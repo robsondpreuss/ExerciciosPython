@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python para Iniciantes — Exercícios Guiados · 35 semanas</title>
+<style>
+  :root{ --azul:#3776AB; --azul-esc:#28577E; --amarelo:#FFD43B; --ambar:#FFB000;
+         --fundo:#F5F8FC; --tinta:#1F2430; --cinza:#5b6472; --borda:#dbe4ee; --verde:#2e8b57; }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  body{ background:var(--fundo); color:var(--tinta);
+        font-family:'Segoe UI',system-ui,-apple-system,Arial,sans-serif; }
+  code, .mono{ font-family:'Cascadia Code','JetBrains Mono',Consolas,monospace; }
+
+  /* ---- barra fixa de XP total ---- */
+  .progress-wrap{ position:sticky; top:0; z-index:50; display:flex; align-items:center; gap:12px;
+    background:var(--tinta); color:#fff; padding:10px 18px; box-shadow:0 2px 10px rgba(0,0,0,.25); flex-wrap:wrap; }
+  .progress-wrap .label{ font-family:Consolas,monospace; font-size:12px; letter-spacing:2px; color:var(--amarelo); }
+  .progress-bar{ flex:1; min-width:160px; height:14px; background:#3a4152; border-radius:99px; overflow:hidden; }
+  .progress-fill{ height:100%; width:0%; border-radius:99px;
+    background:linear-gradient(90deg,var(--amarelo),var(--ambar)); transition:width .5s; }
+  .progress-count,.progress-msg{ font-family:Consolas,monospace; font-size:13px; }
+  .progress-msg{ color:#c8d2e0; }
+  .btn-continuar{ background:var(--amarelo); color:var(--tinta); text-decoration:none; font-weight:700;
+    font-size:13px; padding:6px 14px; border-radius:8px; white-space:nowrap; }
+  .btn-continuar:hover{ background:var(--ambar); }
+
+  /* ---- hero ---- */
+  header.hero{ max-width:1080px; margin:34px auto 10px; padding:0 20px; }
+  .kicker{ font-family:Consolas,monospace; font-size:13px; letter-spacing:3px; color:var(--azul);
+    text-transform:uppercase; }
+  header.hero h1{ font-family:'Cascadia Code',Consolas,monospace; font-size:clamp(1.7rem,4.5vw,2.9rem);
+    margin:8px 0 4px; line-height:1.15; }
+  header.hero h1 .amarelo{ color:var(--ambar); }
+  .cursor{ display:inline-block; width:.55em; height:1.05em; background:var(--amarelo);
+    vertical-align:-.12em; margin-left:6px; animation:pisca 1s steps(1) infinite; }
+  @keyframes pisca{ 50%{ opacity:0; } }
+  .tokens{ font-family:Consolas,monospace; font-size:13px; letter-spacing:1.5px; color:var(--cinza); margin:8px 0 14px; }
+  .sub{ color:var(--cinza); max-width:760px; line-height:1.55; }
+  .howto{ background:#fff; border:2px dashed var(--azul); border-radius:12px; padding:14px 16px;
+    margin:18px 0 6px; font-size:14.5px; line-height:1.55; }
+
+  /* ---- nav de módulos ---- */
+  nav.parts{ position:sticky; top:52px; z-index:40; display:flex; gap:8px; overflow-x:auto;
+    max-width:1080px; margin:14px auto; padding:8px 20px; background:var(--fundo); }
+  nav.parts a{ white-space:nowrap; text-decoration:none; color:var(--azul-esc); background:#fff;
+    border:1.5px solid var(--borda); padding:7px 13px; border-radius:99px; font-size:13.5px; font-weight:600; }
+  nav.parts a:hover{ border-color:var(--azul); color:var(--azul); }
+
+  main{ max-width:1080px; margin:0 auto 60px; padding:0 20px; }
+
+  /* ---- módulos ---- */
+  .modulo{ margin:34px 0; border-left:5px solid var(--cor); background:#fff; border-radius:14px;
+    padding:20px 22px; box-shadow:0 1px 4px rgba(31,36,48,.06); }
+  .mod-head{ display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; }
+  .mod-title{ display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+  .mod-num{ font-family:Consolas,monospace; font-weight:700; color:#fff; background:var(--cor);
+    border-radius:8px; padding:4px 10px; font-size:14px; }
+  .mod-title h2{ font-size:1.25rem; }
+  .mod-faixa{ font-family:Consolas,monospace; font-size:12.5px; color:var(--cinza); }
+  .mod-prog{ display:flex; align-items:center; gap:10px; min-width:190px; }
+  .mod-bar{ flex:1; height:9px; background:var(--fundo); border-radius:99px; overflow:hidden; border:1px solid var(--borda); }
+  .mod-fill{ height:100%; width:0%; background:var(--cor); transition:width .5s; }
+  .mod-count{ font-family:Consolas,monospace; font-size:12.5px; color:var(--cinza); }
+  .mod-desc{ color:var(--cinza); font-size:14.5px; margin:8px 0 16px; }
+
+  /* ---- cards ---- */
+  .grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(225px,1fr)); gap:14px; }
+  .card{ display:flex; flex-direction:column; gap:9px; background:#fff; border:2px solid var(--borda);
+    border-radius:12px; padding:14px 15px; text-decoration:none; color:var(--tinta);
+    transition:transform .12s, box-shadow .12s, border-color .12s; }
+  .card:hover{ transform:translateY(-3px); box-shadow:0 6px 16px rgba(31,36,48,.12); border-color:var(--azul); }
+  .card.proj{ border-color:var(--ambar); background:linear-gradient(180deg,#fffdf4,#fff); }
+  .card.completa{ border-color:var(--verde); background:linear-gradient(180deg,#f2faf5,#fff); }
+  .card-top{ display:flex; justify-content:space-between; align-items:center; }
+  .snum{ font-family:Consolas,monospace; font-weight:700; font-size:13px; color:#fff;
+    background:var(--tinta); border-radius:6px; padding:2px 8px; }
+  .card.proj .snum{ background:var(--ambar); color:var(--tinta); }
+  .card.completa .snum{ background:var(--verde); }
+  .status{ font-family:Consolas,monospace; font-size:11px; letter-spacing:.5px; color:var(--cinza);
+    border:1px solid var(--borda); border-radius:99px; padding:2px 8px; }
+  .card.completa .status{ color:var(--verde); border-color:var(--verde); font-weight:700; }
+  .card h3{ font-size:15.5px; line-height:1.3; min-height:2.5em; }
+  .mini-bar{ height:7px; background:var(--fundo); border-radius:99px; overflow:hidden; border:1px solid var(--borda); }
+  .mini-fill{ height:100%; width:0%; background:linear-gradient(90deg,var(--amarelo),var(--ambar)); transition:width .5s; }
+  .card.completa .mini-fill{ background:var(--verde); }
+  .card-foot{ display:flex; justify-content:space-between; font-family:Consolas,monospace;
+    font-size:12.5px; color:var(--cinza); }
+  .abrir{ color:var(--azul); font-weight:700; }
+
+  footer{ text-align:center; font-family:Consolas,monospace; font-size:12.5px; color:var(--cinza);
+    padding:28px 16px 40px; }
+  .reset-tudo{ background:none; border:1px solid var(--borda); color:var(--cinza); border-radius:8px;
+    padding:5px 12px; font-size:12px; cursor:pointer; margin-top:10px; }
+  .reset-tudo:hover{ border-color:#c0392b; color:#c0392b; }
+  @media (max-width:640px){ .mod-prog{ width:100%; } nav.parts{ top:96px; } }
+</style>
+</head>
+<body>
+
+<div class="progress-wrap" role="region" aria-label="Progresso do curso">
+  <span class="label">XP DO CURSO</span>
+  <div class="progress-bar"><div class="progress-fill" id="pfill"></div></div>
+  <span class="progress-count" id="pcount">0 / 467</span>
+  <span class="progress-msg" id="pmsg">Bem-vindo(a)! Escolha uma semana ✔</span>
+  <a class="btn-continuar" id="continuar" href="atividades/semana-01-logica-e-primeiros-passos.html">▶ Começar</a>
+</div>
+
+<header class="hero">
+  <div class="kicker">Python para Iniciantes · Exercícios Guiados</div>
+  <h1>35 semanas de código:<br>do <span class="amarelo">print()</span> à engenharia de software<span class="cursor" aria-hidden="true"></span></h1>
+  <div class="tokens mono">35 semanas · 467 exercícios · 7 módulos · 7 projetos finais · ☕ Tua Caneca</div>
+  <p class="sub">Este é o seu mapa da jornada. Cada card abre a página de exercícios da semana — gamificada, com dicas e soluções recolhíveis. O progresso que você marca lá dentro aparece aqui automaticamente, nas barrinhas de cada semana, de cada módulo e do curso inteiro.</p>
+  <div class="howto"><strong>Como usar:</strong> siga as semanas em ordem (os conteúdos se acumulam!). Marque <strong>✔ Concluído</strong> nos exercícios dentro de cada semana — ao voltar aqui, suas barras estarão atualizadas. O botão <strong>▶</strong> na barra do topo leva você direto para onde parou. Bons códigos! 🐍</div>
+</header>
+
+<nav class="parts" aria-label="Módulos"><a href="#m1">🧱 Fundamentos</a><a href="#m2">🧬 POO & Dados</a><a href="#m3">🌍 Mundo Real</a><a href="#m4">📊 Dados & Web</a><a href="#m5">🗄️ Bancos & Web Dinâmica</a><a href="#m6">🏛️ Full-Stack Desacoplado</a><a href="#m7">🏗️ Engenharia de Software</a></nav>
+
+<main>
+  <section class="modulo" id="m1" style="--cor:#FFB000">
+    <div class="mod-head">
+      <div class="mod-title"><span class="mod-num">01</span><h2>🧱 Fundamentos</h2><span class="mod-faixa">Semanas 01–08</span></div>
+      <div class="mod-prog"><div class="mod-bar"><div class="mod-fill" id="modf-1"></div></div><span class="mod-count" id="modc-1">0 / 149</span></div>
+    </div>
+    <p class="mod-desc">Lógica, decisões, repetições, coleções e funções — a base de tudo.</p>
+    <div class="grid">
+      <a class="card" id="card-01" href="atividades/semana-01-logica-e-primeiros-passos.html">
+        <div class="card-top"><span class="snum">S01</span><span class="status" id="st-01">começar</span></div>
+        <h3>Lógica e Primeiros Passos</h3>
+        <div class="mini-bar"><div class="mini-fill" id="mf-01"></div></div>
+        <div class="card-foot"><span id="mc-01">0 / 25</span><span class="abrir">abrir →</span></div>
+      </a>
+      <a class="card" id="card-02" href="atividades/semana-02-condicionais.html">
+        <div class="card-top"><span class="snum">S02</span><span class="status" id="st-02">começar</span></div>
+        <h3>Condicionais</h3>
+        <div class="mini-bar"><div class="mini-fill" id="mf-02"></div></div>
+        <div class="card-foot"><span id="mc-02">0 / 21</span><span class="abrir">abrir →</span></div>
+      </a>
+      <a class="card" id="card-03" href="atividades/semana-03-loops-repeticoes.html">
+        <div class="card-top"><span class="snum">S03</span><span class="status" id="st-03">começar</span></div>
+        <h3>Loops e Repetições</h3>
+        <div class="mini-bar"><div class="mini-fill" id="mf-03"></div></div>
+        <div class="card-foot"><span id="mc-03">0 / 22</span><span class="abrir">abrir →</span></div>
+      </a>
+      <a class="card" id="card-04" href="atividades/semana-04-listas-e-strings.html">
+        <div class="card-top"><span class="snum">S04</span><span class="status" id="st-04">começar</span></div>
+        <h3>Listas e Strings</h3>
+        <div class="mini-bar"><div class="mini-fill" id="mf-04"></div></div>
+        <div class="card-foot"><span id="mc-04">0 / 20</span><span class="abrir">abrir →</span></div>
+      </a>
+      <a class="card" id="card-05" href="atividades/semana-05-dicionarios-e-tuplas.html">
+        <div class="card-top"><span class="snum">S05</span><span class="status" id="st-05">começar</span></div>
+        <h3>Dicionários e Tuplas</h3>
+        <div class="mini-bar"><div class="mini-fill" id="mf-05"></div></div>
+        <div class="card-foot"><span id="mc-05">0 / 18</span><span class="abrir">abrir →</span></div>
+      </a>
+      <a class="card" id="card-06" href="atividades/semana-06-funcoes.html">
+        <div class="card-top"><span class="snum">S06</span><span class="status" id="st-06">começar</span></div>
+        <h3>Funções</h3>
+        <div class="mini-bar"><div class="mini-fill" id="mf-06"></div></div>
+        <div class="card-foot"><span id="mc-06">0 / 17</span><span class="abrir">abrir →</span></div>
+      </a>
+      <a class="card" id="card-07" href="atividades/semana-07-erros-e-arquivos.html">
+        <div class="card-top"><span class="snum">S07</span><span class="status" id="st-07">começar</span></div>
+        <h3>Erros e Arquivos</h3>
+        <div class="mini-bar"><div class="mini-fill" id="mf-07"></div></div>
+        <div class="card-foot"><span id="mc-07">0 / 16</span><span class="abrir">abrir →</span></div>
+      </a>
+      <a class="card proj" id="card-08" href="atividades/semana-08-projeto-final.html">
+        <div class="card-top"><span class="snum">S08</span><span class="status" id="st-08">começar</span></div>
+        <h3>Projeto Final 1 🏆</h3>
+        <div class="mini-bar"><div class="mini-fill" id="mf-08"></div></div>
+        <div class="card-foot"><span id="mc-08">0 / 10</span><span class="abrir">abrir →</span></div>
+      </a>
+    </div>
+  </section>
+  <section class="modulo" id="m2" style="--cor:#E8A400">
+    <div class="mod-head">
+      <div class="mod-title"><span class="mod-num">02</span><h2>🧬 POO & Dados</h2><span class="mod-faixa">Semanas 09–12</span></div>
+      <div class="mod-prog"><div class="mod-bar"><div class="mod-fill" id="modf-2"></div></div><span class="mod-count" id="modc-2">0 / 53</span></div>
+    </div>
+    <p class="mod-desc">Módulos, orientação a objetos, herança e persistência em JSON.</p>
+    <div class="grid">
+      <a class="card" id="card-09" href="atividades/semana-09-modulos-e-bibliotecas.html">
+        <div class="card-top"><span class="snum">S09</span><span class="status" id="st-09">começar</span></div>
+        <h3>Módulos e Bibliotecas</h3>
+        <div class="mini-bar"><div class="mini-fill" id="mf-09"></div></div>
+        <div class="card-foot"><span id="mc-09">0 / 16</span><span class="abrir">abrir →</span></div>
+      </a>
+      <a class="card" id="card-10" href="atividades/semana-10-classes-e-objetos.html">
+        <div class="card-top"><span class="snum">S10</span><span class="status" id="st-10">começar</span></div>
+        <h3>Classes e Objetos</h3>
+        <div class="mini-bar"><div class="mini-fill" id="mf-10"></div></div>
+        <div class="card-foot"><span id="mc-10">0 / 14</span><span class="abrir">abrir →</span></div>
+      </a>
+      <a class="card" id="card-11" href="atividades/semana-11-heranca-e-json.html">
+        <div class="card-top"><span class="snum">S11</span><span class="status" id="st-11">começar</span></div>
+        <h3>Herança e JSON</h3>
+        <div class="mini-bar"><div class="mini-fill" id="mf-11"></div></div>
+        <div class="card-foot"><span id="mc-11">0 / 13</span><span class="abrir">abrir →</span></div>
+      </a>
+      <a class="card proj" id="card-12" href="atividades/semana-12-projeto-final-2.html">
+        <div class="card-top"><span class="snum">S12</span><span class="status" id="st-12">começar</span></div>
+        <h3>Projeto Final 2 🏆</h3>
+        <div class="mini-bar"><div class="mini-fill" id="mf-12"></div></div>
+        <div class="card-foot"><span id="mc-12">0 / 10</span><span class="abrir">abrir →</span></div>
+      </a>
+    </div>
+  </section>
+  <section class="modulo" id="m3" style="--cor:#8FBFE8">
+    <div class="mod-head">
+      <div class="mod-title"><span class="mod-num">03</span><h2>🌍 Mundo Real</h2><span class="mod-faixa">Semanas 13–16</span></div>
+      <div class="mod-prog"><div class="mod-bar"><div class="mod-fill" id="modf-3"></div></div><span class="mod-count" id="modc-3">0 / 46</span></div>
+    </div>
+    <p class="mod-desc">Planilhas CSV, automação de arquivos e APIs da internet.</p>
+    <div class="grid">
+      <a class="card" id="card-13" href="atividades/semana-13-csv-e-planilhas.html">
+        <div class="card-top"><span class="snum">S13</span><span class="status" id="st-13">começar</span></div>
+        <h3>CSV e Planilhas</h3>
+        <div class="mini-bar"><div class="mini-fill" id="mf-13"></div></div>
+        <div class="card-foot"><span id="mc-13">0 / 13</span><span class="abrir">abrir →</span></div>
+      </a>
+      <a class="card" id="card-14" href="atividades/semana-14-automacoes.html">
+        <div class="card-top"><span class="snum">S14</span><span class="status" id="st-14">começar</span></div>
+        <h3>Automações</h3>
+        <div class="mini-bar"><div class="mini-fill" id="mf-14"></div></div>
+        <div class="card-foot"><span id="mc-14">0 / 12</span><span class="abrir">abrir →</span></div>
+      </a>
+      <a class="card" id="card-15" href="atividades/semana-15-apis-e-internet.html">
+        <div class="card-top"><span class="snum">S15</span><span class="status" id="st-15">começar</span></div>
+        <h3>APIs e Internet</h3>
+        <div class="mini-bar"><div class="mini-fill" id="mf-15"></div></div>
+        <div class="card-foot"><span id="mc-15">0 / 11</span><span class="abrir">abrir →</span></div>
+      </a>
+      <a class="card proj" id="card-16" href="atividades/semana-16-projeto-final-3.html">
+        <div class="card-top"><span class="snum">S16</span><span class="status" id="st-16">começar</span></div>
+        <h3>Projeto Final 3 🏆</h3>
+        <div class="mini-bar"><div class="mini-fill" id="mf-16"></div></div>
+        <div class="card-foot"><span id="mc-16">0 / 10</span><span class="abrir">abrir →</span></div>
+      </a>
+    </div>
+  </section>
+  <section class="modulo" id="m4" style="--cor:#6FAEDF">
+    <div class="mod-head">
+      <div class="mod-title"><span class="mod-num">04</span><h2>📊 Dados & Web</h2><span class="mod-faixa">Semanas 17–20</span></div>
+      <div class="mod-prog"><div class="mod-bar"><div class="mod-fill" id="modf-4"></div></div><span class="mod-count" id="modc-4">0 / 45</span></div>
+    </div>
+    <p class="mod-desc">pandas, matplotlib e as primeiras páginas com Flask.</p>
+    <div class="grid">
+      <a class="card" id="card-17" href="atividades/semana-17-pandas.html">
+        <div class="card-top"><span class="snum">S17</span><span class="status" id="st-17">começar</span></div>
+        <h3>pandas</h3>
+        <div class="mini-bar"><div class="mini-fill" id="mf-17"></div></div>
+        <div class="card-foot"><span id="mc-17">0 / 14</span><span class="abrir">abrir →</span></div>
+      </a>
+      <a class="card" id="card-18" href="atividades/semana-18-graficos-matplotlib.html">
+        <div class="card-top"><span class="snum">S18</span><span class="status" id="st-18">começar</span></div>
+        <h3>Gráficos com matplotlib</h3>
+        <div class="mini-bar"><div class="mini-fill" id="mf-18"></div></div>
+        <div class="card-foot"><span id="mc-18">0 / 11</span><span class="abrir">abrir →</span></div>
+      </a>
+      <a class="card" id="card-19" href="atividades/semana-19-web-com-flask.html">
+        <div class="card-top"><span class="snum">S19</span><span class="status" id="st-19">começar</span></div>
+        <h3>Web com Flask</h3>
+        <div class="mini-bar"><div class="mini-fill" id="mf-19"></div></div>
+        <div class="card-foot"><span id="mc-19">0 / 10</span><span class="abrir">abrir →</span></div>
+      </a>
+      <a class="card proj" id="card-20" href="atividades/semana-20-projeto-final-4.html">
+        <div class="card-top"><span class="snum">S20</span><span class="status" id="st-20">começar</span></div>
+        <h3>Projeto Final 4 🏆</h3>
+        <div class="mini-bar"><div class="mini-fill" id="mf-20"></div></div>
+        <div class="card-foot"><span id="mc-20">0 / 10</span><span class="abrir">abrir →</span></div>
+      </a>
+    </div>
+  </section>
+  <section class="modulo" id="m5" style="--cor:#4E93C9">
+    <div class="mod-head">
+      <div class="mod-title"><span class="mod-num">05</span><h2>🗄️ Bancos & Web Dinâmica</h2><span class="mod-faixa">Semanas 21–25</span></div>
+      <div class="mod-prog"><div class="mod-bar"><div class="mod-fill" id="modf-5"></div></div><span class="mod-count" id="modc-5">0 / 63</span></div>
+    </div>
+    <p class="mod-desc">SQL do zero ao GROUP BY, CRUD web, IA — e o monolito completo.</p>
+    <div class="grid">
+      <a class="card" id="card-21" href="atividades/semana-21-banco-sqlite.html">
+        <div class="card-top"><span class="snum">S21</span><span class="status" id="st-21">começar</span></div>
+        <h3>Banco de Dados com SQLite</h3>
+        <div class="mini-bar"><div class="mini-fill" id="mf-21"></div></div>
+        <div class="card-foot"><span id="mc-21">0 / 15</span><span class="abrir">abrir →</span></div>
+      </a>
+      <a class="card" id="card-22" href="atividades/semana-22-sql-crud.html">
+        <div class="card-top"><span class="snum">S22</span><span class="status" id="st-22">começar</span></div>
+        <h3>SQL a Fundo (CRUD)</h3>
+        <div class="mini-bar"><div class="mini-fill" id="mf-22"></div></div>
+        <div class="card-foot"><span id="mc-22">0 / 14</span><span class="abrir">abrir →</span></div>
+      </a>
+      <a class="card" id="card-23" href="atividades/semana-23-flask-e-banco.html">
+        <div class="card-top"><span class="snum">S23</span><span class="status" id="st-23">começar</span></div>
+        <h3>Flask + Banco de Dados</h3>
+        <div class="mini-bar"><div class="mini-fill" id="mf-23"></div></div>
+        <div class="card-foot"><span id="mc-23">0 / 12</span><span class="abrir">abrir →</span></div>
+      </a>
+      <a class="card" id="card-24" href="atividades/semana-24-python-e-ia.html">
+        <div class="card-top"><span class="snum">S24</span><span class="status" id="st-24">começar</span></div>
+        <h3>Python e IA</h3>
+        <div class="mini-bar"><div class="mini-fill" id="mf-24"></div></div>
+        <div class="card-foot"><span id="mc-24">0 / 12</span><span class="abrir">abrir →</span></div>
+      </a>
+      <a class="card proj" id="card-25" href="atividades/semana-25-projeto-final-5.html">
+        <div class="card-top"><span class="snum">S25</span><span class="status" id="st-25">começar</span></div>
+        <h3>Projeto Final 5 🏆</h3>
+        <div class="mini-bar"><div class="mini-fill" id="mf-25"></div></div>
+        <div class="card-foot"><span id="mc-25">0 / 10</span><span class="abrir">abrir →</span></div>
+      </a>
+    </div>
+  </section>
+  <section class="modulo" id="m6" style="--cor:#3776AB">
+    <div class="mod-head">
+      <div class="mod-title"><span class="mod-num">06</span><h2>🏛️ Full-Stack Desacoplado</h2><span class="mod-faixa">Semanas 26–30</span></div>
+      <div class="mod-prog"><div class="mod-bar"><div class="mod-fill" id="modf-6"></div></div><span class="mod-count" id="modc-6">0 / 56</span></div>
+    </div>
+    <p class="mod-desc">MariaDB + DBeaver, API REST, JWT e frontend separado.</p>
+    <div class="grid">
+      <a class="card" id="card-26" href="atividades/semana-26-mariadb-e-dbeaver.html">
+        <div class="card-top"><span class="snum">S26</span><span class="status" id="st-26">começar</span></div>
+        <h3>MariaDB e DBeaver</h3>
+        <div class="mini-bar"><div class="mini-fill" id="mf-26"></div></div>
+        <div class="card-foot"><span id="mc-26">0 / 13</span><span class="abrir">abrir →</span></div>
+      </a>
+      <a class="card" id="card-27" href="atividades/semana-27-api-rest.html">
+        <div class="card-top"><span class="snum">S27</span><span class="status" id="st-27">começar</span></div>
+        <h3>API REST com Flask</h3>
+        <div class="mini-bar"><div class="mini-fill" id="mf-27"></div></div>
+        <div class="card-foot"><span id="mc-27">0 / 13</span><span class="abrir">abrir →</span></div>
+      </a>
+      <a class="card" id="card-28" href="atividades/semana-28-autenticacao-jwt.html">
+        <div class="card-top"><span class="snum">S28</span><span class="status" id="st-28">começar</span></div>
+        <h3>Autenticação com JWT</h3>
+        <div class="mini-bar"><div class="mini-fill" id="mf-28"></div></div>
+        <div class="card-foot"><span id="mc-28">0 / 10</span><span class="abrir">abrir →</span></div>
+      </a>
+      <a class="card" id="card-29" href="atividades/semana-29-frontend-desacoplado.html">
+        <div class="card-top"><span class="snum">S29</span><span class="status" id="st-29">começar</span></div>
+        <h3>Frontend Desacoplado</h3>
+        <div class="mini-bar"><div class="mini-fill" id="mf-29"></div></div>
+        <div class="card-foot"><span id="mc-29">0 / 10</span><span class="abrir">abrir →</span></div>
+      </a>
+      <a class="card proj" id="card-30" href="atividades/semana-30-projeto-final-6.html">
+        <div class="card-top"><span class="snum">S30</span><span class="status" id="st-30">começar</span></div>
+        <h3>Projeto Final 6 🏆</h3>
+        <div class="mini-bar"><div class="mini-fill" id="mf-30"></div></div>
+        <div class="card-foot"><span id="mc-30">0 / 10</span><span class="abrir">abrir →</span></div>
+      </a>
+    </div>
+  </section>
+  <section class="modulo" id="m7" style="--cor:#28577E">
+    <div class="mod-head">
+      <div class="mod-title"><span class="mod-num">07</span><h2>🏗️ Engenharia de Software</h2><span class="mod-faixa">Semanas 31–35</span></div>
+      <div class="mod-prog"><div class="mod-bar"><div class="mod-fill" id="modf-7"></div></div><span class="mod-count" id="modc-7">0 / 55</span></div>
+    </div>
+    <p class="mod-desc">JOINs, pytest, Git/GitHub e preparação para produção.</p>
+    <div class="grid">
+      <a class="card" id="card-31" href="atividades/semana-31-sql-joins.html">
+        <div class="card-top"><span class="snum">S31</span><span class="status" id="st-31">começar</span></div>
+        <h3>SQL Avançado: JOINs</h3>
+        <div class="mini-bar"><div class="mini-fill" id="mf-31"></div></div>
+        <div class="card-foot"><span id="mc-31">0 / 13</span><span class="abrir">abrir →</span></div>
+      </a>
+      <a class="card" id="card-32" href="atividades/semana-32-testes-pytest.html">
+        <div class="card-top"><span class="snum">S32</span><span class="status" id="st-32">começar</span></div>
+        <h3>Testes com pytest</h3>
+        <div class="mini-bar"><div class="mini-fill" id="mf-32"></div></div>
+        <div class="card-foot"><span id="mc-32">0 / 11</span><span class="abrir">abrir →</span></div>
+      </a>
+      <a class="card" id="card-33" href="atividades/semana-33-git-e-github.html">
+        <div class="card-top"><span class="snum">S33</span><span class="status" id="st-33">começar</span></div>
+        <h3>Git e GitHub</h3>
+        <div class="mini-bar"><div class="mini-fill" id="mf-33"></div></div>
+        <div class="card-foot"><span id="mc-33">0 / 10</span><span class="abrir">abrir →</span></div>
+      </a>
+      <a class="card" id="card-34" href="atividades/semana-34-producao-e-deploy.html">
+        <div class="card-top"><span class="snum">S34</span><span class="status" id="st-34">começar</span></div>
+        <h3>Produção e Deploy</h3>
+        <div class="mini-bar"><div class="mini-fill" id="mf-34"></div></div>
+        <div class="card-foot"><span id="mc-34">0 / 11</span><span class="abrir">abrir →</span></div>
+      </a>
+      <a class="card proj" id="card-35" href="atividades/semana-35-projeto-final-7.html">
+        <div class="card-top"><span class="snum">S35</span><span class="status" id="st-35">começar</span></div>
+        <h3>Projeto Final 7 🏆</h3>
+        <div class="mini-bar"><div class="mini-fill" id="mf-35"></div></div>
+        <div class="card-foot"><span id="mc-35">0 / 10</span><span class="abrir">abrir →</span></div>
+      </a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  python_para_iniciantes // hub do curso // progresso salvo no seu navegador<br>
+  <button class="reset-tudo" id="resetTudo" title="Apaga o progresso salvo de TODAS as semanas neste navegador">↺ Zerar todo o progresso</button>
+</footer>
+
+<script>
+  const SEMANAS = [{"n": 1, "arq": "semana-01-logica-e-primeiros-passos.html", "t": "Lógica e Primeiros Passos", "ex": 25, "proj": false}, {"n": 2, "arq": "semana-02-condicionais.html", "t": "Condicionais", "ex": 21, "proj": false}, {"n": 3, "arq": "semana-03-loops-repeticoes.html", "t": "Loops e Repetições", "ex": 22, "proj": false}, {"n": 4, "arq": "semana-04-listas-e-strings.html", "t": "Listas e Strings", "ex": 20, "proj": false}, {"n": 5, "arq": "semana-05-dicionarios-e-tuplas.html", "t": "Dicionários e Tuplas", "ex": 18, "proj": false}, {"n": 6, "arq": "semana-06-funcoes.html", "t": "Funções", "ex": 17, "proj": false}, {"n": 7, "arq": "semana-07-erros-e-arquivos.html", "t": "Erros e Arquivos", "ex": 16, "proj": false}, {"n": 8, "arq": "semana-08-projeto-final.html", "t": "Projeto Final 1", "ex": 10, "proj": true}, {"n": 9, "arq": "semana-09-modulos-e-bibliotecas.html", "t": "Módulos e Bibliotecas", "ex": 16, "proj": false}, {"n": 10, "arq": "semana-10-classes-e-objetos.html", "t": "Classes e Objetos", "ex": 14, "proj": false}, {"n": 11, "arq": "semana-11-heranca-e-json.html", "t": "Herança e JSON", "ex": 13, "proj": false}, {"n": 12, "arq": "semana-12-projeto-final-2.html", "t": "Projeto Final 2", "ex": 10, "proj": true}, {"n": 13, "arq": "semana-13-csv-e-planilhas.html", "t": "CSV e Planilhas", "ex": 13, "proj": false}, {"n": 14, "arq": "semana-14-automacoes.html", "t": "Automações", "ex": 12, "proj": false}, {"n": 15, "arq": "semana-15-apis-e-internet.html", "t": "APIs e Internet", "ex": 11, "proj": false}, {"n": 16, "arq": "semana-16-projeto-final-3.html", "t": "Projeto Final 3", "ex": 10, "proj": true}, {"n": 17, "arq": "semana-17-pandas.html", "t": "pandas", "ex": 14, "proj": false}, {"n": 18, "arq": "semana-18-graficos-matplotlib.html", "t": "Gráficos com matplotlib", "ex": 11, "proj": false}, {"n": 19, "arq": "semana-19-web-com-flask.html", "t": "Web com Flask", "ex": 10, "proj": false}, {"n": 20, "arq": "semana-20-projeto-final-4.html", "t": "Projeto Final 4", "ex": 10, "proj": true}, {"n": 21, "arq": "semana-21-banco-sqlite.html", "t": "Banco de Dados com SQLite", "ex": 15, "proj": false}, {"n": 22, "arq": "semana-22-sql-crud.html", "t": "SQL a Fundo (CRUD)", "ex": 14, "proj": false}, {"n": 23, "arq": "semana-23-flask-e-banco.html", "t": "Flask + Banco de Dados", "ex": 12, "proj": false}, {"n": 24, "arq": "semana-24-python-e-ia.html", "t": "Python e IA", "ex": 12, "proj": false}, {"n": 25, "arq": "semana-25-projeto-final-5.html", "t": "Projeto Final 5", "ex": 10, "proj": true}, {"n": 26, "arq": "semana-26-mariadb-e-dbeaver.html", "t": "MariaDB e DBeaver", "ex": 13, "proj": false}, {"n": 27, "arq": "semana-27-api-rest.html", "t": "API REST com Flask", "ex": 13, "proj": false}, {"n": 28, "arq": "semana-28-autenticacao-jwt.html", "t": "Autenticação com JWT", "ex": 10, "proj": false}, {"n": 29, "arq": "semana-29-frontend-desacoplado.html", "t": "Frontend Desacoplado", "ex": 10, "proj": false}, {"n": 30, "arq": "semana-30-projeto-final-6.html", "t": "Projeto Final 6", "ex": 10, "proj": true}, {"n": 31, "arq": "semana-31-sql-joins.html", "t": "SQL Avançado: JOINs", "ex": 13, "proj": false}, {"n": 32, "arq": "semana-32-testes-pytest.html", "t": "Testes com pytest", "ex": 11, "proj": false}, {"n": 33, "arq": "semana-33-git-e-github.html", "t": "Git e GitHub", "ex": 10, "proj": false}, {"n": 34, "arq": "semana-34-producao-e-deploy.html", "t": "Produção e Deploy", "ex": 11, "proj": false}, {"n": 35, "arq": "semana-35-projeto-final-7.html", "t": "Projeto Final 7", "ex": 10, "proj": true}];
+  const MODULOS = [{"emoji": "🧱", "nome": "Fundamentos", "ini": 1, "fim": 8}, {"emoji": "🧬", "nome": "POO & Dados", "ini": 9, "fim": 12}, {"emoji": "🌍", "nome": "Mundo Real", "ini": 13, "fim": 16}, {"emoji": "📊", "nome": "Dados & Web", "ini": 17, "fim": 20}, {"emoji": "🗄️", "nome": "Bancos & Web Dinâmica", "ini": 21, "fim": 25}, {"emoji": "🏛️", "nome": "Full-Stack Desacoplado", "ini": 26, "fim": 30}, {"emoji": "🏗️", "nome": "Engenharia de Software", "ini": 31, "fim": 35}];
+  const TOTAL = 467;
+
+  function lerSemana(n){
+    try{
+      const chave = 'python_semana' + String(n).padStart(2,'0') + '_progresso';
+      const dados = JSON.parse(localStorage.getItem(chave)) || {};
+      return Object.values(dados).filter(Boolean).length;
+    }catch(e){ return 0; }
+  }
+
+  function render(){
+    let totalFeito = 0;
+    let proxima = null;
+    for(const s of SEMANAS){
+      const feito = Math.min(lerSemana(s.n), s.ex);
+      totalFeito += feito;
+      const id = String(s.n).padStart(2,'0');
+      const pct = Math.round(100 * feito / s.ex);
+      document.getElementById('mf-'+id).style.width = pct + '%';
+      document.getElementById('mc-'+id).textContent = feito + ' / ' + s.ex;
+      const card = document.getElementById('card-'+id);
+      const st = document.getElementById('st-'+id);
+      card.classList.toggle('completa', feito >= s.ex);
+      st.textContent = feito >= s.ex ? '✓ completa' : (feito > 0 ? 'em andamento' : 'começar');
+      if(proxima === null && feito < s.ex) proxima = s;
+    }
+    MODULOS.forEach((m, i) => {
+      let f = 0, t = 0;
+      for(const s of SEMANAS) if(s.n >= m.ini && s.n <= m.fim){ f += Math.min(lerSemana(s.n), s.ex); t += s.ex; }
+      document.getElementById('modf-'+(i+1)).style.width = Math.round(100*f/t) + '%';
+      document.getElementById('modc-'+(i+1)).textContent = f + ' / ' + t;
+    });
+    const pct = Math.round(100 * totalFeito / TOTAL);
+    document.getElementById('pfill').style.width = pct + '%';
+    document.getElementById('pcount').textContent = totalFeito + ' / ' + TOTAL;
+    const msg = document.getElementById('pmsg');
+    if(totalFeito === 0) msg.textContent = 'Bem-vindo(a)! Escolha uma semana ✔';
+    else if(pct < 30) msg.textContent = 'Boa! Continue assim 💪';
+    else if(pct < 50) msg.textContent = 'Pegando o ritmo! 🔥';
+    else if(pct < 75) msg.textContent = 'Metade do caminho! 🚀';
+    else if(pct < 100) msg.textContent = 'Quase lá... força! ⚡';
+    else msg.textContent = 'CURSO COMPLETO! 🏆🎓';
+    const btn = document.getElementById('continuar');
+    if(proxima === null){
+      btn.textContent = '🏆 Curso completo!';
+      btn.href = 'atividades/' + SEMANAS[SEMANAS.length-1].arq;
+    } else {
+      btn.textContent = (totalFeito === 0 ? '▶ Começar' : '▶ Continuar na S' + String(proxima.n).padStart(2,'0'));
+      btn.href = 'atividades/' + proxima.arq;
+    }
+  }
+
+  document.getElementById('resetTudo').addEventListener('click', () => {
+    if(!confirm('Isso apaga o progresso salvo de TODAS as 35 semanas neste navegador. Tem certeza?')) return;
+    try{
+      for(const s of SEMANAS){
+        localStorage.removeItem('python_semana' + String(s.n).padStart(2,'0') + '_progresso');
+      }
+    }catch(e){}
+    render();
+  });
+
+  window.addEventListener('storage', render);
+  document.addEventListener('visibilitychange', () => { if(!document.hidden) render(); });
+  render();
+</script>
+</body>
+</html>
