@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Semana 14 — Automações</title>
+<title>Semana 27 — API REST com Flask</title>
 <style>
   :root{
     --ink:#16243A;
@@ -57,7 +57,7 @@
     color:#fff;padding:56px 20px 48px;text-align:center;position:relative;overflow:hidden;
   }
   header.hero::before{
-    content:"import os  os.listdir(  shutil.move(  makedirs  backup";
+    content:"REST  GET POST PUT DELETE  JSON  status 200/404  CORS";
     position:absolute;inset:auto 0 8px 0;font-family:var(--mono);font-size:.78rem;
     color:rgba(255,255,255,.14);letter-spacing:.4em;white-space:nowrap;overflow:hidden;
   }
@@ -234,280 +234,299 @@
 <div class="progress-wrap" role="region" aria-label="Progresso da semana">
   <span class="label">XP DA SEMANA</span>
   <div class="progress-bar"><div class="progress-fill" id="pfill"></div></div>
-  <span class="progress-count" id="pcount">0 / 12</span>
+  <span class="progress-count" id="pcount">0 / 13</span>
   <span class="progress-msg" id="pmsg">Marque os exercícios concluídos ✔</span>
   <button class="reset-btn" id="resetBtn" title="Apagar todo o progresso salvo">↺ Resetar</button>
 </div>
 
 <header class="hero">
   <div class="kicker">Python para Iniciantes · Exercícios Guiados</div>
-  <h1>SEMANA 14 — Automações:<br>Python arruma sua bagunça<span class="cursor" aria-hidden="true"></span></h1>
-  <p class="sub">Os módulos os e shutil: listar, criar, renomear, mover e copiar arquivos em lote — com segurança! O organizador de Downloads e backups automáticos com data.</p>
+  <h1>SEMANA 27 — API REST:<br>quebrando o monolito<span class="cursor" aria-hidden="true"></span></h1>
+  <p class="sub">A arquitetura profissional: separar o backend (uma API REST que fala JSON) do frontend. Verbos HTTP mapeando o CRUD, códigos de status corretos, CORS e a sua loja virando um serviço consumível por qualquer cliente.</p>
   <div class="howto">
     <strong>Como usar:</strong> digite o código você mesmo (não copie e cole!), compare com a saída esperada e marque <strong>✔ Concluído</strong> em cada exercício para encher sua barra de XP. As <strong>dicas</strong> e <strong>soluções</strong> ficam escondidas — só abra depois de tentar! Seu progresso fica salvo no navegador.
   </div>
 </header>
 
-<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · Explorando</a><a href="#p2">2 · Criando & renomeando</a><a href="#p3">3 · shutil</a><a href="#p4">4 · Caminhos & tamanhos</a><a href="#p5">5 · Segurança</a><a href="#p6">6 · Projetos</a><a href="#checklist">✅ Checklist</a></nav>
+<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · O que é REST</a><a href="#p2">2 · GET</a><a href="#p3">3 · POST</a><a href="#p4">4 · PUT & DELETE</a><a href="#p5">5 · Status, CORS, teste</a><a href="#p6">6 · Projetos</a><a href="#checklist">✅ Checklist</a></nav>
 
 <main>
 
 <section class="parte" id="p1">
-  <div class="parte-head"><span class="num">01</span><h2>Explorando pastas com o módulo os</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>O módulo <code>os</code> é a ponte entre o Python e o sistema operacional. <strong>⚠️ REGRA DE OURO DA SEMANA:</strong> automação de arquivos se aprende numa <strong>pasta de laboratório</strong> — nunca treine direto nos seus arquivos reais! O primeiro exercício monta o laboratório.</p></div>
+  <div class="parte-head"><span class="num">01</span><h2>O que é uma API REST?</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Até agora, suas apps web eram <strong>monolitos</strong>: um único programa Flask que mexia no banco, decidia a lógica E montava as telas HTML — tudo grudado. A arquitetura profissional <strong>separa</strong> isso em duas partes independentes:</p><table><tr><th>Backend (API REST)</th><th>Frontend (cliente)</th></tr><tr><td>Python + Flask + MariaDB</td><td>HTML/JS, app mobile, etc.</td></tr><tr><td>Fala só <strong>JSON</strong> (sem HTML)</td><td>Mostra as telas</td></tr><tr><td>Cuida dos dados e regras</td><td>Cuida da aparência</td></tr></table><p>Os dois conversam por uma <strong>API REST</strong>: um conjunto de endereços (endpoints) que recebem pedidos e devolvem JSON. A regra do <strong>REST</strong> é organizar tudo em torno de <strong>recursos</strong> (ex.: "produtos") e usar os <strong>verbos do HTTP</strong> para dizer a operação. É o padrão que move a internet moderna.</p></div>
   <article class="ex" id="ex1">
     <div class="ex-head">
       <span class="ex-num">EX 01</span>
-      <h3>Montando o laboratório 🧪</h3>
+      <h3>Monolito vs desacoplado: a grande virada 🏛️</h3>
       <span class="stars">⭐ básico</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex1"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Criar uma pasta de testes com arquivos falsos — seu campo de treino seguro.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Execute este script: ele cria a pasta <code>laboratorio</code> com 7 arquivos de mentira</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex01_setup.py</span></div><pre class="code">import os
-
-os.makedirs("laboratorio", exist_ok=True)
-
-nomes = ["foto1.jpg", "foto2.png", "relatorio.pdf", "notas.txt",
-         "planilha.xlsx", "musica.mp3", "rascunho.txt"]
-
-for nome in nomes:
-    caminho = os.path.join("laboratorio", nome)
-    with open(caminho, "w") as arquivo:
-        arquivo.write("arquivo de teste\n")
-
-print("Laboratório montado com", len(nomes), "arquivos ✔")</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Laboratório montado com 7 arquivos ✔</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner">Tudo nesta semana acontece DENTRO da pasta laboratorio. Se algo der errado, é só apagá-la e rodar este script de novo. Errar de graça é o luxo do laboratório!</div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Entender por que separar backend e frontend é o jeito profissional.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Reflita sobre as vantagens de separar a API do frontend. Para cada situação, pense por que o desacoplamento ajuda:</li><li>a) Você quer um site E um app de celular usando os mesmos dados</li><li>b) O time de design quer mudar as telas sem mexer na lógica do banco</li><li>c) Outra empresa quer integrar o sistema dela com o seu</li><li>d) Você quer trocar o frontend de HTML puro para React no futuro</li></ol><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><p><strong>a)</strong> Site e app consomem a MESMA API — você escreve a lógica uma vez. <strong>b)</strong> Frontend e backend são projetos separados; mudar telas não toca no banco. <strong>c)</strong> Uma API REST é "plugável": qualquer sistema que fale HTTP+JSON se conecta. <strong>d)</strong> Troca-se o frontend inteiro sem mexer na API — ela nem fica sabendo. <strong>Em uma frase:</strong> o monolito é uma peça só (simples de começar, difícil de evoluir); o desacoplado são peças independentes que evoluem sozinhas. É por isso que praticamente toda empresa moderna trabalha assim.</p></div></details>
     </div>
   </article>
 
   <article class="ex" id="ex2">
     <div class="ex-head">
       <span class="ex-num">EX 02</span>
-      <h3>Onde estou? O que tem aqui?</h3>
-      <span class="stars">⭐⭐ médio</span>
+      <h3>O mapa: verbos HTTP = CRUD</h3>
+      <span class="stars">⭐ básico</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex2"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Os dois comandos de orientação: getcwd e listdir.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>PREVEJA e execute:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex02_explorar.py</span></div><pre class="code">import os
-
-print("Pasta atual:", os.getcwd())
-print("Conteúdo do laboratório:")
-
-for nome in os.listdir("laboratorio"):
-    print("-", nome)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Pasta atual: C:\Users\voce\projetos
-Conteúdo do laboratório:
-- foto1.jpg
-- foto2.png
-- relatorio.pdf
-- notas.txt
-- planilha.xlsx
-- musica.mp3
-- rascunho.txt</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner"><code>os.listdir(pasta)</code> devolve uma LISTA de nomes — e tudo que você sabe de listas funciona: len(), in, sort(), filtros com for + if...</div></details>
-    </div>
-  </article>
-
-  <article class="ex" id="ex3">
-    <div class="ex-head">
-      <span class="ex-num">EX 03</span>
-      <h3>Censo por extensão 📊</h3>
-      <span class="stars">⭐⭐ médio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex3"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Filtrar e contar arquivos por tipo — o dict contador ataca novamente!</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Liste só os .txt usando <code>if nome.endswith(".txt")</code></li><li>Depois conte TODOS os tipos: a extensão é <code>nome.split(".")[-1]</code> — use o padrão <code>contagem.get(ext, 0) + 1</code></li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Arquivos .txt: ['notas.txt', 'rascunho.txt']
-Censo: {'jpg': 1, 'png': 1, 'pdf': 1, 'txt': 2, 'xlsx': 1, 'mp3': 1}</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex03.py</span></div><pre class="code">import os
-
-arquivos = os.listdir("laboratorio")
-
-txts = []
-for nome in arquivos:
-    if nome.endswith(".txt"):
-        txts.append(nome)
-print(f"Arquivos .txt: {txts}")
-
-contagem = {}
-for nome in arquivos:
-    ext = nome.split(".")[-1]
-    contagem[ext] = contagem.get(ext, 0) + 1
-print(f"Censo: {contagem}")</pre></div></div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Memorizar qual verbo HTTP faz cada operação.</p><p>O segredo do REST é que cada operação do CRUD (Semana 22) tem um verbo HTTP correspondente:</p><table><tr><th>CRUD</th><th>Verbo HTTP</th><th>Exemplo</th></tr><tr><td>Read (ler)</td><td><code>GET</code></td><td>GET /api/produtos</td></tr><tr><td>Create (criar)</td><td><code>POST</code></td><td>POST /api/produtos</td></tr><tr><td>Update (atualizar)</td><td><code>PUT</code></td><td>PUT /api/produtos/5</td></tr><tr><td>Delete (remover)</td><td><code>DELETE</code></td><td>DELETE /api/produtos/5</td></tr></table><span class="tag passos">🧭 Passo a passo</span><ol><li>Só de ler o pedido "<code>DELETE /api/produtos/5</code>", o que você acha que ele faz?</li><li>E "<code>GET /api/produtos</code>"? E "<code>POST /api/produtos</code>"?</li></ol><details class="dica"><summary>💡 A elegância do REST</summary><div class="inner">Repare: o MESMO endereço /api/produtos faz coisas diferentes dependendo do VERBO. GET lê, POST cria. O endereço diz o RECURSO; o verbo diz a AÇÃO. Essa clareza é o que torna APIs REST tão fáceis de entender — qualquer dev no mundo lê e já sabe o que acontece.</div></details>
     </div>
   </article>
 </section>
 
 <section class="parte" id="p2">
-  <div class="parte-head"><span class="num">02</span><h2>Criando pastas e renomeando em lote</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Criar: <code>os.makedirs(caminho, exist_ok=True)</code> (o exist_ok evita erro se já existir). Conferir: <code>os.path.exists(caminho)</code>. Renomear: <code>os.rename(antigo, novo)</code> — que em lote, dentro de um for, vira uma máquina de produtividade.</p></div>
-  <article class="ex" id="ex4">
+  <div class="parte-head"><span class="num">02</span><h2>GET: lendo recursos</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Começamos pelo verbo mais simples. Uma API devolve <strong>JSON</strong>, então usamos o <code>jsonify</code> (Semana 19). Conecte ao MariaDB (Semana 26) com a função <code>conectar()</code> do seu <code>db.py</code>. E lembre: numa API, <strong>nunca</strong> se retorna HTML — só dados.</p></div>
+  <article class="ex" id="ex3">
     <div class="ex-head">
-      <span class="ex-num">EX 04</span>
-      <h3>Criando a estrutura</h3>
+      <span class="ex-num">EX 03</span>
+      <h3>GET coleção: a lista de produtos</h3>
       <span class="stars">⭐⭐ médio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex4"> Concluído</label>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex3"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Criar várias subpastas de uma vez.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Dentro do laboratório, crie as pastas Imagens, Documentos e Outros</li><li>Use um for sobre a lista de nomes + <code>os.path.join</code></li><li>Confira com <code>os.path.exists</code> e liste o laboratório de novo</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Pasta Imagens criada ✔
-Pasta Documentos criada ✔
-Pasta Outros criada ✔</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex04.py</span></div><pre class="code">import os
+<span class="tag obj">🎯 Objetivo</span><p>Criar o endpoint que devolve todos os produtos em JSON.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Rota <code>/api/produtos</code> com <code>methods=["GET"]</code></li><li>SELECT no MariaDB, monte uma lista de dicionários (list comprehension — Semana 17)</li><li>Devolva com <code>jsonify(lista)</code></li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">api.py</span></div><pre class="code">from flask import Flask, jsonify
+from db import conectar   # do seu db.py (Semana 26)
 
-pastas = ["Imagens", "Documentos", "Outros"]
+app = Flask(__name__)
 
-for pasta in pastas:
-    caminho = os.path.join("laboratorio", pasta)
-    os.makedirs(caminho, exist_ok=True)
-    if os.path.exists(caminho):
-        print(f"Pasta {pasta} criada ✔")</pre></div></div></details>
+@app.route("/api/produtos", methods=["GET"])
+def listar_produtos():
+    conexao = conectar()
+    cursor = conexao.cursor()
+    cursor.execute("SELECT id, nome, preco, estoque FROM produtos")
+    produtos = [
+        {"id": id, "nome": nome, "preco": float(preco), "estoque": estoque}
+        for id, nome, preco, estoque in cursor.fetchall()
+    ]
+    conexao.close()
+    return jsonify(produtos)
+
+app.run(debug=True)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">[
+  {"id": 1, "nome": "caneca branca", "preco": 25.0, "estoque": 10},
+  {"id": 2, "nome": "caneca preta", "preco": 27.5, "estoque": 8}
+]</pre></div><details class="dica"><summary>💡 float() no DECIMAL</summary><div class="inner">O tipo <code>DECIMAL</code> do MariaDB vira um objeto especial em Python; o <code>float()</code> o converte para um número que o <code>jsonify</code> entende (lembra do mesmo cuidado com o pandas na Semana 20?). Acesse /api/produtos no navegador: JSON puro, pronto para qualquer cliente consumir.</div></details>
     </div>
   </article>
 
-  <article class="ex" id="ex5">
+  <article class="ex" id="ex4">
     <div class="ex-head">
-      <span class="ex-num">EX 05</span>
-      <h3>Renomeando em lote 🏷️</h3>
+      <span class="ex-num">EX 04</span>
+      <h3>GET item: um produto específico (e o 404)</h3>
       <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex5"> Concluído</label>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex4"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Adicionar um prefixo a todos os .txt — o clássico pedido de escritório.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Percorra o laboratório filtrando os .txt</li><li>Para cada um, monte o nome novo: <code>"2026_" + nome</code></li><li>Renomeie com <code>os.rename(caminho_antigo, caminho_novo)</code> — SEMPRE com os caminhos completos via join!</li><li>Liste a pasta para conferir</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">notas.txt → 2026_notas.txt
-rascunho.txt → 2026_rascunho.txt</pre></div><details class="dica"><summary>💡 Cuidado clássico</summary><div class="inner">O rename precisa do CAMINHO completo dos dois lados. Só o nome do arquivo funciona apenas se o script estiver rodando dentro da própria pasta — e aí qualquer descuido renomeia a coisa errada!</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex05.py</span></div><pre class="code">import os
+<span class="tag obj">🎯 Objetivo</span><p>Buscar um produto pelo id — e responder corretamente quando não existe.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Rota <code>/api/produtos/&lt;int:id&gt;</code> (GET)</li><li>SELECT WHERE id = %s; se <code>fetchone()</code> devolver None, o produto não existe</li><li>Nesse caso, retorne um JSON de erro COM o status 404: <code>return jsonify({"erro": "não encontrado"}), 404</code></li></ol><span class="tag saida">✅ Exemplo</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">GET /api/produtos/1  -&gt;  {"id": 1, "nome": "caneca branca", ...}
+GET /api/produtos/999  -&gt;  {"erro": "Produto não encontrado"}  (status 404)</pre></div><details class="dica"><summary>💡 O status code importa</summary><div class="inner">Numa API, o CÓDIGO DE STATUS é tão importante quanto o JSON. O <code>200</code> diz "deu certo"; o <code>404</code> diz "esse recurso não existe". O cliente USA esse número para decidir o que fazer. Retornar 200 com "não encontrado" no texto seria mentir para quem consome a API!</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex04.py</span></div><pre class="code">@app.route("/api/produtos/&lt;int:id&gt;", methods=["GET"])
+def buscar_produto(id):
+    conexao = conectar()
+    cursor = conexao.cursor()
+    cursor.execute("SELECT id, nome, preco, estoque FROM produtos WHERE id = %s", (id,))
+    r = cursor.fetchone()
+    conexao.close()
 
-for nome in os.listdir("laboratorio"):
-    if nome.endswith(".txt"):
-        antigo = os.path.join("laboratorio", nome)
-        novo = os.path.join("laboratorio", "2026_" + nome)
-        os.rename(antigo, novo)
-        print(f"{nome} → 2026_{nome}")</pre></div></div></details>
+    if r is None:
+        return jsonify({"erro": "Produto não encontrado"}), 404
+
+    return jsonify({"id": r[0], "nome": r[1],
+                    "preco": float(r[2]), "estoque": r[3]})</pre></div></div></details>
     </div>
   </article>
 </section>
 
 <section class="parte" id="p3">
-  <div class="parte-head"><span class="num">03</span><h2>shutil: copiar e mover</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>O <code>os</code> organiza; o <code>shutil</code> transporta: <code>shutil.copy(origem, destino)</code> copia (o original fica) e <code>shutil.move(origem, destino)</code> move (o original vai embora). O destino pode ser uma PASTA — o arquivo entra nela com o mesmo nome.</p></div>
+  <div class="parte-head"><span class="num">03</span><h2>POST: criando recursos</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Para CRIAR, o cliente envia os dados no <strong>corpo</strong> da requisição em JSON. No Flask, lemos com <code>request.get_json()</code> (que devolve um dicionário — Semana 5). E ao criar algo com sucesso, o status correto não é 200, e sim <code>201</code> ("Created").</p></div>
+  <article class="ex" id="ex5">
+    <div class="ex-head">
+      <span class="ex-num">EX 05</span>
+      <h3>POST: cadastrar um produto via API</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex5"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Receber JSON, inserir no banco e responder com 201.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Rota <code>/api/produtos</code> com <code>methods=["POST"]</code></li><li>Leia <code>dados = request.get_json()</code> e pegue os campos do dicionário</li><li>INSERT no MariaDB com <code>%s</code> + commit</li><li>Retorne o produto criado (com o novo id) e o status <code>201</code></li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex05_post.py</span></div><pre class="code">from flask import Flask, jsonify, request
+from db import conectar
+
+app = Flask(__name__)
+
+@app.route("/api/produtos", methods=["POST"])
+def criar_produto():
+    dados = request.get_json()
+
+    conexao = conectar()
+    cursor = conexao.cursor()
+    cursor.execute(
+        "INSERT INTO produtos (nome, preco, estoque) VALUES (%s, %s, %s)",
+        (dados["nome"], dados["preco"], dados["estoque"]))
+    conexao.commit()
+    novo_id = cursor.lastrowid   # o id que o banco gerou
+    conexao.close()
+
+    return jsonify({"id": novo_id, **dados}), 201
+
+app.run(debug=True)</pre></div><span class="tag saida">✅ Exemplo</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">POST /api/produtos
+corpo: {"nome": "caneca azul", "preco": 28.0, "estoque": 6}
+resposta (201): {"id": 7, "nome": "caneca azul", "preco": 28.0, "estoque": 6}</pre></div><details class="dica"><summary>💡 lastrowid e o **dados</summary><div class="inner">O <code>cursor.lastrowid</code> devolve o id que o AUTO_INCREMENT acabou de gerar. E o <code>**dados</code> (pesquise "desempacotar dicionário"!) "espalha" os campos do dicionário dentro do novo — um truque elegante para devolver o que foi criado já com o id. O <code>201</code> avisa o cliente: "criei com sucesso".</div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p4">
+  <div class="parte-head"><span class="num">04</span><h2>PUT e DELETE: atualizando e removendo</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Os dois últimos verbos fecham o CRUD. O <code>PUT</code> atualiza (recebe os novos dados no corpo, como o POST); o <code>DELETE</code> remove (só precisa do id na URL). Ambos devem responder <code>404</code> se o recurso não existir.</p></div>
   <article class="ex" id="ex6">
     <div class="ex-head">
       <span class="ex-num">EX 06</span>
-      <h3>Primeira cópia</h3>
+      <h3>PUT: atualizar um produto</h3>
       <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex6"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Copiar um arquivo para outra pasta.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Copie o relatorio.pdf para a pasta Documentos:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex06_copy.py</span></div><pre class="code">import os
-import shutil
+<span class="tag obj">🎯 Objetivo</span><p>Editar um produto existente via API.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Rota <code>/api/produtos/&lt;int:id&gt;</code> com <code>methods=["PUT"]</code></li><li>Leia o corpo com get_json, faça o UPDATE com %s e WHERE id</li><li>Use <code>cursor.rowcount</code> para saber se alguma linha foi alterada — se 0, retorne 404</li></ol><span class="tag saida">✅ Exemplo</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">PUT /api/produtos/1  corpo: {"preco": 31.0}  -&gt;  {"ok": true}  (ou 404)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex06.py</span></div><pre class="code">@app.route("/api/produtos/&lt;int:id&gt;", methods=["PUT"])
+def atualizar_produto(id):
+    dados = request.get_json()
+    conexao = conectar()
+    cursor = conexao.cursor()
+    cursor.execute(
+        "UPDATE produtos SET nome=%s, preco=%s, estoque=%s WHERE id=%s",
+        (dados["nome"], dados["preco"], dados["estoque"], id))
+    conexao.commit()
+    afetadas = cursor.rowcount
+    conexao.close()
 
-origem = os.path.join("laboratorio", "relatorio.pdf")
-destino = os.path.join("laboratorio", "Documentos")
-
-shutil.copy(origem, destino)
-print("Copiado ✔")
-print(os.listdir(destino))</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Copiado ✔
-['relatorio.pdf']</pre></div><details class="dica"><summary>💡 copy vs move</summary><div class="inner">Depois de copiar, o relatorio.pdf existe NOS DOIS lugares. Teste a diferença: troque por <code>shutil.move</code> e veja o original sumir da raiz do laboratório.</div></details>
+    if afetadas == 0:
+        return jsonify({"erro": "Produto não encontrado"}), 404
+    return jsonify({"ok": True, "id": id})</pre></div><p>O <code>rowcount</code> diz quantas linhas o comando mexeu. Zero significa que o WHERE não achou ninguém — ou seja, o id não existe. Daí o 404.</p></div></details>
     </div>
   </article>
 
   <article class="ex" id="ex7">
     <div class="ex-head">
       <span class="ex-num">EX 07</span>
-      <h3>Movendo por extensão</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
+      <h3>DELETE: remover um produto</h3>
+      <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex7"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>O coração do organizador: cada tipo para sua pasta.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Percorra os arquivos da RAIZ do laboratório (pule as pastas! use <code>os.path.isfile</code> ou confira se tem ponto no nome)</li><li>jpg/png → Imagens · pdf/txt/xlsx → Documentos · resto → Outros</li><li>Mova com shutil.move e relate cada movimento</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">foto1.jpg → Imagens
-foto2.png → Imagens
-2026_notas.txt → Documentos
-(...)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex07.py</span></div><pre class="code">import os
-import shutil
+<span class="tag obj">🎯 Objetivo</span><p>Apagar um produto via API, com o status certo.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Rota <code>/api/produtos/&lt;int:id&gt;</code> com <code>methods=["DELETE"]</code></li><li>DELETE WHERE id = %s + commit</li><li>Se <code>rowcount == 0</code>, retorne 404; senão, confirme a remoção</li></ol><span class="tag saida">✅ Exemplo</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">DELETE /api/produtos/7  -&gt;  {"ok": true, "removido": 7}  (ou 404)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex07.py</span></div><pre class="code">@app.route("/api/produtos/&lt;int:id&gt;", methods=["DELETE"])
+def remover_produto(id):
+    conexao = conectar()
+    cursor = conexao.cursor()
+    cursor.execute("DELETE FROM produtos WHERE id = %s", (id,))
+    conexao.commit()
+    afetadas = cursor.rowcount
+    conexao.close()
 
-LAB = "laboratorio"
-
-for nome in os.listdir(LAB):
-    caminho = os.path.join(LAB, nome)
-    if not os.path.isfile(caminho):
-        continue   # pula as pastas!
-
-    if nome.endswith(".jpg") or nome.endswith(".png"):
-        destino = "Imagens"
-    elif nome.endswith(".pdf") or nome.endswith(".txt") or nome.endswith(".xlsx"):
-        destino = "Documentos"
-    else:
-        destino = "Outros"
-
-    shutil.move(caminho, os.path.join(LAB, destino))
-    print(f"{nome} → {destino}")</pre></div><p>O <code>continue</code> da Semana 3 salvando o dia: pastas não devem ser movidas para dentro de pastas! E repare que o <code>os.path.isfile</code> distingue arquivo de pasta.</p></div></details>
-    </div>
-  </article>
-</section>
-
-<section class="parte" id="p4">
-  <div class="parte-head"><span class="num">04</span><h2>Caminhos portáteis e tamanhos</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Dois detalhes de profissional: <code>os.path.join</code> monta caminhos que funcionam em Windows, Linux e Mac (nada de colar "\\" na mão!), e <code>os.path.getsize</code> devolve o tamanho em <strong>bytes</strong> (÷ 1024 = KB).</p></div>
-  <article class="ex" id="ex8">
-    <div class="ex-head">
-      <span class="ex-num">EX 08</span>
-      <h3>Relatório de tamanhos</h3>
-      <span class="stars">⭐⭐ médio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex8"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Medir cada arquivo da pasta Documentos.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Percorra a pasta com listdir</li><li>Para cada arquivo: <code>os.path.getsize(caminho)</code> e converta para KB</li><li>Exiba alinhado e some o total</li></ol><span class="tag saida">✅ Exemplo (tamanhos variam)</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">relatorio.pdf — 0.02 KB
-2026_notas.txt — 0.02 KB
-(...)
-TOTAL: 0.08 KB</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex08.py</span></div><pre class="code">import os
-
-pasta = os.path.join("laboratorio", "Documentos")
-total = 0
-
-for nome in os.listdir(pasta):
-    caminho = os.path.join(pasta, nome)
-    tamanho_kb = os.path.getsize(caminho) / 1024
-    total = total + tamanho_kb
-    print(f"{nome} — {tamanho_kb:.2f} KB")
-
-print(f"TOTAL: {total:.2f} KB")</pre></div></div></details>
+    if afetadas == 0:
+        return jsonify({"erro": "Produto não encontrado"}), 404
+    return jsonify({"ok": True, "removido": id})</pre></div><p>Repare como os quatro verbos sobre o MESMO recurso (/api/produtos) formam um CRUD completo e limpo. Isso é uma API REST bem desenhada.</p></div></details>
     </div>
   </article>
 </section>
 
 <section class="parte" id="p5">
-  <div class="parte-head"><span class="num">05</span><h2>Segurança: o dry run</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>A prática que separa o automatizador confiável do destruidor de pastas: o <strong>dry run</strong> (ensaio). O script primeiro SÓ MOSTRA o que faria; a ação real só roda depois de uma confirmação explícita. Mover arquivo errado dá trabalho; em lote, dá MUITO trabalho.</p></div>
+  <div class="parte-head"><span class="num">05</span><h2>Status, validação, CORS e testes</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Os detalhes que separam uma API amadora de uma profissional: usar os códigos de status certos, validar a entrada e liberar o acesso para o frontend (CORS).</p></div>
+  <article class="ex" id="ex8">
+    <div class="ex-head">
+      <span class="ex-num">EX 08</span>
+      <h3>Os códigos de status essenciais</h3>
+      <span class="stars">⭐ básico</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex8"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Saber qual código usar em cada situação.</p><table><tr><th>Código</th><th>Significado</th><th>Quando usar</th></tr><tr><td><code>200</code></td><td>OK</td><td>GET/PUT/DELETE deu certo</td></tr><tr><td><code>201</code></td><td>Created</td><td>POST criou um recurso</td></tr><tr><td><code>400</code></td><td>Bad Request</td><td>o cliente mandou dados inválidos</td></tr><tr><td><code>404</code></td><td>Not Found</td><td>o recurso não existe</td></tr><tr><td><code>401</code></td><td>Unauthorized</td><td>falta autenticação (Semana 28!)</td></tr></table><span class="tag passos">🧭 Passo a passo</span><ol><li>Para cada caso, qual status? a) criou um produto · b) pediu um id que não existe · c) mandou JSON sem o campo "nome" · d) listou produtos com sucesso</li></ol><details class="dica"><summary>💡 Família dos códigos</summary><div class="inner">Os 2xx = sucesso; os 4xx = erro do CLIENTE (mandou algo errado); os 5xx = erro do SERVIDOR (deu pau no seu código). Usar o código certo é falar a língua universal do HTTP — todo cliente, em qualquer linguagem, entende.</div></details>
+    </div>
+  </article>
+
   <article class="ex" id="ex9">
     <div class="ex-head">
       <span class="ex-num">EX 09</span>
-      <h3>Ensaiando antes de mover 🛡️</h3>
+      <h3>Validação: respondendo 400</h3>
       <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex9"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Adicionar modo simulação ao organizador.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Refaça o Exercício 7 em DUAS passadas:</li><li>Passada 1: só imprime "MOVERIA: x → y" (nenhum move!)</li><li>Pergunte: "Confirmar? (sim/não)" — só execute os moves de verdade no "sim"</li><li>Dica de estrutura: guarde os pares (origem, destino) numa lista na passada 1</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">MOVERIA: foto1.jpg → Imagens
-MOVERIA: musica.mp3 → Outros
-Confirmar? (sim/não): sim
-2 arquivos movidos ✔</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex09.py</span></div><pre class="code">import os
-import shutil
+<span class="tag obj">🎯 Objetivo</span><p>Rejeitar requisições com dados faltando ou inválidos.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>No POST, antes de inserir, verifique se o JSON tem os campos obrigatórios</li><li>Se faltar "nome" (ou o corpo vier vazio), retorne <code>400</code> com uma mensagem clara</li><li>Nunca confie no cliente — a regra de ouro da Semana 23 vale ainda mais numa API pública!</li></ol><span class="tag saida">✅ Exemplo</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">POST /api/produtos  corpo: {"preco": 10}  -&gt;  {"erro": "campo nome é obrigatório"}  (400)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex09.py</span></div><pre class="code">@app.route("/api/produtos", methods=["POST"])
+def criar_produto():
+    dados = request.get_json()
 
-LAB = "laboratorio"
-planos = []
+    if not dados or "nome" not in dados or not str(dados.get("nome", "")).strip():
+        return jsonify({"erro": "campo nome é obrigatório"}), 400
+    try:
+        preco = float(dados["preco"])
+        estoque = int(dados["estoque"])
+    except (KeyError, ValueError, TypeError):
+        return jsonify({"erro": "preco e estoque devem ser números"}), 400
 
-for nome in os.listdir(LAB):
-    caminho = os.path.join(LAB, nome)
-    if not os.path.isfile(caminho):
-        continue
-    if nome.endswith(".jpg") or nome.endswith(".png"):
-        destino = "Imagens"
-    else:
-        destino = "Outros"
-    planos.append((caminho, os.path.join(LAB, destino)))
-    print(f"MOVERIA: {nome} → {destino}")
+    conexao = conectar()
+    cursor = conexao.cursor()
+    cursor.execute(
+        "INSERT INTO produtos (nome, preco, estoque) VALUES (%s, %s, %s)",
+        (dados["nome"].strip(), preco, estoque))
+    conexao.commit()
+    novo_id = cursor.lastrowid
+    conexao.close()
+    return jsonify({"id": novo_id, "nome": dados["nome"].strip(),
+                    "preco": preco, "estoque": estoque}), 201</pre></div></div></details>
+    </div>
+  </article>
 
-if len(planos) == 0:
-    print("Nada a mover.")
-else:
-    resposta = input("Confirmar? (sim/não): ")
-    if resposta == "sim":
-        for origem, destino in planos:
-            shutil.move(origem, destino)
-        print(f"{len(planos)} arquivos movidos ✔")
-    else:
-        print("Operação cancelada — nada foi alterado.")</pre></div><p>Repare na lista de TUPLAS (Semana 5!) guardando os planos e no desempacotamento no for final. Esse padrão "planejar → confirmar → executar" vale para QUALQUER automação perigosa.</p></div></details>
+  <article class="ex" id="ex10">
+    <div class="ex-head">
+      <span class="ex-num">EX 10</span>
+      <h3>CORS: liberando o frontend 🌍</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex10"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Permitir que um frontend em outro endereço consuma a sua API.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Instale: <code>pip install flask-cors</code></li><li>Importe e ative: <code>from flask_cors import CORS</code> e <code>CORS(app)</code></li><li>Pronto — agora um frontend (Semana 29) hospedado em outro endereço pode chamar a API</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex10_cors.py</span></div><pre class="code">from flask import Flask, jsonify
+from flask_cors import CORS
+
+app = Flask(__name__)
+CORS(app)   # libera o acesso de outros endereços (origens)
+
+@app.route("/api/produtos")
+def listar():
+    return jsonify([{"nome": "caneca branca"}])
+
+app.run(debug=True)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(a API agora aceita chamadas vindas de um frontend separado)</pre></div><details class="dica"><summary>💡 Por que CORS existe?</summary><div class="inner">Por segurança, navegadores BLOQUEIAM uma página de um endereço (ex.: seu frontend) de chamar uma API em OUTRO endereço — a menos que a API autorize. O <code>CORS(app)</code> é essa autorização. Sem ele, seu frontend da Semana 29 tomaria erro ao chamar a API. É um detalhe pequeno que trava MUITO iniciante — agora você já sabe!</div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex11">
+    <div class="ex-head">
+      <span class="ex-num">EX 11</span>
+      <h3>Testando a API com requests 🧪</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex11"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Consumir a própria API por um cliente Python — o ciclo completo.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Com a API rodando num terminal, abra OUTRO e use o <code>requests</code> (Semana 15)</li><li>Teste o GET (listar) e o POST (criar) — note o uso de <code>json=</code> no POST</li><li>Confira o <code>.status_code</code> de cada resposta</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">GET status: 200
+Produtos: 3
+POST status: 201
+Criado: {'id': 8, 'nome': 'caneca teste', ...}</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">testar_api.py</span></div><pre class="code">import requests
+
+BASE = "http://localhost:5000/api/produtos"
+
+# GET (listar)
+r = requests.get(BASE, timeout=5)
+print("GET status:", r.status_code)
+print("Produtos:", len(r.json()))
+
+# POST (criar)
+novo = {"nome": "caneca teste", "preco": 22.0, "estoque": 5}
+r = requests.post(BASE, json=novo, timeout=5)
+print("POST status:", r.status_code)
+print("Criado:", r.json())</pre></div><p>Cliente (requests) e servidor (sua API REST), os dois em Python, conversando em JSON via HTTP. É exatamente o que o frontend da Semana 29 fará — só que em JavaScript. Você está testando a API como um profissional.</p></div></details>
     </div>
   </article>
 </section>
@@ -515,110 +534,92 @@ else:
 <section class="parte" id="p6">
   <div class="parte-head"><span class="num">06</span><h2>Projetos da semana: juntando tudo!</h2></div>
 
-  <article class="ex" id="ex10">
-    <div class="ex-head">
-      <span class="ex-num">EX 10</span>
-      <h3>Projeto: Organizador de Downloads 🗂️</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex10"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>O organizador definitivo, com dicionário de regras e dry run.</p><span class="tag passos">🧭 Requisitos</span><ol><li>Regras num dicionário: <code>{"Imagens": [".jpg", ".png", ".gif"], "Documentos": [".pdf", ".docx", ".txt", ".xlsx"], "Musicas": [".mp3"]}</code> — extensão fora das regras vai para "Outros"</li><li>Crie as pastas necessárias (makedirs exist_ok)</li><li>Dry run completo + confirmação + execução</li><li>TREINE NO LABORATÓRIO! Só aponte para a pasta Downloads real quando estiver 100% confiante</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">MOVERIA: foto_ferias.jpg → Imagens
-MOVERIA: boleto.pdf → Documentos
-Confirmar? (sim/não): sim
-2 arquivos organizados ✔</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex10.py</span></div><pre class="code">import os
-import shutil
-
-PASTA = "laboratorio"   # troque para sua pasta real SÓ quando dominar!
-
-REGRAS = {
-    "Imagens": [".jpg", ".png", ".gif"],
-    "Documentos": [".pdf", ".docx", ".txt", ".xlsx"],
-    "Musicas": [".mp3"]
-}
-
-def descobrir_destino(nome):
-    for pasta, extensoes in REGRAS.items():
-        for ext in extensoes:
-            if nome.endswith(ext):
-                return pasta
-    return "Outros"
-
-planos = []
-for nome in os.listdir(PASTA):
-    caminho = os.path.join(PASTA, nome)
-    if not os.path.isfile(caminho):
-        continue
-    destino = descobrir_destino(nome)
-    planos.append((caminho, destino))
-    print(f"MOVERIA: {nome} → {destino}")
-
-if planos and input("Confirmar? (sim/não): ") == "sim":
-    for origem, destino in planos:
-        os.makedirs(os.path.join(PASTA, destino), exist_ok=True)
-        shutil.move(origem, os.path.join(PASTA, destino))
-    print(f"{len(planos)} arquivos organizados ✔")</pre></div></div></details>
-    </div>
-  </article>
-
-  <article class="ex" id="ex11">
-    <div class="ex-head">
-      <span class="ex-num">EX 11</span>
-      <h3>Projeto: Backup com data 💾</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex11"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Cópia de segurança automática da pasta inteira, carimbada com datetime.</p><span class="tag passos">🧭 Passo a passo</span><ol><li><code>shutil.copytree(origem, destino)</code> copia uma PASTA inteira (com subpastas!)</li><li>O nome do destino leva a data: <code>datetime.now().strftime("backup_%Y-%m-%d_%H-%M")</code></li><li>Faça o backup do laboratório e rode duas vezes — dois backups, cada um com seu horário!</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Backup criado: backup_2026-06-12_15-30 ✔</pre></div><details class="dica"><summary>💡 Por que ano-mês-dia?</summary><div class="inner">No formato %Y-%m-%d, a ordem ALFABÉTICA das pastas é também a ordem CRONOLÓGICA — seus backups se organizam sozinhos na listagem!</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex11.py</span></div><pre class="code">import shutil
-from datetime import datetime
-
-nome = datetime.now().strftime("backup_%Y-%m-%d_%H-%M")
-shutil.copytree("laboratorio", nome)
-print(f"Backup criado: {nome} ✔")</pre></div></div></details>
-    </div>
-  </article>
-
   <article class="ex" id="ex12">
     <div class="ex-head">
       <span class="ex-num">EX 12</span>
-      <h3>Projeto bônus: Raio-X da pasta 🔬</h3>
+      <h3>Projeto: a API REST completa da Tua Caneca 🌐</h3>
       <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex12"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Um relatório completo da pasta, gravado em CSV (olá, Semana 13!) — sem código pronto.</p><span class="tag passos">🧭 Roteiro</span><ol><li>Percorra o laboratório (e subpastas, se quiser ousar com <code>os.walk</code> — pesquise!)</li><li>Para cada arquivo: nome, extensão, tamanho em KB</li><li>Grave tudo em <code>raio_x.csv</code> com DictWriter</li><li>No final, exiba: total de arquivos, tamanho total e o MAIOR arquivo (padrão maior/menor da Semana 3!)</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">raio_x.csv gerado: 7 arquivos, 0.14 KB no total
-Maior arquivo: planilha.xlsx (0.02 KB)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex12.py</span></div><pre class="code">import os
-import csv
+<span class="tag obj">🎯 Objetivo</span><p>Uma API REST profissional de produtos, sobre o MariaDB, com os 4 verbos.</p><span class="tag passos">🧭 Requisitos</span><ol><li>Endpoints: <code>GET /api/produtos</code> (lista), <code>GET /api/produtos/&lt;id&gt;</code> (item), <code>POST</code> (cria), <code>PUT /api/produtos/&lt;id&gt;</code> (atualiza), <code>DELETE /api/produtos/&lt;id&gt;</code> (remove)</li><li>Todos sobre o MariaDB (Semana 26), com %s e validação</li><li>Códigos de status corretos (200, 201, 400, 404) e CORS habilitado</li><li>Teste TODOS os verbos com o requests do exercício anterior</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(uma API REST completa: lista, busca, cria, atualiza e remove — tudo em JSON)</pre></div><details class="dica"><summary>💡 Isso é um backend de verdade</summary><div class="inner">O que você construiu — uma API REST com CRUD, validação, status codes e CORS sobre um banco MariaDB — é literalmente o backend de incontáveis sistemas reais. Apps de celular, sites, integrações: todos conversam com APIs assim. Coloque no GitHub com um bom README listando os endpoints. É portfólio de peso. 🏆</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">api.py</span></div><pre class="code">from flask import Flask, jsonify, request
+from flask_cors import CORS
+from db import conectar   # Semana 26
 
-PASTA = "laboratorio"
+app = Flask(__name__)
+CORS(app)
 
-linhas = []
-for nome in os.listdir(PASTA):
-    caminho = os.path.join(PASTA, nome)
-    if os.path.isfile(caminho):
-        linhas.append({
-            "nome": nome,
-            "extensao": nome.split(".")[-1],
-            "kb": round(os.path.getsize(caminho) / 1024, 2)
-        })
+def produto_para_dict(linha):
+    return {"id": linha[0], "nome": linha[1],
+            "preco": float(linha[2]), "estoque": linha[3]}
 
-with open("raio_x.csv", "w", newline="", encoding="utf-8") as arquivo:
-    escritor = csv.DictWriter(arquivo, fieldnames=["nome", "extensao", "kb"])
-    escritor.writeheader()
-    for linha in linhas:
-        escritor.writerow(linha)
+@app.route("/api/produtos", methods=["GET"])
+def listar():
+    con = conectar(); cur = con.cursor()
+    cur.execute("SELECT id, nome, preco, estoque FROM produtos")
+    lista = [produto_para_dict(l) for l in cur.fetchall()]
+    con.close()
+    return jsonify(lista)
 
-total_kb = 0
-maior_nome = ""
-maior_kb = 0
-for linha in linhas:
-    total_kb = total_kb + linha["kb"]
-    if linha["kb"] &gt; maior_kb:
-        maior_kb = linha["kb"]
-        maior_nome = linha["nome"]
+@app.route("/api/produtos/&lt;int:id&gt;", methods=["GET"])
+def buscar(id):
+    con = conectar(); cur = con.cursor()
+    cur.execute("SELECT id, nome, preco, estoque FROM produtos WHERE id=%s", (id,))
+    r = cur.fetchone(); con.close()
+    if r is None:
+        return jsonify({"erro": "Produto não encontrado"}), 404
+    return jsonify(produto_para_dict(r))
 
-print(f"raio_x.csv gerado: {len(linhas)} arquivos, {total_kb:.2f} KB no total")
-print(f"Maior arquivo: {maior_nome} ({maior_kb} KB)")</pre></div></div></details>
+@app.route("/api/produtos", methods=["POST"])
+def criar():
+    d = request.get_json()
+    if not d or not str(d.get("nome", "")).strip():
+        return jsonify({"erro": "campo nome é obrigatório"}), 400
+    try:
+        preco, estoque = float(d["preco"]), int(d["estoque"])
+    except (KeyError, ValueError, TypeError):
+        return jsonify({"erro": "preco e estoque devem ser números"}), 400
+    con = conectar(); cur = con.cursor()
+    cur.execute("INSERT INTO produtos (nome, preco, estoque) VALUES (%s, %s, %s)",
+                (d["nome"].strip(), preco, estoque))
+    con.commit(); novo_id = cur.lastrowid; con.close()
+    return jsonify({"id": novo_id, "nome": d["nome"].strip(),
+                    "preco": preco, "estoque": estoque}), 201
+
+@app.route("/api/produtos/&lt;int:id&gt;", methods=["PUT"])
+def atualizar(id):
+    d = request.get_json()
+    con = conectar(); cur = con.cursor()
+    cur.execute("UPDATE produtos SET nome=%s, preco=%s, estoque=%s WHERE id=%s",
+                (d["nome"], float(d["preco"]), int(d["estoque"]), id))
+    con.commit(); afetadas = cur.rowcount; con.close()
+    if afetadas == 0:
+        return jsonify({"erro": "Produto não encontrado"}), 404
+    return jsonify({"ok": True, "id": id})
+
+@app.route("/api/produtos/&lt;int:id&gt;", methods=["DELETE"])
+def remover(id):
+    con = conectar(); cur = con.cursor()
+    cur.execute("DELETE FROM produtos WHERE id=%s", (id,))
+    con.commit(); afetadas = cur.rowcount; con.close()
+    if afetadas == 0:
+        return jsonify({"erro": "Produto não encontrado"}), 404
+    return jsonify({"ok": True, "removido": id})
+
+app.run(debug=True)</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex13">
+    <div class="ex-head">
+      <span class="ex-num">EX 13</span>
+      <h3>Projeto bônus: API de vendas e relatório 📊</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex13"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Estender a API com vendas e um relatório agregado (sem código pronto!).</p><span class="tag passos">🧭 Roteiro</span><ol><li><code>POST /api/vendas</code>: recebe {produto_id, qtd}, confere o estoque, dá baixa (UPDATE) e registra a venda (INSERT) — tudo numa transação</li><li>Responda 400 se faltar estoque, 404 se o produto não existir, 201 se vender</li><li><code>GET /api/relatorio</code>: um GROUP BY (Semana 22) devolvendo o total vendido por produto, em JSON</li><li>Teste com requests, enviando vendas e consultando o relatório</li></ol><span class="tag saida">✅ Exemplo</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">POST /api/vendas {"produto_id": 1, "qtd": 3} -&gt; 201
+GET /api/relatorio -&gt; [{"produto": "caneca branca", "total_vendido": 3}, ...]</pre></div><details class="dica"><summary>💡 Empurrãozinho</summary><div class="inner">A lógica de venda você domina desde a Semana 22 (SELECT estoque → valida → UPDATE + INSERT). O novo aqui é "vestir" essa lógica como endpoints REST com os status certos. E o relatório é o seu velho GROUP BY devolvido como JSON em vez de impresso. Combinar o que já sabe em formato novo — a essência do desenvolvimento. 😉</div></details>
     </div>
   </article>
 </section>
@@ -626,29 +627,29 @@ print(f"Maior arquivo: {maior_nome} ({maior_kb} KB)")</pre></div></div></details
 <div class="checklist" id="checklist">
   <h2>✅ Checklist de fim de semana</h2>
   <p>Antes de seguir para a próxima semana, confirme que você consegue:</p>
-<label class="check-item"><input type="checkbox"><span>Descobrir a pasta atual com os.getcwd() e listar com os.listdir()</span></label>
-<label class="check-item"><input type="checkbox"><span>Filtrar arquivos por extensão com endswith()</span></label>
-<label class="check-item"><input type="checkbox"><span>Criar pastas com os.makedirs(exist_ok=True)</span></label>
-<label class="check-item"><input type="checkbox"><span>Verificar existência com os.path.exists()</span></label>
-<label class="check-item"><input type="checkbox"><span>Renomear arquivos em lote com os.rename()</span></label>
-<label class="check-item"><input type="checkbox"><span>Copiar com shutil.copy() e mover com shutil.move()</span></label>
-<label class="check-item"><input type="checkbox"><span>Montar caminhos portáteis com os.path.join()</span></label>
-<label class="check-item"><input type="checkbox"><span>Medir tamanhos com os.path.getsize()</span></label>
-<label class="check-item"><input type="checkbox"><span>Fazer um "dry run" (simulação) antes de executar de verdade</span></label>
-<label class="check-item"><input type="checkbox"><span>Criar um backup com data no nome usando copytree</span></label>
+<label class="check-item"><input type="checkbox"><span>Explicar o que é uma API REST e o conceito de recurso</span></label>
+<label class="check-item"><input type="checkbox"><span>Diferenciar arquitetura monolítica de desacoplada (API + frontend)</span></label>
+<label class="check-item"><input type="checkbox"><span>Mapear o CRUD aos verbos HTTP (GET, POST, PUT, DELETE)</span></label>
+<label class="check-item"><input type="checkbox"><span>Retornar JSON com jsonify (e nunca HTML numa API)</span></label>
+<label class="check-item"><input type="checkbox"><span>Ler o corpo JSON da requisição com request.get_json()</span></label>
+<label class="check-item"><input type="checkbox"><span>Usar os códigos de status certos (200, 201, 400, 404)</span></label>
+<label class="check-item"><input type="checkbox"><span>Criar endpoints de coleção (/api/produtos) e de item (/api/produtos/&lt;id&gt;)</span></label>
+<label class="check-item"><input type="checkbox"><span>Validar a entrada e responder 400 quando faltarem dados</span></label>
+<label class="check-item"><input type="checkbox"><span>Habilitar CORS para um frontend externo consumir a API</span></label>
+<label class="check-item"><input type="checkbox"><span>Testar a API com um cliente Python (requests)</span></label>
 </div>
 
 <div class="win-banner" id="winBanner">
-  <h2>🏆 SEMANA 14 COMPLETA!</h2>
-  <p>Você concluiu todos os exercícios. As tarefas repetitivas do computador agora são problema do Python!</p>
+  <h2>🏆 SEMANA 27 COMPLETA!</h2>
+  <p>Você concluiu todos os exercícios. Você construiu uma API REST de verdade — o backend desacoplado que sustenta apps web, mobile e integrações no mundo todo!</p>
 </div>
 
 <div class="preview-s2">
-<h2>📅 Prévia da Semana 15</h2><p>Na próxima semana: <strong>Python e a internet</strong>! A biblioteca <code>requests</code> para consumir <strong>APIs</strong> de verdade: consultar CEP no ViaCEP, cotação do dólar ao vivo e construir sistemas que conversam com o mundo. 🌐</p></div>
+<h2>📅 Prévia da Semana 28</h2><p>Sua API está aberta para qualquer um... e isso é um problema! Na próxima semana: <strong>autenticação com JWT</strong>. Senhas guardadas com segurança (nunca em texto puro!), um endpoint de <strong>login</strong> que devolve um <strong>token</strong>, e rotas protegidas que só respondem a quem está autenticado. A sua API ganha um porteiro. 🔐</p></div>
 
 </main>
 
-<footer>python_para_iniciantes // semana_14 // exercícios guiados</footer>
+<footer>python_para_iniciantes // semana_27 // exercícios guiados</footer>
 
 <script>
 // ===== Syntax highlight leve para Python =====
@@ -660,7 +661,7 @@ print(f"Maior arquivo: {maior_nome} ({maior_kb} KB)")</pre></div></div></details
     src = src.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     // uma passada só, com alternação (comentário | string | builtin | bool | número)
     src = src.replace(
-      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|insert|int|float|str|len|range|type|abs|round|max|min|sum|sorted|sort|reverse|append|remove|split|strip|upper|lower|replace|title|randint|random|get|keys|values|items|open|readlines|read|write|close|count|index|pop|update|list|dict|tuple|enumerate|sqrt|floor|ceil|choice|shuffle|sample|sleep|now|today|strftime|dumps|dump|loads|load|isinstance|datetime|date|DictReader|DictWriter|writerows|writerow|writeheader|writer|reader|csv|Workbook|load_workbook|save|iter_rows|Font|listdir|makedirs|getcwd|rename|exists|getsize|splitext|join|endswith|startswith|copytree|copy|move|requests|status_code|json)\b|\b(True|False|None|if|elif|else|while|for|in|and|or|not|break|continue|import|from|def|return|try|except|finally|with|as|del|global|pass|class|self|super|lambda)\b|(\b\d+(?:\.\d+)?\b)/g,
+      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|insert|int|float|str|len|range|type|abs|round|max|min|sum|sorted|sort|reverse|append|remove|split|strip|upper|lower|replace|title|randint|random|get|keys|values|items|open|readlines|read|write|close|count|index|pop|update|list|dict|tuple|enumerate|sqrt|floor|ceil|choice|shuffle|sample|sleep|now|today|strftime|dumps|dump|loads|load|isinstance|datetime|date|DictReader|DictWriter|writerows|writerow|writeheader|writer|reader|csv|Workbook|load_workbook|save|iter_rows|Font|listdir|makedirs|getcwd|rename|exists|getsize|splitext|join|endswith|startswith|copytree|copy|move|requests|status_code|json|DataFrame|read_csv|read_excel|to_excel|to_csv|head|describe|groupby|sort_values|value_counts|mean|idxmax|bar|barh|pie|plot|savefig|show|title|xlabel|ylabel|figure|legend|axhline|tight_layout|close|Flask|route|run|render_template|jsonify|redirect|request|connect|cursor|execute|executemany|fetchall|fetchone|commit|environ|getenv|post|encode|decode|abort|make_response)\b|\b(True|False|None|if|elif|else|while|for|in|and|or|not|break|continue|import|from|def|return|try|except|finally|with|as|del|global|pass|class|self|super|lambda)\b|(\b\d+(?:\.\d+)?\b)/g,
       function(m, com, str, fn, bool, num){
         if(com)  return '<span class="tk-com">'+com+'</span>';
         if(str)  return '<span class="tk-str">'+str+'</span>';
@@ -679,7 +680,7 @@ print(f"Maior arquivo: {maior_nome} ({maior_kb} KB)")</pre></div></div></details
 // no navegador. Se o localStorage estiver indisponível (modo restrito,
 // pré-visualização, etc.), o progresso funciona só em memória, sem quebrar.
 const storage = (function(){
-  const KEY = 'python_semana14_progresso';
+  const KEY = 'python_semana27_progresso';
   let memoria = {};
   let disponivel = false;
   try{
@@ -728,8 +729,8 @@ const storage = (function(){
     [1,  'Boa! Continue assim 💪'],
     [4,  'Pegando o ritmo! 🔥'],
     [6, 'Metade do caminho! 🚀'],
-    [9, 'Quase lá... força! ⚡'],
-    [12, 'SEMANA COMPLETA! 🏆']
+    [10, 'Quase lá... força! ⚡'],
+    [13, 'SEMANA COMPLETA! 🏆']
   ];
 
   function estadoAtual(){

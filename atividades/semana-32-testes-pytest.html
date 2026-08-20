@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Semana 7 — Erros e Arquivos</title>
+<title>Semana 32 — Testes com pytest</title>
 <style>
   :root{
     --ink:#16243A;
@@ -57,7 +57,7 @@
     color:#fff;padding:56px 20px 48px;text-align:center;position:relative;overflow:hidden;
   }
   header.hero::before{
-    content:"try  except  open(  with  as  .write(  .read(";
+    content:"pytest  assert  test_  raises  test_client";
     position:absolute;inset:auto 0 8px 0;font-family:var(--mono);font-size:.78rem;
     color:rgba(255,255,255,.14);letter-spacing:.4em;white-space:nowrap;overflow:hidden;
   }
@@ -234,310 +234,257 @@
 <div class="progress-wrap" role="region" aria-label="Progresso da semana">
   <span class="label">XP DA SEMANA</span>
   <div class="progress-bar"><div class="progress-fill" id="pfill"></div></div>
-  <span class="progress-count" id="pcount">0 / 16</span>
+  <span class="progress-count" id="pcount">0 / 11</span>
   <span class="progress-msg" id="pmsg">Marque os exercícios concluídos ✔</span>
   <button class="reset-btn" id="resetBtn" title="Apagar todo o progresso salvo">↺ Resetar</button>
 </div>
 
 <header class="hero">
   <div class="kicker">Python para Iniciantes · Exercícios Guiados</div>
-  <h1>SEMANA 7 — Erros e Arquivos:<br>programas à prova de tudo<span class="cursor" aria-hidden="true"></span></h1>
-  <p class="sub">Programas que não quebram (try/except) e dados que sobrevivem ao fechamento: gravar e ler arquivos .txt, processar dados linha a linha e o "CSV caseiro".</p>
+  <h1>SEMANA 32 — pytest:<br>a rede de segurança do código<span class="cursor" aria-hidden="true"></span></h1>
+  <p class="sub">Como garantir que a mudança de hoje não quebra o que funcionava ontem? Testes automatizados: assert, o pytest, casos extremos, exceções esperadas e até a sua API Flask testada de ponta a ponta — sem subir servidor.</p>
   <div class="howto">
     <strong>Como usar:</strong> digite o código você mesmo (não copie e cole!), compare com a saída esperada e marque <strong>✔ Concluído</strong> em cada exercício para encher sua barra de XP. As <strong>dicas</strong> e <strong>soluções</strong> ficam escondidas — só abra depois de tentar! Seu progresso fica salvo no navegador.
   </div>
 </header>
 
-<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · try / except</a><a href="#p2">2 · Gravando</a><a href="#p3">3 · Lendo</a><a href="#p4">4 · Processando</a><a href="#p5">5 · Funções + arquivos</a><a href="#p6">6 · Projetos</a><a href="#checklist">✅ Checklist</a></nav>
+<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · Por que testar</a><a href="#p2">2 · pytest</a><a href="#p3">3 · Casos extremos</a><a href="#p4">4 · Exceções & parametrize</a><a href="#p5">5 · Testando a API</a><a href="#p6">6 · Projetos</a><a href="#checklist">✅ Checklist</a></nav>
 
 <main>
 
 <section class="parte" id="p1">
-  <div class="parte-head"><span class="num">01</span><h2>try / except: errar sem quebrar</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Até hoje, um erro = programa morto. Mas erros têm nome e podem ser <strong>capturados</strong>:</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">estrutura.py</span></div><pre class="code">try:
-    # código que PODE dar erro
-    numero = int(input("Número: "))
-except ValueError:
-    # plano B se o erro acontecer
-    print("Isso não é um número!")</pre></div><p>Se tudo der certo, o except é ignorado. Se o erro estourar, o Python pula para o plano B em vez de quebrar. Profissionais chamam isso de <strong>programação defensiva</strong>.</p></div>
+  <div class="parte-head"><span class="num">01</span><h2>Por que testar? (e o assert)</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Seu sistema tem banco, API, JWT, frontend... e a cada mudança, você testa TUDO de novo na mão? Clicando, olhando, conferindo? Isso não escala. <strong>Testes automatizados</strong> são programas que testam seu programa: rodam em segundos, não esquecem nenhum caso e gritam na hora que algo quebra.</p><p>A peça básica é o <code>assert</code>: ele afirma que algo é verdade — e explode se não for.</p></div>
   <article class="ex" id="ex1">
     <div class="ex-head">
       <span class="ex-num">EX 01</span>
-      <h3>Colecionador de erros 🐛</h3>
+      <h3>Conhecendo o assert 💥</h3>
       <span class="stars">⭐ básico</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex1"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Conhecer os 3 erros mais comuns de execução pelo nome.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Execute UMA linha por vez (comente as outras com #)</li><li>Para cada uma, anote o NOME do erro (última linha do traceback)</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex01_erros.py</span></div><pre class="code">print(int("abc"))      # erro 1
-print(10 / 0)          # erro 2
-print("2" + 2)         # erro 3</pre></div><span class="tag saida">✅ Os três erros</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">ValueError: invalid literal for int() ...
-ZeroDivisionError: division by zero
-TypeError: can only concatenate str ...</pre></div><details class="dica"><summary>💡 Como ler um traceback</summary><div class="inner">Vá direto para a ÚLTIMA linha: ela tem o tipo do erro e a explicação. As linhas de cima mostram ONDE (arquivo e linha) ele aconteceu. Traceback não é bronca — é um mapa do tesouro! 🗺️</div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Entender a peça fundamental de todo teste.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>O <code>assert condicao</code> não faz nada se a condição for True... e levanta <code>AssertionError</code> se for False</li><li>PREVEJA o que acontece em cada linha, depois execute:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex01_assert.py</span></div><pre class="code">def calcular_total(preco, qtd):
+    return preco * qtd
+
+assert calcular_total(10, 3) == 30
+print("Primeiro assert passou!")
+
+assert calcular_total(25.0, 2) == 50.0
+print("Segundo assert passou!")
+
+assert calcular_total(10, 0) == 999   # essa afirmação é falsa!
+print("Você nunca verá esta linha.")</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Primeiro assert passou!
+Segundo assert passou!
+Traceback (most recent call last):
+  ...
+AssertionError</pre></div><details class="dica"><summary>💡 Afirmar, não perguntar</summary><div class="inner">O <code>assert</code> é uma AFIRMAÇÃO: "isto É verdade". Se for, silêncio (bom sinal!); se não for, erro na cara. Um teste é só um conjunto de afirmações sobre como seu código DEVE se comportar. Simples assim — e poderoso assim.</div></details>
     </div>
   </article>
 
   <article class="ex" id="ex2">
     <div class="ex-head">
       <span class="ex-num">EX 02</span>
-      <h3>Primeira rede de proteção</h3>
-      <span class="stars">⭐⭐ médio</span>
+      <h3>O custo do bug tardio 🐛💸</h3>
+      <span class="stars">⭐ básico</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex2"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Capturar um ValueError.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Digite e execute respondendo "abc" e depois um número de verdade:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex02_try.py</span></div><pre class="code">try:
-    numero = int(input("Digite um número: "))
-    print(f"O dobro é {numero * 2}")
-except ValueError:
-    print("Isso não é um número válido!")</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Digite um número: abc
-Isso não é um número válido!</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner">Repare que o print do dobro está DENTRO do try: se a conversão falhar, ele nem tenta executar — vai direto para o except.</div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Entender POR QUE empresas levam testes tão a sério.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Reflita sobre o mesmo bug (o desconto que calcula errado) descoberto em três momentos:</li><li>a) Pelo SEU teste, 10 segundos depois de escrever a função</li><li>b) Pelo colega, uma semana depois, ao usar sua função no módulo dele</li><li>c) Pelo CLIENTE, um mês depois, cobrado errado na loja</li></ol><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><p><strong>a)</strong> Custo: 2 minutos — você corrige na hora, com o contexto fresco. <strong>b)</strong> Custo: horas — o colega investiga, te aciona, vocês depuram juntos. <strong>c)</strong> Custo: enorme — cliente irritado, reembolsos, reputação, e o bug está enterrado sob um mês de mudanças. <strong>A regra da indústria: quanto mais tarde o bug aparece, mais caro ele fica</strong> (às vezes 100x). Testes automatizados puxam a descoberta para o momento mais barato: agora. É por isso que vagas pedem "experiência com testes" — é dinheiro puro.</p></div></details>
     </div>
   </article>
+</section>
 
+<section class="parte" id="p2">
+  <div class="parte-head"><span class="num">02</span><h2>pytest: o padrão do mercado</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>O <strong>pytest</strong> (<code>pip install pytest</code>) organiza e roda seus asserts. As convenções: testes vivem em arquivos <code>test_*.py</code>, dentro de funções <code>def test_*()</code>. Aí você digita <code>pytest</code> no terminal e ele encontra e roda TUDO sozinho, com um relatório colorido no final.</p></div>
   <article class="ex" id="ex3">
     <div class="ex-head">
       <span class="ex-num">EX 03</span>
-      <h3>Um plano B para cada erro</h3>
+      <h3>Seu primeiro arquivo de testes ✅</h3>
       <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex3"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Tratar erros diferentes com mensagens diferentes.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Monte uma divisão de dois números pedidos ao usuário</li><li>Use DOIS excepts: um para <code>ValueError</code> (texto em vez de número) e outro para <code>ZeroDivisionError</code></li><li>Teste os dois caminhos!</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Dividendo: 10
-Divisor: 0
-Não dá para dividir por zero!</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex03.py</span></div><pre class="code">try:
-    a = float(input("Dividendo: "))
-    b = float(input("Divisor: "))
-    print(f"Resultado: {a / b}")
-except ValueError:
-    print("Digite apenas números!")
-except ZeroDivisionError:
-    print("Não dá para dividir por zero!")</pre></div></div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Criar e rodar uma suíte pytest de verdade.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie <code>loja.py</code> com a função <code>calcular_total</code> (com desconto de 10% acima de 100)</li><li>Crie <code>test_loja.py</code> com funções test_* que a verificam</li><li>Rode <code>pytest</code> no terminal (na mesma pasta)</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">loja.py</span></div><pre class="code">def calcular_total(preco, qtd):
+    total = preco * qtd
+    if total &gt; 100:
+        total = total * 0.9   # 10% de desconto
+    return round(total, 2)</pre></div><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">test_loja.py</span></div><pre class="code">from loja import calcular_total
+
+def test_total_simples():
+    assert calcular_total(10, 3) == 30
+
+def test_desconto_acima_de_100():
+    assert calcular_total(60, 2) == 108.0   # 120 - 10%
+
+def test_sem_desconto_no_limite():
+    assert calcular_total(50, 2) == 100     # 100 nao ganha desconto</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">$ pytest
+========================= test session starts =========================
+collected 3 items
+
+test_loja.py ...                                                 [100%]
+========================== 3 passed in 0.02s ==========================</pre></div><details class="dica"><summary>💡 Os três pontinhos</summary><div class="inner">Cada <code>.</code> é um teste que passou; um <code>F</code> seria uma falha. O pytest ACHOU seus testes sozinho (pela convenção test_) e rodou todos. A partir de agora, "rodar os testes" é um comando de 6 letras — sem desculpa para pular!</div></details>
     </div>
   </article>
 
   <article class="ex" id="ex4">
     <div class="ex-head">
       <span class="ex-num">EX 04</span>
-      <h3>A entrada blindada 🛡️</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
+      <h3>Vendo um teste FALHAR (de propósito) 🔴</h3>
+      <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex4"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Criar a função mais útil da sua caixa de ferramentas: pedir_inteiro().</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Junte 3 semanas numa função: loop (S3) + função com return (S6) + try/except (S7)</li><li>A função insiste até receber um inteiro válido — e RETORNA ele</li><li>Quem chama tem garantia de receber um número!</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Sua idade: vinte
-Digite um número inteiro!
-Sua idade: 35
-Idade registrada: 35</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex04.py</span></div><pre class="code">def pedir_inteiro(mensagem):
-    while True:
-        try:
-            return int(input(mensagem))
-        except ValueError:
-            print("Digite um número inteiro!")
+<span class="tag obj">🎯 Objetivo</span><p>Aprender a ler o relatório de falha — a habilidade que faz o teste valer.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Quebre a função de propósito: mude o desconto de <code>0.9</code> para <code>0.8</code></li><li>Rode <code>pytest</code> e LEIA a falha com calma:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output" style="color:#FF9B94">$ pytest
+test_loja.py .F.                                                 [100%]
+============================== FAILURES ===============================
+______________________ test_desconto_acima_de_100 _____________________
 
-idade = pedir_inteiro("Sua idade: ")
-print(f"Idade registrada: {idade}")</pre></div><p>Guarde essa função com carinho — ela volta no projeto final! O <code>return</code> dentro do try encerra o loop E a função de uma vez quando dá certo.</p></div></details>
-    </div>
-  </article>
-</section>
+    def test_desconto_acima_de_100():
+&gt;       assert calcular_total(60, 2) == 108.0
+E       assert 96.0 == 108.0
 
-<section class="parte" id="p2">
-  <div class="parte-head"><span class="num">02</span><h2>Gravando arquivos</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Tudo que seus programas fizeram até hoje EVAPORA quando eles fecham. Arquivos resolvem isso:</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">estrutura.py</span></div><pre class="code">with open("dados.txt", "w", encoding="utf-8") as arquivo:
-    arquivo.write("primeira linha\n")</pre></div><p>Os modos: <code>"w"</code> (write) cria o arquivo — e <strong>APAGA</strong> se já existir! <code>"a"</code> (append) acrescenta no final sem apagar. O <code>with</code> fecha o arquivo sozinho ao terminar (sempre use!). E o <code>\n</code> quebra a linha — o write não quebra sozinho como o print.</p></div>
-  <article class="ex" id="ex5">
-    <div class="ex-head">
-      <span class="ex-num">EX 05</span>
-      <h3>Primeiro arquivo 📄</h3>
-      <span class="stars">⭐⭐ médio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex5"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Criar um arquivo de texto com Python.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Digite e execute:</li><li>Depois, abra a pasta do seu script e procure o <code>ola.txt</code> — abra no Bloco de Notas!</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex05_gravar.py</span></div><pre class="code">with open("ola.txt", "w", encoding="utf-8") as arquivo:
-    arquivo.write("Meu primeiro arquivo!\n")
-    arquivo.write("Criado com Python.\n")
-
-print("Arquivo gravado! Vá conferir na pasta.")</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Arquivo gravado! Vá conferir na pasta.</pre></div><details class="dica"><summary>💡 Experimento importante</summary><div class="inner">Rode o programa DUAS vezes e abra o arquivo: continua com 2 linhas, não 4! O modo "w" recomeça do zero a cada execução. Guarde isso para o próximo exercício...</div></details>
-    </div>
-  </article>
-
-  <article class="ex" id="ex6">
-    <div class="ex-head">
-      <span class="ex-num">EX 06</span>
-      <h3>Diário de bordo (modo "a") 📓</h3>
-      <span class="stars">⭐⭐ médio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex6"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Acrescentar sem apagar.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Peça uma frase ao usuário e grave em <code>diario.txt</code> com o modo <code>"a"</code></li><li>Rode o programa 3 vezes com frases diferentes</li><li>Abra o arquivo: as 3 frases estão lá! ✔</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Como foi seu dia? Aprendi a gravar arquivos!
-Registrado no diário ✔</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex06.py</span></div><pre class="code">frase = input("Como foi seu dia? ")
-
-with open("diario.txt", "a", encoding="utf-8") as arquivo:
-    arquivo.write(frase + "\n")
-
-print("Registrado no diário ✔")</pre></div></div></details>
+===================== 1 failed, 2 passed in 0.04s =====================</pre></div><span class="tag passos">🧭 Continue</span><ol><li>O pytest mostra: QUAL teste falhou, QUAL linha, e os DOIS valores (esperado vs recebido)</li><li>Conserte a função (volte o 0.9) e veja tudo verde de novo</li></ol><details class="dica"><summary>💡 Vermelho é seu amigo</summary><div class="inner">O teste falhando fez o trabalho dele: pegou o bug ANTES do cliente. O ciclo profissional é: mudou o código → rodou pytest → verde? entrega; vermelho? conserta. Repare que o teste que falhou aponta a linha exata e a diferença de valores — depuração de precisão cirúrgica.</div></details>
     </div>
   </article>
 </section>
 
 <section class="parte" id="p3">
-  <div class="parte-head"><span class="num">03</span><h2>Lendo arquivos</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Para ler, o modo é <code>"r"</code> (read). Duas formas: <code>arquivo.read()</code> traz TUDO numa string só; <code>for linha in arquivo</code> percorre linha a linha (melhor para processar dados).</p></div>
-  <article class="ex" id="ex7">
+  <div class="parte-head"><span class="num">03</span><h2>Casos extremos: onde os bugs moram</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Bugs raramente moram no caso comum — moram nas BORDAS: zero, negativo, vazio, o limite exato. Testar bem é perguntar "e se...?": e se a quantidade for 0? E se o preço for negativo? E se o carrinho estiver vazio?</p></div>
+  <article class="ex" id="ex5">
     <div class="ex-head">
-      <span class="ex-num">EX 07</span>
-      <h3>Lendo tudo de uma vez</h3>
-      <span class="stars">⭐⭐ médio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex7"> Concluído</label>
+      <span class="ex-num">EX 05</span>
+      <h3>Caçando bordas 🎯</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex5"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Recuperar o conteúdo gravado.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Leia o <code>ola.txt</code> do Exercício 5:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex07_ler.py</span></div><pre class="code">with open("ola.txt", "r", encoding="utf-8") as arquivo:
-    conteudo = arquivo.read()
+<span class="tag obj">🎯 Objetivo</span><p>Escrever testes para os casos que ninguém pensa (e o código quebra).</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Para a <code>calcular_total</code>, escreva testes de borda: qtd 0, exatamente 100, valor gigante</li><li>Alguma borda revela comportamento estranho? (qtd negativa devia ser permitida?)</li><li>Se achar um comportamento errado, você achou um BUG — conserte a função e deixe o teste de guarda</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(testes de borda passando — ou revelando decisões que a função nem tinha tomado!)</pre></div><details class="dica"><summary>💡 O teste que faz pensar</summary><div class="inner">Escrever o teste da qtd negativa te obriga a DECIDIR: deve dar erro? Deve devolver 0? Testes não só verificam código — eles expõem decisões que você nem sabia que precisava tomar. Por isso dizem que testar melhora o DESIGN do código.</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">test_bordas.py</span></div><pre class="code">from loja import calcular_total
 
-print(conteudo)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Meu primeiro arquivo!
-Criado com Python.</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner">O conteúdo vem como uma string normal — dá para usar len(), split(), in... tudo que você sabe de strings!</div></details>
+def test_quantidade_zero():
+    assert calcular_total(50, 0) == 0
+
+def test_limite_exato_sem_desconto():
+    assert calcular_total(100, 1) == 100    # 100 NAO ganha desconto
+
+def test_um_centavo_acima_ganha_desconto():
+    assert calcular_total(100.01, 1) == 90.01
+
+def test_valor_grande():
+    assert calcular_total(1000, 10) == 9000.0</pre></div><p>O teste do "um centavo acima" é clássico: limites exatos (<code>&gt;</code> vs <code>&gt;=</code>) são o habitat favorito dos bugs. Um bom testador pensa como o bug pensa. 🕵️</p></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p4">
+  <div class="parte-head"><span class="num">04</span><h2>Exceções esperadas e parametrize</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Duas ferramentas que elevam o nível: o <code>pytest.raises</code> testa que um erro ACONTECE quando deve (lembra do ValueError da Semana 7?), e o <code>@pytest.mark.parametrize</code> roda o MESMO teste com vários dados — DRY (Semana 6) nos testes.</p></div>
+  <article class="ex" id="ex6">
+    <div class="ex-head">
+      <span class="ex-num">EX 06</span>
+      <h3>Testando que o erro acontece 🧨</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex6"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Garantir que entradas inválidas são recusadas com exceção.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Faça a <code>calcular_total</code> levantar <code>ValueError</code> para preço ou qtd negativos (Semana 7: <code>raise</code></li><li>No teste, use o bloco <code>with pytest.raises(ValueError):</code> — o teste PASSA se o erro acontecer</li><li>Se a função NÃO levantar o erro, o teste falha (é isso que você quer vigiar!)</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">test_erros.py</span></div><pre class="code">import pytest
+from loja import calcular_total
+
+def test_preco_negativo_recusado():
+    with pytest.raises(ValueError):
+        calcular_total(-10, 2)
+
+def test_qtd_negativa_recusada():
+    with pytest.raises(ValueError):
+        calcular_total(10, -1)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">2 passed in 0.02s</pre></div><details class="dica"><summary>💡 Erro certo na hora certa</summary><div class="inner">Parece contraintuitivo: um teste que passa quando dá erro?! Mas pense: recusar entrada inválida É um comportamento correto — e comportamentos corretos merecem vigilância. O <code>pytest.raises</code> afirma: "aqui DEVE explodir". Se um dia alguém remover a validação, este teste acusa.</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">loja.py</span></div><pre class="code">def calcular_total(preco, qtd):
+    if preco &lt; 0 or qtd &lt; 0:
+        raise ValueError("preco e qtd devem ser positivos")
+    total = preco * qtd
+    if total &gt; 100:
+        total = total * 0.9
+    return round(total, 2)</pre></div></div></details>
     </div>
   </article>
 
+  <article class="ex" id="ex7">
+    <div class="ex-head">
+      <span class="ex-num">EX 07</span>
+      <h3>parametrize: um teste, muitos dados ♻️</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex7"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Rodar o mesmo teste com uma tabela de casos.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Decore o teste com <code>@pytest.mark.parametrize</code></li><li>Passe os nomes dos parâmetros e a lista de tuplas (entrada → esperado)</li><li>O pytest roda UMA vez por tupla — 5 casos = 5 testes no relatório</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">test_param.py</span></div><pre class="code">import pytest
+from loja import calcular_total
+
+@pytest.mark.parametrize("preco, qtd, esperado", [
+    (10, 3, 30),
+    (60, 2, 108.0),
+    (50, 2, 100),
+    (100.01, 1, 90.01),
+    (0, 5, 0),
+])
+def test_calcular_total(preco, qtd, esperado):
+    assert calcular_total(preco, qtd) == esperado</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">5 passed in 0.03s</pre></div><details class="dica"><summary>💡 A tabela de verdades</summary><div class="inner">Cinco testes num só, sem copiar e colar função — é a lista de tuplas da Semana 5 alimentando o teste! Adicionar um caso novo = adicionar uma linha. Times profissionais mantêm tabelas com DEZENAS de casos assim, cobrindo cada canto da função.</div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p5">
+  <div class="parte-head"><span class="num">05</span><h2>Testando a API Flask 🌐</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>O grande salto: testar a sua API REST (Semanas 27-28) SEM subir servidor. O Flask traz o <code>test_client()</code>: um "navegador de mentira" que chama suas rotas direto na memória — GET, POST, com token, tudo. Os testes rodam em milissegundos.</p></div>
   <article class="ex" id="ex8">
     <div class="ex-head">
       <span class="ex-num">EX 08</span>
-      <h3>Linha a linha (e o mistério do espaçamento)</h3>
-      <span class="stars">⭐⭐ médio</span>
+      <h3>O primeiro teste de rota</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex8"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Percorrer um arquivo com for — e descobrir por que o strip() é essencial.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Leia o diário linha a linha, primeiro SEM strip:</li><li>Note as linhas em branco extras na saída!</li><li>Adicione <code>.strip()</code> e rode de novo</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex08_linhas.py</span></div><pre class="code">with open("diario.txt", "r", encoding="utf-8") as arquivo:
-    for linha in arquivo:
-        print(linha)          # com "fantasma"
-        # print(linha.strip())  # sem "fantasma"</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><p>Cada linha do arquivo termina com um <code>\n</code> invisível — e o print adiciona OUTRO. Resultado: linha em branco extra. O <code>.strip()</code> (Semana 4!) remove o <code>\n</code> fantasma. Regra prática: <strong>leu linha de arquivo? strip() nela.</strong></p></div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Testar o GET /api/produtos com o test_client.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>No arquivo de teste, importe o <code>app</code> da sua API</li><li>Crie o cliente: <code>client = app.test_client()</code></li><li>Chame <code>client.get("/api/produtos")</code> e verifique status e JSON</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">test_api.py</span></div><pre class="code">from api import app   # a sua API das Semanas 27-28
+
+def test_listar_produtos():
+    client = app.test_client()
+    resp = client.get("/api/produtos")
+
+    assert resp.status_code == 200
+    dados = resp.get_json()
+    assert isinstance(dados, list)   # devolve uma lista?</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">1 passed in 0.15s</pre></div><details class="dica"><summary>💡 Sem servidor, sem espera</summary><div class="inner">O <code>test_client</code> NÃO abre porta nem precisa do <code>app.run()</code> — ele injeta a requisição direto no Flask. Por isso é tão rápido. O <code>resp.get_json()</code> é o espelho do <code>jsonify</code>: desfaz o JSON para você verificar com assert.</div></details>
     </div>
   </article>
 
   <article class="ex" id="ex9">
     <div class="ex-head">
       <span class="ex-num">EX 09</span>
-      <h3>O arquivo que não existe</h3>
+      <h3>Testando a proteção JWT 🔐</h3>
       <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex9"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Tratar o FileNotFoundError.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Tente abrir <code>"tesouro.txt"</code> (que não existe) e veja o erro</li><li>Proteja com try/except <code>FileNotFoundError</code></li><li>No plano B, avise o usuário com uma mensagem amigável</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output" style="color:#FF9B94">FileNotFoundError: [Errno 2] No such file or directory: 'tesouro.txt'</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex09.py</span></div><pre class="code">try:
-    with open("tesouro.txt", "r", encoding="utf-8") as arquivo:
-        print(arquivo.read())
-except FileNotFoundError:
-    print("Arquivo não encontrado! Verifique o nome e a pasta.")</pre></div><p>Esse tratamento é OBRIGATÓRIO em programas reais: você nunca tem certeza de que o arquivo está lá. No projeto final, vamos usá-lo para carregar dados "se existirem".</p></div></details>
-    </div>
-  </article>
-</section>
+<span class="tag obj">🎯 Objetivo</span><p>Garantir que as rotas protegidas RECUSAM sem token e ACEITAM com.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Teste 1: POST sem token deve dar <code>401</code> — a segurança está de pé?</li><li>Teste 2: faça login pelo próprio test_client, pegue o token e crie COM o header <code>Authorization</code></li><li>Dois testes que vigiam sua autenticação para sempre</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">2 passed in 0.31s</pre></div><details class="dica"><summary>💡 Testando o cadeado</summary><div class="inner">O teste do 401 é dos mais valiosos do sistema: se um dia alguém REMOVER o @token_required sem querer, ele acusa na hora. Testes de segurança são o alarme do alarme. E note o fluxo do teste 2: login → token → uso — o mesmo do frontend (Semana 29), automatizado.</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">test_auth.py</span></div><pre class="code">from api import app
 
-<section class="parte" id="p4">
-  <div class="parte-head"><span class="num">04</span><h2>Processando dados de arquivos</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Agora a mágica completa: <strong>listas ↔ arquivos</strong>. Gravar = percorrer a lista escrevendo uma linha por item. Ler = percorrer as linhas adicionando numa lista. Seus dados ganham vida eterna! ⚡</p></div>
-  <article class="ex" id="ex10">
-    <div class="ex-head">
-      <span class="ex-num">EX 10</span>
-      <h3>Lista de compras eterna 🛒</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex10"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Salvar uma lista em arquivo e carregá-la de volta.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Parte 1 — gravar: monte a lista com input (até "fim") e grave um item por linha</li><li>Parte 2 — ler: em OUTRO script, leia o arquivo de volta para uma lista (com strip!)</li><li>Feche tudo, rode só a parte 2: a lista sobreviveu! 🎉</li></ol><span class="tag saida">✅ Saída da parte 2</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Lista carregada: ['arroz', 'feijão', 'erva-mate']</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">parte1_gravar.py</span></div><pre class="code">compras = []
-while True:
-    item = input("Item (ou 'fim'): ")
-    if item == "fim":
-        break
-    compras.append(item)
+def test_criar_sem_token_da_401():
+    client = app.test_client()
+    resp = client.post("/api/produtos",
+                       json={"nome": "x", "preco": 1, "estoque": 1})
+    assert resp.status_code == 401
 
-with open("compras.txt", "w", encoding="utf-8") as arquivo:
-    for item in compras:
-        arquivo.write(item + "\n")
+def test_criar_com_token_funciona():
+    client = app.test_client()
 
-print("Lista salva!")</pre></div><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">parte2_ler.py</span></div><pre class="code">lista = []
-with open("compras.txt", "r", encoding="utf-8") as arquivo:
-    for linha in arquivo:
-        lista.append(linha.strip())
+    # login (usuario de teste ja cadastrado no banco)
+    resp = client.post("/api/login",
+                       json={"usuario": "robson", "senha": "tuacaneca123"})
+    assert resp.status_code == 200
+    token = resp.get_json()["token"]
 
-print(f"Lista carregada: {lista}")</pre></div></div></details>
-    </div>
-  </article>
-
-  <article class="ex" id="ex11">
-    <div class="ex-head">
-      <span class="ex-num">EX 11</span>
-      <h3>Média a partir do arquivo</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex11"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Ler números de um arquivo e calcular sobre eles.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie na mão (no Bloco de Notas) um <code>notas.txt</code> com uma nota por linha: 8.5, 7.0, 9.5, 6.0</li><li>Leia cada linha, converta com <code>float(linha.strip())</code> e acumule numa lista</li><li>Calcule e exiba a média</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Notas lidas: [8.5, 7.0, 9.5, 6.0]
-Média: 7.8</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex11.py</span></div><pre class="code">notas = []
-
-with open("notas.txt", "r", encoding="utf-8") as arquivo:
-    for linha in arquivo:
-        notas.append(float(linha.strip()))
-
-print(f"Notas lidas: {notas}")
-print(f"Média: {sum(notas) / len(notas):.1f}")</pre></div><p>Atenção à ordem: primeiro strip (limpa), depois float (converte). Arquivo só guarda TEXTO — converter é por nossa conta.</p></div></details>
-    </div>
-  </article>
-
-  <article class="ex" id="ex12">
-    <div class="ex-head">
-      <span class="ex-num">EX 12</span>
-      <h3>O "CSV caseiro" 📊</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex12"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Guardar VÁRIOS dados por linha com separador — o formato dos dados profissionais.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie <code>produtos.txt</code> com linhas no formato <code>nome;preco</code> — ex.: <code>caneca branca;25.00</code></li><li>Leia cada linha, use <code>split(";")</code> para separar os campos</li><li>Desempacote: <code>nome, preco = linha.strip().split(";")</code></li><li>Exiba como tabela e some o total</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">caneca branca — R$ 25.00
-caneca preta — R$ 27.50
-azulejo — R$ 40.00
-TOTAL: R$ 92.50</pre></div><details class="dica"><summary>💡 Você acabou de inventar o CSV!</summary><div class="inner">Arquivos com "valores separados por caractere" são o formato CSV — o mesmo que o Excel exporta. Você está a um passo de processar planilhas com Python! 🤯</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex12.py</span></div><pre class="code">total = 0
-
-with open("produtos.txt", "r", encoding="utf-8") as arquivo:
-    for linha in arquivo:
-        nome, preco = linha.strip().split(";")
-        preco = float(preco)
-        total = total + preco
-        print(f"{nome} — R$ {preco:.2f}")
-
-print(f"TOTAL: R$ {total:.2f}")</pre></div></div></details>
-    </div>
-  </article>
-</section>
-
-<section class="parte" id="p5">
-  <div class="parte-head"><span class="num">05</span><h2>Funções + arquivos: salvar e carregar</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>O padrão profissional: um PAR de funções, <code>salvar_dados(lista)</code> e <code>carregar_dados()</code>. Todo programa com persistência tem essa dupla — e a carga trata o "primeiro uso" (arquivo ainda não existe) com try/except.</p></div>
-  <article class="ex" id="ex13">
-    <div class="ex-head">
-      <span class="ex-num">EX 13</span>
-      <h3>A dupla salvar/carregar</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex13"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Escrever o par de funções que você vai usar para sempre.</p><span class="tag passos">🧭 Passo a passo</span><ol><li><code>salvar_tarefas(tarefas)</code>: grava a lista, um item por linha</li><li><code>carregar_tarefas()</code>: lê e RETORNA a lista — e se o arquivo não existir, retorna <code>[]</code> (lista vazia) via except</li><li>Teste: carregue, adicione um item, salve, rode de novo</li></ol><span class="tag saida">✅ Três execuções seguidas</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Tarefas: []
-Tarefas: ['estudar python']
-Tarefas: ['estudar python', 'criar exercícios']</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex13.py</span></div><pre class="code">def salvar_tarefas(tarefas):
-    with open("tarefas.txt", "w", encoding="utf-8") as arquivo:
-        for tarefa in tarefas:
-            arquivo.write(tarefa + "\n")
-
-def carregar_tarefas():
-    try:
-        tarefas = []
-        with open("tarefas.txt", "r", encoding="utf-8") as arquivo:
-            for linha in arquivo:
-                tarefas.append(linha.strip())
-        return tarefas
-    except FileNotFoundError:
-        return []   # primeiro uso: começa vazio
-
-tarefas = carregar_tarefas()
-print(f"Tarefas: {tarefas}")
-
-nova = input("Nova tarefa: ")
-tarefas.append(nova)
-salvar_tarefas(tarefas)</pre></div></div></details>
+    # cria com o token
+    resp = client.post("/api/produtos",
+                       headers={"Authorization": f"Bearer {token}"},
+                       json={"nome": "caneca teste", "preco": 20, "estoque": 3})
+    assert resp.status_code == 201
+    assert resp.get_json()["nome"] == "caneca teste"</pre></div><p>Dica profissional: em projetos maiores usa-se um banco SEPARADO para testes (para não sujar os dados reais). Pesquise "pytest fixtures" quando quiser dar esse passo — é o próximo nível natural.</p></div></details>
     </div>
   </article>
 </section>
@@ -545,156 +492,30 @@ salvar_tarefas(tarefas)</pre></div></div></details>
 <section class="parte" id="p6">
   <div class="parte-head"><span class="num">06</span><h2>Projetos da semana: juntando tudo!</h2></div>
 
-  <article class="ex" id="ex14">
+  <article class="ex" id="ex10">
     <div class="ex-head">
-      <span class="ex-num">EX 14</span>
-      <h3>Projeto: Registro de vendas Tua Caneca 💾</h3>
+      <span class="ex-num">EX 10</span>
+      <h3>Projeto: a suíte da Tua Caneca 🧪</h3>
       <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex14"> Concluído</label>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex10"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Vendas que sobrevivem: cada venda vira uma linha no arquivo, e o relatório lê tudo.</p><span class="tag passos">🧭 Requisitos</span><ol><li>Menu: 1-Registrar venda · 2-Relatório · 3-Sair</li><li>Registrar: peça cor e quantidade; grave <code>cor;quantidade;total</code> com modo <code>"a"</code> em <code>vendas.txt</code></li><li>Relatório: leia o arquivo (protegido com FileNotFoundError!), some os totais e conte as vendas</li><li>Use sua <code>pedir_inteiro()</code> nas entradas numéricas!</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">1-Registrar  2-Relatório  3-Sair
-Opção: 2
-Vendas registradas: 3
-Faturamento total: R$ 175.00</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex14.py</span></div><pre class="code">PRECO = 25.00
-
-def pedir_inteiro(mensagem):
-    while True:
-        try:
-            return int(input(mensagem))
-        except ValueError:
-            print("Digite um número inteiro!")
-
-while True:
-    print()
-    print("1-Registrar  2-Relatório  3-Sair")
-    opcao = pedir_inteiro("Opção: ")
-
-    if opcao == 1:
-        cor = input("Cor: ")
-        qtd = pedir_inteiro("Quantidade: ")
-        total = qtd * PRECO
-        with open("vendas.txt", "a", encoding="utf-8") as arquivo:
-            arquivo.write(f"{cor};{qtd};{total}\n")
-        print(f"Venda registrada: R$ {total:.2f}")
-    elif opcao == 2:
-        try:
-            vendas = 0
-            faturamento = 0
-            with open("vendas.txt", "r", encoding="utf-8") as arquivo:
-                for linha in arquivo:
-                    cor, qtd, total = linha.strip().split(";")
-                    vendas = vendas + 1
-                    faturamento = faturamento + float(total)
-            print(f"Vendas registradas: {vendas}")
-            print(f"Faturamento total: R$ {faturamento:.2f}")
-        except FileNotFoundError:
-            print("Nenhuma venda registrada ainda.")
-    elif opcao == 3:
-        break
-    else:
-        print("Opção inválida!")</pre></div></div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Uma suíte de testes cobrindo a API inteira — sua rede de segurança oficial.</p><span class="tag passos">🧭 Requisitos</span><ol><li>Um <code>test_api.py</code> com no mínimo 8 testes: listar (200), buscar existente (200) e inexistente (404), criar sem token (401), criar com token (201), criar sem nome (400), atualizar e excluir</li><li>Use parametrize onde houver repetição</li><li>Meta: <code>pytest</code> → tudo verde ✅</li><li>Regra de ouro a partir de hoje: NUNCA entregue sem rodar a suíte</li></ol><span class="tag saida">✅ A meta</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">$ pytest
+collected 9 items
+test_api.py .........                                            [100%]
+========================== 9 passed in 0.8s ===========================</pre></div><details class="dica"><summary>💡 O contrato da sua API</summary><div class="inner">Essa suíte é a ESPECIFICAÇÃO viva da API: qualquer pessoa (inclusive você daqui a 6 meses) lê os testes e entende exatamente o que cada endpoint promete. E toda mudança futura tem que passar por eles. Código testado é código em que se pode confiar — e confiança é o que se vende no mercado. 🤝</div></details>
     </div>
   </article>
 
-  <article class="ex" id="ex15">
+  <article class="ex" id="ex11">
     <div class="ex-head">
-      <span class="ex-num">EX 15</span>
-      <h3>Projeto: Lista de tarefas v2 — agora eterna ✅</h3>
+      <span class="ex-num">EX 11</span>
+      <h3>Projeto bônus: caça ao bug com rede de proteção 🎪</h3>
       <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex15"> Concluído</label>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex11"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Dar persistência ao projeto final da Semana 4.</p><span class="tag passos">🧭 Requisitos</span><ol><li>Pegue sua lista de tarefas da Semana 4 (menu adicionar/listar/remover/sair)</li><li>No INÍCIO: <code>tarefas = carregar_tarefas()</code> (Exercício 13)</li><li>Após cada mudança (adicionar/remover): <code>salvar_tarefas(tarefas)</code></li><li>Feche, abra de novo: as tarefas continuam lá! 🎉</li></ol><span class="tag saida">✅ Ao reabrir o programa</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">📋 Tarefas: ['estudar python', 'preparar aula']</pre></div><details class="dica"><summary>💡 Repare na evolução</summary><div class="inner">Semana 4: o programa funcionava. Semana 7: ele LEMBRA. Essa diferença — dados persistentes — é o que separa um exercício de um software de verdade.</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex15.py</span></div><pre class="code">def salvar_tarefas(tarefas):
-    with open("tarefas.txt", "w", encoding="utf-8") as arquivo:
-        for tarefa in tarefas:
-            arquivo.write(tarefa + "\n")
-
-def carregar_tarefas():
-    try:
-        tarefas = []
-        with open("tarefas.txt", "r", encoding="utf-8") as arquivo:
-            for linha in arquivo:
-                tarefas.append(linha.strip())
-        return tarefas
-    except FileNotFoundError:
-        return []
-
-tarefas = carregar_tarefas()
-
-while True:
-    print()
-    print("1-Adicionar  2-Listar  3-Remover  4-Sair")
-    opcao = int(input("Opção: "))
-
-    if opcao == 1:
-        tarefas.append(input("Nova tarefa: "))
-        salvar_tarefas(tarefas)
-    elif opcao == 2:
-        print(f"📋 Tarefas: {tarefas}")
-    elif opcao == 3:
-        tarefa = input("Qual remover? ")
-        if tarefa in tarefas:
-            tarefas.remove(tarefa)
-            salvar_tarefas(tarefas)
-        else:
-            print("Não encontrada!")
-    elif opcao == 4:
-        break</pre></div></div></details>
-    </div>
-  </article>
-
-  <article class="ex" id="ex16">
-    <div class="ex-head">
-      <span class="ex-num">EX 16</span>
-      <h3>Projeto bônus: Agenda de contatos 📒</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex16"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Construir sozinho um sistema com CSV caseiro (sem código pronto!).</p><span class="tag passos">🧭 Roteiro</span><ol><li>Arquivo <code>contatos.txt</code> no formato <code>nome;telefone</code></li><li>Menu: adicionar (modo "a") · listar todos · buscar por nome · sair</li><li>Na busca, percorra as linhas comparando o nome após o split</li><li>Blinde TUDO: pedir_inteiro no menu, FileNotFoundError nas leituras</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Buscar: Ana
-Ana: (51) 98888-7777</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex16.py</span></div><pre class="code">def pedir_inteiro(mensagem):
-    while True:
-        try:
-            return int(input(mensagem))
-        except ValueError:
-            print("Digite um número!")
-
-while True:
-    print()
-    print("1-Adicionar  2-Listar  3-Buscar  4-Sair")
-    opcao = pedir_inteiro("Opção: ")
-
-    if opcao == 1:
-        nome = input("Nome: ")
-        telefone = input("Telefone: ")
-        with open("contatos.txt", "a", encoding="utf-8") as arquivo:
-            arquivo.write(f"{nome};{telefone}\n")
-        print("Contato salvo!")
-    elif opcao == 2:
-        try:
-            with open("contatos.txt", "r", encoding="utf-8") as arquivo:
-                for linha in arquivo:
-                    nome, telefone = linha.strip().split(";")
-                    print(f"— {nome}: {telefone}")
-        except FileNotFoundError:
-            print("Agenda vazia.")
-    elif opcao == 3:
-        busca = input("Buscar: ")
-        encontrado = False
-        try:
-            with open("contatos.txt", "r", encoding="utf-8") as arquivo:
-                for linha in arquivo:
-                    nome, telefone = linha.strip().split(";")
-                    if nome == busca:
-                        print(f"{nome}: {telefone}")
-                        encontrado = True
-        except FileNotFoundError:
-            pass
-        if not encontrado:
-            print("Não encontrado!")
-    elif opcao == 4:
-        break</pre></div></div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Sentir o fluxo profissional: quebrar, detectar, consertar (sem código pronto!).</p><span class="tag passos">🧭 Roteiro</span><ol><li>Com a suíte verde, sabote de propósito UM detalhe da API (ex.: troque o 201 por 200, ou remova uma validação)</li><li>Rode <code>pytest</code> — quais testes acusam? A mensagem aponta o lugar certo?</li><li>Conserte e veja tudo verde de novo</li><li>Reflita: sem os testes, quanto tempo até esse "sabotador" ser descoberto?</li></ol><details class="dica"><summary>💡 O jogo do sabotador</summary><div class="inner">Esse exercício tem nome chique no mercado: "mutation testing" (testar os testes!). Se você sabotar algo e NENHUM teste acusar... achou um buraco na sua rede — escreva o teste que falta. Uma suíte é tão boa quanto os bugs que ela consegue pegar. 🕳️🕸️</div></details>
     </div>
   </article>
 </section>
@@ -702,29 +523,29 @@ while True:
 <div class="checklist" id="checklist">
   <h2>✅ Checklist de fim de semana</h2>
   <p>Antes de seguir para a próxima semana, confirme que você consegue:</p>
-<label class="check-item"><input type="checkbox"><span>Ler um traceback e identificar o TIPO do erro na última linha</span></label>
-<label class="check-item"><input type="checkbox"><span>Proteger uma conversão com try/except ValueError</span></label>
-<label class="check-item"><input type="checkbox"><span>Tratar erros diferentes com excepts separados</span></label>
-<label class="check-item"><input type="checkbox"><span>Criar uma função de entrada "blindada" (while + try + return)</span></label>
-<label class="check-item"><input type="checkbox"><span>Gravar um arquivo com with open(..., "w") e write()</span></label>
-<label class="check-item"><input type="checkbox"><span>Acrescentar linhas sem apagar com o modo "a"</span></label>
-<label class="check-item"><input type="checkbox"><span>Ler um arquivo inteiro com read() e linha a linha com for</span></label>
-<label class="check-item"><input type="checkbox"><span>Lembrar do strip() para tirar o \n das linhas lidas</span></label>
-<label class="check-item"><input type="checkbox"><span>Tratar FileNotFoundError ao abrir arquivos</span></label>
-<label class="check-item"><input type="checkbox"><span>Salvar e carregar uma lista usando split(";")</span></label>
+<label class="check-item"><input type="checkbox"><span>Explicar por que testes automatizados valem o esforço</span></label>
+<label class="check-item"><input type="checkbox"><span>Usar assert para verificar comportamentos</span></label>
+<label class="check-item"><input type="checkbox"><span>Escrever funções de teste no padrão test_*</span></label>
+<label class="check-item"><input type="checkbox"><span>Rodar o pytest e interpretar o relatório (passou/falhou)</span></label>
+<label class="check-item"><input type="checkbox"><span>Testar casos normais E casos extremos (borda)</span></label>
+<label class="check-item"><input type="checkbox"><span>Verificar que uma exceção é levantada com pytest.raises</span></label>
+<label class="check-item"><input type="checkbox"><span>Repetir um teste com vários dados usando parametrize</span></label>
+<label class="check-item"><input type="checkbox"><span>Testar rotas da API Flask com o test_client (sem subir servidor)</span></label>
+<label class="check-item"><input type="checkbox"><span>Testar rotas protegidas enviando o token JWT</span></label>
+<label class="check-item"><input type="checkbox"><span>Manter uma suíte de testes que roda antes de cada entrega</span></label>
 </div>
 
 <div class="win-banner" id="winBanner">
-  <h2>🏆 SEMANA 7 COMPLETA!</h2>
-  <p>Você concluiu todos os exercícios. Seus programas agora aguentam o tranco do mundo real!</p>
+  <h2>🏆 SEMANA 32 COMPLETA!</h2>
+  <p>Você concluiu todos os exercícios. Seu código agora tem uma rede de segurança automatizada — você muda com confiança, porque os testes vigiam por você!</p>
 </div>
 
 <div class="preview-s2">
-<h2>📅 Prévia da Semana 8</h2><p>Chegou a hora: o <strong>PROJETO FINAL</strong>! Você vai construir, etapa por etapa, um sistema completo de vendas com menu, estoque em dicionário, relatórios, dados salvos em arquivo e entradas blindadas com try/except. Tudo que você aprendeu nas 7 semanas, num programa só. 🎓</p></div>
+<h2>📅 Prévia da Semana 33</h2><p>Seu código funciona e é testado — agora falta a memória e a vitrine! Na próxima semana: <strong>Git e GitHub</strong>. Salvar cada versão do projeto (e voltar no tempo quando precisar), o <code>.gitignore</code> que protege suas senhas, e publicar seus repositórios no GitHub com README profissional — o portfólio que recrutadores realmente olham. 🐙</p></div>
 
 </main>
 
-<footer>python_para_iniciantes // semana_07 // exercícios guiados</footer>
+<footer>python_para_iniciantes // semana_32 // exercícios guiados</footer>
 
 <script>
 // ===== Syntax highlight leve para Python =====
@@ -736,7 +557,7 @@ while True:
     src = src.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     // uma passada só, com alternação (comentário | string | builtin | bool | número)
     src = src.replace(
-      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|insert|int|float|str|len|range|type|abs|round|max|min|sum|sorted|sort|reverse|append|remove|split|strip|upper|lower|replace|title|randint|random|get|keys|values|items|open|readlines|read|write|close|count|index|pop|update|list|dict|tuple|enumerate)\b|\b(True|False|None|if|elif|else|while|for|in|and|or|not|break|continue|import|from|def|return|try|except|finally|with|as|del|global|pass)\b|(\b\d+(?:\.\d+)?\b)/g,
+      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|insert|int|float|str|len|range|type|abs|round|max|min|sum|sorted|sort|reverse|append|remove|split|strip|upper|lower|replace|title|randint|random|get|keys|values|items|open|readlines|read|write|close|count|index|pop|update|list|dict|tuple|enumerate|sqrt|floor|ceil|choice|shuffle|sample|sleep|now|today|strftime|dumps|dump|loads|load|isinstance|datetime|date|DictReader|DictWriter|writerows|writerow|writeheader|writer|reader|csv|Workbook|load_workbook|save|iter_rows|Font|listdir|makedirs|getcwd|rename|exists|getsize|splitext|join|endswith|startswith|copytree|copy|move|requests|status_code|json|DataFrame|read_csv|read_excel|to_excel|to_csv|head|describe|groupby|sort_values|value_counts|mean|idxmax|bar|barh|pie|plot|savefig|show|title|xlabel|ylabel|figure|legend|axhline|tight_layout|close|Flask|route|run|render_template|jsonify|redirect|request|connect|cursor|execute|executemany|fetchall|fetchone|commit|environ|getenv|post|encode|decode|abort|make_response|raises|approx|load_dotenv)\b|\b(True|False|None|if|elif|else|while|for|in|and|or|not|break|continue|import|from|def|return|try|except|finally|with|as|del|global|pass|class|self|super|lambda)\b|(\b\d+(?:\.\d+)?\b)/g,
       function(m, com, str, fn, bool, num){
         if(com)  return '<span class="tk-com">'+com+'</span>';
         if(str)  return '<span class="tk-str">'+str+'</span>';
@@ -755,7 +576,7 @@ while True:
 // no navegador. Se o localStorage estiver indisponível (modo restrito,
 // pré-visualização, etc.), o progresso funciona só em memória, sem quebrar.
 const storage = (function(){
-  const KEY = 'python_semana07_progresso';
+  const KEY = 'python_semana32_progresso';
   let memoria = {};
   let disponivel = false;
   try{
@@ -802,10 +623,10 @@ const storage = (function(){
   const MSGS = [
     [0,  'Marque os exercícios concluídos ✔'],
     [1,  'Boa! Continue assim 💪'],
-    [5,  'Pegando o ritmo! 🔥'],
-    [8, 'Metade do caminho! 🚀'],
-    [12, 'Quase lá... força! ⚡'],
-    [16, 'SEMANA COMPLETA! 🏆']
+    [3,  'Pegando o ritmo! 🔥'],
+    [6, 'Metade do caminho! 🚀'],
+    [8, 'Quase lá... força! ⚡'],
+    [11, 'SEMANA COMPLETA! 🏆']
   ];
 
   function estadoAtual(){

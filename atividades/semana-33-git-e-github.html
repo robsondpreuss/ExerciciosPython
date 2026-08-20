@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Semana 18 — Gráficos com matplotlib</title>
+<title>Semana 33 — Git e GitHub</title>
 <style>
   :root{
     --ink:#16243A;
@@ -57,7 +57,7 @@
     color:#fff;padding:56px 20px 48px;text-align:center;position:relative;overflow:hidden;
   }
   header.hero::before{
-    content:"import matplotlib  plt.bar(  pie(  savefig(  📊";
+    content:"git init  add  commit  push  branch  .gitignore";
     position:absolute;inset:auto 0 8px 0;font-family:var(--mono);font-size:.78rem;
     color:rgba(255,255,255,.14);letter-spacing:.4em;white-space:nowrap;overflow:hidden;
   }
@@ -234,189 +234,181 @@
 <div class="progress-wrap" role="region" aria-label="Progresso da semana">
   <span class="label">XP DA SEMANA</span>
   <div class="progress-bar"><div class="progress-fill" id="pfill"></div></div>
-  <span class="progress-count" id="pcount">0 / 11</span>
+  <span class="progress-count" id="pcount">0 / 10</span>
   <span class="progress-msg" id="pmsg">Marque os exercícios concluídos ✔</span>
   <button class="reset-btn" id="resetBtn" title="Apagar todo o progresso salvo">↺ Resetar</button>
 </div>
 
 <header class="hero">
   <div class="kicker">Python para Iniciantes · Exercícios Guiados</div>
-  <h1>SEMANA 18 — matplotlib:<br>seus dados ganham olhos<span class="cursor" aria-hidden="true"></span></h1>
-  <p class="sub">Gráficos de barras, pizza e linha com matplotlib: títulos, cores, salvar em PNG, o atalho .plot() do pandas e a arte de escolher o gráfico certo para cada história.</p>
+  <h1>SEMANA 33 — Git &amp; GitHub:<br>memória e vitrine do código<span class="cursor" aria-hidden="true"></span></h1>
+  <p class="sub">A máquina do tempo dos programadores: salvar cada versão com commits, voltar atrás quando precisar, proteger segredos com .gitignore e publicar no GitHub com README profissional — o portfólio que o mercado olha.</p>
   <div class="howto">
     <strong>Como usar:</strong> digite o código você mesmo (não copie e cole!), compare com a saída esperada e marque <strong>✔ Concluído</strong> em cada exercício para encher sua barra de XP. As <strong>dicas</strong> e <strong>soluções</strong> ficam escondidas — só abra depois de tentar! Seu progresso fica salvo no navegador.
   </div>
 </header>
 
-<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · Primeiro gráfico</a><a href="#p2">2 · Tipos</a><a href="#p3">3 · Salvando</a><a href="#p4">4 · pandas + plt</a><a href="#p5">5 · O gráfico certo</a><a href="#p6">6 · Projetos</a><a href="#checklist">✅ Checklist</a></nav>
+<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · Por que Git</a><a href="#p2">2 · add & commit</a><a href="#p3">3 · Histórico</a><a href="#p4">4 · .gitignore</a><a href="#p5">5 · GitHub & branches</a><a href="#p6">6 · Projetos</a><a href="#checklist">✅ Checklist</a></nav>
 
 <main>
 
 <section class="parte" id="p1">
-  <div class="parte-head"><span class="num">01</span><h2>O primeiro gráfico</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Instale com <code>pip install matplotlib</code>. A convenção é importar o submódulo pyplot como plt: <code>import matplotlib.pyplot as plt</code>. O fluxo básico: montar o gráfico → <code>plt.show()</code> abre a janela (feche-a para o programa continuar).</p></div>
+  <div class="parte-head"><span class="num">01</span><h2>Por que controle de versão?</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Você já criou <code>projeto_final_v2_AGORA_VAI_definitivo.py</code>? Todo mundo já. O <strong>Git</strong> acaba com isso: ele guarda TODAS as versões do seu projeto numa linha do tempo de <strong>commits</strong> (fotografias do código). Você viaja entre versões, compara mudanças, e — em time — várias pessoas trabalham no mesmo projeto sem se atropelar.</p><p>Instale o Git (git-scm.com; no Windows o instalador padrão resolve) e configure seu nome uma única vez:</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="code">git config --global user.name "Seu Nome"
+git config --global user.email "seu@email.com"</pre></div></div>
   <article class="ex" id="ex1">
     <div class="ex-head">
       <span class="ex-num">EX 01</span>
-      <h3>Barras no ar 📊</h3>
-      <span class="stars">⭐⭐ médio</span>
+      <h3>git init: nasce um repositório 🌱</h3>
+      <span class="stars">⭐ básico</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex1"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Seu primeiro gráfico em 4 linhas.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Digite e execute — uma JANELA vai abrir com o gráfico:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex01_barras.py</span></div><pre class="code">import matplotlib.pyplot as plt
+<span class="tag obj">🎯 Objetivo</span><p>Transformar a pasta do projeto num repositório Git.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Na pasta do seu projeto (ex.: a API da Tua Caneca), rode <code>git init</code></li><li>Rode <code>git status</code> e leia com calma: ele lista os arquivos "untracked" (ainda fora da linha do tempo)</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">$ git init
+Initialized empty Git repository in .../tua_caneca/.git/
 
-produtos = ["branca", "preta", "azulejo"]
-totais = [175.0, 407.5, 120.0]
-
-plt.bar(produtos, totais)
-plt.show()</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(abre uma janela com 3 barras — feche-a para encerrar)</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner">O bar recebe duas listas pareadas: rótulos e alturas — as listas da Semana 4 finalmente viram desenho! Se a janela não abrir no seu editor, procure a aba "Plots" ou rode pelo terminal.</div></details>
-    </div>
-  </article>
-
-  <article class="ex" id="ex2">
-    <div class="ex-head">
-      <span class="ex-num">EX 02</span>
-      <h3>Título e rótulos: gráfico com contexto</h3>
-      <span class="stars">⭐⭐ médio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex2"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Um gráfico sem título é um número sem unidade.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Antes do show, adicione os textos:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex02_titulos.py</span></div><pre class="code">import matplotlib.pyplot as plt
-
-produtos = ["branca", "preta", "azulejo"]
-totais = [175.0, 407.5, 120.0]
-
-plt.bar(produtos, totais, color="#3776AB")
-plt.title("Faturamento por produto — Tua Caneca")
-plt.xlabel("Produto")
-plt.ylabel("Faturamento (R$)")
-plt.show()</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(o mesmo gráfico, agora azul e com identidade!)</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner">O <code>color</code> aceita nomes ("blue", "gold") ou códigos hex como <code>"#3776AB"</code> (o azul oficial do Python 😄). Pode até ser uma LISTA com uma cor por barra.</div></details>
+$ git status
+On branch main
+Untracked files:
+  api.py
+  db.py
+  test_api.py</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(repositório criado — a pasta oculta .git é a "máquina do tempo")</pre></div><details class="dica"><summary>💡 O git status é seu GPS</summary><div class="inner">Sempre que estiver perdido no Git, rode <code>git status</code>: ele diz em que branch você está, o que mudou e até sugere o próximo comando. É o comando mais digitado do mundo — use sem moderação.</div></details>
     </div>
   </article>
 </section>
 
 <section class="parte" id="p2">
-  <div class="parte-head"><span class="num">02</span><h2>Linha e pizza: cada um com seu papel</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p><code>plt.plot</code> (linha) conta evolução no TEMPO; <code>plt.pie</code> (pizza) mostra PARTES de um todo. Mesma estrutura, perguntas diferentes.</p></div>
+  <div class="parte-head"><span class="num">02</span><h2>add e commit: salvando versões</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>O ciclo básico do Git tem dois passos: o <code>git add</code> escolhe as mudanças que entram na próxima "fotografia", e o <code>git commit</code> tira a foto com uma etiqueta (a mensagem). Repita esse ciclo a cada avanço pequeno — commits frequentes e focados são a marca de quem versiona bem.</p></div>
+  <article class="ex" id="ex2">
+    <div class="ex-head">
+      <span class="ex-num">EX 02</span>
+      <h3>add + commit: a primeira fotografia 📸</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex2"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Salvar a primeira versão do projeto na linha do tempo.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>O fluxo tem 2 passos: <code>git add</code> ESCOLHE o que entra na foto; <code>git commit</code> TIRA a foto</li><li>Adicione tudo: <code>git add .</code></li><li>Commite com mensagem: <code>git commit -m "Primeira versao da API Tua Caneca"</code></li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">$ git add .
+$ git commit -m "Primeira versao da API Tua Caneca"
+[main (root-commit) a1b2c3d] Primeira versao da API Tua Caneca
+ 3 files changed, 180 insertions(+)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(primeiro commit feito — a versão está eternizada)</pre></div><details class="dica"><summary>💡 Por que dois passos?</summary><div class="inner">O <code>add</code> existe para você MONTAR a foto: dá para commitar só um arquivo mexido e deixar outro para o próximo commit. Pense no add como "colocar na caixinha" e no commit como "lacrar a caixinha com uma etiqueta". A etiqueta (mensagem) importa — já já falamos dela.</div></details>
+    </div>
+  </article>
+
   <article class="ex" id="ex3">
     <div class="ex-head">
       <span class="ex-num">EX 03</span>
-      <h3>A linha do tempo 📈</h3>
+      <h3>A arte da mensagem de commit ✍️</h3>
       <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex3"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Evolução do faturamento por dia.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Use plt.plot com <code>marker="o"</code> para destacar os pontos:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex03_linha.py</span></div><pre class="code">import matplotlib.pyplot as plt
-
-dias = ["10/06", "11/06", "12/06"]
-faturamento = [345.0, 217.5, 140.0]
-
-plt.plot(dias, faturamento, marker="o", color="#FFB000")
-plt.title("Faturamento por dia")
-plt.ylabel("R$")
-plt.show()</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(linha amarela descendo... hora de vender mais! 😅)</pre></div>
+<span class="tag obj">🎯 Objetivo</span><p>Escrever mensagens que o seu "eu do futuro" agradece.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Compare os dois históricos abaixo — qual deles ajuda a achar onde o bug do desconto entrou?</li><li>Regra prática: a mensagem completa a frase "Este commit... [adiciona validação no POST]"</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">historico_ruim.txt</span></div><pre class="output" style="color:#FF9B94">git log --oneline
+9f8e7d6 arrumei
+5c4b3a2 mudancas
+1a2b3c4 agora vai
+d4e5f6a coisas</pre></div><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">historico_bom.txt</span></div><pre class="output">git log --oneline
+9f8e7d6 Corrige calculo do desconto acima de 100
+5c4b3a2 Adiciona validacao de nome no POST /api/produtos
+1a2b3c4 Protege rotas de escrita com @token_required
+d4e5f6a Cria endpoints GET de produtos</pre></div><details class="dica"><summary>💡 Commits contam a história</summary><div class="inner">Um bom histórico é a NARRATIVA do projeto: dá para entender a evolução sem abrir código. Convenção comum: verbo no presente ("Adiciona", "Corrige", "Remove") + o quê + onde. Times sérios recusam commits com mensagem vaga — e recrutadores olham seu histórico no GitHub!</div></details>
     </div>
   </article>
+</section>
 
+<section class="parte" id="p3">
+  <div class="parte-head"><span class="num">03</span><h2>Viajando no tempo: log, diff e restore</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Com commits acumulados, o Git vira sua máquina do tempo: <code>git log</code> mostra a linha do tempo, <code>git diff</code> mostra o que mudou desde a última foto, e <code>git restore</code> desfaz bagunça.</p></div>
   <article class="ex" id="ex4">
     <div class="ex-head">
       <span class="ex-num">EX 04</span>
-      <h3>A pizza 🍕</h3>
+      <h3>log e diff: o que mudou? 🔍</h3>
       <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex4"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Participação de cada produto no faturamento.</p><span class="tag passos">🧭 Passo a passo</span><ol><li><code>autopct="%1.0f%%"</code> escreve o percentual em cada fatia:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex04_pizza.py</span></div><pre class="code">import matplotlib.pyplot as plt
+<span class="tag obj">🎯 Objetivo</span><p>Inspecionar o histórico e as mudanças pendentes.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Mexa em algum arquivo (mude uma linha da API)</li><li>Rode <code>git diff</code>: as linhas removidas aparecem com <code>-</code>, as novas com <code>+</code></li><li>Rode <code>git log --oneline</code> para ver a linha do tempo resumida</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">$ git diff
+- return jsonify({"ok": True})
++ return jsonify({"ok": True, "id": novo_id}), 201
 
-produtos = ["branca", "preta", "azulejo"]
-totais = [175.0, 407.5, 120.0]
-
-plt.pie(totais, labels=produtos, autopct="%1.0f%%")
-plt.title("Participação no faturamento")
-plt.show()</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(pizza com 25%, 58% e 17% — a preta domina!)</pre></div><details class="dica"><summary>💡 Regra da pizza</summary><div class="inner">Pizza funciona com POUCAS fatias (até 5) e quando a pergunta é "quanto cada parte representa do todo". Com 12 categorias vira uma roleta ilegível — use barras!</div></details>
+$ git log --oneline
+5c4b3a2 Adiciona validacao de nome no POST
+1a2b3c4 Primeira versao da API</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(você enxerga exatamente o que mudou antes de commitar)</pre></div><details class="dica"><summary>💡 O diff antes do commit</summary><div class="inner">Hábito de ouro: rodar <code>git diff</code> ANTES de todo commit, para conferir o que vai na foto. Quantas vezes um <code>print</code> de debug esquecido foi parar em produção porque ninguém olhou o diff... Não seja essa pessoa. 😄</div></details>
     </div>
   </article>
 
   <article class="ex" id="ex5">
     <div class="ex-head">
       <span class="ex-num">EX 05</span>
-      <h3>Barras deitadas e comparações</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
+      <h3>restore: o botão de desfazer 🧯</h3>
+      <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex5"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>barh para rótulos longos e duas séries lado a lado.</p><span class="tag passos">🧭 Passo a passo</span><ol><li><code>plt.barh</code> deita as barras — perfeito quando os nomes são compridos</li><li>Faça um barh dos produtos; depois experimente comparar duas listas (qtd vendida vs. estoque) com duas chamadas de bar</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(barras horizontais com os nomes legíveis)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex05.py</span></div><pre class="code">import matplotlib.pyplot as plt
-
-produtos = ["caneca branca", "caneca preta", "azulejo decorado"]
-totais = [175.0, 407.5, 120.0]
-
-plt.barh(produtos, totais, color="#3776AB")
-plt.title("Faturamento por produto")
-plt.xlabel("R$")
-plt.tight_layout()
-plt.show()</pre></div><p>O <code>tight_layout()</code> ajusta as margens para nada ficar cortado — hábito de quem entrega gráfico bonito.</p></div></details>
-    </div>
-  </article>
-</section>
-
-<section class="parte" id="p3">
-  <div class="parte-head"><span class="num">03</span><h2>Salvando em PNG</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Gráfico bom é gráfico que viaja: <code>plt.savefig("nome.png", dpi=150)</code> grava a imagem. <strong>⚠️ A pegadinha clássica:</strong> salve ANTES do show — o show "consome" a figura, e salvar depois gera um PNG em branco!</p></div>
-  <article class="ex" id="ex6">
-    <div class="ex-head">
-      <span class="ex-num">EX 06</span>
-      <h3>Do gráfico ao arquivo</h3>
-      <span class="stars">⭐⭐ médio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex6"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Gerar um PNG pronto para slides, relatórios e WhatsApp do cliente.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Monte o gráfico de barras e finalize com:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex06_savefig.py</span></div><pre class="code">plt.title("Faturamento por produto")
-plt.tight_layout()
-plt.savefig("faturamento.png", dpi=150)
-plt.show()
-
-print("faturamento.png salvo ✔")</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">faturamento.png salvo ✔ (confira a imagem na pasta!)</pre></div><details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Teste a pegadinha: inverta savefig e show e abra o PNG resultante. Branco total! Agora você nunca mais erra. 😄</div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Recuperar um arquivo depois de uma bagunça.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Estrague um arquivo de propósito (apague metade do api.py e salve!)</li><li>Respire: <code>git restore api.py</code></li><li>Abra o arquivo: ele voltou à última foto. Crise cancelada</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(o arquivo restaurado, idêntico ao último commit)</pre></div><details class="dica"><summary>💡 A rede embaixo do trapézio</summary><div class="inner">Esse é o momento em que o Git muda sua vida: errar deixa de ser perigoso. Refatorações ousadas, experimentos, testes destrutivos — tudo fica seguro, porque a última versão commitada está a um <code>git restore</code> de distância. Commite cedo, commite sempre.</div></details>
     </div>
   </article>
 </section>
 
 <section class="parte" id="p4">
-  <div class="parte-head"><span class="num">04</span><h2>pandas + matplotlib: o atalho .plot()</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>O casamento perfeito: todo resultado de pandas tem um <code>.plot()</code> embutido. Um groupby vira gráfico com <code>kind="bar"</code> — o matplotlib trabalha por baixo, e o plt.show() continua valendo.</p></div>
-  <article class="ex" id="ex7">
+  <div class="parte-head"><span class="num">04</span><h2>.gitignore: o segurança do repositório</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>NEM TUDO deve entrar na linha do tempo: senhas (<code>.env</code>!), lixo gerado (<code>__pycache__</code>), o banco local. O arquivo <code>.gitignore</code> lista o que o Git deve fingir que não existe. <strong>Esta é uma lição de segurança séria:</strong> segredo commitado é segredo vazado.</p></div>
+  <article class="ex" id="ex6">
     <div class="ex-head">
-      <span class="ex-num">EX 07</span>
-      <h3>groupby → gráfico em 2 linhas 🤯</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex7"> Concluído</label>
+      <span class="ex-num">EX 06</span>
+      <h3>Montando o .gitignore 🛡️</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex6"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>O fluxo profissional: CSV → análise → gráfico.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Com o vendas.csv da Semana 17 na pasta:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex07_pandasplot.py</span></div><pre class="code">import pandas as pd
-import matplotlib.pyplot as plt
+<span class="tag obj">🎯 Objetivo</span><p>Proteger segredos e excluir lixo do repositório.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie o arquivo <code>.gitignore</code> na raiz do projeto com o conteúdo abaixo</li><li>Rode <code>git status</code>: os itens listados SOMEM da lista de untracked</li><li>Commite o próprio .gitignore (ele sim, vai para o repositório!)</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">.gitignore</span></div><pre class="code"># segredos — NUNCA no repositorio!
+.env
 
-df = pd.read_csv("vendas.csv")
+# lixo do Python
+__pycache__/
+*.pyc
 
-df.groupby("produto")["total"].sum().plot(kind="bar", color="#3776AB")
-plt.title("Faturamento por produto")
-plt.ylabel("R$")
-plt.tight_layout()
-plt.show()</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(o gráfico do seu groupby, direto do CSV!)</pre></div><details class="dica"><summary>💡 Experimente os kinds</summary><div class="inner"><code>kind="bar"</code>, <code>"barh"</code>, <code>"line"</code>, <code>"pie"</code>... Troque e veja. O pandas cuida dos rótulos sozinho — ele já SABE os nomes dos grupos!</div></details>
+# ambiente virtual (Semana 34)
+venv/
+
+# banco local de testes
+*.db</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(git status limpo — os segredos invisíveis para o Git)</pre></div><details class="dica"><summary>💡 A regra que salva carreiras</summary><div class="inner">Robôs varrem o GitHub 24h por dia atrás de senhas e chaves commitadas — um <code>.env</code> público é sequestrado em MINUTOS (lembra da lição da Semana 24?). E atenção: o Git guarda o HISTÓRICO — remover o arquivo depois não apaga as versões antigas! Por isso o .gitignore vem PRIMEIRO, antes do primeiro commit. Grave isso. 🔐</div></details>
     </div>
   </article>
 </section>
 
 <section class="parte" id="p5">
-  <div class="parte-head"><span class="num">05</span><h2>O gráfico certo para cada pergunta</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>A regra de ouro da visualização:</p><table><tr><th>Pergunta</th><th>Gráfico</th></tr><tr><td>Comparar categorias ("quem vende mais?")</td><td>Barras</td></tr><tr><td>Evolução no tempo ("estamos crescendo?")</td><td>Linha</td></tr><tr><td>Partes de um todo ("quanto % cada um?")</td><td>Pizza (≤ 5 fatias)</td></tr></table><p>Gráfico errado conta a história errada — e quem escolhe é você, não a ferramenta.</p></div>
+  <div class="parte-head"><span class="num">05</span><h2>GitHub: publicando (e as branches)</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>O Git guarda a história na SUA máquina; o <strong>GitHub</strong> a hospeda na nuvem — backup, vitrine e ponto de colaboração. O fluxo: criar o repositório no site, conectar com <code>git remote add</code>, enviar com <code>git push</code>.</p></div>
+  <article class="ex" id="ex7">
+    <div class="ex-head">
+      <span class="ex-num">EX 07</span>
+      <h3>Subindo para o GitHub ☁️</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex7"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Publicar seu repositório local no GitHub.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>No github.com: New repository → nome (ex.: <code>tua-caneca-api</code>) → SEM inicializar com nada → Create</li><li>Conecte e envie com os comandos que o próprio GitHub mostra:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="code">git remote add origin https://github.com/SEU-USUARIO/tua-caneca-api.git
+git branch -M main
+git push -u origin main</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(atualize a página do GitHub: seu código está lá, com todo o histórico!)</pre></div><details class="dica"><summary>💡 remote, origin, push</summary><div class="inner"><code>remote</code> = um endereço de repositório na nuvem; <code>origin</code> = o apelido padrão dele; <code>push</code> = "empurrar" seus commits para lá. O caminho de volta é o <code>git clone URL</code> — que baixa qualquer repositório público para sua máquina (ótimo para estudar código dos outros!).</div></details>
+    </div>
+  </article>
+
   <article class="ex" id="ex8">
     <div class="ex-head">
       <span class="ex-num">EX 08</span>
-      <h3>Consultor de gráficos 🎩</h3>
-      <span class="stars">⭐⭐ médio</span>
+      <h3>Branches: o universo paralelo 🌿</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex8"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Treinar a escolha — a habilidade que separa o gerador de gráficos do comunicador de dados.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Para cada cenário, decida o tipo e MONTE um deles:</li><li>a) Faturamento mensal de jan a dez — qual gráfico?</li><li>b) Vendas por vendedor no trimestre — qual?</li><li>c) Fatia de mercado de 4 marcas — qual?</li><li>d) Notas de 30 alunos individualmente — qual? (pegadinha!)</li></ol><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><p><strong>a)</strong> Linha (tempo!). <strong>b)</strong> Barras (comparação). <strong>c)</strong> Pizza (partes do todo, só 4 fatias ✔). <strong>d)</strong> A pegadinha: 30 fatias de pizza seria um crime — barras horizontais ordenadas, ou melhor ainda, um histograma (pesquise <code>plt.hist</code>!). A pergunta define o gráfico; o gráfico define a história.</p></div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Desenvolver uma novidade sem tocar na versão que funciona.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie e entre numa branch: <code>git switch -c relatorio-clientes</code></li><li>Faça commits nela (mexa num arquivo, add, commit) — a <code>main</code> fica intacta!</li><li>Volte para a main (<code>git switch main</code>) e traga a novidade: <code>git merge relatorio-clientes</code></li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">$ git switch -c relatorio-clientes
+Switched to a new branch 'relatorio-clientes'
+$ git add . &amp;&amp; git commit -m "Adiciona relatorio por cliente"
+$ git switch main
+$ git merge relatorio-clientes
+Fast-forward
+ api.py | 12 ++++++++++++</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(a novidade desenvolvida em paralelo e trazida para a main)</pre></div><details class="dica"><summary>💡 Como os times trabalham</summary><div class="inner">Em empresas, a <code>main</code> é sagrada (é o que está no ar!) e TODA mudança nasce numa branch — que só entra via merge depois de revisão e testes (a suíte da Semana 32!). Você acabou de experimentar o fluxo de trabalho de 99% dos times de software do planeta.</div></details>
     </div>
   </article>
 </section>
@@ -427,98 +419,24 @@ plt.show()</pre></div><span class="tag saida">✅ Saída esperada</span><div cla
   <article class="ex" id="ex9">
     <div class="ex-head">
       <span class="ex-num">EX 09</span>
-      <h3>Projeto: Painel Tua Caneca em PNG 🖼️</h3>
+      <h3>Projeto: os repositórios da Tua Caneca 🐙</h3>
       <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex9"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Os 3 gráficos oficiais do negócio, salvos e prontos para o relatório.</p><span class="tag passos">🧭 Requisitos</span><ol><li>A partir do vendas.csv: (1) barras do faturamento por produto, (2) pizza da participação, (3) linha do faturamento por dia</li><li>Cada um com título, cores e tight_layout, salvo em PNG (dpi=150)</li><li>Entre um gráfico e outro: <code>plt.figure()</code> inicia uma figura nova (senão eles se misturam!)</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">por_produto.png ✔
-participacao.png ✔
-por_dia.png ✔</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex09.py</span></div><pre class="code">import pandas as pd
-import matplotlib.pyplot as plt
-
-df = pd.read_csv("vendas.csv")
-
-# 1. Barras
-plt.figure(figsize=(6, 4))
-df.groupby("produto")["total"].sum().plot(kind="bar", color="#3776AB")
-plt.title("Faturamento por produto")
-plt.ylabel("R$")
-plt.tight_layout()
-plt.savefig("por_produto.png", dpi=150)
-print("por_produto.png ✔")
-
-# 2. Pizza
-plt.figure(figsize=(5, 5))
-df.groupby("produto")["total"].sum().plot(kind="pie", autopct="%1.0f%%")
-plt.title("Participação no faturamento")
-plt.ylabel("")
-plt.tight_layout()
-plt.savefig("participacao.png", dpi=150)
-print("participacao.png ✔")
-
-# 3. Linha
-plt.figure(figsize=(6, 4))
-df.groupby("data")["total"].sum().plot(kind="line", marker="o", color="#FFB000")
-plt.title("Faturamento por dia")
-plt.ylabel("R$")
-plt.tight_layout()
-plt.savefig("por_dia.png", dpi=150)
-print("por_dia.png ✔")</pre></div></div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Publicar o sistema completo no GitHub — backend e frontend, como manda o figurino.</p><span class="tag passos">🧭 Requisitos</span><ol><li>DOIS repositórios (arquitetura desacoplada, lembra?): <code>tua-caneca-api</code> e <code>tua-caneca-frontend</code></li><li>Em cada um: <code>.gitignore</code> ANTES de tudo (o .env do backend jamais pode subir!)</li><li>Histórico com commits de mensagens claras (não vale um commit gigante "projeto inteiro")</li><li>Suba os dois e confira no GitHub</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(dois repositórios públicos, com histórico limpo e zero segredos)</pre></div><details class="dica"><summary>💡 Portfólio em construção</summary><div class="inner">Dois repositórios conectados (API + frontend) mostram que você entende arquitetura — algo que UM zipzão de código nunca mostraria. O próximo exercício adiciona a peça que transforma repositório em portfólio: o README.</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><p>Checklist de conferência: <strong>(1)</strong> o <code>.env</code> NÃO aparece no GitHub (se aparecer: troque as senhas imediatamente e refaça o repositório — o histórico guarda tudo!); <strong>(2)</strong> <code>git log --oneline</code> conta uma história legível; <strong>(3)</strong> os dois repositórios clonam e rodam em outra máquina seguindo apenas as instruções. Se os três passam, você publicou como profissional.</p></div></details>
     </div>
   </article>
 
   <article class="ex" id="ex10">
     <div class="ex-head">
       <span class="ex-num">EX 10</span>
-      <h3>Projeto: Notas da turma com linha da média 🎓</h3>
+      <h3>Projeto bônus: o README que contrata 📄</h3>
       <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex10"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Visualizar desempenho com uma linha de referência.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Barras com a média de cada aluno (groupby da Semana 17)</li><li>Linha horizontal da nota de corte: <code>plt.axhline(7, color="red", linestyle="--")</code></li><li>Quem está abaixo da linha fica visível na hora — é assim que dado vira decisão!</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(barras dos alunos com a linha vermelha do 7)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex10.py</span></div><pre class="code">import pandas as pd
-import matplotlib.pyplot as plt
-
-notas = pd.DataFrame({
-    "aluno": ["Ana", "Ana", "Bruno", "Bruno", "Carla", "Carla"],
-    "nota": [8.0, 8.5, 6.0, 5.0, 9.5, 9.5]
-})
-
-medias = notas.groupby("aluno")["nota"].mean()
-
-medias.plot(kind="bar", color="#3776AB")
-plt.axhline(7, color="red", linestyle="--", label="Nota de corte")
-plt.title("Média por aluno")
-plt.ylabel("Nota")
-plt.legend()
-plt.tight_layout()
-plt.savefig("medias_turma.png", dpi=150)
-plt.show()</pre></div></div></details>
-    </div>
-  </article>
-
-  <article class="ex" id="ex11">
-    <div class="ex-head">
-      <span class="ex-num">EX 11</span>
-      <h3>Projeto bônus: Gráfico das cotações 📈</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex11"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Fechar o ciclo com a Semana 15: o historico.csv das moedas vira gráfico (sem código pronto!).</p><span class="tag passos">🧭 Roteiro</span><ol><li>Rode o monitor de moedas da Semana 15 algumas vezes para encher o historico.csv</li><li>Leia com pandas (dica: o CSV não tem cabeçalho — pesquise o parâmetro <code>names=[...]</code> do read_csv!)</li><li>Filtre só o Dólar e plote a linha da cotação ao longo das consultas</li><li>Reflita: API (S15) + CSV (S13) + pandas (S17) + gráfico (S18) — quatro semanas, um pipeline!</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(a linha do dólar nas suas consultas)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex11.py</span></div><pre class="code">import pandas as pd
-import matplotlib.pyplot as plt
-
-df = pd.read_csv("historico.csv", names=["data", "moeda", "valor"])
-
-dolar = df[df["moeda"] == "Dólar"]
-
-plt.plot(dolar["data"], dolar["valor"].astype(float), marker="o")
-plt.title("Cotação do dólar nas minhas consultas")
-plt.ylabel("R$")
-plt.xticks(rotation=45)
-plt.tight_layout()
-plt.savefig("dolar_historico.png", dpi=150)
-plt.show()</pre></div></div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Escrever a porta de entrada dos seus repositórios (sem código pronto!).</p><span class="tag passos">🧭 Roteiro</span><ol><li>Crie um <code>README.md</code> em cada repositório (Markdown: <code>#</code> títulos, <code>```</code> blocos de código, <code>-</code> listas)</li><li>Estrutura sugerida: o que é o projeto → tecnologias → como rodar (passo a passo!) → endpoints da API (tabela) → aprendizados</li><li>Inclua o comando de rodar os testes (Semana 32) — isso impressiona</li><li>Capriche: o README é a primeira (às vezes única) coisa que um recrutador lê</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(dois READMEs que explicam, ensinam a rodar e vendem o projeto)</pre></div><details class="dica"><summary>💡 O produto é você</summary><div class="inner">Um bom README responde em 30 segundos: o que faz? como rodo? o autor sabe o que está fazendo? Projetos com README caprichado passam a impressão de cuidado — a mesma que um portfólio bem montado passa num processo seletivo. Você construiu 33 semanas de conteúdo; agora aprenda a APRESENTÁ-LO. 🎯</div></details>
     </div>
   </article>
 </section>
@@ -526,29 +444,29 @@ plt.show()</pre></div></div></details>
 <div class="checklist" id="checklist">
   <h2>✅ Checklist de fim de semana</h2>
   <p>Antes de seguir para a próxima semana, confirme que você consegue:</p>
-<label class="check-item"><input type="checkbox"><span>Criar um gráfico de barras com plt.bar e exibir com show()</span></label>
-<label class="check-item"><input type="checkbox"><span>Colocar título e rótulos nos eixos (title, xlabel, ylabel)</span></label>
-<label class="check-item"><input type="checkbox"><span>Fazer um gráfico de linha para evolução no tempo</span></label>
-<label class="check-item"><input type="checkbox"><span>Fazer uma pizza com percentuais (autopct)</span></label>
-<label class="check-item"><input type="checkbox"><span>Personalizar cores das barras e fatias</span></label>
-<label class="check-item"><input type="checkbox"><span>Salvar em PNG com savefig (ANTES do show!)</span></label>
-<label class="check-item"><input type="checkbox"><span>Gerar gráficos direto do pandas com .plot(kind=...)</span></label>
-<label class="check-item"><input type="checkbox"><span>Escolher o tipo certo: barra/linha/pizza para cada pergunta</span></label>
-<label class="check-item"><input type="checkbox"><span>Usar axhline para linhas de referência (meta, média)</span></label>
-<label class="check-item"><input type="checkbox"><span>Montar um painel com vários gráficos salvos</span></label>
+<label class="check-item"><input type="checkbox"><span>Explicar o que é controle de versão e por que todo time usa</span></label>
+<label class="check-item"><input type="checkbox"><span>Iniciar um repositório com git init e ler o git status</span></label>
+<label class="check-item"><input type="checkbox"><span>Preparar e salvar mudanças com git add e git commit</span></label>
+<label class="check-item"><input type="checkbox"><span>Escrever mensagens de commit claras e úteis</span></label>
+<label class="check-item"><input type="checkbox"><span>Ver o histórico com git log e as mudanças com git diff</span></label>
+<label class="check-item"><input type="checkbox"><span>Proteger segredos e lixo com o .gitignore (.env, __pycache__)</span></label>
+<label class="check-item"><input type="checkbox"><span>Criar um repositório no GitHub e conectar com remote</span></label>
+<label class="check-item"><input type="checkbox"><span>Enviar e baixar código com git push e git clone</span></label>
+<label class="check-item"><input type="checkbox"><span>Trabalhar numa branch e trazer com merge</span></label>
+<label class="check-item"><input type="checkbox"><span>Publicar projetos com um README profissional</span></label>
 </div>
 
 <div class="win-banner" id="winBanner">
-  <h2>🏆 SEMANA 18 COMPLETA!</h2>
-  <p>Você concluiu todos os exercícios. Seus relatórios nunca mais serão só texto!</p>
+  <h2>🏆 SEMANA 33 COMPLETA!</h2>
+  <p>Você concluiu todos os exercícios. Seu código tem memória (todo o histórico), proteção (segredos fora do repositório) e vitrine (GitHub) — como o de qualquer time profissional!</p>
 </div>
 
 <div class="preview-s2">
-<h2>📅 Prévia da Semana 19</h2><p>Na próxima semana, a virada épica: <strong>Flask</strong> — seu Python vira um SITE! Rotas, páginas HTML geradas por código, e o momento de glória: você vai criar a sua PRÓPRIA API. Depois de 4 semanas consumindo o garçom... você assume a cozinha. 👨‍🍳🌐</p></div>
+<h2>📅 Prévia da Semana 34</h2><p>Código testado e versionado — falta deixá-lo pronto para o MUNDO. Na próxima semana, <strong>produção e deploy</strong>: congelar dependências no <code>requirements.txt</code>, ambientes virtuais, configuração por <code>.env</code>, desligar o debug (você vai entender o perigo!), o papel do Docker e o caminho para colocar frontend e API no ar. A última milha! 🚀</p></div>
 
 </main>
 
-<footer>python_para_iniciantes // semana_18 // exercícios guiados</footer>
+<footer>python_para_iniciantes // semana_33 // exercícios guiados</footer>
 
 <script>
 // ===== Syntax highlight leve para Python =====
@@ -560,7 +478,7 @@ plt.show()</pre></div></div></details>
     src = src.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     // uma passada só, com alternação (comentário | string | builtin | bool | número)
     src = src.replace(
-      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|insert|int|float|str|len|range|type|abs|round|max|min|sum|sorted|sort|reverse|append|remove|split|strip|upper|lower|replace|title|randint|random|get|keys|values|items|open|readlines|read|write|close|count|index|pop|update|list|dict|tuple|enumerate|sqrt|floor|ceil|choice|shuffle|sample|sleep|now|today|strftime|dumps|dump|loads|load|isinstance|datetime|date|DictReader|DictWriter|writerows|writerow|writeheader|writer|reader|csv|Workbook|load_workbook|save|iter_rows|Font|listdir|makedirs|getcwd|rename|exists|getsize|splitext|join|endswith|startswith|copytree|copy|move|requests|status_code|json|DataFrame|read_csv|read_excel|to_excel|to_csv|head|describe|groupby|sort_values|value_counts|mean|idxmax|bar|barh|pie|plot|savefig|show|title|xlabel|ylabel|figure|legend|axhline|tight_layout|close|Flask|route|run|render_template|jsonify|redirect|request)\b|\b(True|False|None|if|elif|else|while|for|in|and|or|not|break|continue|import|from|def|return|try|except|finally|with|as|del|global|pass|class|self|super|lambda)\b|(\b\d+(?:\.\d+)?\b)/g,
+      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|insert|int|float|str|len|range|type|abs|round|max|min|sum|sorted|sort|reverse|append|remove|split|strip|upper|lower|replace|title|randint|random|get|keys|values|items|open|readlines|read|write|close|count|index|pop|update|list|dict|tuple|enumerate|sqrt|floor|ceil|choice|shuffle|sample|sleep|now|today|strftime|dumps|dump|loads|load|isinstance|datetime|date|DictReader|DictWriter|writerows|writerow|writeheader|writer|reader|csv|Workbook|load_workbook|save|iter_rows|Font|listdir|makedirs|getcwd|rename|exists|getsize|splitext|join|endswith|startswith|copytree|copy|move|requests|status_code|json|DataFrame|read_csv|read_excel|to_excel|to_csv|head|describe|groupby|sort_values|value_counts|mean|idxmax|bar|barh|pie|plot|savefig|show|title|xlabel|ylabel|figure|legend|axhline|tight_layout|close|Flask|route|run|render_template|jsonify|redirect|request|connect|cursor|execute|executemany|fetchall|fetchone|commit|environ|getenv|post|encode|decode|abort|make_response|raises|approx|load_dotenv)\b|\b(True|False|None|if|elif|else|while|for|in|and|or|not|break|continue|import|from|def|return|try|except|finally|with|as|del|global|pass|class|self|super|lambda)\b|(\b\d+(?:\.\d+)?\b)/g,
       function(m, com, str, fn, bool, num){
         if(com)  return '<span class="tk-com">'+com+'</span>';
         if(str)  return '<span class="tk-str">'+str+'</span>';
@@ -579,7 +497,7 @@ plt.show()</pre></div></div></details>
 // no navegador. Se o localStorage estiver indisponível (modo restrito,
 // pré-visualização, etc.), o progresso funciona só em memória, sem quebrar.
 const storage = (function(){
-  const KEY = 'python_semana18_progresso';
+  const KEY = 'python_semana33_progresso';
   let memoria = {};
   let disponivel = false;
   try{
@@ -627,9 +545,9 @@ const storage = (function(){
     [0,  'Marque os exercícios concluídos ✔'],
     [1,  'Boa! Continue assim 💪'],
     [3,  'Pegando o ritmo! 🔥'],
-    [6, 'Metade do caminho! 🚀'],
+    [5, 'Metade do caminho! 🚀'],
     [8, 'Quase lá... força! ⚡'],
-    [11, 'SEMANA COMPLETA! 🏆']
+    [10, 'SEMANA COMPLETA! 🏆']
   ];
 
   function estadoAtual(){

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Semana 32 — Testes com pytest</title>
+<title>Semana 18 — Gráficos com matplotlib</title>
 <style>
   :root{
     --ink:#16243A;
@@ -57,7 +57,7 @@
     color:#fff;padding:56px 20px 48px;text-align:center;position:relative;overflow:hidden;
   }
   header.hero::before{
-    content:"pytest  assert  test_  raises  test_client";
+    content:"import matplotlib  plt.bar(  pie(  savefig(  📊";
     position:absolute;inset:auto 0 8px 0;font-family:var(--mono);font-size:.78rem;
     color:rgba(255,255,255,.14);letter-spacing:.4em;white-space:nowrap;overflow:hidden;
   }
@@ -241,250 +241,182 @@
 
 <header class="hero">
   <div class="kicker">Python para Iniciantes · Exercícios Guiados</div>
-  <h1>SEMANA 32 — pytest:<br>a rede de segurança do código<span class="cursor" aria-hidden="true"></span></h1>
-  <p class="sub">Como garantir que a mudança de hoje não quebra o que funcionava ontem? Testes automatizados: assert, o pytest, casos extremos, exceções esperadas e até a sua API Flask testada de ponta a ponta — sem subir servidor.</p>
+  <h1>SEMANA 18 — matplotlib:<br>seus dados ganham olhos<span class="cursor" aria-hidden="true"></span></h1>
+  <p class="sub">Gráficos de barras, pizza e linha com matplotlib: títulos, cores, salvar em PNG, o atalho .plot() do pandas e a arte de escolher o gráfico certo para cada história.</p>
   <div class="howto">
     <strong>Como usar:</strong> digite o código você mesmo (não copie e cole!), compare com a saída esperada e marque <strong>✔ Concluído</strong> em cada exercício para encher sua barra de XP. As <strong>dicas</strong> e <strong>soluções</strong> ficam escondidas — só abra depois de tentar! Seu progresso fica salvo no navegador.
   </div>
 </header>
 
-<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · Por que testar</a><a href="#p2">2 · pytest</a><a href="#p3">3 · Casos extremos</a><a href="#p4">4 · Exceções & parametrize</a><a href="#p5">5 · Testando a API</a><a href="#p6">6 · Projetos</a><a href="#checklist">✅ Checklist</a></nav>
+<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · Primeiro gráfico</a><a href="#p2">2 · Tipos</a><a href="#p3">3 · Salvando</a><a href="#p4">4 · pandas + plt</a><a href="#p5">5 · O gráfico certo</a><a href="#p6">6 · Projetos</a><a href="#checklist">✅ Checklist</a></nav>
 
 <main>
 
 <section class="parte" id="p1">
-  <div class="parte-head"><span class="num">01</span><h2>Por que testar? (e o assert)</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Seu sistema tem banco, API, JWT, frontend... e a cada mudança, você testa TUDO de novo na mão? Clicando, olhando, conferindo? Isso não escala. <strong>Testes automatizados</strong> são programas que testam seu programa: rodam em segundos, não esquecem nenhum caso e gritam na hora que algo quebra.</p><p>A peça básica é o <code>assert</code>: ele afirma que algo é verdade — e explode se não for.</p></div>
+  <div class="parte-head"><span class="num">01</span><h2>O primeiro gráfico</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Instale com <code>pip install matplotlib</code>. A convenção é importar o submódulo pyplot como plt: <code>import matplotlib.pyplot as plt</code>. O fluxo básico: montar o gráfico → <code>plt.show()</code> abre a janela (feche-a para o programa continuar).</p></div>
   <article class="ex" id="ex1">
     <div class="ex-head">
       <span class="ex-num">EX 01</span>
-      <h3>Conhecendo o assert 💥</h3>
-      <span class="stars">⭐ básico</span>
+      <h3>Barras no ar 📊</h3>
+      <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex1"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Entender a peça fundamental de todo teste.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>O <code>assert condicao</code> não faz nada se a condição for True... e levanta <code>AssertionError</code> se for False</li><li>PREVEJA o que acontece em cada linha, depois execute:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex01_assert.py</span></div><pre class="code">def calcular_total(preco, qtd):
-    return preco * qtd
+<span class="tag obj">🎯 Objetivo</span><p>Seu primeiro gráfico em 4 linhas.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Digite e execute — uma JANELA vai abrir com o gráfico:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex01_barras.py</span></div><pre class="code">import matplotlib.pyplot as plt
 
-assert calcular_total(10, 3) == 30
-print("Primeiro assert passou!")
+produtos = ["branca", "preta", "azulejo"]
+totais = [175.0, 407.5, 120.0]
 
-assert calcular_total(25.0, 2) == 50.0
-print("Segundo assert passou!")
-
-assert calcular_total(10, 0) == 999   # essa afirmação é falsa!
-print("Você nunca verá esta linha.")</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Primeiro assert passou!
-Segundo assert passou!
-Traceback (most recent call last):
-  ...
-AssertionError</pre></div><details class="dica"><summary>💡 Afirmar, não perguntar</summary><div class="inner">O <code>assert</code> é uma AFIRMAÇÃO: "isto É verdade". Se for, silêncio (bom sinal!); se não for, erro na cara. Um teste é só um conjunto de afirmações sobre como seu código DEVE se comportar. Simples assim — e poderoso assim.</div></details>
+plt.bar(produtos, totais)
+plt.show()</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(abre uma janela com 3 barras — feche-a para encerrar)</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner">O bar recebe duas listas pareadas: rótulos e alturas — as listas da Semana 4 finalmente viram desenho! Se a janela não abrir no seu editor, procure a aba "Plots" ou rode pelo terminal.</div></details>
     </div>
   </article>
 
   <article class="ex" id="ex2">
     <div class="ex-head">
       <span class="ex-num">EX 02</span>
-      <h3>O custo do bug tardio 🐛💸</h3>
-      <span class="stars">⭐ básico</span>
+      <h3>Título e rótulos: gráfico com contexto</h3>
+      <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex2"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Entender POR QUE empresas levam testes tão a sério.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Reflita sobre o mesmo bug (o desconto que calcula errado) descoberto em três momentos:</li><li>a) Pelo SEU teste, 10 segundos depois de escrever a função</li><li>b) Pelo colega, uma semana depois, ao usar sua função no módulo dele</li><li>c) Pelo CLIENTE, um mês depois, cobrado errado na loja</li></ol><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><p><strong>a)</strong> Custo: 2 minutos — você corrige na hora, com o contexto fresco. <strong>b)</strong> Custo: horas — o colega investiga, te aciona, vocês depuram juntos. <strong>c)</strong> Custo: enorme — cliente irritado, reembolsos, reputação, e o bug está enterrado sob um mês de mudanças. <strong>A regra da indústria: quanto mais tarde o bug aparece, mais caro ele fica</strong> (às vezes 100x). Testes automatizados puxam a descoberta para o momento mais barato: agora. É por isso que vagas pedem "experiência com testes" — é dinheiro puro.</p></div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Um gráfico sem título é um número sem unidade.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Antes do show, adicione os textos:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex02_titulos.py</span></div><pre class="code">import matplotlib.pyplot as plt
+
+produtos = ["branca", "preta", "azulejo"]
+totais = [175.0, 407.5, 120.0]
+
+plt.bar(produtos, totais, color="#3776AB")
+plt.title("Faturamento por produto — Tua Caneca")
+plt.xlabel("Produto")
+plt.ylabel("Faturamento (R$)")
+plt.show()</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(o mesmo gráfico, agora azul e com identidade!)</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner">O <code>color</code> aceita nomes ("blue", "gold") ou códigos hex como <code>"#3776AB"</code> (o azul oficial do Python 😄). Pode até ser uma LISTA com uma cor por barra.</div></details>
     </div>
   </article>
 </section>
 
 <section class="parte" id="p2">
-  <div class="parte-head"><span class="num">02</span><h2>pytest: o padrão do mercado</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>O <strong>pytest</strong> (<code>pip install pytest</code>) organiza e roda seus asserts. As convenções: testes vivem em arquivos <code>test_*.py</code>, dentro de funções <code>def test_*()</code>. Aí você digita <code>pytest</code> no terminal e ele encontra e roda TUDO sozinho, com um relatório colorido no final.</p></div>
+  <div class="parte-head"><span class="num">02</span><h2>Linha e pizza: cada um com seu papel</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p><code>plt.plot</code> (linha) conta evolução no TEMPO; <code>plt.pie</code> (pizza) mostra PARTES de um todo. Mesma estrutura, perguntas diferentes.</p></div>
   <article class="ex" id="ex3">
     <div class="ex-head">
       <span class="ex-num">EX 03</span>
-      <h3>Seu primeiro arquivo de testes ✅</h3>
+      <h3>A linha do tempo 📈</h3>
       <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex3"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Criar e rodar uma suíte pytest de verdade.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie <code>loja.py</code> com a função <code>calcular_total</code> (com desconto de 10% acima de 100)</li><li>Crie <code>test_loja.py</code> com funções test_* que a verificam</li><li>Rode <code>pytest</code> no terminal (na mesma pasta)</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">loja.py</span></div><pre class="code">def calcular_total(preco, qtd):
-    total = preco * qtd
-    if total &gt; 100:
-        total = total * 0.9   # 10% de desconto
-    return round(total, 2)</pre></div><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">test_loja.py</span></div><pre class="code">from loja import calcular_total
+<span class="tag obj">🎯 Objetivo</span><p>Evolução do faturamento por dia.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Use plt.plot com <code>marker="o"</code> para destacar os pontos:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex03_linha.py</span></div><pre class="code">import matplotlib.pyplot as plt
 
-def test_total_simples():
-    assert calcular_total(10, 3) == 30
+dias = ["10/06", "11/06", "12/06"]
+faturamento = [345.0, 217.5, 140.0]
 
-def test_desconto_acima_de_100():
-    assert calcular_total(60, 2) == 108.0   # 120 - 10%
-
-def test_sem_desconto_no_limite():
-    assert calcular_total(50, 2) == 100     # 100 nao ganha desconto</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">$ pytest
-========================= test session starts =========================
-collected 3 items
-
-test_loja.py ...                                                 [100%]
-========================== 3 passed in 0.02s ==========================</pre></div><details class="dica"><summary>💡 Os três pontinhos</summary><div class="inner">Cada <code>.</code> é um teste que passou; um <code>F</code> seria uma falha. O pytest ACHOU seus testes sozinho (pela convenção test_) e rodou todos. A partir de agora, "rodar os testes" é um comando de 6 letras — sem desculpa para pular!</div></details>
+plt.plot(dias, faturamento, marker="o", color="#FFB000")
+plt.title("Faturamento por dia")
+plt.ylabel("R$")
+plt.show()</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(linha amarela descendo... hora de vender mais! 😅)</pre></div>
     </div>
   </article>
 
   <article class="ex" id="ex4">
     <div class="ex-head">
       <span class="ex-num">EX 04</span>
-      <h3>Vendo um teste FALHAR (de propósito) 🔴</h3>
+      <h3>A pizza 🍕</h3>
       <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex4"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Aprender a ler o relatório de falha — a habilidade que faz o teste valer.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Quebre a função de propósito: mude o desconto de <code>0.9</code> para <code>0.8</code></li><li>Rode <code>pytest</code> e LEIA a falha com calma:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output" style="color:#FF9B94">$ pytest
-test_loja.py .F.                                                 [100%]
-============================== FAILURES ===============================
-______________________ test_desconto_acima_de_100 _____________________
+<span class="tag obj">🎯 Objetivo</span><p>Participação de cada produto no faturamento.</p><span class="tag passos">🧭 Passo a passo</span><ol><li><code>autopct="%1.0f%%"</code> escreve o percentual em cada fatia:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex04_pizza.py</span></div><pre class="code">import matplotlib.pyplot as plt
 
-    def test_desconto_acima_de_100():
-&gt;       assert calcular_total(60, 2) == 108.0
-E       assert 96.0 == 108.0
+produtos = ["branca", "preta", "azulejo"]
+totais = [175.0, 407.5, 120.0]
 
-===================== 1 failed, 2 passed in 0.04s =====================</pre></div><span class="tag passos">🧭 Continue</span><ol><li>O pytest mostra: QUAL teste falhou, QUAL linha, e os DOIS valores (esperado vs recebido)</li><li>Conserte a função (volte o 0.9) e veja tudo verde de novo</li></ol><details class="dica"><summary>💡 Vermelho é seu amigo</summary><div class="inner">O teste falhando fez o trabalho dele: pegou o bug ANTES do cliente. O ciclo profissional é: mudou o código → rodou pytest → verde? entrega; vermelho? conserta. Repare que o teste que falhou aponta a linha exata e a diferença de valores — depuração de precisão cirúrgica.</div></details>
+plt.pie(totais, labels=produtos, autopct="%1.0f%%")
+plt.title("Participação no faturamento")
+plt.show()</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(pizza com 25%, 58% e 17% — a preta domina!)</pre></div><details class="dica"><summary>💡 Regra da pizza</summary><div class="inner">Pizza funciona com POUCAS fatias (até 5) e quando a pergunta é "quanto cada parte representa do todo". Com 12 categorias vira uma roleta ilegível — use barras!</div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex5">
+    <div class="ex-head">
+      <span class="ex-num">EX 05</span>
+      <h3>Barras deitadas e comparações</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex5"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>barh para rótulos longos e duas séries lado a lado.</p><span class="tag passos">🧭 Passo a passo</span><ol><li><code>plt.barh</code> deita as barras — perfeito quando os nomes são compridos</li><li>Faça um barh dos produtos; depois experimente comparar duas listas (qtd vendida vs. estoque) com duas chamadas de bar</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(barras horizontais com os nomes legíveis)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex05.py</span></div><pre class="code">import matplotlib.pyplot as plt
+
+produtos = ["caneca branca", "caneca preta", "azulejo decorado"]
+totais = [175.0, 407.5, 120.0]
+
+plt.barh(produtos, totais, color="#3776AB")
+plt.title("Faturamento por produto")
+plt.xlabel("R$")
+plt.tight_layout()
+plt.show()</pre></div><p>O <code>tight_layout()</code> ajusta as margens para nada ficar cortado — hábito de quem entrega gráfico bonito.</p></div></details>
     </div>
   </article>
 </section>
 
 <section class="parte" id="p3">
-  <div class="parte-head"><span class="num">03</span><h2>Casos extremos: onde os bugs moram</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Bugs raramente moram no caso comum — moram nas BORDAS: zero, negativo, vazio, o limite exato. Testar bem é perguntar "e se...?": e se a quantidade for 0? E se o preço for negativo? E se o carrinho estiver vazio?</p></div>
-  <article class="ex" id="ex5">
+  <div class="parte-head"><span class="num">03</span><h2>Salvando em PNG</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Gráfico bom é gráfico que viaja: <code>plt.savefig("nome.png", dpi=150)</code> grava a imagem. <strong>⚠️ A pegadinha clássica:</strong> salve ANTES do show — o show "consome" a figura, e salvar depois gera um PNG em branco!</p></div>
+  <article class="ex" id="ex6">
     <div class="ex-head">
-      <span class="ex-num">EX 05</span>
-      <h3>Caçando bordas 🎯</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex5"> Concluído</label>
+      <span class="ex-num">EX 06</span>
+      <h3>Do gráfico ao arquivo</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex6"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Escrever testes para os casos que ninguém pensa (e o código quebra).</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Para a <code>calcular_total</code>, escreva testes de borda: qtd 0, exatamente 100, valor gigante</li><li>Alguma borda revela comportamento estranho? (qtd negativa devia ser permitida?)</li><li>Se achar um comportamento errado, você achou um BUG — conserte a função e deixe o teste de guarda</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(testes de borda passando — ou revelando decisões que a função nem tinha tomado!)</pre></div><details class="dica"><summary>💡 O teste que faz pensar</summary><div class="inner">Escrever o teste da qtd negativa te obriga a DECIDIR: deve dar erro? Deve devolver 0? Testes não só verificam código — eles expõem decisões que você nem sabia que precisava tomar. Por isso dizem que testar melhora o DESIGN do código.</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">test_bordas.py</span></div><pre class="code">from loja import calcular_total
+<span class="tag obj">🎯 Objetivo</span><p>Gerar um PNG pronto para slides, relatórios e WhatsApp do cliente.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Monte o gráfico de barras e finalize com:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex06_savefig.py</span></div><pre class="code">plt.title("Faturamento por produto")
+plt.tight_layout()
+plt.savefig("faturamento.png", dpi=150)
+plt.show()
 
-def test_quantidade_zero():
-    assert calcular_total(50, 0) == 0
-
-def test_limite_exato_sem_desconto():
-    assert calcular_total(100, 1) == 100    # 100 NAO ganha desconto
-
-def test_um_centavo_acima_ganha_desconto():
-    assert calcular_total(100.01, 1) == 90.01
-
-def test_valor_grande():
-    assert calcular_total(1000, 10) == 9000.0</pre></div><p>O teste do "um centavo acima" é clássico: limites exatos (<code>&gt;</code> vs <code>&gt;=</code>) são o habitat favorito dos bugs. Um bom testador pensa como o bug pensa. 🕵️</p></div></details>
+print("faturamento.png salvo ✔")</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">faturamento.png salvo ✔ (confira a imagem na pasta!)</pre></div><details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Teste a pegadinha: inverta savefig e show e abra o PNG resultante. Branco total! Agora você nunca mais erra. 😄</div></details>
     </div>
   </article>
 </section>
 
 <section class="parte" id="p4">
-  <div class="parte-head"><span class="num">04</span><h2>Exceções esperadas e parametrize</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Duas ferramentas que elevam o nível: o <code>pytest.raises</code> testa que um erro ACONTECE quando deve (lembra do ValueError da Semana 7?), e o <code>@pytest.mark.parametrize</code> roda o MESMO teste com vários dados — DRY (Semana 6) nos testes.</p></div>
-  <article class="ex" id="ex6">
-    <div class="ex-head">
-      <span class="ex-num">EX 06</span>
-      <h3>Testando que o erro acontece 🧨</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex6"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Garantir que entradas inválidas são recusadas com exceção.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Faça a <code>calcular_total</code> levantar <code>ValueError</code> para preço ou qtd negativos (Semana 7: <code>raise</code></li><li>No teste, use o bloco <code>with pytest.raises(ValueError):</code> — o teste PASSA se o erro acontecer</li><li>Se a função NÃO levantar o erro, o teste falha (é isso que você quer vigiar!)</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">test_erros.py</span></div><pre class="code">import pytest
-from loja import calcular_total
-
-def test_preco_negativo_recusado():
-    with pytest.raises(ValueError):
-        calcular_total(-10, 2)
-
-def test_qtd_negativa_recusada():
-    with pytest.raises(ValueError):
-        calcular_total(10, -1)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">2 passed in 0.02s</pre></div><details class="dica"><summary>💡 Erro certo na hora certa</summary><div class="inner">Parece contraintuitivo: um teste que passa quando dá erro?! Mas pense: recusar entrada inválida É um comportamento correto — e comportamentos corretos merecem vigilância. O <code>pytest.raises</code> afirma: "aqui DEVE explodir". Se um dia alguém remover a validação, este teste acusa.</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">loja.py</span></div><pre class="code">def calcular_total(preco, qtd):
-    if preco &lt; 0 or qtd &lt; 0:
-        raise ValueError("preco e qtd devem ser positivos")
-    total = preco * qtd
-    if total &gt; 100:
-        total = total * 0.9
-    return round(total, 2)</pre></div></div></details>
-    </div>
-  </article>
-
+  <div class="parte-head"><span class="num">04</span><h2>pandas + matplotlib: o atalho .plot()</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>O casamento perfeito: todo resultado de pandas tem um <code>.plot()</code> embutido. Um groupby vira gráfico com <code>kind="bar"</code> — o matplotlib trabalha por baixo, e o plt.show() continua valendo.</p></div>
   <article class="ex" id="ex7">
     <div class="ex-head">
       <span class="ex-num">EX 07</span>
-      <h3>parametrize: um teste, muitos dados ♻️</h3>
+      <h3>groupby → gráfico em 2 linhas 🤯</h3>
       <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex7"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Rodar o mesmo teste com uma tabela de casos.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Decore o teste com <code>@pytest.mark.parametrize</code></li><li>Passe os nomes dos parâmetros e a lista de tuplas (entrada → esperado)</li><li>O pytest roda UMA vez por tupla — 5 casos = 5 testes no relatório</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">test_param.py</span></div><pre class="code">import pytest
-from loja import calcular_total
+<span class="tag obj">🎯 Objetivo</span><p>O fluxo profissional: CSV → análise → gráfico.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Com o vendas.csv da Semana 17 na pasta:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex07_pandasplot.py</span></div><pre class="code">import pandas as pd
+import matplotlib.pyplot as plt
 
-@pytest.mark.parametrize("preco, qtd, esperado", [
-    (10, 3, 30),
-    (60, 2, 108.0),
-    (50, 2, 100),
-    (100.01, 1, 90.01),
-    (0, 5, 0),
-])
-def test_calcular_total(preco, qtd, esperado):
-    assert calcular_total(preco, qtd) == esperado</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">5 passed in 0.03s</pre></div><details class="dica"><summary>💡 A tabela de verdades</summary><div class="inner">Cinco testes num só, sem copiar e colar função — é a lista de tuplas da Semana 5 alimentando o teste! Adicionar um caso novo = adicionar uma linha. Times profissionais mantêm tabelas com DEZENAS de casos assim, cobrindo cada canto da função.</div></details>
+df = pd.read_csv("vendas.csv")
+
+df.groupby("produto")["total"].sum().plot(kind="bar", color="#3776AB")
+plt.title("Faturamento por produto")
+plt.ylabel("R$")
+plt.tight_layout()
+plt.show()</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(o gráfico do seu groupby, direto do CSV!)</pre></div><details class="dica"><summary>💡 Experimente os kinds</summary><div class="inner"><code>kind="bar"</code>, <code>"barh"</code>, <code>"line"</code>, <code>"pie"</code>... Troque e veja. O pandas cuida dos rótulos sozinho — ele já SABE os nomes dos grupos!</div></details>
     </div>
   </article>
 </section>
 
 <section class="parte" id="p5">
-  <div class="parte-head"><span class="num">05</span><h2>Testando a API Flask 🌐</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>O grande salto: testar a sua API REST (Semanas 27-28) SEM subir servidor. O Flask traz o <code>test_client()</code>: um "navegador de mentira" que chama suas rotas direto na memória — GET, POST, com token, tudo. Os testes rodam em milissegundos.</p></div>
+  <div class="parte-head"><span class="num">05</span><h2>O gráfico certo para cada pergunta</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>A regra de ouro da visualização:</p><table><tr><th>Pergunta</th><th>Gráfico</th></tr><tr><td>Comparar categorias ("quem vende mais?")</td><td>Barras</td></tr><tr><td>Evolução no tempo ("estamos crescendo?")</td><td>Linha</td></tr><tr><td>Partes de um todo ("quanto % cada um?")</td><td>Pizza (≤ 5 fatias)</td></tr></table><p>Gráfico errado conta a história errada — e quem escolhe é você, não a ferramenta.</p></div>
   <article class="ex" id="ex8">
     <div class="ex-head">
       <span class="ex-num">EX 08</span>
-      <h3>O primeiro teste de rota</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
+      <h3>Consultor de gráficos 🎩</h3>
+      <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex8"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Testar o GET /api/produtos com o test_client.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>No arquivo de teste, importe o <code>app</code> da sua API</li><li>Crie o cliente: <code>client = app.test_client()</code></li><li>Chame <code>client.get("/api/produtos")</code> e verifique status e JSON</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">test_api.py</span></div><pre class="code">from api import app   # a sua API das Semanas 27-28
-
-def test_listar_produtos():
-    client = app.test_client()
-    resp = client.get("/api/produtos")
-
-    assert resp.status_code == 200
-    dados = resp.get_json()
-    assert isinstance(dados, list)   # devolve uma lista?</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">1 passed in 0.15s</pre></div><details class="dica"><summary>💡 Sem servidor, sem espera</summary><div class="inner">O <code>test_client</code> NÃO abre porta nem precisa do <code>app.run()</code> — ele injeta a requisição direto no Flask. Por isso é tão rápido. O <code>resp.get_json()</code> é o espelho do <code>jsonify</code>: desfaz o JSON para você verificar com assert.</div></details>
-    </div>
-  </article>
-
-  <article class="ex" id="ex9">
-    <div class="ex-head">
-      <span class="ex-num">EX 09</span>
-      <h3>Testando a proteção JWT 🔐</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex9"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Garantir que as rotas protegidas RECUSAM sem token e ACEITAM com.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Teste 1: POST sem token deve dar <code>401</code> — a segurança está de pé?</li><li>Teste 2: faça login pelo próprio test_client, pegue o token e crie COM o header <code>Authorization</code></li><li>Dois testes que vigiam sua autenticação para sempre</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">2 passed in 0.31s</pre></div><details class="dica"><summary>💡 Testando o cadeado</summary><div class="inner">O teste do 401 é dos mais valiosos do sistema: se um dia alguém REMOVER o @token_required sem querer, ele acusa na hora. Testes de segurança são o alarme do alarme. E note o fluxo do teste 2: login → token → uso — o mesmo do frontend (Semana 29), automatizado.</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">test_auth.py</span></div><pre class="code">from api import app
-
-def test_criar_sem_token_da_401():
-    client = app.test_client()
-    resp = client.post("/api/produtos",
-                       json={"nome": "x", "preco": 1, "estoque": 1})
-    assert resp.status_code == 401
-
-def test_criar_com_token_funciona():
-    client = app.test_client()
-
-    # login (usuario de teste ja cadastrado no banco)
-    resp = client.post("/api/login",
-                       json={"usuario": "robson", "senha": "tuacaneca123"})
-    assert resp.status_code == 200
-    token = resp.get_json()["token"]
-
-    # cria com o token
-    resp = client.post("/api/produtos",
-                       headers={"Authorization": f"Bearer {token}"},
-                       json={"nome": "caneca teste", "preco": 20, "estoque": 3})
-    assert resp.status_code == 201
-    assert resp.get_json()["nome"] == "caneca teste"</pre></div><p>Dica profissional: em projetos maiores usa-se um banco SEPARADO para testes (para não sujar os dados reais). Pesquise "pytest fixtures" quando quiser dar esse passo — é o próximo nível natural.</p></div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Treinar a escolha — a habilidade que separa o gerador de gráficos do comunicador de dados.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Para cada cenário, decida o tipo e MONTE um deles:</li><li>a) Faturamento mensal de jan a dez — qual gráfico?</li><li>b) Vendas por vendedor no trimestre — qual?</li><li>c) Fatia de mercado de 4 marcas — qual?</li><li>d) Notas de 30 alunos individualmente — qual? (pegadinha!)</li></ol><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><p><strong>a)</strong> Linha (tempo!). <strong>b)</strong> Barras (comparação). <strong>c)</strong> Pizza (partes do todo, só 4 fatias ✔). <strong>d)</strong> A pegadinha: 30 fatias de pizza seria um crime — barras horizontais ordenadas, ou melhor ainda, um histograma (pesquise <code>plt.hist</code>!). A pergunta define o gráfico; o gráfico define a história.</p></div></details>
     </div>
   </article>
 </section>
@@ -492,30 +424,101 @@ def test_criar_com_token_funciona():
 <section class="parte" id="p6">
   <div class="parte-head"><span class="num">06</span><h2>Projetos da semana: juntando tudo!</h2></div>
 
+  <article class="ex" id="ex9">
+    <div class="ex-head">
+      <span class="ex-num">EX 09</span>
+      <h3>Projeto: Painel Tua Caneca em PNG 🖼️</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex9"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Os 3 gráficos oficiais do negócio, salvos e prontos para o relatório.</p><span class="tag passos">🧭 Requisitos</span><ol><li>A partir do vendas.csv: (1) barras do faturamento por produto, (2) pizza da participação, (3) linha do faturamento por dia</li><li>Cada um com título, cores e tight_layout, salvo em PNG (dpi=150)</li><li>Entre um gráfico e outro: <code>plt.figure()</code> inicia uma figura nova (senão eles se misturam!)</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">por_produto.png ✔
+participacao.png ✔
+por_dia.png ✔</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex09.py</span></div><pre class="code">import pandas as pd
+import matplotlib.pyplot as plt
+
+df = pd.read_csv("vendas.csv")
+
+# 1. Barras
+plt.figure(figsize=(6, 4))
+df.groupby("produto")["total"].sum().plot(kind="bar", color="#3776AB")
+plt.title("Faturamento por produto")
+plt.ylabel("R$")
+plt.tight_layout()
+plt.savefig("por_produto.png", dpi=150)
+print("por_produto.png ✔")
+
+# 2. Pizza
+plt.figure(figsize=(5, 5))
+df.groupby("produto")["total"].sum().plot(kind="pie", autopct="%1.0f%%")
+plt.title("Participação no faturamento")
+plt.ylabel("")
+plt.tight_layout()
+plt.savefig("participacao.png", dpi=150)
+print("participacao.png ✔")
+
+# 3. Linha
+plt.figure(figsize=(6, 4))
+df.groupby("data")["total"].sum().plot(kind="line", marker="o", color="#FFB000")
+plt.title("Faturamento por dia")
+plt.ylabel("R$")
+plt.tight_layout()
+plt.savefig("por_dia.png", dpi=150)
+print("por_dia.png ✔")</pre></div></div></details>
+    </div>
+  </article>
+
   <article class="ex" id="ex10">
     <div class="ex-head">
       <span class="ex-num">EX 10</span>
-      <h3>Projeto: a suíte da Tua Caneca 🧪</h3>
+      <h3>Projeto: Notas da turma com linha da média 🎓</h3>
       <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex10"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Uma suíte de testes cobrindo a API inteira — sua rede de segurança oficial.</p><span class="tag passos">🧭 Requisitos</span><ol><li>Um <code>test_api.py</code> com no mínimo 8 testes: listar (200), buscar existente (200) e inexistente (404), criar sem token (401), criar com token (201), criar sem nome (400), atualizar e excluir</li><li>Use parametrize onde houver repetição</li><li>Meta: <code>pytest</code> → tudo verde ✅</li><li>Regra de ouro a partir de hoje: NUNCA entregue sem rodar a suíte</li></ol><span class="tag saida">✅ A meta</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">$ pytest
-collected 9 items
-test_api.py .........                                            [100%]
-========================== 9 passed in 0.8s ===========================</pre></div><details class="dica"><summary>💡 O contrato da sua API</summary><div class="inner">Essa suíte é a ESPECIFICAÇÃO viva da API: qualquer pessoa (inclusive você daqui a 6 meses) lê os testes e entende exatamente o que cada endpoint promete. E toda mudança futura tem que passar por eles. Código testado é código em que se pode confiar — e confiança é o que se vende no mercado. 🤝</div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Visualizar desempenho com uma linha de referência.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Barras com a média de cada aluno (groupby da Semana 17)</li><li>Linha horizontal da nota de corte: <code>plt.axhline(7, color="red", linestyle="--")</code></li><li>Quem está abaixo da linha fica visível na hora — é assim que dado vira decisão!</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(barras dos alunos com a linha vermelha do 7)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex10.py</span></div><pre class="code">import pandas as pd
+import matplotlib.pyplot as plt
+
+notas = pd.DataFrame({
+    "aluno": ["Ana", "Ana", "Bruno", "Bruno", "Carla", "Carla"],
+    "nota": [8.0, 8.5, 6.0, 5.0, 9.5, 9.5]
+})
+
+medias = notas.groupby("aluno")["nota"].mean()
+
+medias.plot(kind="bar", color="#3776AB")
+plt.axhline(7, color="red", linestyle="--", label="Nota de corte")
+plt.title("Média por aluno")
+plt.ylabel("Nota")
+plt.legend()
+plt.tight_layout()
+plt.savefig("medias_turma.png", dpi=150)
+plt.show()</pre></div></div></details>
     </div>
   </article>
 
   <article class="ex" id="ex11">
     <div class="ex-head">
       <span class="ex-num">EX 11</span>
-      <h3>Projeto bônus: caça ao bug com rede de proteção 🎪</h3>
+      <h3>Projeto bônus: Gráfico das cotações 📈</h3>
       <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex11"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Sentir o fluxo profissional: quebrar, detectar, consertar (sem código pronto!).</p><span class="tag passos">🧭 Roteiro</span><ol><li>Com a suíte verde, sabote de propósito UM detalhe da API (ex.: troque o 201 por 200, ou remova uma validação)</li><li>Rode <code>pytest</code> — quais testes acusam? A mensagem aponta o lugar certo?</li><li>Conserte e veja tudo verde de novo</li><li>Reflita: sem os testes, quanto tempo até esse "sabotador" ser descoberto?</li></ol><details class="dica"><summary>💡 O jogo do sabotador</summary><div class="inner">Esse exercício tem nome chique no mercado: "mutation testing" (testar os testes!). Se você sabotar algo e NENHUM teste acusar... achou um buraco na sua rede — escreva o teste que falta. Uma suíte é tão boa quanto os bugs que ela consegue pegar. 🕳️🕸️</div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Fechar o ciclo com a Semana 15: o historico.csv das moedas vira gráfico (sem código pronto!).</p><span class="tag passos">🧭 Roteiro</span><ol><li>Rode o monitor de moedas da Semana 15 algumas vezes para encher o historico.csv</li><li>Leia com pandas (dica: o CSV não tem cabeçalho — pesquise o parâmetro <code>names=[...]</code> do read_csv!)</li><li>Filtre só o Dólar e plote a linha da cotação ao longo das consultas</li><li>Reflita: API (S15) + CSV (S13) + pandas (S17) + gráfico (S18) — quatro semanas, um pipeline!</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(a linha do dólar nas suas consultas)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex11.py</span></div><pre class="code">import pandas as pd
+import matplotlib.pyplot as plt
+
+df = pd.read_csv("historico.csv", names=["data", "moeda", "valor"])
+
+dolar = df[df["moeda"] == "Dólar"]
+
+plt.plot(dolar["data"], dolar["valor"].astype(float), marker="o")
+plt.title("Cotação do dólar nas minhas consultas")
+plt.ylabel("R$")
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.savefig("dolar_historico.png", dpi=150)
+plt.show()</pre></div></div></details>
     </div>
   </article>
 </section>
@@ -523,29 +526,29 @@ test_api.py .........                                            [100%]
 <div class="checklist" id="checklist">
   <h2>✅ Checklist de fim de semana</h2>
   <p>Antes de seguir para a próxima semana, confirme que você consegue:</p>
-<label class="check-item"><input type="checkbox"><span>Explicar por que testes automatizados valem o esforço</span></label>
-<label class="check-item"><input type="checkbox"><span>Usar assert para verificar comportamentos</span></label>
-<label class="check-item"><input type="checkbox"><span>Escrever funções de teste no padrão test_*</span></label>
-<label class="check-item"><input type="checkbox"><span>Rodar o pytest e interpretar o relatório (passou/falhou)</span></label>
-<label class="check-item"><input type="checkbox"><span>Testar casos normais E casos extremos (borda)</span></label>
-<label class="check-item"><input type="checkbox"><span>Verificar que uma exceção é levantada com pytest.raises</span></label>
-<label class="check-item"><input type="checkbox"><span>Repetir um teste com vários dados usando parametrize</span></label>
-<label class="check-item"><input type="checkbox"><span>Testar rotas da API Flask com o test_client (sem subir servidor)</span></label>
-<label class="check-item"><input type="checkbox"><span>Testar rotas protegidas enviando o token JWT</span></label>
-<label class="check-item"><input type="checkbox"><span>Manter uma suíte de testes que roda antes de cada entrega</span></label>
+<label class="check-item"><input type="checkbox"><span>Criar um gráfico de barras com plt.bar e exibir com show()</span></label>
+<label class="check-item"><input type="checkbox"><span>Colocar título e rótulos nos eixos (title, xlabel, ylabel)</span></label>
+<label class="check-item"><input type="checkbox"><span>Fazer um gráfico de linha para evolução no tempo</span></label>
+<label class="check-item"><input type="checkbox"><span>Fazer uma pizza com percentuais (autopct)</span></label>
+<label class="check-item"><input type="checkbox"><span>Personalizar cores das barras e fatias</span></label>
+<label class="check-item"><input type="checkbox"><span>Salvar em PNG com savefig (ANTES do show!)</span></label>
+<label class="check-item"><input type="checkbox"><span>Gerar gráficos direto do pandas com .plot(kind=...)</span></label>
+<label class="check-item"><input type="checkbox"><span>Escolher o tipo certo: barra/linha/pizza para cada pergunta</span></label>
+<label class="check-item"><input type="checkbox"><span>Usar axhline para linhas de referência (meta, média)</span></label>
+<label class="check-item"><input type="checkbox"><span>Montar um painel com vários gráficos salvos</span></label>
 </div>
 
 <div class="win-banner" id="winBanner">
-  <h2>🏆 SEMANA 32 COMPLETA!</h2>
-  <p>Você concluiu todos os exercícios. Seu código agora tem uma rede de segurança automatizada — você muda com confiança, porque os testes vigiam por você!</p>
+  <h2>🏆 SEMANA 18 COMPLETA!</h2>
+  <p>Você concluiu todos os exercícios. Seus relatórios nunca mais serão só texto!</p>
 </div>
 
 <div class="preview-s2">
-<h2>📅 Prévia da Semana 33</h2><p>Seu código funciona e é testado — agora falta a memória e a vitrine! Na próxima semana: <strong>Git e GitHub</strong>. Salvar cada versão do projeto (e voltar no tempo quando precisar), o <code>.gitignore</code> que protege suas senhas, e publicar seus repositórios no GitHub com README profissional — o portfólio que recrutadores realmente olham. 🐙</p></div>
+<h2>📅 Prévia da Semana 19</h2><p>Na próxima semana, a virada épica: <strong>Flask</strong> — seu Python vira um SITE! Rotas, páginas HTML geradas por código, e o momento de glória: você vai criar a sua PRÓPRIA API. Depois de 4 semanas consumindo o garçom... você assume a cozinha. 👨‍🍳🌐</p></div>
 
 </main>
 
-<footer>python_para_iniciantes // semana_32 // exercícios guiados</footer>
+<footer>python_para_iniciantes // semana_18 // exercícios guiados</footer>
 
 <script>
 // ===== Syntax highlight leve para Python =====
@@ -557,7 +560,7 @@ test_api.py .........                                            [100%]
     src = src.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     // uma passada só, com alternação (comentário | string | builtin | bool | número)
     src = src.replace(
-      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|insert|int|float|str|len|range|type|abs|round|max|min|sum|sorted|sort|reverse|append|remove|split|strip|upper|lower|replace|title|randint|random|get|keys|values|items|open|readlines|read|write|close|count|index|pop|update|list|dict|tuple|enumerate|sqrt|floor|ceil|choice|shuffle|sample|sleep|now|today|strftime|dumps|dump|loads|load|isinstance|datetime|date|DictReader|DictWriter|writerows|writerow|writeheader|writer|reader|csv|Workbook|load_workbook|save|iter_rows|Font|listdir|makedirs|getcwd|rename|exists|getsize|splitext|join|endswith|startswith|copytree|copy|move|requests|status_code|json|DataFrame|read_csv|read_excel|to_excel|to_csv|head|describe|groupby|sort_values|value_counts|mean|idxmax|bar|barh|pie|plot|savefig|show|title|xlabel|ylabel|figure|legend|axhline|tight_layout|close|Flask|route|run|render_template|jsonify|redirect|request|connect|cursor|execute|executemany|fetchall|fetchone|commit|environ|getenv|post|encode|decode|abort|make_response|raises|approx|load_dotenv)\b|\b(True|False|None|if|elif|else|while|for|in|and|or|not|break|continue|import|from|def|return|try|except|finally|with|as|del|global|pass|class|self|super|lambda)\b|(\b\d+(?:\.\d+)?\b)/g,
+      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|insert|int|float|str|len|range|type|abs|round|max|min|sum|sorted|sort|reverse|append|remove|split|strip|upper|lower|replace|title|randint|random|get|keys|values|items|open|readlines|read|write|close|count|index|pop|update|list|dict|tuple|enumerate|sqrt|floor|ceil|choice|shuffle|sample|sleep|now|today|strftime|dumps|dump|loads|load|isinstance|datetime|date|DictReader|DictWriter|writerows|writerow|writeheader|writer|reader|csv|Workbook|load_workbook|save|iter_rows|Font|listdir|makedirs|getcwd|rename|exists|getsize|splitext|join|endswith|startswith|copytree|copy|move|requests|status_code|json|DataFrame|read_csv|read_excel|to_excel|to_csv|head|describe|groupby|sort_values|value_counts|mean|idxmax|bar|barh|pie|plot|savefig|show|title|xlabel|ylabel|figure|legend|axhline|tight_layout|close|Flask|route|run|render_template|jsonify|redirect|request)\b|\b(True|False|None|if|elif|else|while|for|in|and|or|not|break|continue|import|from|def|return|try|except|finally|with|as|del|global|pass|class|self|super|lambda)\b|(\b\d+(?:\.\d+)?\b)/g,
       function(m, com, str, fn, bool, num){
         if(com)  return '<span class="tk-com">'+com+'</span>';
         if(str)  return '<span class="tk-str">'+str+'</span>';
@@ -576,7 +579,7 @@ test_api.py .........                                            [100%]
 // no navegador. Se o localStorage estiver indisponível (modo restrito,
 // pré-visualização, etc.), o progresso funciona só em memória, sem quebrar.
 const storage = (function(){
-  const KEY = 'python_semana32_progresso';
+  const KEY = 'python_semana18_progresso';
   let memoria = {};
   let disponivel = false;
   try{

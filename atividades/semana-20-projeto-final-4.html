@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Semana 27 — API REST com Flask</title>
+<title>Semana 20 — Projeto Final 4</title>
 <style>
   :root{
     --ink:#16243A;
@@ -57,7 +57,7 @@
     color:#fff;padding:56px 20px 48px;text-align:center;position:relative;overflow:hidden;
   }
   header.hero::before{
-    content:"REST  GET POST PUT DELETE  JSON  status 200/404  CORS";
+    content:"pandas  matplotlib  Flask  dashboard  🏆";
     position:absolute;inset:auto 0 8px 0;font-family:var(--mono);font-size:.78rem;
     color:rgba(255,255,255,.14);letter-spacing:.4em;white-space:nowrap;overflow:hidden;
   }
@@ -234,392 +234,388 @@
 <div class="progress-wrap" role="region" aria-label="Progresso da semana">
   <span class="label">XP DA SEMANA</span>
   <div class="progress-bar"><div class="progress-fill" id="pfill"></div></div>
-  <span class="progress-count" id="pcount">0 / 13</span>
+  <span class="progress-count" id="pcount">0 / 10</span>
   <span class="progress-msg" id="pmsg">Marque os exercícios concluídos ✔</span>
   <button class="reset-btn" id="resetBtn" title="Apagar todo o progresso salvo">↺ Resetar</button>
 </div>
 
 <header class="hero">
   <div class="kicker">Python para Iniciantes · Exercícios Guiados</div>
-  <h1>SEMANA 27 — API REST:<br>quebrando o monolito<span class="cursor" aria-hidden="true"></span></h1>
-  <p class="sub">A arquitetura profissional: separar o backend (uma API REST que fala JSON) do frontend. Verbos HTTP mapeando o CRUD, códigos de status corretos, CORS e a sua loja virando um serviço consumível por qualquer cliente.</p>
+  <h1>SEMANA 20 — Projeto Final 4:<br>o Dashboard Web 🏆<span class="cursor" aria-hidden="true"></span></h1>
+  <p class="sub">A obra-prima absoluta: pandas analisa, matplotlib desenha, Flask serve. Um dashboard de verdade no navegador — números, gráficos, API e botão de atualizar.</p>
   <div class="howto">
     <strong>Como usar:</strong> digite o código você mesmo (não copie e cole!), compare com a saída esperada e marque <strong>✔ Concluído</strong> em cada exercício para encher sua barra de XP. As <strong>dicas</strong> e <strong>soluções</strong> ficam escondidas — só abra depois de tentar! Seu progresso fica salvo no navegador.
   </div>
 </header>
 
-<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · O que é REST</a><a href="#p2">2 · GET</a><a href="#p3">3 · POST</a><a href="#p4">4 · PUT & DELETE</a><a href="#p5">5 · Status, CORS, teste</a><a href="#p6">6 · Projetos</a><a href="#checklist">✅ Checklist</a></nav>
+<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · Revisão</a><a href="#p2">2 · Etapas 1-2</a><a href="#p3">3 · Etapas 3-4</a><a href="#p4">4 · Etapas 5-6</a><a href="#p5">5 · A última formatura</a><a href="#checklist">✅ Checklist</a></nav>
 
 <main>
 
 <section class="parte" id="p1">
-  <div class="parte-head"><span class="num">01</span><h2>O que é uma API REST?</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Até agora, suas apps web eram <strong>monolitos</strong>: um único programa Flask que mexia no banco, decidia a lógica E montava as telas HTML — tudo grudado. A arquitetura profissional <strong>separa</strong> isso em duas partes independentes:</p><table><tr><th>Backend (API REST)</th><th>Frontend (cliente)</th></tr><tr><td>Python + Flask + MariaDB</td><td>HTML/JS, app mobile, etc.</td></tr><tr><td>Fala só <strong>JSON</strong> (sem HTML)</td><td>Mostra as telas</td></tr><tr><td>Cuida dos dados e regras</td><td>Cuida da aparência</td></tr></table><p>Os dois conversam por uma <strong>API REST</strong>: um conjunto de endereços (endpoints) que recebem pedidos e devolvem JSON. A regra do <strong>REST</strong> é organizar tudo em torno de <strong>recursos</strong> (ex.: "produtos") e usar os <strong>verbos do HTTP</strong> para dizer a operação. É o padrão que move a internet moderna.</p></div>
+  <div class="parte-head"><span class="num">01</span><h2>Revisão relâmpago</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>O último aquecimento de todos. Capriche — é pela honra! 😄</p></div>
   <article class="ex" id="ex1">
     <div class="ex-head">
       <span class="ex-num">EX 01</span>
-      <h3>Monolito vs desacoplado: a grande virada 🏛️</h3>
-      <span class="stars">⭐ básico</span>
+      <h3>Quiz: preveja as 8 saídas 🧠</h3>
+      <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex1"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Entender por que separar backend e frontend é o jeito profissional.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Reflita sobre as vantagens de separar a API do frontend. Para cada situação, pense por que o desacoplamento ajuda:</li><li>a) Você quer um site E um app de celular usando os mesmos dados</li><li>b) O time de design quer mudar as telas sem mexer na lógica do banco</li><li>c) Outra empresa quer integrar o sistema dela com o seu</li><li>d) Você quer trocar o frontend de HTML puro para React no futuro</li></ol><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><p><strong>a)</strong> Site e app consomem a MESMA API — você escreve a lógica uma vez. <strong>b)</strong> Frontend e backend são projetos separados; mudar telas não toca no banco. <strong>c)</strong> Uma API REST é "plugável": qualquer sistema que fale HTTP+JSON se conecta. <strong>d)</strong> Troca-se o frontend inteiro sem mexer na API — ela nem fica sabendo. <strong>Em uma frase:</strong> o monolito é uma peça só (simples de começar, difícil de evoluir); o desacoplado são peças independentes que evoluem sozinhas. É por isso que praticamente toda empresa moderna trabalha assim.</p></div></details>
+<span class="tag obj">🎯 Objetivo</span><p>pandas, rotas, f-strings com CSS e os eternos clássicos.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Anote as previsões. Última chance de gabarito da jornada!</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex01_quiz.py</span></div><pre class="code">import pandas as pd
+
+df = pd.DataFrame({"p": ["a", "b", "a"], "v": [10, 20, 30]})
+
+print(len(df))
+print(df["v"].sum())
+print(df[df["p"] == "a"]["v"].sum())
+print(df.groupby("p")["v"].sum().idxmax())
+
+print(f"{{ color: red }}")
+print("/api/produtos".startswith("/api"))
+
+rota = "/tabuada/&lt;int:n&gt;"
+print("int" in rota)
+
+x = [1, 2, 3]
+print(x[::-1])</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">3
+60
+40
+a
+{ color: red }
+True
+True
+[3, 2, 1]</pre></div><details class="dica"><summary>💡 Gabarito comentado</summary><div class="inner">3 linhas · soma da coluna inteira · filtro p=="a" soma 10+30=40 · idxmax dos grupos {a: 40, b: 20} → "a" é o campeão · chaves duplas {{ }} viram chaves simples na f-string (S19!) · startswith (S14) · "int" é substring da rota · fatia reversa [::-1] (S4). 6+ acertos? Rumo ao dashboard!</div></details>
     </div>
   </article>
 
   <article class="ex" id="ex2">
     <div class="ex-head">
       <span class="ex-num">EX 02</span>
-      <h3>O mapa: verbos HTTP = CRUD</h3>
-      <span class="stars">⭐ básico</span>
+      <h3>Caça aos bugs do dashboard 🐛🔍</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex2"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Memorizar qual verbo HTTP faz cada operação.</p><p>O segredo do REST é que cada operação do CRUD (Semana 22) tem um verbo HTTP correspondente:</p><table><tr><th>CRUD</th><th>Verbo HTTP</th><th>Exemplo</th></tr><tr><td>Read (ler)</td><td><code>GET</code></td><td>GET /api/produtos</td></tr><tr><td>Create (criar)</td><td><code>POST</code></td><td>POST /api/produtos</td></tr><tr><td>Update (atualizar)</td><td><code>PUT</code></td><td>PUT /api/produtos/5</td></tr><tr><td>Delete (remover)</td><td><code>DELETE</code></td><td>DELETE /api/produtos/5</td></tr></table><span class="tag passos">🧭 Passo a passo</span><ol><li>Só de ler o pedido "<code>DELETE /api/produtos/5</code>", o que você acha que ele faz?</li><li>E "<code>GET /api/produtos</code>"? E "<code>POST /api/produtos</code>"?</li></ol><details class="dica"><summary>💡 A elegância do REST</summary><div class="inner">Repare: o MESMO endereço /api/produtos faz coisas diferentes dependendo do VERBO. GET lê, POST cria. O endereço diz o RECURSO; o verbo diz a AÇÃO. Essa clareza é o que torna APIs REST tão fáceis de entender — qualquer dev no mundo lê e já sabe o que acontece.</div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Os 5 bugs que travam dashboards de iniciantes.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>O código deveria gerar um gráfico e servir uma página — ache os 5 bugs ANTES de rodar</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex02_bugs.py</span></div><pre class="code">import pandas as pd
+import matplotlib.pyplot as plt
+from flask import Flask
+
+app = Flask(__name__)
+
+def grafico():
+    df = pd.read_csv("vendas.csv")
+    df.groupby("produto")["total"].sum().plot(kind="bar")
+    plt.show()
+    plt.savefig("grafico.png")
+
+@app.route("/")
+def painel():
+    return f"&lt;style&gt;body { background: red }&lt;/style&gt;&lt;h1&gt;Painel&lt;/h1&gt;"
+
+def api():
+    return jsonify({"ok": True})
+
+app.run(debug=True)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><p><strong>Os 5 bugs:</strong> (1) <code>plt.show()</code> num app web abre janela no SERVIDOR e trava tudo — em dashboard, NUNCA use show; use savefig (e o modo "Agg", que você verá na Etapa 3). (2) savefig DEPOIS do show = PNG em branco (Semana 18!). (3) O gráfico salvou fora da pasta <code>static</code> — o Flask não vai servi-lo. (4) Chaves SIMPLES no CSS dentro da f-string → erro; precisa <code>{{ }}</code>. (5) A função api() está sem o decorador <code>@app.route("/api")</code> (e sem importar jsonify) — sem o decorador, a rota simplesmente não existe.</p></div></details>
     </div>
   </article>
 </section>
 
 <section class="parte" id="p2">
-  <div class="parte-head"><span class="num">02</span><h2>GET: lendo recursos</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Começamos pelo verbo mais simples. Uma API devolve <strong>JSON</strong>, então usamos o <code>jsonify</code> (Semana 19). Conecte ao MariaDB (Semana 26) com a função <code>conectar()</code> do seu <code>db.py</code>. E lembre: numa API, <strong>nunca</strong> se retorna HTML — só dados.</p></div>
+  <div class="parte-head"><span class="num">02</span><h2>Dashboard — Etapas 1 e 2</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p><strong>A arquitetura da obra-prima:</strong></p><table><tr><th>Camada</th><th>Ferramenta</th><th>Semanas</th></tr><tr><td>Dados</td><td>vendas.csv + pandas</td><td>13, 17</td></tr><tr><td>Análise</td><td>groupby em funções</td><td>6, 17</td></tr><tr><td>Visual</td><td>matplotlib → PNG em static/</td><td>18</td></tr><tr><td>Entrega</td><td>Flask: painel + API + atualizar</td><td>19</td></tr></table><p>Estrutura de pastas: <code>app.py</code> · <code>dados/vendas.csv</code> · <code>static/</code> (gráficos). Crie o <code>app.py</code> e vamos por etapas!</p></div>
   <article class="ex" id="ex3">
     <div class="ex-head">
       <span class="ex-num">EX 03</span>
-      <h3>GET coleção: a lista de produtos</h3>
+      <h3>Etapa 1: dados no lugar</h3>
       <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex3"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Criar o endpoint que devolve todos os produtos em JSON.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Rota <code>/api/produtos</code> com <code>methods=["GET"]</code></li><li>SELECT no MariaDB, monte uma lista de dicionários (list comprehension — Semana 17)</li><li>Devolva com <code>jsonify(lista)</code></li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">api.py</span></div><pre class="code">from flask import Flask, jsonify
-from db import conectar   # do seu db.py (Semana 26)
+<span class="tag obj">🎯 Objetivo</span><p>Pastas + CSV de exemplo + carregamento com pandas.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Funções <code>preparar()</code> (makedirs de dados/ e static/) e <code>gerar_exemplo()</code> (o vendas.csv da Semana 17, se não existir — reuse o gerador da Semana 16!)</li><li><code>carregar_dados()</code>: retorna <code>pd.read_csv(os.path.join("dados", "vendas.csv"))</code></li><li>Teste: imprima <code>len(df)</code> e o head()</li></ol><span class="tag saida">✅ Teste da etapa</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">6 vendas carregadas ✔</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">etapa1.py</span></div><pre class="code">import os
+import pandas as pd
 
-app = Flask(__name__)
+def preparar():
+    os.makedirs("dados", exist_ok=True)
+    os.makedirs("static", exist_ok=True)
 
-@app.route("/api/produtos", methods=["GET"])
-def listar_produtos():
-    conexao = conectar()
-    cursor = conexao.cursor()
-    cursor.execute("SELECT id, nome, preco, estoque FROM produtos")
-    produtos = [
-        {"id": id, "nome": nome, "preco": float(preco), "estoque": estoque}
-        for id, nome, preco, estoque in cursor.fetchall()
-    ]
-    conexao.close()
-    return jsonify(produtos)
+def gerar_exemplo():
+    caminho = os.path.join("dados", "vendas.csv")
+    if os.path.exists(caminho):
+        return
+    conteudo = """data,produto,qtd,total
+10/06/2026,caneca branca,3,75.0
+10/06/2026,caneca preta,12,270.0
+11/06/2026,azulejo,2,80.0
+11/06/2026,caneca preta,5,137.5
+12/06/2026,caneca branca,4,100.0
+12/06/2026,azulejo,1,40.0
+"""
+    with open(caminho, "w", encoding="utf-8") as arquivo:
+        arquivo.write(conteudo)
 
-app.run(debug=True)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">[
-  {"id": 1, "nome": "caneca branca", "preco": 25.0, "estoque": 10},
-  {"id": 2, "nome": "caneca preta", "preco": 27.5, "estoque": 8}
-]</pre></div><details class="dica"><summary>💡 float() no DECIMAL</summary><div class="inner">O tipo <code>DECIMAL</code> do MariaDB vira um objeto especial em Python; o <code>float()</code> o converte para um número que o <code>jsonify</code> entende (lembra do mesmo cuidado com o pandas na Semana 20?). Acesse /api/produtos no navegador: JSON puro, pronto para qualquer cliente consumir.</div></details>
+def carregar_dados():
+    return pd.read_csv(os.path.join("dados", "vendas.csv"))
+
+preparar()
+gerar_exemplo()
+df = carregar_dados()
+print(f"{len(df)} vendas carregadas ✔")</pre></div></div></details>
     </div>
   </article>
 
   <article class="ex" id="ex4">
     <div class="ex-head">
       <span class="ex-num">EX 04</span>
-      <h3>GET item: um produto específico (e o 404)</h3>
+      <h3>Etapa 2: a análise em pandas</h3>
       <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex4"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Buscar um produto pelo id — e responder corretamente quando não existe.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Rota <code>/api/produtos/&lt;int:id&gt;</code> (GET)</li><li>SELECT WHERE id = %s; se <code>fetchone()</code> devolver None, o produto não existe</li><li>Nesse caso, retorne um JSON de erro COM o status 404: <code>return jsonify({"erro": "não encontrado"}), 404</code></li></ol><span class="tag saida">✅ Exemplo</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">GET /api/produtos/1  -&gt;  {"id": 1, "nome": "caneca branca", ...}
-GET /api/produtos/999  -&gt;  {"erro": "Produto não encontrado"}  (status 404)</pre></div><details class="dica"><summary>💡 O status code importa</summary><div class="inner">Numa API, o CÓDIGO DE STATUS é tão importante quanto o JSON. O <code>200</code> diz "deu certo"; o <code>404</code> diz "esse recurso não existe". O cliente USA esse número para decidir o que fazer. Retornar 200 com "não encontrado" no texto seria mentir para quem consome a API!</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex04.py</span></div><pre class="code">@app.route("/api/produtos/&lt;int:id&gt;", methods=["GET"])
-def buscar_produto(id):
-    conexao = conectar()
-    cursor = conexao.cursor()
-    cursor.execute("SELECT id, nome, preco, estoque FROM produtos WHERE id = %s", (id,))
-    r = cursor.fetchone()
-    conexao.close()
-
-    if r is None:
-        return jsonify({"erro": "Produto não encontrado"}), 404
-
-    return jsonify({"id": r[0], "nome": r[1],
-                    "preco": float(r[2]), "estoque": r[3]})</pre></div></div></details>
+<span class="tag obj">🎯 Objetivo</span><p>A função analisar() — agora na versão de uma linha por métrica.</p><span class="tag passos">🧭 Passo a passo</span><ol><li><code>analisar(df)</code> retorna o dicionário: faturamento (sum), unidades (sum), campeão (groupby + idxmax), ticket (mean)</li><li>Detalhe de gente grande: converta com <code>float()</code> e <code>int()</code> — os números do pandas têm tipos próprios que o jsonify da API não engole!</li></ol><span class="tag saida">✅ Teste da etapa</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">{'faturamento': 702.5, 'unidades': 27, 'campeao': 'caneca preta', 'ticket': 117.08}</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">etapa2.py</span></div><pre class="code">def analisar(df):
+    return {
+        "faturamento": float(df["total"].sum()),
+        "unidades": int(df["qtd"].sum()),
+        "campeao": df.groupby("produto")["qtd"].sum().idxmax(),
+        "ticket": round(float(df["total"].mean()), 2)
+    }</pre></div></div></details>
     </div>
   </article>
 </section>
 
 <section class="parte" id="p3">
-  <div class="parte-head"><span class="num">03</span><h2>POST: criando recursos</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Para CRIAR, o cliente envia os dados no <strong>corpo</strong> da requisição em JSON. No Flask, lemos com <code>request.get_json()</code> (que devolve um dicionário — Semana 5). E ao criar algo com sucesso, o status correto não é 200, e sim <code>201</code> ("Created").</p></div>
+  <div class="parte-head"><span class="num">03</span><h2>Dashboard — Etapas 3 e 4</h2></div>
+
   <article class="ex" id="ex5">
     <div class="ex-head">
       <span class="ex-num">EX 05</span>
-      <h3>POST: cadastrar um produto via API</h3>
+      <h3>Etapa 3: gráficos em modo servidor 🖼️</h3>
       <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex5"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Receber JSON, inserir no banco e responder com 201.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Rota <code>/api/produtos</code> com <code>methods=["POST"]</code></li><li>Leia <code>dados = request.get_json()</code> e pegue os campos do dicionário</li><li>INSERT no MariaDB com <code>%s</code> + commit</li><li>Retorne o produto criado (com o novo id) e o status <code>201</code></li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex05_post.py</span></div><pre class="code">from flask import Flask, jsonify, request
-from db import conectar
+<span class="tag obj">🎯 Objetivo</span><p>Gerar os PNGs por código — sem janela nenhuma (o segredo do modo Agg).</p><span class="tag passos">🧭 Passo a passo</span><ol><li>ANTES de importar o pyplot: <code>import matplotlib</code> e <code>matplotlib.use("Agg")</code> — o modo "só gerar imagem", obrigatório em servidores!</li><li><code>gerar_graficos(df)</code>: barras do faturamento por produto e linha por dia, salvos em static/ com tight_layout</li><li>Feche cada figura com <code>plt.close()</code> (servidor que não fecha figuras enche a memória!)</li></ol><span class="tag saida">✅ Teste da etapa</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">2 gráficos gerados em static/ ✔</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">etapa3.py</span></div><pre class="code">import matplotlib
+matplotlib.use("Agg")   # modo servidor: gera PNG sem abrir janela
+import matplotlib.pyplot as plt
+
+def gerar_graficos(df):
+    por_produto = df.groupby("produto")["total"].sum()
+    plt.figure(figsize=(6, 4))
+    plt.bar(por_produto.index, por_produto.values, color="#3776AB")
+    plt.title("Faturamento por produto")
+    plt.ylabel("R$")
+    plt.tight_layout()
+    plt.savefig("static/por_produto.png", dpi=120)
+    plt.close()
+
+    por_dia = df.groupby("data")["total"].sum()
+    plt.figure(figsize=(6, 4))
+    plt.plot(por_dia.index, por_dia.values, marker="o", color="#FFB000")
+    plt.title("Faturamento por dia")
+    plt.ylabel("R$")
+    plt.tight_layout()
+    plt.savefig("static/por_dia.png", dpi=120)
+    plt.close()
+    print("2 gráficos gerados em static/ ✔")</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex6">
+    <div class="ex-head">
+      <span class="ex-num">EX 06</span>
+      <h3>Etapa 4: o painel e a API 🌐</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex6"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>A rota / com os cartões de números + gráficos, e a /api/resumo.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Rota /: carregue, analise e monte o HTML — cartões com os 4 números e as duas imagens de /static/</li><li>Lembre das chaves duplas no CSS da f-string!</li><li>Rota /api/resumo: <code>jsonify(analisar(carregar_dados()))</code> — seu dashboard também é uma API</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(localhost:5000 → o painel com cartões e gráficos!)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">etapa4.py</span></div><pre class="code">from flask import Flask, jsonify
 
 app = Flask(__name__)
 
-@app.route("/api/produtos", methods=["POST"])
-def criar_produto():
-    dados = request.get_json()
+@app.route("/")
+def painel():
+    r = analisar(carregar_dados())
+    return f"""
+    &lt;html&gt;&lt;head&gt;&lt;title&gt;Dashboard Tua Caneca&lt;/title&gt;
+    &lt;style&gt;
+      body {{ font-family: Arial; background: #F5F8FC; margin: 40px; }}
+      h1 {{ color: #3776AB; }}
+      .cartao {{ background: white; display: inline-block; padding: 18px 28px;
+                 margin: 8px; border-radius: 12px; box-shadow: 0 2px 8px #0002; }}
+      img {{ border-radius: 12px; margin: 10px; box-shadow: 0 2px 8px #0002; }}
+    &lt;/style&gt;&lt;/head&gt;&lt;body&gt;
+    &lt;h1&gt;☕ Dashboard Tua Caneca&lt;/h1&gt;
+    &lt;div class="cartao"&gt;&lt;b&gt;Faturamento&lt;/b&gt;&lt;br&gt;R$ {r["faturamento"]:.2f}&lt;/div&gt;
+    &lt;div class="cartao"&gt;&lt;b&gt;Unidades&lt;/b&gt;&lt;br&gt;{r["unidades"]}&lt;/div&gt;
+    &lt;div class="cartao"&gt;&lt;b&gt;Campeão&lt;/b&gt;&lt;br&gt;{r["campeao"]}&lt;/div&gt;
+    &lt;div class="cartao"&gt;&lt;b&gt;Ticket médio&lt;/b&gt;&lt;br&gt;R$ {r["ticket"]:.2f}&lt;/div&gt;
+    &lt;br&gt;
+    &lt;img src="/static/por_produto.png" width="440"&gt;
+    &lt;img src="/static/por_dia.png" width="440"&gt;
+    &lt;/body&gt;&lt;/html&gt;
+    """
 
-    conexao = conectar()
-    cursor = conexao.cursor()
-    cursor.execute(
-        "INSERT INTO produtos (nome, preco, estoque) VALUES (%s, %s, %s)",
-        (dados["nome"], dados["preco"], dados["estoque"]))
-    conexao.commit()
-    novo_id = cursor.lastrowid   # o id que o banco gerou
-    conexao.close()
-
-    return jsonify({"id": novo_id, **dados}), 201
-
-app.run(debug=True)</pre></div><span class="tag saida">✅ Exemplo</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">POST /api/produtos
-corpo: {"nome": "caneca azul", "preco": 28.0, "estoque": 6}
-resposta (201): {"id": 7, "nome": "caneca azul", "preco": 28.0, "estoque": 6}</pre></div><details class="dica"><summary>💡 lastrowid e o **dados</summary><div class="inner">O <code>cursor.lastrowid</code> devolve o id que o AUTO_INCREMENT acabou de gerar. E o <code>**dados</code> (pesquise "desempacotar dicionário"!) "espalha" os campos do dicionário dentro do novo — um truque elegante para devolver o que foi criado já com o id. O <code>201</code> avisa o cliente: "criei com sucesso".</div></details>
+@app.route("/api/resumo")
+def api_resumo():
+    return jsonify(analisar(carregar_dados()))</pre></div></div></details>
     </div>
   </article>
 </section>
 
 <section class="parte" id="p4">
-  <div class="parte-head"><span class="num">04</span><h2>PUT e DELETE: atualizando e removendo</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Os dois últimos verbos fecham o CRUD. O <code>PUT</code> atualiza (recebe os novos dados no corpo, como o POST); o <code>DELETE</code> remove (só precisa do id na URL). Ambos devem responder <code>404</code> se o recurso não existir.</p></div>
-  <article class="ex" id="ex6">
-    <div class="ex-head">
-      <span class="ex-num">EX 06</span>
-      <h3>PUT: atualizar um produto</h3>
-      <span class="stars">⭐⭐ médio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex6"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Editar um produto existente via API.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Rota <code>/api/produtos/&lt;int:id&gt;</code> com <code>methods=["PUT"]</code></li><li>Leia o corpo com get_json, faça o UPDATE com %s e WHERE id</li><li>Use <code>cursor.rowcount</code> para saber se alguma linha foi alterada — se 0, retorne 404</li></ol><span class="tag saida">✅ Exemplo</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">PUT /api/produtos/1  corpo: {"preco": 31.0}  -&gt;  {"ok": true}  (ou 404)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex06.py</span></div><pre class="code">@app.route("/api/produtos/&lt;int:id&gt;", methods=["PUT"])
-def atualizar_produto(id):
-    dados = request.get_json()
-    conexao = conectar()
-    cursor = conexao.cursor()
-    cursor.execute(
-        "UPDATE produtos SET nome=%s, preco=%s, estoque=%s WHERE id=%s",
-        (dados["nome"], dados["preco"], dados["estoque"], id))
-    conexao.commit()
-    afetadas = cursor.rowcount
-    conexao.close()
-
-    if afetadas == 0:
-        return jsonify({"erro": "Produto não encontrado"}), 404
-    return jsonify({"ok": True, "id": id})</pre></div><p>O <code>rowcount</code> diz quantas linhas o comando mexeu. Zero significa que o WHERE não achou ninguém — ou seja, o id não existe. Daí o 404.</p></div></details>
-    </div>
-  </article>
+  <div class="parte-head"><span class="num">04</span><h2>Dashboard — Etapas 5 e 6</h2></div>
 
   <article class="ex" id="ex7">
     <div class="ex-head">
       <span class="ex-num">EX 07</span>
-      <h3>DELETE: remover um produto</h3>
-      <span class="stars">⭐⭐ médio</span>
+      <h3>Etapa 5: o botão de atualizar 🔄</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex7"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Apagar um produto via API, com o status certo.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Rota <code>/api/produtos/&lt;int:id&gt;</code> com <code>methods=["DELETE"]</code></li><li>DELETE WHERE id = %s + commit</li><li>Se <code>rowcount == 0</code>, retorne 404; senão, confirme a remoção</li></ol><span class="tag saida">✅ Exemplo</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">DELETE /api/produtos/7  -&gt;  {"ok": true, "removido": 7}  (ou 404)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex07.py</span></div><pre class="code">@app.route("/api/produtos/&lt;int:id&gt;", methods=["DELETE"])
-def remover_produto(id):
-    conexao = conectar()
-    cursor = conexao.cursor()
-    cursor.execute("DELETE FROM produtos WHERE id = %s", (id,))
-    conexao.commit()
-    afetadas = cursor.rowcount
-    conexao.close()
+<span class="tag obj">🎯 Objetivo</span><p>A rota /atualizar: regenera os gráficos e volta ao painel.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Importe também o <code>redirect</code></li><li>Rota /atualizar: <code>gerar_graficos(carregar_dados())</code> e <code>return redirect("/")</code></li><li>No painel, adicione o link: <code>&lt;a href="/atualizar"&gt;🔄 Atualizar&lt;/a&gt;</code></li><li>Teste de verdade: edite o vendas.csv (adicione uma venda!), clique em atualizar e veja os números E os gráficos mudarem</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(clique → gráficos novos → de volta ao painel!)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">etapa5.py</span></div><pre class="code">from flask import redirect
 
-    if afetadas == 0:
-        return jsonify({"erro": "Produto não encontrado"}), 404
-    return jsonify({"ok": True, "removido": id})</pre></div><p>Repare como os quatro verbos sobre o MESMO recurso (/api/produtos) formam um CRUD completo e limpo. Isso é uma API REST bem desenhada.</p></div></details>
+@app.route("/atualizar")
+def atualizar():
+    gerar_graficos(carregar_dados())
+    return redirect("/")</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex8">
+    <div class="ex-head">
+      <span class="ex-num">EX 08</span>
+      <h3>Etapa 6: a obra-prima integrada 🏁</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex8"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Montar o app.py final — e dar o play na sua formatura.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Junte as 5 etapas no app.py: preparar + gerar_exemplo + gráficos iniciais ANTES do app.run</li><li>Roteiro de teste final: painel → API → editar CSV → atualizar → tudo vivo?</li><li>Confira com a versão integrada na solução — e tire um print da tela: é o seu diploma 🏆</li></ol><span class="tag saida">✅ A formatura</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output"> * Running on http://127.0.0.1:5000
+(e no navegador: o dashboard completo, SEU)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">app.py</span></div><pre class="code">import os
+import pandas as pd
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+from flask import Flask, jsonify, redirect
+
+app = Flask(__name__)
+
+def preparar():
+    os.makedirs("dados", exist_ok=True)
+    os.makedirs("static", exist_ok=True)
+
+def gerar_exemplo():
+    caminho = os.path.join("dados", "vendas.csv")
+    if os.path.exists(caminho):
+        return
+    conteudo = """data,produto,qtd,total
+10/06/2026,caneca branca,3,75.0
+10/06/2026,caneca preta,12,270.0
+11/06/2026,azulejo,2,80.0
+11/06/2026,caneca preta,5,137.5
+12/06/2026,caneca branca,4,100.0
+12/06/2026,azulejo,1,40.0
+"""
+    with open(caminho, "w", encoding="utf-8") as arquivo:
+        arquivo.write(conteudo)
+
+def carregar_dados():
+    return pd.read_csv(os.path.join("dados", "vendas.csv"))
+
+def analisar(df):
+    return {
+        "faturamento": float(df["total"].sum()),
+        "unidades": int(df["qtd"].sum()),
+        "campeao": df.groupby("produto")["qtd"].sum().idxmax(),
+        "ticket": round(float(df["total"].mean()), 2)
+    }
+
+def gerar_graficos(df):
+    por_produto = df.groupby("produto")["total"].sum()
+    plt.figure(figsize=(6, 4))
+    plt.bar(por_produto.index, por_produto.values, color="#3776AB")
+    plt.title("Faturamento por produto")
+    plt.ylabel("R$")
+    plt.tight_layout()
+    plt.savefig("static/por_produto.png", dpi=120)
+    plt.close()
+
+    por_dia = df.groupby("data")["total"].sum()
+    plt.figure(figsize=(6, 4))
+    plt.plot(por_dia.index, por_dia.values, marker="o", color="#FFB000")
+    plt.title("Faturamento por dia")
+    plt.ylabel("R$")
+    plt.tight_layout()
+    plt.savefig("static/por_dia.png", dpi=120)
+    plt.close()
+
+@app.route("/")
+def painel():
+    r = analisar(carregar_dados())
+    return f"""
+    &lt;html&gt;&lt;head&gt;&lt;title&gt;Dashboard Tua Caneca&lt;/title&gt;
+    &lt;style&gt;
+      body {{ font-family: Arial; background: #F5F8FC; margin: 40px; }}
+      h1 {{ color: #3776AB; }}
+      .cartao {{ background: white; display: inline-block; padding: 18px 28px;
+                 margin: 8px; border-radius: 12px; box-shadow: 0 2px 8px #0002; }}
+      img {{ border-radius: 12px; margin: 10px; box-shadow: 0 2px 8px #0002; }}
+    &lt;/style&gt;&lt;/head&gt;&lt;body&gt;
+    &lt;h1&gt;☕ Dashboard Tua Caneca&lt;/h1&gt;
+    &lt;div class="cartao"&gt;&lt;b&gt;Faturamento&lt;/b&gt;&lt;br&gt;R$ {r["faturamento"]:.2f}&lt;/div&gt;
+    &lt;div class="cartao"&gt;&lt;b&gt;Unidades&lt;/b&gt;&lt;br&gt;{r["unidades"]}&lt;/div&gt;
+    &lt;div class="cartao"&gt;&lt;b&gt;Campeão&lt;/b&gt;&lt;br&gt;{r["campeao"]}&lt;/div&gt;
+    &lt;div class="cartao"&gt;&lt;b&gt;Ticket médio&lt;/b&gt;&lt;br&gt;R$ {r["ticket"]:.2f}&lt;/div&gt;
+    &lt;br&gt;
+    &lt;img src="/static/por_produto.png" width="440"&gt;
+    &lt;img src="/static/por_dia.png" width="440"&gt;
+    &lt;br&gt;&lt;a href="/atualizar"&gt;🔄 Atualizar&lt;/a&gt; · &lt;a href="/api/resumo"&gt;API JSON&lt;/a&gt;
+    &lt;/body&gt;&lt;/html&gt;
+    """
+
+@app.route("/api/resumo")
+def api_resumo():
+    return jsonify(analisar(carregar_dados()))
+
+@app.route("/atualizar")
+def atualizar():
+    gerar_graficos(carregar_dados())
+    return redirect("/")
+
+# ===== INICIALIZAÇÃO =====
+preparar()
+gerar_exemplo()
+gerar_graficos(carregar_dados())
+app.run(debug=True)</pre></div><p><strong>~110 linhas. 4 bibliotecas. 20 semanas.</strong> O aluno da Semana 1 não acreditaria — mas foi ele que começou. 👏🏆</p></div></details>
     </div>
   </article>
 </section>
 
 <section class="parte" id="p5">
-  <div class="parte-head"><span class="num">05</span><h2>Status, validação, CORS e testes</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Os detalhes que separam uma API amadora de uma profissional: usar os códigos de status certos, validar a entrada e liberar o acesso para o frontend (CORS).</p></div>
-  <article class="ex" id="ex8">
-    <div class="ex-head">
-      <span class="ex-num">EX 08</span>
-      <h3>Os códigos de status essenciais</h3>
-      <span class="stars">⭐ básico</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex8"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Saber qual código usar em cada situação.</p><table><tr><th>Código</th><th>Significado</th><th>Quando usar</th></tr><tr><td><code>200</code></td><td>OK</td><td>GET/PUT/DELETE deu certo</td></tr><tr><td><code>201</code></td><td>Created</td><td>POST criou um recurso</td></tr><tr><td><code>400</code></td><td>Bad Request</td><td>o cliente mandou dados inválidos</td></tr><tr><td><code>404</code></td><td>Not Found</td><td>o recurso não existe</td></tr><tr><td><code>401</code></td><td>Unauthorized</td><td>falta autenticação (Semana 28!)</td></tr></table><span class="tag passos">🧭 Passo a passo</span><ol><li>Para cada caso, qual status? a) criou um produto · b) pediu um id que não existe · c) mandou JSON sem o campo "nome" · d) listou produtos com sucesso</li></ol><details class="dica"><summary>💡 Família dos códigos</summary><div class="inner">Os 2xx = sucesso; os 4xx = erro do CLIENTE (mandou algo errado); os 5xx = erro do SERVIDOR (deu pau no seu código). Usar o código certo é falar a língua universal do HTTP — todo cliente, em qualquer linguagem, entende.</div></details>
-    </div>
-  </article>
-
+  <div class="parte-head"><span class="num">05</span><h2>A última formatura</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Os dois desafios finais da jornada inteira. Sem soluções — sua assinatura no diploma é resolvê-los. 🏆</p></div>
   <article class="ex" id="ex9">
     <div class="ex-head">
       <span class="ex-num">EX 09</span>
-      <h3>Validação: respondendo 400</h3>
+      <h3>Desafio: o dashboard cresce 📈</h3>
       <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex9"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Rejeitar requisições com dados faltando ou inválidos.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>No POST, antes de inserir, verifique se o JSON tem os campos obrigatórios</li><li>Se faltar "nome" (ou o corpo vier vazio), retorne <code>400</code> com uma mensagem clara</li><li>Nunca confie no cliente — a regra de ouro da Semana 23 vale ainda mais numa API pública!</li></ol><span class="tag saida">✅ Exemplo</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">POST /api/produtos  corpo: {"preco": 10}  -&gt;  {"erro": "campo nome é obrigatório"}  (400)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex09.py</span></div><pre class="code">@app.route("/api/produtos", methods=["POST"])
-def criar_produto():
-    dados = request.get_json()
-
-    if not dados or "nome" not in dados or not str(dados.get("nome", "")).strip():
-        return jsonify({"erro": "campo nome é obrigatório"}), 400
-    try:
-        preco = float(dados["preco"])
-        estoque = int(dados["estoque"])
-    except (KeyError, ValueError, TypeError):
-        return jsonify({"erro": "preco e estoque devem ser números"}), 400
-
-    conexao = conectar()
-    cursor = conexao.cursor()
-    cursor.execute(
-        "INSERT INTO produtos (nome, preco, estoque) VALUES (%s, %s, %s)",
-        (dados["nome"].strip(), preco, estoque))
-    conexao.commit()
-    novo_id = cursor.lastrowid
-    conexao.close()
-    return jsonify({"id": novo_id, "nome": dados["nome"].strip(),
-                    "preco": preco, "estoque": estoque}), 201</pre></div></div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Três evoluções dignas de produção.</p><span class="tag passos">🧭 Roteiro</span><ol><li>Filtro por produto: rota <code>/produto/&lt;nome&gt;</code> mostrando só os dados daquele produto (pandas filtra, Flask serve!)</li><li>Upload simples: pesquise "flask upload file" e permita enviar um vendas.csv novo pelo navegador</li><li>O toque da Semana 15: um cartão com o faturamento em dólares, via sua cotacao_segura()</li><li>Cada item integra uma semana diferente — escolha pelo menos um e implemente</li></ol><details class="dica"><summary>💡 Pesquisar É programar</summary><div class="inner">Repare: este desafio manda você PESQUISAR. Programadores profissionais pesquisam o dia inteiro — a diferença é que agora você entende o que encontra.</div></details>
     </div>
   </article>
 
   <article class="ex" id="ex10">
     <div class="ex-head">
       <span class="ex-num">EX 10</span>
-      <h3>CORS: liberando o frontend 🌍</h3>
-      <span class="stars">⭐⭐ médio</span>
+      <h3>O desafio de todos os desafios 🏆</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex10"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Permitir que um frontend em outro endereço consuma a sua API.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Instale: <code>pip install flask-cors</code></li><li>Importe e ative: <code>from flask_cors import CORS</code> e <code>CORS(app)</code></li><li>Pronto — agora um frontend (Semana 29) hospedado em outro endereço pode chamar a API</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex10_cors.py</span></div><pre class="code">from flask import Flask, jsonify
-from flask_cors import CORS
-
-app = Flask(__name__)
-CORS(app)   # libera o acesso de outros endereços (origens)
-
-@app.route("/api/produtos")
-def listar():
-    return jsonify([{"nome": "caneca branca"}])
-
-app.run(debug=True)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(a API agora aceita chamadas vindas de um frontend separado)</pre></div><details class="dica"><summary>💡 Por que CORS existe?</summary><div class="inner">Por segurança, navegadores BLOQUEIAM uma página de um endereço (ex.: seu frontend) de chamar uma API em OUTRO endereço — a menos que a API autorize. O <code>CORS(app)</code> é essa autorização. Sem ele, seu frontend da Semana 29 tomaria erro ao chamar a API. É um detalhe pequeno que trava MUITO iniciante — agora você já sabe!</div></details>
-    </div>
-  </article>
-
-  <article class="ex" id="ex11">
-    <div class="ex-head">
-      <span class="ex-num">EX 11</span>
-      <h3>Testando a API com requests 🧪</h3>
-      <span class="stars">⭐⭐ médio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex11"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Consumir a própria API por um cliente Python — o ciclo completo.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Com a API rodando num terminal, abra OUTRO e use o <code>requests</code> (Semana 15)</li><li>Teste o GET (listar) e o POST (criar) — note o uso de <code>json=</code> no POST</li><li>Confira o <code>.status_code</code> de cada resposta</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">GET status: 200
-Produtos: 3
-POST status: 201
-Criado: {'id': 8, 'nome': 'caneca teste', ...}</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">testar_api.py</span></div><pre class="code">import requests
-
-BASE = "http://localhost:5000/api/produtos"
-
-# GET (listar)
-r = requests.get(BASE, timeout=5)
-print("GET status:", r.status_code)
-print("Produtos:", len(r.json()))
-
-# POST (criar)
-novo = {"nome": "caneca teste", "preco": 22.0, "estoque": 5}
-r = requests.post(BASE, json=novo, timeout=5)
-print("POST status:", r.status_code)
-print("Criado:", r.json())</pre></div><p>Cliente (requests) e servidor (sua API REST), os dois em Python, conversando em JSON via HTTP. É exatamente o que o frontend da Semana 29 fará — só que em JavaScript. Você está testando a API como um profissional.</p></div></details>
-    </div>
-  </article>
-</section>
-
-<section class="parte" id="p6">
-  <div class="parte-head"><span class="num">06</span><h2>Projetos da semana: juntando tudo!</h2></div>
-
-  <article class="ex" id="ex12">
-    <div class="ex-head">
-      <span class="ex-num">EX 12</span>
-      <h3>Projeto: a API REST completa da Tua Caneca 🌐</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex12"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Uma API REST profissional de produtos, sobre o MariaDB, com os 4 verbos.</p><span class="tag passos">🧭 Requisitos</span><ol><li>Endpoints: <code>GET /api/produtos</code> (lista), <code>GET /api/produtos/&lt;id&gt;</code> (item), <code>POST</code> (cria), <code>PUT /api/produtos/&lt;id&gt;</code> (atualiza), <code>DELETE /api/produtos/&lt;id&gt;</code> (remove)</li><li>Todos sobre o MariaDB (Semana 26), com %s e validação</li><li>Códigos de status corretos (200, 201, 400, 404) e CORS habilitado</li><li>Teste TODOS os verbos com o requests do exercício anterior</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(uma API REST completa: lista, busca, cria, atualiza e remove — tudo em JSON)</pre></div><details class="dica"><summary>💡 Isso é um backend de verdade</summary><div class="inner">O que você construiu — uma API REST com CRUD, validação, status codes e CORS sobre um banco MariaDB — é literalmente o backend de incontáveis sistemas reais. Apps de celular, sites, integrações: todos conversam com APIs assim. Coloque no GitHub com um bom README listando os endpoints. É portfólio de peso. 🏆</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">api.py</span></div><pre class="code">from flask import Flask, jsonify, request
-from flask_cors import CORS
-from db import conectar   # Semana 26
-
-app = Flask(__name__)
-CORS(app)
-
-def produto_para_dict(linha):
-    return {"id": linha[0], "nome": linha[1],
-            "preco": float(linha[2]), "estoque": linha[3]}
-
-@app.route("/api/produtos", methods=["GET"])
-def listar():
-    con = conectar(); cur = con.cursor()
-    cur.execute("SELECT id, nome, preco, estoque FROM produtos")
-    lista = [produto_para_dict(l) for l in cur.fetchall()]
-    con.close()
-    return jsonify(lista)
-
-@app.route("/api/produtos/&lt;int:id&gt;", methods=["GET"])
-def buscar(id):
-    con = conectar(); cur = con.cursor()
-    cur.execute("SELECT id, nome, preco, estoque FROM produtos WHERE id=%s", (id,))
-    r = cur.fetchone(); con.close()
-    if r is None:
-        return jsonify({"erro": "Produto não encontrado"}), 404
-    return jsonify(produto_para_dict(r))
-
-@app.route("/api/produtos", methods=["POST"])
-def criar():
-    d = request.get_json()
-    if not d or not str(d.get("nome", "")).strip():
-        return jsonify({"erro": "campo nome é obrigatório"}), 400
-    try:
-        preco, estoque = float(d["preco"]), int(d["estoque"])
-    except (KeyError, ValueError, TypeError):
-        return jsonify({"erro": "preco e estoque devem ser números"}), 400
-    con = conectar(); cur = con.cursor()
-    cur.execute("INSERT INTO produtos (nome, preco, estoque) VALUES (%s, %s, %s)",
-                (d["nome"].strip(), preco, estoque))
-    con.commit(); novo_id = cur.lastrowid; con.close()
-    return jsonify({"id": novo_id, "nome": d["nome"].strip(),
-                    "preco": preco, "estoque": estoque}), 201
-
-@app.route("/api/produtos/&lt;int:id&gt;", methods=["PUT"])
-def atualizar(id):
-    d = request.get_json()
-    con = conectar(); cur = con.cursor()
-    cur.execute("UPDATE produtos SET nome=%s, preco=%s, estoque=%s WHERE id=%s",
-                (d["nome"], float(d["preco"]), int(d["estoque"]), id))
-    con.commit(); afetadas = cur.rowcount; con.close()
-    if afetadas == 0:
-        return jsonify({"erro": "Produto não encontrado"}), 404
-    return jsonify({"ok": True, "id": id})
-
-@app.route("/api/produtos/&lt;int:id&gt;", methods=["DELETE"])
-def remover(id):
-    con = conectar(); cur = con.cursor()
-    cur.execute("DELETE FROM produtos WHERE id=%s", (id,))
-    con.commit(); afetadas = cur.rowcount; con.close()
-    if afetadas == 0:
-        return jsonify({"erro": "Produto não encontrado"}), 404
-    return jsonify({"ok": True, "removido": id})
-
-app.run(debug=True)</pre></div></div></details>
-    </div>
-  </article>
-
-  <article class="ex" id="ex13">
-    <div class="ex-head">
-      <span class="ex-num">EX 13</span>
-      <h3>Projeto bônus: API de vendas e relatório 📊</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex13"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Estender a API com vendas e um relatório agregado (sem código pronto!).</p><span class="tag passos">🧭 Roteiro</span><ol><li><code>POST /api/vendas</code>: recebe {produto_id, qtd}, confere o estoque, dá baixa (UPDATE) e registra a venda (INSERT) — tudo numa transação</li><li>Responda 400 se faltar estoque, 404 se o produto não existir, 201 se vender</li><li><code>GET /api/relatorio</code>: um GROUP BY (Semana 22) devolvendo o total vendido por produto, em JSON</li><li>Teste com requests, enviando vendas e consultando o relatório</li></ol><span class="tag saida">✅ Exemplo</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">POST /api/vendas {"produto_id": 1, "qtd": 3} -&gt; 201
-GET /api/relatorio -&gt; [{"produto": "caneca branca", "total_vendido": 3}, ...]</pre></div><details class="dica"><summary>💡 Empurrãozinho</summary><div class="inner">A lógica de venda você domina desde a Semana 22 (SELECT estoque → valida → UPDATE + INSERT). O novo aqui é "vestir" essa lógica como endpoints REST com os status certos. E o relatório é o seu velho GROUP BY devolvido como JSON em vez de impresso. Combinar o que já sabe em formato novo — a essência do desenvolvimento. 😉</div></details>
+<span class="tag obj">🎯 Objetivo</span><p>O projeto-assinatura: um dashboard web para um problema 100% seu.</p><span class="tag passos">🧭 Roteiro</span><ol><li>Escolha os dados da SUA vida: vendas do negócio, notas das turmas, finanças, treinos...</li><li>Pipeline completo: CSV/Excel → pandas → matplotlib → Flask</li><li>README caprichado + GitHub + screenshot no LinkedIn</li><li>Apresente para alguém — de preferência, ensinando. Foi assim que esta jornada toda foi feita. 😉</li><li>E então... comece o próximo projeto. Sempre o próximo projeto. 🚀</li></ol><details class="dica"><summary>💡 A última palavra</summary><div class="inner">20 semanas, ~270 exercícios, 4 sistemas completos. Você não terminou um curso: você se tornou alguém que transforma problemas em código. O resto é prática — e a prática, agora, é vida. Obrigado pela jornada, e bons códigos para sempre! 🏆🎓🐍</div></details>
     </div>
   </article>
 </section>
@@ -627,29 +623,29 @@ GET /api/relatorio -&gt; [{"produto": "caneca branca", "total_vendido": 3}, ...]
 <div class="checklist" id="checklist">
   <h2>✅ Checklist de fim de semana</h2>
   <p>Antes de seguir para a próxima semana, confirme que você consegue:</p>
-<label class="check-item"><input type="checkbox"><span>Explicar o que é uma API REST e o conceito de recurso</span></label>
-<label class="check-item"><input type="checkbox"><span>Diferenciar arquitetura monolítica de desacoplada (API + frontend)</span></label>
-<label class="check-item"><input type="checkbox"><span>Mapear o CRUD aos verbos HTTP (GET, POST, PUT, DELETE)</span></label>
-<label class="check-item"><input type="checkbox"><span>Retornar JSON com jsonify (e nunca HTML numa API)</span></label>
-<label class="check-item"><input type="checkbox"><span>Ler o corpo JSON da requisição com request.get_json()</span></label>
-<label class="check-item"><input type="checkbox"><span>Usar os códigos de status certos (200, 201, 400, 404)</span></label>
-<label class="check-item"><input type="checkbox"><span>Criar endpoints de coleção (/api/produtos) e de item (/api/produtos/&lt;id&gt;)</span></label>
-<label class="check-item"><input type="checkbox"><span>Validar a entrada e responder 400 quando faltarem dados</span></label>
-<label class="check-item"><input type="checkbox"><span>Habilitar CORS para um frontend externo consumir a API</span></label>
-<label class="check-item"><input type="checkbox"><span>Testar a API com um cliente Python (requests)</span></label>
+<label class="check-item"><input type="checkbox"><span>Prever saídas misturando pandas, Flask e os clássicos</span></label>
+<label class="check-item"><input type="checkbox"><span>Caçar os bugs típicos de dashboards (show no servidor, chaves em f-string...)</span></label>
+<label class="check-item"><input type="checkbox"><span>Estruturar um projeto web: dados/, static/, app.py</span></label>
+<label class="check-item"><input type="checkbox"><span>Carregar e analisar dados com pandas em funções</span></label>
+<label class="check-item"><input type="checkbox"><span>Gerar gráficos em PNG por código (modo Agg, sem janela!)</span></label>
+<label class="check-item"><input type="checkbox"><span>Montar o painel HTML com números e imagens</span></label>
+<label class="check-item"><input type="checkbox"><span>Expor a análise via API própria com jsonify</span></label>
+<label class="check-item"><input type="checkbox"><span>Criar a rota /atualizar com redirect</span></label>
+<label class="check-item"><input type="checkbox"><span>Integrar 4 bibliotecas num sistema coeso</span></label>
+<label class="check-item"><input type="checkbox"><span>Apresentar o dashboard rodando — sua obra-prima</span></label>
 </div>
 
 <div class="win-banner" id="winBanner">
-  <h2>🏆 SEMANA 27 COMPLETA!</h2>
-  <p>Você concluiu todos os exercícios. Você construiu uma API REST de verdade — o backend desacoplado que sustenta apps web, mobile e integrações no mundo todo!</p>
+  <h2>🏆 SEMANA 20 COMPLETA!</h2>
+  <p>JORNADA ABSOLUTA COMPLETA! 20 semanas, ~270 exercícios, 4 projetos finais — do print() a um dashboard web. Não há mais curso à sua frente: há o mundo. Vá programar nele! 🏆🎓🐍✨</p>
 </div>
 
 <div class="preview-s2">
-<h2>📅 Prévia da Semana 28</h2><p>Sua API está aberta para qualquer um... e isso é um problema! Na próxima semana: <strong>autenticação com JWT</strong>. Senhas guardadas com segurança (nunca em texto puro!), um endpoint de <strong>login</strong> que devolve um <strong>token</strong>, e rotas protegidas que só respondem a quem está autenticado. A sua API ganha um porteiro. 🔐</p></div>
+<h2>🏆 A última formatura: 20 semanas</h2><p>Olhe a estrada: <strong>Fundamentos</strong> (1-8), <strong>POO e dados</strong> (9-12), <strong>Mundo real</strong> (13-16) e <strong>Dados &amp; Web</strong> (17-20). Você lê código, escreve código, conserta código — e agora SERVE código na web. Daqui em diante: aprofunde uma trilha (pandas avançado, Django, automação com bots, IA via APIs), mantenha o GitHub vivo, participe de comunidades e — o conselho eterno — <strong>construa coisas reais</strong>. Esta página é a última do curso, mas a primeira da sua carreira. Obrigado pela jornada! 🏆🎓🐍</p></div>
 
 </main>
 
-<footer>python_para_iniciantes // semana_27 // exercícios guiados</footer>
+<footer>python_para_iniciantes // semana_20 // exercícios guiados</footer>
 
 <script>
 // ===== Syntax highlight leve para Python =====
@@ -661,7 +657,7 @@ GET /api/relatorio -&gt; [{"produto": "caneca branca", "total_vendido": 3}, ...]
     src = src.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     // uma passada só, com alternação (comentário | string | builtin | bool | número)
     src = src.replace(
-      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|insert|int|float|str|len|range|type|abs|round|max|min|sum|sorted|sort|reverse|append|remove|split|strip|upper|lower|replace|title|randint|random|get|keys|values|items|open|readlines|read|write|close|count|index|pop|update|list|dict|tuple|enumerate|sqrt|floor|ceil|choice|shuffle|sample|sleep|now|today|strftime|dumps|dump|loads|load|isinstance|datetime|date|DictReader|DictWriter|writerows|writerow|writeheader|writer|reader|csv|Workbook|load_workbook|save|iter_rows|Font|listdir|makedirs|getcwd|rename|exists|getsize|splitext|join|endswith|startswith|copytree|copy|move|requests|status_code|json|DataFrame|read_csv|read_excel|to_excel|to_csv|head|describe|groupby|sort_values|value_counts|mean|idxmax|bar|barh|pie|plot|savefig|show|title|xlabel|ylabel|figure|legend|axhline|tight_layout|close|Flask|route|run|render_template|jsonify|redirect|request|connect|cursor|execute|executemany|fetchall|fetchone|commit|environ|getenv|post|encode|decode|abort|make_response)\b|\b(True|False|None|if|elif|else|while|for|in|and|or|not|break|continue|import|from|def|return|try|except|finally|with|as|del|global|pass|class|self|super|lambda)\b|(\b\d+(?:\.\d+)?\b)/g,
+      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|insert|int|float|str|len|range|type|abs|round|max|min|sum|sorted|sort|reverse|append|remove|split|strip|upper|lower|replace|title|randint|random|get|keys|values|items|open|readlines|read|write|close|count|index|pop|update|list|dict|tuple|enumerate|sqrt|floor|ceil|choice|shuffle|sample|sleep|now|today|strftime|dumps|dump|loads|load|isinstance|datetime|date|DictReader|DictWriter|writerows|writerow|writeheader|writer|reader|csv|Workbook|load_workbook|save|iter_rows|Font|listdir|makedirs|getcwd|rename|exists|getsize|splitext|join|endswith|startswith|copytree|copy|move|requests|status_code|json|DataFrame|read_csv|read_excel|to_excel|to_csv|head|describe|groupby|sort_values|value_counts|mean|idxmax|bar|barh|pie|plot|savefig|show|title|xlabel|ylabel|figure|legend|axhline|tight_layout|close|Flask|route|run|render_template|jsonify|redirect|request)\b|\b(True|False|None|if|elif|else|while|for|in|and|or|not|break|continue|import|from|def|return|try|except|finally|with|as|del|global|pass|class|self|super|lambda)\b|(\b\d+(?:\.\d+)?\b)/g,
       function(m, com, str, fn, bool, num){
         if(com)  return '<span class="tk-com">'+com+'</span>';
         if(str)  return '<span class="tk-str">'+str+'</span>';
@@ -680,7 +676,7 @@ GET /api/relatorio -&gt; [{"produto": "caneca branca", "total_vendido": 3}, ...]
 // no navegador. Se o localStorage estiver indisponível (modo restrito,
 // pré-visualização, etc.), o progresso funciona só em memória, sem quebrar.
 const storage = (function(){
-  const KEY = 'python_semana27_progresso';
+  const KEY = 'python_semana20_progresso';
   let memoria = {};
   let disponivel = false;
   try{
@@ -727,10 +723,10 @@ const storage = (function(){
   const MSGS = [
     [0,  'Marque os exercícios concluídos ✔'],
     [1,  'Boa! Continue assim 💪'],
-    [4,  'Pegando o ritmo! 🔥'],
-    [6, 'Metade do caminho! 🚀'],
-    [10, 'Quase lá... força! ⚡'],
-    [13, 'SEMANA COMPLETA! 🏆']
+    [3,  'Pegando o ritmo! 🔥'],
+    [5, 'Metade do caminho! 🚀'],
+    [8, 'Quase lá... força! ⚡'],
+    [10, 'SEMANA COMPLETA! 🏆']
   ];
 
   function estadoAtual(){

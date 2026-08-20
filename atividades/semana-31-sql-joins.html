@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Semana 1 — Lógica e Primeiros Passos com Python</title>
+<title>Semana 31 — SQL Avançado: JOINs</title>
 <style>
   :root{
     --ink:#16243A;
@@ -57,7 +57,7 @@
     color:#fff;padding:56px 20px 48px;text-align:center;position:relative;overflow:hidden;
   }
   header.hero::before{
-    content:"print(  input(  int(  float(  =  //  %  **  f\"  {  }  #  ==";
+    content:"FOREIGN KEY  INNER JOIN  ON  LEFT JOIN  IS NULL";
     position:absolute;inset:auto 0 8px 0;font-family:var(--mono);font-size:.78rem;
     color:rgba(255,255,255,.14);letter-spacing:.4em;white-space:nowrap;overflow:hidden;
   }
@@ -231,1263 +231,363 @@
 </head>
 <body>
 
-<!-- ===== BARRA DE PROGRESSO ===== -->
 <div class="progress-wrap" role="region" aria-label="Progresso da semana">
   <span class="label">XP DA SEMANA</span>
   <div class="progress-bar"><div class="progress-fill" id="pfill"></div></div>
-  <span class="progress-count" id="pcount">0 / 25</span>
+  <span class="progress-count" id="pcount">0 / 13</span>
   <span class="progress-msg" id="pmsg">Marque os exercícios concluídos ✔</span>
   <button class="reset-btn" id="resetBtn" title="Apagar todo o progresso salvo">↺ Resetar</button>
 </div>
 
-<!-- ===== HERO ===== -->
 <header class="hero">
   <div class="kicker">Python para Iniciantes · Exercícios Guiados</div>
-  <h1>SEMANA 1 — Lógica de Programação<br>e Primeiros Passos<span class="cursor" aria-hidden="true"></span></h1>
-  <p class="sub">Entenda o que é um algoritmo, aprenda a "pensar como um programador" e dê os primeiros passos com Python: variáveis, tipos de dados, entrada e saída, e operadores matemáticos.</p>
+  <h1>SEMANA 31 — JOINs:<br>ligando as tabelas<span class="cursor" aria-hidden="true"></span></h1>
+  <p class="sub">O superpoder que faltava no seu SQL: relacionamentos com chave estrangeira, INNER JOIN para cruzar tabelas, LEFT JOIN para achar o que NÃO aconteceu e relatórios de três tabelas — o dia a dia de quem trabalha com dados.</p>
   <div class="howto">
-    <strong>Como usar:</strong> digite o código você mesmo (não copie e cole!), compare com a saída esperada e marque <strong>✔ Concluído</strong> em cada exercício para encher sua barra de XP. As <strong>dicas</strong> e <strong>soluções</strong> ficam escondidas — só abra depois de tentar!
+    <strong>Como usar:</strong> digite o código você mesmo (não copie e cole!), compare com a saída esperada e marque <strong>✔ Concluído</strong> em cada exercício para encher sua barra de XP. As <strong>dicas</strong> e <strong>soluções</strong> ficam escondidas — só abra depois de tentar! Seu progresso fica salvo no navegador.
   </div>
 </header>
 
-<!-- ===== NAVEGAÇÃO ===== -->
-<nav class="parts" aria-label="Partes da semana">
-  <a href="#p1">1 · Lógica</a>
-  <a href="#p2">2 · print()</a>
-  <a href="#p3">3 · Variáveis</a>
-  <a href="#p4">4 · Tipos & input()</a>
-  <a href="#p5">5 · Operadores</a>
-  <a href="#p6">6 · Projetos</a>
-  <a href="#checklist">✅ Checklist</a>
-</nav>
+<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · Relacionamentos</a><a href="#p2">2 · INNER JOIN</a><a href="#p3">3 · LEFT JOIN</a><a href="#p4">4 · JOIN + GROUP BY</a><a href="#p5">5 · Três tabelas</a><a href="#p6">6 · Projetos</a><a href="#checklist">✅ Checklist</a></nav>
 
 <main>
 
-<!-- ============ PARTE 1 ============ -->
 <section class="parte" id="p1">
-  <div class="parte-head"><span class="num">01</span><h2>Lógica de Programação: pensando antes de programar</h2></div>
-  <div class="parte-intro">
-    <h3>Conceito</h3>
-    <p>Um <strong>algoritmo</strong> é uma sequência de passos ordenados para resolver um problema. Antes de escrever código, todo programador pensa nos passos.</p>
-    <p><strong>Exemplo do mundo real — algoritmo para fazer café:</strong> pegar a garrafa térmica → ferver a água → colocar o pó no filtro → despejar a água quente → esperar coar → servir.</p>
-    <p>Repare: a <strong>ordem importa</strong>! Se você despejar a água antes de colocar o pó, o resultado será errado. Programação é exatamente isso: dar instruções claras, completas e na ordem certa.</p>
-  </div>
-
-  <!-- EX 1 -->
+  <div class="parte-head"><span class="num">01</span><h2>Relacionamentos: a alma do banco relacional</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Na Semana 30 sua tabela <code>vendas</code> guardava <code>produto_id</code> — um NÚMERO apontando para a tabela produtos. Isso é um <strong>relacionamento</strong>, e é ele que dá nome aos "bancos relacionais". A coluna que aponta para outra tabela chama-se <strong>chave estrangeira</strong> (foreign key).</p><p>Por que guardar o id e não o nome? Três motivos: se o nome do produto mudar, muda num lugar só; números ocupam menos espaço e comparam mais rápido; e o banco consegue GARANTIR que a venda aponta para um produto que existe.</p></div>
   <article class="ex" id="ex1">
     <div class="ex-head">
       <span class="ex-num">EX 01</span>
-      <h3>Algoritmo em português (sem código!)</h3>
+      <h3>Por que produto_id e não o nome? 🤔</h3>
       <span class="stars">⭐ básico</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex1"> Concluído</label>
     </div>
     <div class="ex-body">
-      <span class="tag obj">🎯 Objetivo</span>
-      <p>Praticar o pensamento sequencial antes de programar.</p>
-      <p><strong>Tarefa:</strong> escreva em um papel (ou num arquivo de texto) o algoritmo passo a passo para <strong>trocar uma lâmpada queimada</strong>.</p>
-      <span class="tag passos">🧭 Passo a passo</span>
-      <ol>
-        <li>Pense: qual é o <strong>estado inicial</strong>? (lâmpada queimada no soquete)</li>
-        <li>Pense: qual é o <strong>estado final desejado</strong>? (lâmpada nova funcionando)</li>
-        <li>Liste TODOS os passos intermediários, sem pular nenhum</li>
-        <li>Revise: um robô que não sabe nada conseguiria seguir suas instruções?</li>
-      </ol>
-      <p><strong>Critério de sucesso:</strong> pelo menos 8 passos, incluindo detalhes como "verificar se o interruptor está desligado" e "pegar uma escada se necessário".</p>
-      <details class="dica"><summary>💡 Dica</summary><div class="inner">Programadores iniciantes erram por <strong>pular passos óbvios</strong>. Para o computador, NADA é óbvio!</div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Sentir na pele o problema de duplicar dados.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Imagine a tabela vendas guardando o NOME do produto em cada linha:</li><li>a) A "caneca branca" vira "caneca branca P" — quantas linhas você teria que atualizar?</li><li>b) Alguém digita "Caneca Branca" (maiúsculas) numa venda — o GROUP BY ainda agrupa certo?</li><li>c) Com produto_id, os dois problemas existem?</li></ol><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><p><strong>a)</strong> Com o nome duplicado, TODAS as vendas antigas precisariam de UPDATE (e se esquecer uma, o relatório quebra). Com o id, muda-se o nome UMA vez na tabela produtos. <strong>b)</strong> "caneca branca" ≠ "Caneca Branca" para o GROUP BY — o relatório dividiria o mesmo produto em dois! Com o id, impossível errar. <strong>c)</strong> Não: o id é único, imutável e verificável. <strong>Regra de ouro da modelagem: cada informação vive num lugar só; as outras tabelas apenas APONTAM para ela.</strong> É o DRY (Semana 6) aplicado a dados!</p></div></details>
     </div>
   </article>
 
-  <!-- EX 2 -->
   <article class="ex" id="ex2">
     <div class="ex-head">
       <span class="ex-num">EX 02</span>
-      <h3>Encontrando o erro no algoritmo</h3>
-      <span class="stars">⭐ básico</span>
+      <h3>FOREIGN KEY: o contrato entre tabelas 📜</h3>
+      <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex2"> Concluído</label>
     </div>
     <div class="ex-body">
-      <span class="tag obj">🎯 Objetivo</span>
-      <p>Desenvolver olhar crítico para sequências lógicas.</p>
-      <p><strong>Tarefa:</strong> o algoritmo abaixo para "fazer um sanduíche" tem <strong>3 erros de lógica</strong> (passos fora de ordem ou faltando). Encontre-os:</p>
-      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">algoritmo_sanduiche.txt</span></div>
-<pre class="output"><span class="prompt-in">1. Pegar duas fatias de pão
-2. Comer o sanduíche
-3. Passar maionese na fatia de baixo
-4. Fechar o sanduíche com a fatia de cima
-5. Colocar o queijo e o presunto</span></pre></div>
-      <span class="tag passos">🧭 Passo a passo</span>
-      <ol>
-        <li>Leia o algoritmo na ordem, imaginando cada ação</li>
-        <li>Pergunte-se: "neste ponto, isso é possível?"</li>
-        <li>Anote os problemas que encontrar</li>
-        <li>Reescreva o algoritmo na ordem correta</li>
-      </ol>
-      <details class="dica"><summary>💡 Dica</summary><div class="inner">O passo 2 está claramente no lugar errado. Há também algo sendo feito <em>depois</em> de quando deveria.</div></details>
-      <details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p>
-        <p><strong>Erros:</strong> (1) "Comer o sanduíche" deveria ser o ÚLTIMO passo; (2) "Colocar queijo e presunto" deveria vir ANTES de fechar; (3) a ordem dos recheios ficou confusa — a maionese deve vir antes de tudo.</p>
-        <p><strong>Ordem correta:</strong> pegar o pão → passar maionese → colocar queijo e presunto → fechar → comer.</p>
-      </div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Recriar a tabela vendas com uma chave estrangeira de verdade.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>No DBeaver, rode o CREATE abaixo — a novidade é a linha <code>FOREIGN KEY</code></li><li>Ela declara: "produto_id aponta para produtos(id)"</li><li>Agora o banco RECUSA uma venda com produto_id que não existe!</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">fk.sql</span></div><pre class="code">USE tua_caneca;
+
+CREATE TABLE IF NOT EXISTS vendas_v2 (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    produto_id INT,
+    qtd INT,
+    total DECIMAL(10,2),
+    FOREIGN KEY (produto_id) REFERENCES produtos(id)
+);</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(tabela criada — e no DBeaver, a aba "Foreign Keys" mostra o vínculo)</pre></div><details class="dica"><summary>💡 O banco como guardião</summary><div class="inner">Tente inserir uma venda com <code>produto_id = 9999</code> (que não existe): o MariaDB recusa com erro de "foreign key constraint fails". Antes, a validação era só no seu Python; agora o PRÓPRIO BANCO garante a integridade. Defesa em camadas — como a validação no servidor da Semana 23!</div></details>
     </div>
   </article>
 
-  <!-- EX 3 -->
   <article class="ex" id="ex3">
     <div class="ex-head">
       <span class="ex-num">EX 03</span>
-      <h3>Algoritmo do caixa eletrônico</h3>
+      <h3>Testando o guardião 🚨</h3>
       <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex3"> Concluído</label>
     </div>
     <div class="ex-body">
-      <span class="tag obj">🎯 Objetivo</span>
-      <p>Pensar em algoritmos que envolvem <strong>decisões</strong> (preparação para a Semana 2!).</p>
-      <p><strong>Tarefa:</strong> escreva o algoritmo para <strong>sacar dinheiro num caixa eletrônico</strong>, desde a chegada até a saída.</p>
-      <span class="tag passos">🧭 Passo a passo</span>
-      <ol>
-        <li>Comece com "Inserir o cartão" e termine com "Retirar o dinheiro e o cartão"</li>
-        <li>Inclua os pontos de decisão usando a estrutura "SE... ENTÃO...":<br>— SE a senha estiver errada, ENTÃO...<br>— SE o saldo for insuficiente, ENTÃO...</li>
-        <li>Seu algoritmo deve ter pelo menos 10 passos e 2 decisões</li>
-      </ol>
-      <details class="dica"><summary>💡 Dica</summary><div class="inner">Decisões ("SE isso, faça aquilo") são o coração da programação. Na Semana 2 você vai escrevê-las em Python com <code>if</code>!</div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Provocar (de propósito) o erro de chave estrangeira.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Pelo Python (pymysql, Semana 26), tente inserir uma venda com um produto_id inexistente</li><li>Leia o erro:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output" style="color:#FF9B94">pymysql.err.IntegrityError: (1452, 'Cannot add or update a child row: a foreign key constraint fails...')</pre></div><span class="tag passos">🧭 Continue</span><ol><li>Erro 1452 = "essa chave estrangeira não existe na tabela-mãe"</li><li>Trate com try/except (Semana 7) para responder um 400 amigável na API</li></ol><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex03.py</span></div><pre class="code">import pymysql
+from db import conectar   # Semana 26
+
+con = conectar()
+cur = con.cursor()
+
+try:
+    cur.execute(
+        "INSERT INTO vendas_v2 (produto_id, qtd, total) VALUES (%s, %s, %s)",
+        (9999, 1, 10.0))
+    con.commit()
+except pymysql.err.IntegrityError:
+    print("Produto inexistente — venda recusada pelo banco! 🛡️")
+
+con.close()</pre></div><p>O <code>IntegrityError</code> é o banco defendendo a consistência dos SEUS dados. Na API, capture-o e devolva <code>400</code> ou <code>404</code> — nunca deixe o erro cru vazar para o cliente.</p></div></details>
     </div>
   </article>
 </section>
 
-<!-- ============ PARTE 2 ============ -->
 <section class="parte" id="p2">
-  <div class="parte-head"><span class="num">02</span><h2>Primeiro código: o comando print()</h2></div>
-  <div class="parte-intro">
-    <h3>Conceito</h3>
-    <p>O comando <code>print()</code> exibe informações na tela. Tudo que estiver entre aspas (simples <code>'</code> ou duplas <code>"</code>) é um <strong>texto</strong> (chamado de <em>string</em>).</p>
-  </div>
-
-  <!-- EX 4 -->
+  <div class="parte-head"><span class="num">02</span><h2>INNER JOIN: cruzando as tabelas</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>A tabela vendas guarda <code>produto_id = 1</code>... mas o relatório precisa mostrar "caneca branca"! O <strong>JOIN</strong> junta as duas tabelas na consulta, seguindo o relacionamento:</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">a_magica.sql</span></div><pre class="code">SELECT v.qtd, p.nome
+FROM vendas v
+JOIN produtos p ON p.id = v.produto_id</pre></div><p>Leia: "pegue as vendas e, PARA CADA UMA, encontre o produto cujo id bate com o produto_id". O <code>ON</code> é a regra do encaixe. Os apelidos <code>v</code> e <code>p</code> (aliases) encurtam a escrita.</p></div>
   <article class="ex" id="ex4">
     <div class="ex-head">
       <span class="ex-num">EX 04</span>
-      <h3>Seu primeiro programa em Python! 🎉</h3>
-      <span class="stars">⭐ básico</span>
+      <h3>Seu primeiro JOIN 🤝</h3>
+      <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex4"> Concluído</label>
     </div>
     <div class="ex-body">
-      <span class="tag obj">🎯 Objetivo</span>
-      <p>Executar seu primeiro código e entender o comando <code>print()</code>.</p>
-      <span class="tag passos">🧭 Passo a passo</span>
-      <ol>
-        <li>Abra o Python (IDLE, VS Code, ou o site replit.com)</li>
-        <li>Crie um arquivo chamado <code>ex04_ola.py</code></li>
-        <li>Digite, execute (F5 no IDLE ou botão Run) e depois adicione as outras linhas:</li>
-      </ol>
-      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex04_ola.py</span></div>
-<pre class="code">print("Olá, mundo!")
-print("Meu nome é [SEU NOME]")
-print("Estou aprendendo Python!")</pre></div>
-      <span class="tag saida">✅ Saída esperada</span>
-      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div>
-<pre class="output">Olá, mundo!
-Meu nome é Robson
-Estou aprendendo Python!</pre></div>
+<span class="tag obj">🎯 Objetivo</span><p>Listar as vendas com o NOME do produto (não o id).</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Monte o SELECT com <code>JOIN produtos p ON p.id = v.produto_id</code></li><li>Peça as colunas com o apelido: <code>p.nome</code>, <code>v.qtd</code>, <code>v.total</code></li><li>Rode no DBeaver primeiro (para VER a tabela cruzada), depois no Python</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex04_join.py</span></div><pre class="code">from db import conectar
+
+con = conectar()
+cur = con.cursor()
+
+cur.execute("""
+    SELECT p.nome, v.qtd, v.total
+    FROM vendas v
+    JOIN produtos p ON p.id = v.produto_id
+""")
+
+for nome, qtd, total in cur.fetchall():
+    print(f"{nome}: {qtd} un. — R$ {total:.2f}")
+
+con.close()</pre></div><span class="tag saida">✅ Exemplo (dados variam)</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">caneca branca: 3 un. — R$ 75.00
+caneca preta: 2 un. — R$ 55.00
+caneca branca: 1 un. — R$ 25.00</pre></div><details class="dica"><summary>💡 O dicionário virou JOIN</summary><div class="inner">Lembra da Semana 8, quando você usava um dict para "traduzir" código→nome dentro de um loop? O JOIN é ISSO, feito pelo banco, em velocidade industrial. Você já tinha a intuição — agora tem a ferramenta definitiva.</div></details>
     </div>
   </article>
 
-  <!-- EX 5 -->
   <article class="ex" id="ex5">
     <div class="ex-head">
       <span class="ex-num">EX 05</span>
-      <h3>Arte com print (ASCII art) 🌲</h3>
-      <span class="stars">⭐ básico</span>
+      <h3>JOIN com filtro e ordenação</h3>
+      <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex5"> Concluído</label>
     </div>
     <div class="ex-body">
-      <span class="tag obj">🎯 Objetivo</span>
-      <p>Praticar múltiplos <code>print()</code> e atenção aos detalhes (espaços contam!).</p>
-      <p><strong>Tarefa:</strong> faça um programa que desenhe esta árvore na tela:</p>
-      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div>
-<pre class="output">   *
-  ***
- *****
-*******
-   |</pre></div>
-      <span class="tag passos">🧭 Passo a passo</span>
-      <ol>
-        <li>Crie o arquivo <code>ex05_arvore.py</code></li>
-        <li>Cada linha do desenho é um <code>print()</code> separado</li>
-        <li>Conte os espaços ANTES dos asteriscos em cada linha — eles fazem parte do texto!</li>
-        <li>Execute e compare visualmente com o desenho acima</li>
-      </ol>
-      <details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Desenhe suas iniciais em letras grandes feitas de <code>#</code>. Exemplo para a letra R:
-<pre style="font-family:var(--mono);font-size:.85rem;background:#EDF2F9;border-radius:8px;padding:10px;margin-top:8px">###
-# #
-###
-# #
-# #</pre></div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Combinar JOIN com WHERE e ORDER BY — tudo junto.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Liste só as vendas de valor acima de R$ 50 (<code>WHERE v.total &gt; 50</code></li><li>Ordene do maior para o menor total</li><li>Repare: o WHERE e o ORDER BY (Semana 22) funcionam normalmente sobre o resultado cruzado</li></ol><span class="tag saida">✅ Exemplo</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">caneca branca: 3 un. — R$ 75.00
+caneca preta: 2 un. — R$ 55.00</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex05.py</span></div><pre class="code">cur.execute("""
+    SELECT p.nome, v.qtd, v.total
+    FROM vendas v
+    JOIN produtos p ON p.id = v.produto_id
+    WHERE v.total &gt; 50
+    ORDER BY v.total DESC
+""")
+for nome, qtd, total in cur.fetchall():
+    print(f"{nome}: {qtd} un. — R$ {total:.2f}")</pre></div><p>A ordem das cláusulas no SQL: <code>SELECT → FROM/JOIN → WHERE → GROUP BY → ORDER BY</code>. Decore essa sequência — ela vale para toda consulta que você escrever na vida.</p></div></details>
     </div>
   </article>
+</section>
 
-  <!-- EX 6 -->
+<section class="parte" id="p3">
+  <div class="parte-head"><span class="num">03</span><h2>LEFT JOIN: o que NÃO aconteceu</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>O <code>INNER JOIN</code> (ou só JOIN) traz apenas as linhas que TÊM par nas duas tabelas. E os produtos que nunca venderam? Eles somem do resultado! O <strong>LEFT JOIN</strong> resolve: traz TODAS as linhas da tabela da esquerda e preenche com <code>NULL</code> onde não houver par. Perguntas de negócio valiosas ("o que está encalhado?") vivem aí.</p></div>
   <article class="ex" id="ex6">
     <div class="ex-head">
       <span class="ex-num">EX 06</span>
-      <h3>Descobrindo erros de digitação</h3>
+      <h3>LEFT JOIN: todos os produtos, vendidos ou não</h3>
       <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex6"> Concluído</label>
     </div>
     <div class="ex-body">
-      <span class="tag obj">🎯 Objetivo</span>
-      <p>Aprender a ler mensagens de erro desde o início.</p>
-      <p><strong>Tarefa:</strong> cada linha abaixo tem UM erro. Digite uma de cada vez, execute, leia o erro e corrija:</p>
-      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex06_erros.py</span></div>
-<pre class="code"># Erro 1:
-print("Olá, mundo!
-# Erro 2:
-Print("Olá, mundo!")
-# Erro 3:
-print(Olá, mundo!)</pre></div>
-      <span class="tag passos">🧭 Passo a passo</span>
-      <ol>
-        <li>Digite o Erro 1, execute e leia a mensagem (<code>SyntaxError</code>... o que faltou?)</li>
-        <li>Corrija, depois teste o Erro 2 (<code>NameError</code>... Python diferencia maiúsculas!)</li>
-        <li>Por fim o Erro 3 (texto sem aspas confunde o Python)</li>
-        <li>Anote com suas palavras o que causou cada erro</li>
-      </ol>
-      <details class="dica"><summary>💡 Lição importante</summary><div class="inner">Ler mensagens de erro é uma habilidade essencial. O Python sempre tenta te dizer ONDE e QUAL é o problema.</div></details>
-      <details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p>
-        <p><strong>Erro 1:</strong> faltou fechar as aspas e o parêntese → <code>SyntaxError</code><br>
-        <strong>Erro 2:</strong> "Print" com P maiúsculo não existe; o correto é <code>print</code> → <code>NameError</code><br>
-        <strong>Erro 3:</strong> texto sem aspas; o Python acha que "Olá" e "mundo" são variáveis → <code>SyntaxError</code>/<code>NameError</code></p>
-      </div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Ver a diferença entre INNER e LEFT na prática.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Rode a mesma consulta duas vezes: uma com <code>JOIN</code>, outra com <code>LEFT JOIN</code></li><li>No LEFT, produtos sem venda aparecem com qtd <code>None</code> (o NULL do banco chega como None no Python — Semana 6!)</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex06_left.py</span></div><pre class="code">cur.execute("""
+    SELECT p.nome, v.qtd
+    FROM produtos p
+    LEFT JOIN vendas v ON v.produto_id = p.id
+""")
+for nome, qtd in cur.fetchall():
+    situacao = f"{qtd} un." if qtd is not None else "— nunca vendido!"
+    print(f"{nome}: {situacao}")</pre></div><span class="tag saida">✅ Exemplo</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">caneca branca: 3 un.
+caneca preta: 2 un.
+azulejo: — nunca vendido!</pre></div><details class="dica"><summary>💡 Esquerda de quem?</summary><div class="inner">"LEFT" = a tabela escrita ANTES do JOIN (aqui, produtos). O LEFT JOIN promete: "TODAS as linhas da esquerda entram no resultado, com ou sem par". Por isso o azulejo aparece — com NULL na parte da venda. O INNER o teria escondido.</div></details>
     </div>
   </article>
-</section>
 
-<!-- ============ PARTE 3 ============ -->
-<section class="parte" id="p3">
-  <div class="parte-head"><span class="num">03</span><h2>Variáveis: a memória do programa</h2></div>
-  <div class="parte-intro">
-    <h3>Conceito</h3>
-    <p>Uma <strong>variável</strong> é como uma caixinha com etiqueta onde guardamos um valor para usar depois.</p>
-    <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">exemplo.py</span></div>
-<pre class="code">nome = "Maria"      # caixinha "nome" guarda o texto Maria
-idade = 25          # caixinha "idade" guarda o número 25
-altura = 1.68       # caixinha "altura" guarda o decimal 1.68</pre></div>
-    <p><strong>Regras para nomes de variáveis:</strong></p>
-    <ul>
-      <li>✅ Pode: letras, números e underline (<code>_</code>) → <code>nome_completo</code>, <code>idade2</code></li>
-      <li>❌ Não pode: começar com número → <code>2nome</code> (erro!)</li>
-      <li>❌ Não pode: espaços → <code>nome completo</code> (erro!)</li>
-      <li>⚠️ Acentos: tecnicamente funcionam, mas evite! Use <code>salario</code> em vez de <code>salário</code></li>
-    </ul>
-  </div>
-
-  <!-- EX 7 -->
   <article class="ex" id="ex7">
     <div class="ex-head">
       <span class="ex-num">EX 07</span>
-      <h3>Criando suas primeiras variáveis</h3>
-      <span class="stars">⭐ básico</span>
+      <h3>Os encalhados: LEFT JOIN + IS NULL 🕵️</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex7"> Concluído</label>
     </div>
     <div class="ex-body">
-      <span class="tag obj">🎯 Objetivo</span>
-      <p>Criar variáveis e exibi-las com <code>print()</code>.</p>
-      <span class="tag passos">🧭 Passo a passo</span>
-      <ol>
-        <li>Crie um arquivo <code>ex07_variaveis.py</code></li>
-        <li>Crie <code>nome</code> com seu nome e <code>cidade</code> com sua cidade</li>
-        <li>Crie <code>idade</code> com sua idade (sem aspas — é número!)</li>
-        <li>Exiba as três variáveis, uma em cada linha</li>
-      </ol>
-      <p><strong>Código inicial (complete os espaços):</strong></p>
-      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex07_variaveis.py</span></div>
-<pre class="code">nome = "______"
-cidade = "______"
-idade = ______
-
-print(nome)
-print(cidade)
-print(idade)</pre></div>
-      <span class="tag saida">✅ Saída esperada (exemplo)</span>
-      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div>
-<pre class="output">Robson
-Porto Alegre
-35</pre></div>
-      <details class="dica"><summary>💡 Dica</summary><div class="inner">Texto precisa de aspas. Número NÃO usa aspas. <code>"35"</code> é texto, <code>35</code> é número — e isso fará diferença mais adiante!</div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Encontrar produtos que NUNCA venderam — a consulta de detetive.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Parta do LEFT JOIN anterior</li><li>Filtre com <code>WHERE v.id IS NULL</code> — sobram só as linhas SEM par</li><li>Atenção: no SQL é <code>IS NULL</code>, nunca <code>= NULL</code></li></ol><span class="tag saida">✅ Exemplo</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Produtos encalhados:
+azulejo</pre></div><details class="dica"><summary>💡 A pergunta invertida</summary><div class="inner">O INNER JOIN responde "o que aconteceu?"; o LEFT JOIN + IS NULL responde "o que NÃO aconteceu?" — clientes que nunca compraram, produtos parados, alunos sem entrega. Perguntas negativas são ouro para o negócio, e essa é A técnica para respondê-las.</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex07.py</span></div><pre class="code">cur.execute("""
+    SELECT p.nome
+    FROM produtos p
+    LEFT JOIN vendas v ON v.produto_id = p.id
+    WHERE v.id IS NULL
+""")
+print("Produtos encalhados:")
+for (nome,) in cur.fetchall():
+    print(nome)</pre></div><p>Repare no <code>(nome,)</code>: fetchall devolve tuplas mesmo com uma coluna só — a vírgula desempacota (Semana 5!).</p></div></details>
     </div>
   </article>
+</section>
 
-  <!-- EX 8 -->
+<section class="parte" id="p4">
+  <div class="parte-head"><span class="num">04</span><h2>JOIN + GROUP BY: relatórios profissionais</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>A dupla mais usada do SQL corporativo: o JOIN cruza, o GROUP BY (Semana 22) resume. Toda pergunta do tipo "total de X por Y" com dados em tabelas diferentes passa por aqui.</p></div>
   <article class="ex" id="ex8">
     <div class="ex-head">
       <span class="ex-num">EX 08</span>
-      <h3>Nomes válidos ou inválidos?</h3>
-      <span class="stars">⭐ básico</span>
+      <h3>Ranking com nome de verdade 🏆</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex8"> Concluído</label>
     </div>
     <div class="ex-body">
-      <span class="tag obj">🎯 Objetivo</span>
-      <p>Fixar as regras de nomes de variáveis.</p>
-      <p><strong>Tarefa:</strong> SEM executar, classifique cada nome abaixo como ✅ válido ou ❌ inválido. Depois teste no Python para conferir:</p>
-      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex08_nomes.py</span></div>
-<pre class="code">nome_completo = "Ana"
-2idade = 30
-preço = 10.50
-valor total = 100
-_resultado = 0
-ValorTotal = 100
-nota-final = 8.5</pre></div>
-      <span class="tag passos">🧭 Passo a passo</span>
-      <ol>
-        <li>Aplique as regras: pode começar com número? Pode ter espaço? Pode ter hífen?</li>
-        <li>Anote suas previsões</li>
-        <li>Teste cada linha no Python (uma de cada vez) e compare</li>
-        <li>Para os inválidos: qual mensagem de erro apareceu?</li>
-      </ol>
-      <details class="dica"><summary>💡 Dica</summary><div class="inner">O hífen (<code>-</code>) é interpretado como subtração! <code>nota-final</code> parece um nome, mas o Python lê como <code>nota</code> menos <code>final</code>.</div></details>
-      <details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p>
-        <p><code>nome_completo</code> ✅ válido · <code>2idade</code> ❌ começa com número · <code>preço</code> ⚠️ funciona, mas evite acentos · <code>valor total</code> ❌ tem espaço · <code>_resultado</code> ✅ pode começar com underline · <code>ValorTotal</code> ✅ válido (mas preferimos <code>valor_total</code>) · <code>nota-final</code> ❌ hífen é subtração</p>
-      </div></details>
+<span class="tag obj">🎯 Objetivo</span><p>O relatório da Semana 30, agora entendido linha por linha.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>JOIN para trazer o nome + GROUP BY p.nome para agrupar</li><li>Some as quantidades e o faturamento por produto</li><li>Ordene pelo total vendido</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex08_ranking.py</span></div><pre class="code">cur.execute("""
+    SELECT p.nome, SUM(v.qtd) AS unidades, SUM(v.total) AS faturamento
+    FROM vendas v
+    JOIN produtos p ON p.id = v.produto_id
+    GROUP BY p.nome
+    ORDER BY unidades DESC
+""")
+print("--- RANKING TUA CANECA ---")
+for nome, unidades, faturamento in cur.fetchall():
+    print(f"{nome}: {unidades} un. — R$ {faturamento:.2f}")</pre></div><span class="tag saida">✅ Exemplo</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">--- RANKING TUA CANECA ---
+caneca branca: 4 un. — R$ 100.00
+caneca preta: 2 un. — R$ 55.00</pre></div><details class="dica"><summary>💡 O AS batiza a coluna</summary><div class="inner">O <code>AS unidades</code> dá um nome ao resultado da agregação — deixa a consulta legível e permite usar <code>ORDER BY unidades</code>. Na Semana 30 você usou essa consulta pronta no relatório da API; agora você a DOMINA peça por peça. 🎓</div></details>
     </div>
   </article>
 
-  <!-- EX 9 -->
   <article class="ex" id="ex9">
     <div class="ex-head">
       <span class="ex-num">EX 09</span>
-      <h3>Combinando texto e variáveis (f-strings)</h3>
-      <span class="stars">⭐ básico</span>
+      <h3>Produtos com estoque baixo E vendas altas ⚠️</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex9"> Concluído</label>
     </div>
     <div class="ex-body">
-      <span class="tag obj">🎯 Objetivo</span>
-      <p>Aprender a montar frases com variáveis usando f-strings.</p>
-      <p><strong>Conceito:</strong> a <strong>f-string</strong> permite inserir variáveis dentro de um texto. Basta colocar <code>f</code> antes das aspas e a variável entre chaves <code>{}</code>:</p>
-      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">exemplo.py</span></div>
-<pre class="code">nome = "Ana"
-print(f"Bem-vinda, {nome}!")   # Exibe: Bem-vinda, Ana!</pre></div>
-      <span class="tag passos">🧭 Passo a passo</span>
-      <ol>
-        <li>Reaproveite as variáveis do Exercício 7</li>
-        <li>Use UMA f-string para exibir: <em>"Meu nome é ___, tenho ___ anos e moro em ___."</em></li>
-        <li>Execute e confira</li>
-      </ol>
-      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex09_fstring.py</span></div>
-<pre class="code">nome = "______"
-cidade = "______"
-idade = ______
-
-print(f"Meu nome é {nome}, tenho {____} anos e moro em {____}.")</pre></div>
-      <span class="tag saida">✅ Saída esperada (exemplo)</span>
-      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div>
-<pre class="output">Meu nome é Robson, tenho 35 anos e moro em Porto Alegre.</pre></div>
-      <details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Crie uma variável <code>ano_atual = 2026</code> e exiba: <em>"Eu nasci aproximadamente em [ano]"</em>, calculando o ano de nascimento dentro da f-string: <code>{ano_atual - idade}</code>.</div></details>
-      <details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p>
-<div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex09.py</span></div>
-<pre class="code">nome = "Robson"
-cidade = "Porto Alegre"
-idade = 35
-
-print(f"Meu nome é {nome}, tenho {idade} anos e moro em {cidade}.")
-
-# Desafio extra:
-ano_atual = 2026
-print(f"Eu nasci aproximadamente em {ano_atual - idade}")
-# Dentro das chaves {} pode haver CONTAS, não só variáveis!</pre></div>
-      </div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Uma consulta de decisão: o que repor com urgência (sem código pronto!).</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Combine tudo: JOIN + GROUP BY + HAVING</li><li>Traga produtos com estoque < 5 cujas vendas somam 2+ unidades</li><li>Pesquise o <code>HAVING</code>: é o WHERE dos grupos (filtra DEPOIS do GROUP BY)</li></ol><span class="tag saida">✅ Exemplo</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Repor com urgência:
+caneca branca (estoque 3, vendeu 4)</pre></div><details class="dica"><summary>💡 WHERE vs HAVING</summary><div class="inner">O <code>WHERE</code> filtra LINHAS antes de agrupar; o <code>HAVING</code> filtra GRUPOS depois de agregar. "Estoque < 5" é sobre a linha (WHERE); "vendeu 2+" é sobre a soma do grupo (HAVING). Saber onde cada filtro entra é marca de quem entende SQL de verdade.</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex09.py</span></div><pre class="code">cur.execute("""
+    SELECT p.nome, p.estoque, SUM(v.qtd) AS vendidas
+    FROM produtos p
+    JOIN vendas v ON v.produto_id = p.id
+    WHERE p.estoque &lt; 5
+    GROUP BY p.nome, p.estoque
+    HAVING vendidas &gt;= 2
+""")
+print("Repor com urgência:")
+for nome, estoque, vendidas in cur.fetchall():
+    print(f"{nome} (estoque {estoque}, vendeu {vendidas})")</pre></div></div></details>
     </div>
   </article>
+</section>
 
-  <!-- EX 10 -->
+<section class="parte" id="p5">
+  <div class="parte-head"><span class="num">05</span><h2>Três tabelas: clientes entram em cena</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Sistemas reais têm MUITAS tabelas relacionadas. Vamos adicionar <code>clientes</code> e ligar: cliente → venda → produto. Um JOIN duplo responde "quem comprou o quê".</p></div>
   <article class="ex" id="ex10">
     <div class="ex-head">
       <span class="ex-num">EX 10</span>
-      <h3>Variáveis mudam de valor!</h3>
-      <span class="stars">⭐ básico</span>
+      <h3>A tabela de clientes</h3>
+      <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex10"> Concluído</label>
     </div>
     <div class="ex-body">
-      <span class="tag obj">🎯 Objetivo</span>
-      <p>Entender que uma variável pode ser <strong>atualizada</strong>.</p>
-      <span class="tag passos">🧭 Passo a passo</span>
-      <ol>
-        <li>Digite o código abaixo e, ANTES de executar, escreva num papel o que você acha que vai aparecer na tela</li>
-        <li>Execute e compare com sua previsão</li>
-        <li>Reflita: o que aconteceu na linha <code>pontos = pontos + 5</code>?</li>
-      </ol>
-      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex10_pontos.py</span></div>
-<pre class="code">pontos = 10
-print(pontos)
+<span class="tag obj">🎯 Objetivo</span><p>Criar clientes e ligá-los às vendas.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie a tabela <code>clientes</code> (id, nome) e adicione <code>cliente_id</code> às vendas (com FOREIGN KEY)</li><li>Insira 2-3 clientes e registre vendas apontando para eles</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">clientes.sql</span></div><pre class="code">CREATE TABLE IF NOT EXISTS clientes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100)
+);
 
-pontos = 25
-print(pontos)
-
-pontos = pontos + 5
-print(pontos)</pre></div>
-      <span class="tag saida">✅ Saída esperada</span>
-      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div>
-<pre class="output">10
-25
-30</pre></div>
-      <details class="dica"><summary>💡 Explicação importante</summary><div class="inner"><code>pontos = pontos + 5</code> significa: "pegue o valor atual de pontos (25), some 5, e guarde o resultado (30) de volta na mesma caixinha". O sinal <code>=</code> em programação significa <strong>atribuição</strong> (guardar), não igualdade matemática!</div></details>
+ALTER TABLE vendas_v2 ADD COLUMN cliente_id INT;
+ALTER TABLE vendas_v2 ADD FOREIGN KEY (cliente_id) REFERENCES clientes(id);</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(clientes criados e vendas apontando para eles — confira o diagrama no DBeaver!)</pre></div><details class="dica"><summary>💡 O diagrama do DBeaver</summary><div class="inner">Clique com o botão direito no banco → View Diagram: o DBeaver DESENHA suas tabelas e as setas dos relacionamentos! Ver o "mapa" do banco ajuda demais a raciocinar — e impressiona em qualquer apresentação. 🗺️</div></details>
     </div>
   </article>
 
-  <!-- EX 11 -->
   <article class="ex" id="ex11">
     <div class="ex-head">
       <span class="ex-num">EX 11</span>
-      <h3>A troca de valores (clássico!)</h3>
-      <span class="stars">⭐⭐ médio</span>
+      <h3>JOIN triplo: quem comprou o quê 🔗</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex11"> Concluído</label>
     </div>
     <div class="ex-body">
-      <span class="tag obj">🎯 Objetivo</span>
-      <p>Resolver um dos problemas mais clássicos da lógica de programação.</p>
-      <p><strong>Contexto:</strong> você tem duas variáveis e precisa <strong>trocar os valores entre elas</strong>:</p>
-      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex11_troca.py</span></div>
-<pre class="code">a = "café"
-b = "leite"
-# Objetivo: no final, a deve valer "leite" e b deve valer "café"</pre></div>
-      <span class="tag passos">🧭 Passo a passo</span>
-      <ol>
-        <li>Primeiro tente o jeito ingênuo e veja por que NÃO funciona:
-<div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">tentativa_errada.py</span></div>
-<pre class="code">a = b   # a agora vale "leite"... mas o "café" foi perdido!
-b = a   # b recebe "leite" de novo. Deu errado!</pre></div></li>
-        <li>Pense na vida real: para trocar o conteúdo de dois copos, você precisa de um <strong>terceiro copo</strong> auxiliar</li>
-        <li>Use uma variável auxiliar e complete:
-<div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex11_troca.py</span></div>
-<pre class="code">auxiliar = a    # guarda o "café" em segurança
-a = ____        # complete
-b = ____        # complete</pre></div></li>
-        <li>Confira com <code>print(a)</code> e <code>print(b)</code></li>
-      </ol>
-      <span class="tag saida">✅ Saída esperada</span>
-      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div>
-<pre class="output">leite
-café</pre></div>
-      <details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Python tem um atalho elegante que dispensa a variável auxiliar: <code>a, b = b, a</code>. Teste e comprove!</div></details>
-      <details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p>
-<div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex11.py</span></div>
-<pre class="code">a = "café"
-b = "leite"
-
-auxiliar = a    # guarda "café" em segurança
-a = b           # a recebe "leite"
-b = auxiliar    # b recebe o "café" que estava guardado
-
-print(a)   # leite
-print(b)   # café
-
-# Desafio extra — o jeito "pythônico":
-a, b = b, a    # troca os dois de uma vez só!</pre></div>
-      </div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Cruzar clientes, vendas e produtos numa consulta só.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Dois JOINs em sequência: vendas→produtos e vendas→clientes</li><li>Cada JOIN tem seu próprio ON</li><li>Traga: nome do cliente, nome do produto, quantidade</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex11_triplo.py</span></div><pre class="code">cur.execute("""
+    SELECT c.nome AS cliente, p.nome AS produto, v.qtd
+    FROM vendas_v2 v
+    JOIN produtos p ON p.id = v.produto_id
+    JOIN clientes c ON c.id = v.cliente_id
+""")
+for cliente, produto, qtd in cur.fetchall():
+    print(f"{cliente} comprou {qtd}x {produto}")</pre></div><span class="tag saida">✅ Exemplo</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Ana comprou 3x caneca branca
+Bruno comprou 2x caneca preta
+Ana comprou 1x caneca personalizada</pre></div><details class="dica"><summary>💡 JOINs empilham</summary><div class="inner">Cada JOIN adiciona uma tabela ao cruzamento — dois, três, cinco JOINs são rotina em sistemas reais. A tabela vendas aqui é o "centro" que conecta tudo (quem + o quê + quanto). Modelagens assim, com uma tabela de eventos ligando entidades, aparecem em TODO sistema comercial.</div></details>
     </div>
   </article>
 </section>
 
-<!-- ============ PARTE 4 ============ -->
-<section class="parte" id="p4">
-  <div class="parte-head"><span class="num">04</span><h2>Tipos de dados e entrada do usuário</h2></div>
-  <div class="parte-intro">
-    <h3>Conceito</h3>
-    <table>
-      <tr><th>Tipo</th><th>Nome em Python</th><th>Exemplo</th></tr>
-      <tr><td>Texto</td><td><code>str</code> (string)</td><td><code>"Olá"</code>, <code>"123"</code></td></tr>
-      <tr><td>Número inteiro</td><td><code>int</code> (integer)</td><td><code>10</code>, <code>-3</code>, <code>2026</code></td></tr>
-      <tr><td>Número decimal</td><td><code>float</code></td><td><code>1.75</code>, <code>-0.5</code></td></tr>
-      <tr><td>Verdadeiro/Falso</td><td><code>bool</code> (boolean)</td><td><code>True</code>, <code>False</code></td></tr>
-    </table>
-    <p>E o comando <code>input()</code> permite que o <strong>usuário digite</strong> algo:</p>
-    <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">exemplo.py</span></div>
-<pre class="code">nome = input("Digite seu nome: ")
-print(f"Olá, {nome}!")</pre></div>
-    <p>⚠️ <strong>MUITO IMPORTANTE:</strong> <code>input()</code> SEMPRE retorna texto (<code>str</code>), mesmo que o usuário digite um número! Para converter: <code>int(input(...))</code> → inteiro · <code>float(input(...))</code> → decimal.</p>
-  </div>
-
-  <!-- EX 12 -->
-  <article class="ex" id="ex12">
-    <div class="ex-head">
-      <span class="ex-num">EX 12</span>
-      <h3>Descobrindo os tipos</h3>
-      <span class="stars">⭐ básico</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex12"> Concluído</label>
-    </div>
-    <div class="ex-body">
-      <span class="tag obj">🎯 Objetivo</span>
-      <p>Usar a função <code>type()</code> para identificar tipos de dados.</p>
-      <span class="tag passos">🧭 Passo a passo</span>
-      <ol>
-        <li>Crie o arquivo <code>ex12_tipos.py</code></li>
-        <li>Digite o código abaixo e PREVEJA a saída antes de executar</li>
-        <li>Execute e confira. A variável <code>d</code> te surpreendeu?</li>
-      </ol>
-      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex12_tipos.py</span></div>
-<pre class="code">a = "Python"
-b = 42
-c = 3.14
-d = "42"
-e = True
-
-print(type(a))
-print(type(b))
-print(type(c))
-print(type(d))
-print(type(e))</pre></div>
-      <span class="tag saida">✅ Saída esperada</span>
-      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div>
-<pre class="output">&lt;class 'str'&gt;
-&lt;class 'int'&gt;
-&lt;class 'float'&gt;
-&lt;class 'str'&gt;
-&lt;class 'bool'&gt;</pre></div>
-      <details class="dica"><summary>💡 Dica</summary><div class="inner"><code>"42"</code> com aspas é TEXTO, não número. Você não consegue fazer matemática com ele diretamente!</div></details>
-    </div>
-  </article>
-
-  <!-- EX 13 -->
-  <article class="ex" id="ex13">
-    <div class="ex-head">
-      <span class="ex-num">EX 13</span>
-      <h3>Texto + texto = ?</h3>
-      <span class="stars">⭐⭐ médio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex13"> Concluído</label>
-    </div>
-    <div class="ex-body">
-      <span class="tag obj">🎯 Objetivo</span>
-      <p>Descobrir o que acontece quando "somamos" e "multiplicamos" textos.</p>
-      <span class="tag passos">🧭 Passo a passo</span>
-      <ol>
-        <li>PREVEJA o resultado de cada linha, depois execute</li>
-        <li>Compare suas previsões com o resultado real</li>
-        <li>Explique com suas palavras: o que <code>+</code> faz com textos? E o <code>*</code>?</li>
-      </ol>
-      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex13_textos.py</span></div>
-<pre class="code">print("2" + "3")
-print(2 + 3)
-print("ha" * 3)
-print("=" * 20)
-print("2" * 3)</pre></div>
-      <span class="tag saida">✅ Saída esperada</span>
-      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div>
-<pre class="output">23
-5
-hahaha
-====================
-222</pre></div>
-      <details class="dica"><summary>💡 Explicação</summary><div class="inner">Com textos, <code>+</code> <strong>junta</strong> (concatena) e <code>*</code> <strong>repete</strong>. Por isso <code>"2" + "3"</code> vira <code>"23"</code> e não <code>5</code>! O tipo do dado muda completamente o comportamento da operação.</div></details>
-    </div>
-  </article>
-
-  <!-- EX 14 -->
-  <article class="ex" id="ex14">
-    <div class="ex-head">
-      <span class="ex-num">EX 14</span>
-      <h3>Programa interativo: cadastro simples</h3>
-      <span class="stars">⭐ básico</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex14"> Concluído</label>
-    </div>
-    <div class="ex-body">
-      <span class="tag obj">🎯 Objetivo</span>
-      <p>Usar <code>input()</code> para coletar dados do usuário.</p>
-      <span class="tag passos">🧭 Passo a passo</span>
-      <ol>
-        <li>Crie o arquivo <code>ex14_cadastro.py</code></li>
-        <li>Peça ao usuário: nome, cidade e comida favorita (3 inputs)</li>
-        <li>No final, exiba um resumo formatado com f-string</li>
-      </ol>
-      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex14_cadastro.py</span></div>
-<pre class="code">print("=== CADASTRO ===")
-
-nome = input("Qual é o seu nome? ")
-cidade = input("____________________")
-comida = input("____________________")
-
-print()  # linha em branco
-print("=== RESUMO ===")
-print(f"Olá, {nome}! Você mora em ______ e adora comer ______.")</pre></div>
-      <span class="tag saida">✅ Exemplo de execução</span>
-      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div>
-<pre class="output">=== CADASTRO ===
-Qual é o seu nome? Carlos
-Em que cidade você mora? Santa Maria
-Qual sua comida favorita? Churrasco
-
-=== RESUMO ===
-Olá, Carlos! Você mora em Santa Maria e adora comer Churrasco.</pre></div>
-      <details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p>
-<div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex14.py</span></div>
-<pre class="code">print("=== CADASTRO ===")
-
-nome = input("Qual é o seu nome? ")
-cidade = input("Em que cidade você mora? ")
-comida = input("Qual sua comida favorita? ")
-
-print()
-print("=== RESUMO ===")
-print(f"Olá, {nome}! Você mora em {cidade} e adora comer {comida}.")</pre></div>
-      </div></details>
-    </div>
-  </article>
-
-  <!-- EX 15 -->
-  <article class="ex" id="ex15">
-    <div class="ex-head">
-      <span class="ex-num">EX 15</span>
-      <h3>A pegadinha do input numérico</h3>
-      <span class="stars">⭐⭐ médio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex15"> Concluído</label>
-    </div>
-    <div class="ex-body">
-      <span class="tag obj">🎯 Objetivo</span>
-      <p>Entender por que precisamos converter tipos.</p>
-      <span class="tag passos">🧭 Passo a passo</span>
-      <ol>
-        <li>Digite e execute este código <strong>com erro proposital</strong>:</li>
-      </ol>
-      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex15_erro.py</span></div>
-<pre class="code">idade = input("Digite sua idade: ")
-daqui_10_anos = idade + 10
-print(f"Daqui a 10 anos você terá {daqui_10_anos} anos")</pre></div>
-      <ol start="2">
-        <li>Você verá um <strong>erro</strong> parecido com:</li>
-      </ol>
-      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div>
-<pre class="output" style="color:#FF9B94">TypeError: can only concatenate str (not "int") to str</pre></div>
-      <ol start="3">
-        <li>Leia o erro: ele diz que não dá para somar texto (<code>str</code>) com número (<code>int</code>)</li>
-        <li>Agora <strong>corrija</strong> convertendo o input para inteiro:</li>
-      </ol>
-      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex15_corrigido.py</span></div>
-<pre class="code">idade = int(input("Digite sua idade: "))
-daqui_10_anos = idade + 10
-print(f"Daqui a 10 anos você terá {daqui_10_anos} anos")</pre></div>
-      <span class="tag saida">✅ Exemplo de execução (corrigido)</span>
-      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div>
-<pre class="output">Digite sua idade: 30
-Daqui a 10 anos você terá 40 anos</pre></div>
-      <details class="dica"><summary>💡 Lição</summary><div class="inner">Errar de propósito é uma ótima forma de aprender!</div></details>
-      <details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Peça o ano de nascimento da pessoa e calcule a idade aproximada dela em 2026.
-<div class="term-window" style="margin-top:10px"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_desafio.py</span></div>
-<pre class="code">ano_nascimento = int(input("Em que ano você nasceu? "))
-idade = 2026 - ano_nascimento
-print(f"Você tem aproximadamente {idade} anos")</pre></div></div></details>
-    </div>
-  </article>
-
-  <!-- EX 16 -->
-  <article class="ex" id="ex16">
-    <div class="ex-head">
-      <span class="ex-num">EX 16</span>
-      <h3>Ficha de personagem de RPG 🎲</h3>
-      <span class="stars">⭐⭐ médio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex16"> Concluído</label>
-    </div>
-    <div class="ex-body">
-      <span class="tag obj">🎯 Objetivo</span>
-      <p>Consolidar input, conversão de tipos e f-strings num programa maior.</p>
-      <p><strong>Tarefa:</strong> crie um programa que monta a ficha de um personagem de jogo, perguntando: nome do personagem (texto), classe (texto), nível (inteiro) e pontos de vida (inteiro). No final, exiba a ficha formatada.</p>
-      <span class="tag passos">🧭 Passo a passo</span>
-      <ol>
-        <li>Crie o arquivo <code>ex16_rpg.py</code></li>
-        <li>Faça os 4 inputs (atenção aos tipos: quais precisam de <code>int()</code>?)</li>
-        <li>Calcule também o <strong>dano base</strong> do personagem: <code>nivel * 3</code></li>
-        <li>Exiba a ficha no formato abaixo</li>
-      </ol>
-      <span class="tag saida">✅ Exemplo de execução</span>
-      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div>
-<pre class="output">=== CRIAÇÃO DE PERSONAGEM ===
-Nome do personagem: Thorin
-Classe: Guerreiro
-Nível: 5
-Pontos de vida: 120
-
-========== FICHA ==========
-🛡️  Thorin — Guerreiro
-⭐ Nível: 5
-❤️  Vida: 120 HP
-⚔️  Dano base: 15
-===========================</pre></div>
-      <details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Adicione o atributo "mana" e calcule o "poder mágico" como <code>mana * 2 + nivel</code>.</div></details>
-      <details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p>
-<div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex16.py</span></div>
-<pre class="code">print("=== CRIAÇÃO DE PERSONAGEM ===")
-
-nome = input("Nome do personagem: ")
-classe = input("Classe: ")
-nivel = int(input("Nível: "))          # número → precisa de int()
-vida = int(input("Pontos de vida: "))  # número → precisa de int()
-
-dano_base = nivel * 3
-
-print()
-print("========== FICHA ==========")
-print(f"🛡️  {nome} — {classe}")
-print(f"⭐ Nível: {nivel}")
-print(f"❤️  Vida: {vida} HP")
-print(f"⚔️  Dano base: {dano_base}")
-print("===========================")</pre></div>
-      </div></details>
-    </div>
-  </article>
-</section>
-
-<!-- ============ PARTE 5 ============ -->
-<section class="parte" id="p5">
-  <div class="parte-head"><span class="num">05</span><h2>Operadores matemáticos</h2></div>
-  <div class="parte-intro">
-    <h3>Conceito</h3>
-    <table>
-      <tr><th>Operador</th><th>Operação</th><th>Exemplo</th><th>Resultado</th></tr>
-      <tr><td><code>+</code></td><td>Soma</td><td><code>5 + 3</code></td><td><code>8</code></td></tr>
-      <tr><td><code>-</code></td><td>Subtração</td><td><code>5 - 3</code></td><td><code>2</code></td></tr>
-      <tr><td><code>*</code></td><td>Multiplicação</td><td><code>5 * 3</code></td><td><code>15</code></td></tr>
-      <tr><td><code>/</code></td><td>Divisão</td><td><code>7 / 2</code></td><td><code>3.5</code></td></tr>
-      <tr><td><code>//</code></td><td>Divisão inteira</td><td><code>7 // 2</code></td><td><code>3</code></td></tr>
-      <tr><td><code>%</code></td><td>Resto da divisão (módulo)</td><td><code>7 % 2</code></td><td><code>1</code></td></tr>
-      <tr><td><code>**</code></td><td>Potência</td><td><code>2 ** 3</code></td><td><code>8</code></td></tr>
-    </table>
-    <p>⚠️ A divisão <code>/</code> SEMPRE retorna <code>float</code>, mesmo que o resultado seja exato: <code>10 / 2</code> → <code>5.0</code></p>
-  </div>
-
-  <!-- EX 17 -->
-  <article class="ex" id="ex17">
-    <div class="ex-head">
-      <span class="ex-num">EX 17</span>
-      <h3>Calculadora de previsões</h3>
-      <span class="stars">⭐ básico</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex17"> Concluído</label>
-    </div>
-    <div class="ex-body">
-      <span class="tag obj">🎯 Objetivo</span>
-      <p>Praticar todos os operadores.</p>
-      <span class="tag passos">🧭 Passo a passo</span>
-      <ol>
-        <li>Crie o arquivo <code>ex17_operadores.py</code> com <code>a = 17</code> e <code>b = 5</code></li>
-        <li>Exiba o resultado de TODAS as 7 operações da tabela, com etiquetas</li>
-        <li>ANTES de executar, calcule mentalmente cada resultado!</li>
-      </ol>
-      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex17_operadores.py</span></div>
-<pre class="code">a = 17
-b = 5
-
-print(f"Soma: {a + b}")
-print(f"Subtração: {a - b}")
-print(f"Multiplicação: {____}")
-print(f"Divisão: {____}")
-print(f"Divisão inteira: {____}")
-print(f"Resto: {____}")
-print(f"Potência: {____}")</pre></div>
-      <span class="tag saida">✅ Saída esperada</span>
-      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div>
-<pre class="output">Soma: 22
-Subtração: 12
-Multiplicação: 85
-Divisão: 3.4
-Divisão inteira: 3
-Resto: 2
-Potência: 1419857</pre></div>
-      <details class="dica"><summary>💡 Dica sobre o % (resto)</summary><div class="inner">Ele é MUITO usado! Por exemplo, <code>numero % 2</code> retorna <code>0</code> se o número for par e <code>1</code> se for ímpar. Guarde essa!</div></details>
-      <details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p>
-<div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex17.py</span></div>
-<pre class="code">a = 17
-b = 5
-
-print(f"Soma: {a + b}")              # 22
-print(f"Subtração: {a - b}")          # 12
-print(f"Multiplicação: {a * b}")      # 85
-print(f"Divisão: {a / b}")            # 3.4 (sempre float!)
-print(f"Divisão inteira: {a // b}")   # 3 (descarta a parte decimal)
-print(f"Resto: {a % b}")              # 2 (17 = 3*5 + 2)
-print(f"Potência: {a ** b}")          # 1419857 (17 elevado a 5)</pre></div>
-      </div></details>
-    </div>
-  </article>
-
-  <!-- EX 18 -->
-  <article class="ex" id="ex18">
-    <div class="ex-head">
-      <span class="ex-num">EX 18</span>
-      <h3>A ordem das operações</h3>
-      <span class="stars">⭐⭐ médio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex18"> Concluído</label>
-    </div>
-    <div class="ex-body">
-      <span class="tag obj">🎯 Objetivo</span>
-      <p>Entender a precedência dos operadores (o que o Python calcula primeiro).</p>
-      <span class="tag passos">🧭 Passo a passo</span>
-      <ol>
-        <li>PREVEJA o resultado de cada linha, depois execute</li>
-        <li>Compare suas previsões</li>
-        <li>Conclua: a ordem é a mesma da matemática? Os parênteses funcionam igual?</li>
-      </ol>
-      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex18_ordem.py</span></div>
-<pre class="code">print(2 + 3 * 4)
-print((2 + 3) * 4)
-print(10 - 4 / 2)
-print((10 - 4) / 2)
-print(2 ** 3 * 2)</pre></div>
-      <span class="tag saida">✅ Saída esperada</span>
-      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div>
-<pre class="output">14
-20
-8.0
-3.0
-16</pre></div>
-      <details class="dica"><summary>💡 Regra</summary><div class="inner">Python segue a matemática: parênteses primeiro, depois potência, depois multiplicação/divisão, depois soma/subtração. <strong>Na dúvida, use parênteses</strong> — eles deixam o código mais claro!</div></details>
-    </div>
-  </article>
-
-  <!-- EX 19 -->
-  <article class="ex" id="ex19">
-    <div class="ex-head">
-      <span class="ex-num">EX 19</span>
-      <h3>Calculadora de média escolar</h3>
-      <span class="stars">⭐⭐ médio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex19"> Concluído</label>
-    </div>
-    <div class="ex-body">
-      <span class="tag obj">🎯 Objetivo</span>
-      <p>Resolver um problema real combinando input, conversão e operadores.</p>
-      <span class="tag passos">🧭 Passo a passo</span>
-      <ol>
-        <li>Crie o arquivo <code>ex19_media.py</code></li>
-        <li>Peça 3 notas ao usuário (use <code>float(input(...))</code> — notas podem ter decimais!)</li>
-        <li>Calcule a média: <code>(nota1 + nota2 + nota3) / 3</code></li>
-        <li>Exiba a média formatada</li>
-      </ol>
-      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex19_media.py</span></div>
-<pre class="code">print("=== CALCULADORA DE MÉDIA ===")
-
-nota1 = float(input("Digite a 1ª nota: "))
-nota2 = ____________________
-nota3 = ____________________
-
-media = ____________________
-
-print(f"Sua média final é: {media:.1f}")</pre></div>
-      <span class="tag saida">✅ Exemplo de execução</span>
-      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div>
-<pre class="output">=== CALCULADORA DE MÉDIA ===
-Digite a 1ª nota: 7.5
-Digite a 2ª nota: 8
-Digite a 3ª nota: 6.5
-Sua média final é: 7.3</pre></div>
-      <details class="dica"><summary>💡 Sobre {media:.1f}</summary><div class="inner">O <code>:.1f</code> dentro da f-string formata o número com <strong>1 casa decimal</strong>. Use <code>:.2f</code> para duas casas, e assim por diante.</div></details>
-      <details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">E se a média fosse <strong>ponderada</strong>? Nota 1 com peso 2, nota 2 com peso 3 e nota 3 com peso 5. Fórmula: <code>(n1*2 + n2*3 + n3*5) / 10</code></div></details>
-      <details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p>
-<div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex19.py</span></div>
-<pre class="code">print("=== CALCULADORA DE MÉDIA ===")
-
-nota1 = float(input("Digite a 1ª nota: "))
-nota2 = float(input("Digite a 2ª nota: "))
-nota3 = float(input("Digite a 3ª nota: "))
-
-media = (nota1 + nota2 + nota3) / 3   # parênteses são essenciais!
-# Sem parênteses, seria nota1 + nota2 + (nota3/3) — errado!
-
-print(f"Sua média final é: {media:.1f}")
-
-# Desafio extra — média ponderada:
-media_ponderada = (nota1 * 2 + nota2 * 3 + nota3 * 5) / 10
-print(f"Média ponderada: {media_ponderada:.1f}")</pre></div>
-      </div></details>
-    </div>
-  </article>
-
-  <!-- EX 20 -->
-  <article class="ex" id="ex20">
-    <div class="ex-head">
-      <span class="ex-num">EX 20</span>
-      <h3>Troco da padaria 🥖</h3>
-      <span class="stars">⭐⭐ médio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex20"> Concluído</label>
-    </div>
-    <div class="ex-body">
-      <span class="tag obj">🎯 Objetivo</span>
-      <p>Usar divisão inteira e módulo num problema do dia a dia.</p>
-      <p><strong>Contexto:</strong> você comprou pães e quer saber quantas notas de R$ 10 cabem no seu troco e quanto sobra.</p>
-      <span class="tag passos">🧭 Passo a passo</span>
-      <ol>
-        <li>Crie a variável <code>troco = 47</code></li>
-        <li>Use <code>//</code> para descobrir quantas notas de 10 cabem em 47</li>
-        <li>Use <code>%</code> para descobrir o que sobra</li>
-        <li>Exiba o resultado</li>
-      </ol>
-      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex20_troco.py</span></div>
-<pre class="code">troco = 47
-
-notas_de_10 = troco ____ 10
-sobra = troco ____ 10
-
-print(f"Troco de R$ {troco}:")
-print(f"→ {notas_de_10} notas de R$ 10")
-print(f"→ R$ {sobra} de sobra")</pre></div>
-      <span class="tag saida">✅ Saída esperada</span>
-      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div>
-<pre class="output">Troco de R$ 47:
-→ 4 notas de R$ 10
-→ R$ 7 de sobra</pre></div>
-      <details class="desafio"><summary>🚀 Desafio extra (difícil!)</summary><div class="inner">Decomponha o troco completo: quantas notas de 10, de 5 e moedas de 1? Dica: depois de calcular as notas de 10, use a sobra para calcular as notas de 5.</div></details>
-      <details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p>
-<div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex20.py</span></div>
-<pre class="code">troco = 47
-
-notas_de_10 = troco // 10   # 4 (quantas vezes 10 "cabe" em 47)
-sobra = troco % 10          # 7 (o que resta)
-
-print(f"Troco de R$ {troco}:")
-print(f"→ {notas_de_10} notas de R$ 10")
-print(f"→ R$ {sobra} de sobra")
-
-# Desafio extra — decomposição completa:
-notas_de_5 = sobra // 5     # 1 nota de 5 (na sobra de 7)
-moedas_de_1 = sobra % 5     # 2 moedas de 1
-print(f"→ {notas_de_5} notas de R$ 5")
-print(f"→ {moedas_de_1} moedas de R$ 1")</pre></div>
-      </div></details>
-    </div>
-  </article>
-
-  <!-- EX 21 -->
-  <article class="ex" id="ex21">
-    <div class="ex-head">
-      <span class="ex-num">EX 21</span>
-      <h3>Conversor de segundos ⏱️</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex21"> Concluído</label>
-    </div>
-    <div class="ex-body">
-      <span class="tag obj">🎯 Objetivo</span>
-      <p>Aplicar <code>//</code> e <code>%</code> em sequência (problema clássico de lógica!).</p>
-      <p><strong>Tarefa:</strong> dado um total de segundos, converta para horas, minutos e segundos.</p>
-      <span class="tag passos">🧭 Passo a passo</span>
-      <ol>
-        <li>Crie a variável <code>total_segundos = 7385</code></li>
-        <li>Pense na lógica:<br>
-          — 1 hora = 3600 segundos → <code>horas = total_segundos // 3600</code><br>
-          — O que sobra depois das horas: <code>resto = total_segundos % 3600</code><br>
-          — 1 minuto = 60 segundos → <code>minutos = resto // 60</code><br>
-          — Segundos finais: <code>segundos = resto % 60</code></li>
-        <li>Monte e exiba o resultado</li>
-      </ol>
-      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex21_segundos.py</span></div>
-<pre class="code">total_segundos = 7385
-
-horas = total_segundos // 3600
-resto = total_segundos % 3600
-minutos = ____________________
-segundos = ____________________
-
-print(f"{total_segundos} segundos = {horas}h {minutos}min {segundos}s")</pre></div>
-      <span class="tag saida">✅ Saída esperada</span>
-      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div>
-<pre class="output">7385 segundos = 2h 3min 5s</pre></div>
-      <details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Transforme em programa interativo: peça os segundos com <code>int(input(...))</code>.</div></details>
-      <details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p>
-<div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex21.py</span></div>
-<pre class="code">total_segundos = 7385
-
-horas = total_segundos // 3600    # 2 (7385 ÷ 3600 = 2, ignorando resto)
-resto = total_segundos % 3600     # 185 segundos restantes
-minutos = resto // 60             # 3
-segundos = resto % 60             # 5
-
-print(f"{total_segundos} segundos = {horas}h {minutos}min {segundos}s")</pre></div>
-      </div></details>
-    </div>
-  </article>
-
-  <!-- EX 22 -->
-  <article class="ex" id="ex22">
-    <div class="ex-head">
-      <span class="ex-num">EX 22</span>
-      <h3>Calculadora de IMC ⚖️</h3>
-      <span class="stars">⭐⭐ médio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex22"> Concluído</label>
-    </div>
-    <div class="ex-body">
-      <span class="tag obj">🎯 Objetivo</span>
-      <p>Usar potência e divisão num cálculo do mundo real.</p>
-      <p><strong>Conceito:</strong> o IMC (Índice de Massa Corporal) é calculado por: <code>peso / altura²</code></p>
-      <span class="tag passos">🧭 Passo a passo</span>
-      <ol>
-        <li>Crie o arquivo <code>ex22_imc.py</code></li>
-        <li>Peça peso (kg) e altura (m) com <code>float(input(...))</code></li>
-        <li>Calcule: <code>imc = peso / altura ** 2</code> (ou <code>peso / (altura * altura)</code>)</li>
-        <li>Exiba com 1 casa decimal</li>
-      </ol>
-      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex22_imc.py</span></div>
-<pre class="code">print("=== CALCULADORA DE IMC ===")
-
-peso = float(input("Seu peso (kg): "))
-altura = ____________________
-
-imc = ____________________
-
-print(f"Seu IMC é: {imc:.1f}")</pre></div>
-      <span class="tag saida">✅ Exemplo de execução</span>
-      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div>
-<pre class="output">=== CALCULADORA DE IMC ===
-Seu peso (kg): 80
-Sua altura (m): 1.75
-Seu IMC é: 26.1</pre></div>
-      <details class="dica"><summary>💡 Atenção</summary><div class="inner">A altura deve ser digitada com PONTO (<code>1.75</code>), não vírgula (<code>1,75</code>) — Python usa o padrão internacional. Teste com vírgula e veja o erro que aparece!</div></details>
-      <details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p>
-<div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex22.py</span></div>
-<pre class="code">print("=== CALCULADORA DE IMC ===")
-
-peso = float(input("Seu peso (kg): "))
-altura = float(input("Sua altura (m): "))
-
-imc = peso / altura ** 2   # potência (**) é calculada antes da divisão
-
-print(f"Seu IMC é: {imc:.1f}")</pre></div>
-      </div></details>
-    </div>
-  </article>
-
-  <!-- EX 23 -->
-  <article class="ex" id="ex23">
-    <div class="ex-head">
-      <span class="ex-num">EX 23</span>
-      <h3>Dividindo a conta do restaurante 🍕</h3>
-      <span class="stars">⭐⭐ médio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex23"> Concluído</label>
-    </div>
-    <div class="ex-body">
-      <span class="tag obj">🎯 Objetivo</span>
-      <p>Combinar vários operadores num problema cotidiano.</p>
-      <span class="tag passos">🧭 Passo a passo</span>
-      <ol>
-        <li>Pergunte o valor total da conta (<code>float</code>)</li>
-        <li>Pergunte o número de pessoas (<code>int</code>)</li>
-        <li>Calcule a gorjeta de 10%: <code>total * 0.10</code></li>
-        <li>Calcule o valor final com gorjeta</li>
-        <li>Divida pelo número de pessoas</li>
-        <li>Exiba quanto cada um paga, com 2 casas decimais</li>
-      </ol>
-      <span class="tag saida">✅ Exemplo de execução</span>
-      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div>
-<pre class="output">=== DIVIDIR A CONTA ===
-Valor da conta: R$ 230
-Número de pessoas: 4
-
-Gorjeta (10%): R$ 23.00
-Total com gorjeta: R$ 253.00
-Cada pessoa paga: R$ 63.25</pre></div>
-      <details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Pergunte também a porcentagem da gorjeta (algumas pessoas dão 12%, 15%...). Dica: <code>gorjeta = total * (porcentagem / 100)</code>.</div></details>
-      <details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p>
-<div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex23.py</span></div>
-<pre class="code">print("=== DIVIDIR A CONTA ===")
-
-total = float(input("Valor da conta: R$ "))
-pessoas = int(input("Número de pessoas: "))
-
-gorjeta = total * 0.10
-total_final = total + gorjeta
-por_pessoa = total_final / pessoas
-
-print()
-print(f"Gorjeta (10%): R$ {gorjeta:.2f}")
-print(f"Total com gorjeta: R$ {total_final:.2f}")
-print(f"Cada pessoa paga: R$ {por_pessoa:.2f}")
-
-# Desafio extra:
-# porcentagem = float(input("Porcentagem da gorjeta: "))
-# gorjeta = total * (porcentagem / 100)</pre></div>
-      </div></details>
-    </div>
-  </article>
-</section>
-
-<!-- ============ PARTE 6 ============ -->
 <section class="parte" id="p6">
   <div class="parte-head"><span class="num">06</span><h2>Projetos da semana: juntando tudo!</h2></div>
 
-  <!-- EX 24 -->
-  <article class="ex" id="ex24">
+  <article class="ex" id="ex12">
     <div class="ex-head">
-      <span class="ex-num">EX 24</span>
-      <h3>Projeto: Orçamento de Canecas Personalizadas ☕</h3>
+      <span class="ex-num">EX 12</span>
+      <h3>Projeto: relatórios profissionais na API 📊</h3>
       <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex24"> Concluído</label>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex12"> Concluído</label>
     </div>
     <div class="ex-body">
-      <span class="tag obj">🎯 Objetivo</span>
-      <p>Construir um programa completo usando TUDO da semana: variáveis, input, conversão de tipos, operadores e f-strings.</p>
-      <p><strong>Contexto:</strong> você tem uma lojinha de canecas personalizadas. Cada caneca custa <strong>R$ 25,00</strong>. Crie um programa que monta um orçamento para o cliente.</p>
-      <span class="tag passos">🧭 Requisitos</span>
-      <ol>
-        <li>Exibir um cabeçalho bonito com o nome da loja</li>
-        <li>Perguntar o nome do cliente</li>
-        <li>Perguntar a quantidade de canecas desejada (inteiro)</li>
-        <li>Calcular o valor total</li>
-        <li>Calcular também um valor com 10% de desconto (<code>total * 0.9</code>)</li>
-        <li>Exibir o orçamento completo formatado</li>
-      </ol>
-      <p><strong>Comece pelo esqueleto abaixo e complete:</strong></p>
-      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex24_projeto.py</span></div>
-<pre class="code">print("=" * 35)
-print("    ☕ TUA CANECA - ORÇAMENTO ☕")
-print("=" * 35)
+<span class="tag obj">🎯 Objetivo</span><p>Servir os novos relatórios com JOIN pela API REST (Semanas 27-28).</p><span class="tag passos">🧭 Requisitos</span><ol><li>Endpoint <code>GET /api/relatorio/ranking</code>: o ranking por produto (JOIN + GROUP BY) em JSON</li><li>Endpoint <code>GET /api/relatorio/encalhados</code>: produtos sem venda (LEFT JOIN + IS NULL)</li><li>Endpoint <code>GET /api/relatorio/clientes</code>: total comprado por cliente (JOIN triplo + GROUP BY)</li><li>Proteja-os com <code>@token_required</code> (Semana 28) — relatório é coisa interna!</li></ol><span class="tag saida">✅ Exemplo</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">GET /api/relatorio/encalhados (com token)
+-&gt; [{"produto": "azulejo"}]</pre></div><details class="dica"><summary>💡 Você virou analista</summary><div class="inner">Uma API que serve relatórios com JOINs protegidos por autenticação — isso é ferramenta de gestão de verdade. O frontend (Semana 29) pode consumir esses endpoints e montar um painel gerencial. Cada peça que você aprendeu multiplica as anteriores. 📈</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">api_relatorios.py</span></div><pre class="code">@app.route("/api/relatorio/ranking")
+@token_required
+def relatorio_ranking(usuario_logado):
+    con = conectar(); cur = con.cursor()
+    cur.execute("""
+        SELECT p.nome, SUM(v.qtd) AS unidades, SUM(v.total) AS faturamento
+        FROM vendas v JOIN produtos p ON p.id = v.produto_id
+        GROUP BY p.nome ORDER BY unidades DESC""")
+    dados = [{"produto": n, "unidades": int(u), "faturamento": float(f)}
+             for n, u, f in cur.fetchall()]
+    con.close()
+    return jsonify(dados)
 
-PRECO_CANECA = 25.00
-
-nome_cliente = input("Nome do cliente: ")
-quantidade = ____________________
-
-total = ____________________
-total_com_desconto = ____________________
-
-print()
-print("=" * 35)
-print(f"Cliente: {nome_cliente}")
-print(f"Quantidade: {quantidade} canecas")
-print(f"Valor unitário: R$ {PRECO_CANECA:.2f}")
-print(f"TOTAL: R$ {total:.2f}")
-print(f"À vista (10% desc.): R$ {total_com_desconto:.2f}")
-print("=" * 35)</pre></div>
-      <span class="tag saida">✅ Exemplo de execução</span>
-      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div>
-<pre class="output">===================================
-    ☕ TUA CANECA - ORÇAMENTO ☕
-===================================
-Nome do cliente: Fernanda
-Quantidade de canecas: 8
-
-===================================
-Cliente: Fernanda
-Quantidade: 8 canecas
-Valor unitário: R$ 25.00
-TOTAL: R$ 200.00
-À vista (10% desc.): R$ 180.00
-===================================</pre></div>
-      <details class="dica"><summary>💡 Curiosidade</summary><div class="inner"><code>PRECO_CANECA</code> está em maiúsculas por convenção: indica um valor que não muda durante o programa (constante). E <code>"=" * 35</code> repete o caractere 35 vezes!</div></details>
-      <details class="desafio"><summary>🚀 Desafios extras (escolha pelo menos um)</summary><div class="inner">
-        <ol>
-          <li>Adicione um campo de frete fixo de R$ 15,00 ao total</li>
-          <li>Pergunte também a cor da caneca e exiba no orçamento</li>
-          <li>Calcule o valor de cada parcela se o cliente dividir em 3x (sem desconto)</li>
-        </ol>
-      </div></details>
-      <details class="solucao"><summary>🔑 Ver solução (com os 3 desafios)</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p>
-<div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex24.py</span></div>
-<pre class="code">print("=" * 35)
-print("    ☕ TUA CANECA - ORÇAMENTO ☕")
-print("=" * 35)
-
-PRECO_CANECA = 25.00
-FRETE = 15.00  # desafio extra 1
-
-nome_cliente = input("Nome do cliente: ")
-quantidade = int(input("Quantidade de canecas: "))
-cor = input("Cor da caneca: ")  # desafio extra 2
-
-total = quantidade * PRECO_CANECA + FRETE
-total_com_desconto = total * 0.9   # 10% de desconto = pagar 90%
-parcela = total / 3                # desafio extra 3
-
-print()
-print("=" * 35)
-print(f"Cliente: {nome_cliente}")
-print(f"Quantidade: {quantidade} canecas ({cor})")
-print(f"Valor unitário: R$ {PRECO_CANECA:.2f}")
-print(f"Frete: R$ {FRETE:.2f}")
-print(f"TOTAL: R$ {total:.2f}")
-print(f"À vista (10% desc.): R$ {total_com_desconto:.2f}")
-print(f"Ou 3x de R$ {parcela:.2f}")
-print("=" * 35)</pre></div>
-      </div></details>
+@app.route("/api/relatorio/encalhados")
+@token_required
+def relatorio_encalhados(usuario_logado):
+    con = conectar(); cur = con.cursor()
+    cur.execute("""
+        SELECT p.nome FROM produtos p
+        LEFT JOIN vendas v ON v.produto_id = p.id
+        WHERE v.id IS NULL""")
+    dados = [{"produto": n} for (n,) in cur.fetchall()]
+    con.close()
+    return jsonify(dados)</pre></div></div></details>
     </div>
   </article>
 
-  <!-- EX 25 -->
-  <article class="ex" id="ex25">
+  <article class="ex" id="ex13">
     <div class="ex-head">
-      <span class="ex-num">EX 25</span>
-      <h3>Projeto bônus: Conta de energia elétrica 💡</h3>
+      <span class="ex-num">EX 13</span>
+      <h3>Projeto bônus: o histórico do cliente 🧾</h3>
       <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex25"> Concluído</label>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex13"> Concluído</label>
     </div>
     <div class="ex-body">
-      <span class="tag obj">🎯 Objetivo</span>
-      <p>Resolver um problema completo sozinho, com menos ajuda (teste final da semana!).</p>
-      <p><strong>Contexto:</strong> a conta de luz é calculada assim:</p>
-      <ul>
-        <li>Consumo em kWh × tarifa de R$ 0,95 por kWh</li>
-        <li>+ taxa de iluminação pública fixa de R$ 12,50</li>
-        <li>+ 18% de imposto sobre o valor do consumo (sem a taxa)</li>
-      </ul>
-      <span class="tag passos">🧭 Roteiro (sem código pronto desta vez!)</span>
-      <ol>
-        <li>Defina as constantes: <code>TARIFA = 0.95</code>, <code>TAXA_ILUMINACAO = 12.50</code></li>
-        <li>Peça o consumo com <code>float(input(...))</code></li>
-        <li>Calcule: valor do consumo, imposto (<code>valor_consumo * 0.18</code>) e total</li>
-        <li>Exiba tudo detalhado, com 2 casas decimais</li>
-      </ol>
-      <span class="tag saida">✅ Exemplo de execução</span>
-      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div>
-<pre class="output">=== CONTA DE ENERGIA ===
-Consumo do mês (kWh): 200
-
-Consumo: R$ 190.00
-Imposto (18%): R$ 34.20
-Iluminação pública: R$ 12.50
-TOTAL A PAGAR: R$ 236.70</pre></div>
-      <details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p>
-<div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex25.py</span></div>
-<pre class="code">print("=== CONTA DE ENERGIA ===")
-
-TARIFA = 0.95
-TAXA_ILUMINACAO = 12.50
-
-consumo = float(input("Consumo do mês (kWh): "))
-
-valor_consumo = consumo * TARIFA
-imposto = valor_consumo * 0.18
-total = valor_consumo + imposto + TAXA_ILUMINACAO
-
-print()
-print(f"Consumo: R$ {valor_consumo:.2f}")
-print(f"Imposto (18%): R$ {imposto:.2f}")
-print(f"Iluminação pública: R$ {TAXA_ILUMINACAO:.2f}")
-print(f"TOTAL A PAGAR: R$ {total:.2f}")</pre></div>
-      </div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Um endpoint de extrato por cliente (sem código pronto!).</p><span class="tag passos">🧭 Roteiro</span><ol><li><code>GET /api/clientes/&lt;id&gt;/compras</code>: todas as compras de UM cliente, com nome do produto, qtd e total</li><li>JOIN duplo + WHERE pelo id do cliente (placeholder %s!)</li><li>Se o cliente não existir, 404; inclua no JSON um campo com a soma total gasta</li><li>Teste com requests para 2 clientes diferentes</li></ol><span class="tag saida">✅ Exemplo</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">GET /api/clientes/1/compras -&gt;
+{"cliente": "Ana", "total_gasto": 100.0,
+ "compras": [{"produto": "caneca branca", "qtd": 3, "total": 75.0}, ...]}</pre></div><details class="dica"><summary>💡 Empurrãozinho</summary><div class="inner">É o JOIN triplo do EX 11 com um WHERE <code>c.id = %s</code>. Para a soma, você pode usar SUM numa segunda consulta ou somar no Python (Semana 3!). Um endpoint desses alimenta a tela "minhas compras" de qualquer loja online — você sabe construir o motor por trás dela. 😉</div></details>
     </div>
   </article>
 </section>
 
-<!-- ============ CHECKLIST ============ -->
 <div class="checklist" id="checklist">
   <h2>✅ Checklist de fim de semana</h2>
-  <p>Antes de seguir para a Semana 2, confirme que você consegue:</p>
-  <label class="check-item"><input type="checkbox"><span>Explicar o que é um algoritmo com suas palavras</span></label>
-  <label class="check-item"><input type="checkbox"><span>Criar variáveis de texto, inteiro e decimal</span></label>
-  <label class="check-item"><input type="checkbox"><span>Saber quais nomes de variáveis são válidos</span></label>
-  <label class="check-item"><input type="checkbox"><span>Usar print() com f-strings (f"..." e {variavel})</span></label>
-  <label class="check-item"><input type="checkbox"><span>Pedir dados ao usuário com input()</span></label>
-  <label class="check-item"><input type="checkbox"><span>Converter texto em número com int() e float()</span></label>
-  <label class="check-item"><input type="checkbox"><span>Trocar valores entre duas variáveis</span></label>
-  <label class="check-item"><input type="checkbox"><span>Usar os 7 operadores matemáticos, incluindo // e %</span></label>
-  <label class="check-item"><input type="checkbox"><span>Formatar decimais com :.2f</span></label>
-  <label class="check-item"><input type="checkbox"><span>Ler uma mensagem de erro sem entrar em pânico 😄</span></label>
+  <p>Antes de seguir para a próxima semana, confirme que você consegue:</p>
+<label class="check-item"><input type="checkbox"><span>Explicar o que é um relacionamento e uma chave estrangeira</span></label>
+<label class="check-item"><input type="checkbox"><span>Justificar por que guardar produto_id em vez do nome do produto</span></label>
+<label class="check-item"><input type="checkbox"><span>Criar tabelas com FOREIGN KEY no MariaDB</span></label>
+<label class="check-item"><input type="checkbox"><span>Ligar duas tabelas com INNER JOIN ... ON</span></label>
+<label class="check-item"><input type="checkbox"><span>Usar apelidos (aliases) para deixar consultas legíveis</span></label>
+<label class="check-item"><input type="checkbox"><span>Diferenciar INNER JOIN de LEFT JOIN</span></label>
+<label class="check-item"><input type="checkbox"><span>Encontrar registros sem correspondência com LEFT JOIN + IS NULL</span></label>
+<label class="check-item"><input type="checkbox"><span>Combinar JOIN com GROUP BY em relatórios</span></label>
+<label class="check-item"><input type="checkbox"><span>Cruzar três tabelas numa consulta (clientes, vendas, produtos)</span></label>
+<label class="check-item"><input type="checkbox"><span>Servir relatórios com JOIN pela API REST</span></label>
 </div>
 
-<!-- banner de conclusão -->
 <div class="win-banner" id="winBanner">
-  <h2>🏆 SEMANA 1 COMPLETA!</h2>
-  <p>Você concluiu os 25 exercícios. Está pronto para a Semana 2!</p>
+  <h2>🏆 SEMANA 31 COMPLETA!</h2>
+  <p>Você concluiu todos os exercícios. Você domina JOINs e modelagem relacional — a habilidade que separa quem "usa banco" de quem realmente entende dados!</p>
 </div>
 
-<!-- prévia semana 2 -->
 <div class="preview-s2">
-  <h2>📅 Prévia da Semana 2</h2>
-  <p>Na próxima semana: <strong>estruturas condicionais</strong> (<code>if</code>, <code>elif</code>, <code>else</code>), operadores de comparação (<code>==</code>, <code>&gt;</code>, <code>&lt;</code>) e operadores lógicos (<code>and</code>, <code>or</code>, <code>not</code>) — seu programa vai começar a <strong>tomar decisões</strong>!</p>
-</div>
+<h2>📅 Prévia da Semana 32</h2><p>Seu sistema cresce — e como garantir que uma mudança nova não QUEBRA o que já funcionava? Com <strong>testes automatizados</strong>! Na próxima semana, o <strong>pytest</strong>: escrever testes que verificam seu código sozinhos, testar casos extremos, exceções e até a sua API Flask completa (com token e tudo) — sem nem subir o servidor. A rede de segurança dos profissionais. 🧪</p></div>
 
 </main>
 
-<footer>python_para_iniciantes // semana_01 // exercícios guiados</footer>
+<footer>python_para_iniciantes // semana_31 // exercícios guiados</footer>
 
 <script>
 // ===== Syntax highlight leve para Python =====
@@ -1499,7 +599,7 @@ print(f"TOTAL A PAGAR: R$ {total:.2f}")</pre></div>
     src = src.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     // uma passada só, com alternação (comentário | string | builtin | bool | número)
     src = src.replace(
-      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|int|float|type)\b|\b(True|False)\b|(\b\d+(?:\.\d+)?\b)/g,
+      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|insert|int|float|str|len|range|type|abs|round|max|min|sum|sorted|sort|reverse|append|remove|split|strip|upper|lower|replace|title|randint|random|get|keys|values|items|open|readlines|read|write|close|count|index|pop|update|list|dict|tuple|enumerate|sqrt|floor|ceil|choice|shuffle|sample|sleep|now|today|strftime|dumps|dump|loads|load|isinstance|datetime|date|DictReader|DictWriter|writerows|writerow|writeheader|writer|reader|csv|Workbook|load_workbook|save|iter_rows|Font|listdir|makedirs|getcwd|rename|exists|getsize|splitext|join|endswith|startswith|copytree|copy|move|requests|status_code|json|DataFrame|read_csv|read_excel|to_excel|to_csv|head|describe|groupby|sort_values|value_counts|mean|idxmax|bar|barh|pie|plot|savefig|show|title|xlabel|ylabel|figure|legend|axhline|tight_layout|close|Flask|route|run|render_template|jsonify|redirect|request|connect|cursor|execute|executemany|fetchall|fetchone|commit|environ|getenv|post|encode|decode|abort|make_response|raises|approx|load_dotenv)\b|\b(True|False|None|if|elif|else|while|for|in|and|or|not|break|continue|import|from|def|return|try|except|finally|with|as|del|global|pass|class|self|super|lambda)\b|(\b\d+(?:\.\d+)?\b)/g,
       function(m, com, str, fn, bool, num){
         if(com)  return '<span class="tk-com">'+com+'</span>';
         if(str)  return '<span class="tk-str">'+str+'</span>';
@@ -1518,7 +618,7 @@ print(f"TOTAL A PAGAR: R$ {total:.2f}")</pre></div>
 // no navegador. Se o localStorage estiver indisponível (modo restrito,
 // pré-visualização, etc.), o progresso funciona só em memória, sem quebrar.
 const storage = (function(){
-  const KEY = 'python_semana01_progresso';
+  const KEY = 'python_semana31_progresso';
   let memoria = {};
   let disponivel = false;
   try{
@@ -1565,10 +665,10 @@ const storage = (function(){
   const MSGS = [
     [0,  'Marque os exercícios concluídos ✔'],
     [1,  'Boa! Continue assim 💪'],
-    [7,  'Pegando o ritmo! 🔥'],
-    [13, 'Metade do caminho! 🚀'],
-    [19, 'Quase lá... força! ⚡'],
-    [25, 'SEMANA COMPLETA! 🏆']
+    [4,  'Pegando o ritmo! 🔥'],
+    [6, 'Metade do caminho! 🚀'],
+    [10, 'Quase lá... força! ⚡'],
+    [13, 'SEMANA COMPLETA! 🏆']
   ];
 
   function estadoAtual(){

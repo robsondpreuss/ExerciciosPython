@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Semana 33 — Git e GitHub</title>
+<title>Semana 28 — Autenticação com JWT</title>
 <style>
   :root{
     --ink:#16243A;
@@ -57,7 +57,7 @@
     color:#fff;padding:56px 20px 48px;text-align:center;position:relative;overflow:hidden;
   }
   header.hero::before{
-    content:"git init  add  commit  push  branch  .gitignore";
+    content:"JWT  login  Bearer token  hash  Authorization  401";
     position:absolute;inset:auto 0 8px 0;font-family:var(--mono);font-size:.78rem;
     color:rgba(255,255,255,.14);letter-spacing:.4em;white-space:nowrap;overflow:hidden;
   }
@@ -241,174 +241,260 @@
 
 <header class="hero">
   <div class="kicker">Python para Iniciantes · Exercícios Guiados</div>
-  <h1>SEMANA 33 — Git &amp; GitHub:<br>memória e vitrine do código<span class="cursor" aria-hidden="true"></span></h1>
-  <p class="sub">A máquina do tempo dos programadores: salvar cada versão com commits, voltar atrás quando precisar, proteger segredos com .gitignore e publicar no GitHub com README profissional — o portfólio que o mercado olha.</p>
+  <h1>SEMANA 28 — JWT:<br>protegendo a sua API<span class="cursor" aria-hidden="true"></span></h1>
+  <p class="sub">A segurança que todo sistema precisa: senhas guardadas com hash (nunca em texto puro!), um login que devolve um token JWT e rotas protegidas que só respondem a quem está autenticado. Sua API ganha um porteiro.</p>
   <div class="howto">
     <strong>Como usar:</strong> digite o código você mesmo (não copie e cole!), compare com a saída esperada e marque <strong>✔ Concluído</strong> em cada exercício para encher sua barra de XP. As <strong>dicas</strong> e <strong>soluções</strong> ficam escondidas — só abra depois de tentar! Seu progresso fica salvo no navegador.
   </div>
 </header>
 
-<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · Por que Git</a><a href="#p2">2 · add & commit</a><a href="#p3">3 · Histórico</a><a href="#p4">4 · .gitignore</a><a href="#p5">5 · GitHub & branches</a><a href="#p6">6 · Projetos</a><a href="#checklist">✅ Checklist</a></nav>
+<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · Por que e hash</a><a href="#p2">2 · Usuários</a><a href="#p3">3 · Login & JWT</a><a href="#p4">4 · Proteger rotas</a><a href="#p5">5 · Erros 401</a><a href="#p6">6 · Projetos</a><a href="#checklist">✅ Checklist</a></nav>
 
 <main>
 
 <section class="parte" id="p1">
-  <div class="parte-head"><span class="num">01</span><h2>Por que controle de versão?</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Você já criou <code>projeto_final_v2_AGORA_VAI_definitivo.py</code>? Todo mundo já. O <strong>Git</strong> acaba com isso: ele guarda TODAS as versões do seu projeto numa linha do tempo de <strong>commits</strong> (fotografias do código). Você viaja entre versões, compara mudanças, e — em time — várias pessoas trabalham no mesmo projeto sem se atropelar.</p><p>Instale o Git (git-scm.com; no Windows o instalador padrão resolve) e configure seu nome uma única vez:</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="code">git config --global user.name "Seu Nome"
-git config --global user.email "seu@email.com"</pre></div></div>
+  <div class="parte-head"><span class="num">01</span><h2>Por que autenticar (e o pecado da senha em texto puro)</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Sua API REST da Semana 27 está ABERTA: qualquer um pode criar, editar e apagar produtos. Sistemas reais precisam saber <strong>quem</strong> está fazendo cada coisa — isso é <strong>autenticação</strong>. E o primeiro mandamento: <strong>senha JAMAIS se guarda em texto puro</strong>.</p><p>Por quê? Se o banco vazar (acontece o tempo todo), todas as senhas estariam expostas. A solução é guardar um <strong>hash</strong>: uma "impressão digital" irreversível da senha. Dá para verificar se a senha digitada bate com o hash, mas é impossível descobrir a senha a partir dele.</p></div>
   <article class="ex" id="ex1">
     <div class="ex-head">
       <span class="ex-num">EX 01</span>
-      <h3>git init: nasce um repositório 🌱</h3>
+      <h3>O perigo da senha em texto puro 🚨</h3>
       <span class="stars">⭐ básico</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex1"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Transformar a pasta do projeto num repositório Git.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Na pasta do seu projeto (ex.: a API da Tua Caneca), rode <code>git init</code></li><li>Rode <code>git status</code> e leia com calma: ele lista os arquivos "untracked" (ainda fora da linha do tempo)</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">$ git init
-Initialized empty Git repository in .../tua_caneca/.git/
+<span class="tag obj">🎯 Objetivo</span><p>Entender por que guardar senhas como texto é um desastre.</p><p>Imagine uma tabela de usuários guardando a senha assim:</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">PERIGOSO.txt</span></div><pre class="code">usuario  | senha
+---------|--------
+robson   | tuacaneca123
+ana      | euamocafe</pre></div><span class="tag passos">🧭 Passo a passo</span><ol><li>Reflita: se um invasor copiar essa tabela, o que ele tem? (Resposta: TUDO — todas as senhas, na cara.)</li><li>Pior: muita gente repete a senha em vários sites. Vazou a sua, vazou o e-mail, o banco...</li><li>A solução (próximo exercício): guardar o HASH, não a senha</li></ol><details class="dica"><summary>💡 Casos reais</summary><div class="inner">Vazamentos de bancos de dados com senhas em texto puro já expuseram MILHÕES de contas e renderam processos milionários. Guardar hash em vez de senha não é "boa prática opcional" — é obrigação ética e legal (a LGPD, no Brasil, cobra isso). Você está aprendendo a fazer certo desde o começo.</div></details>
+    </div>
+  </article>
 
-$ git status
-On branch main
-Untracked files:
-  api.py
-  db.py
-  test_api.py</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(repositório criado — a pasta oculta .git é a "máquina do tempo")</pre></div><details class="dica"><summary>💡 O git status é seu GPS</summary><div class="inner">Sempre que estiver perdido no Git, rode <code>git status</code>: ele diz em que branch você está, o que mudou e até sugere o próximo comando. É o comando mais digitado do mundo — use sem moderação.</div></details>
+  <article class="ex" id="ex2">
+    <div class="ex-head">
+      <span class="ex-num">EX 02</span>
+      <h3>Hash de senha: o jeito certo 🔒</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex2"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Gerar e verificar um hash de senha — sem instalar nada novo.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>O Flask já traz o <code>werkzeug.security</code> — sem instalação extra!</li><li>Importe <code>generate_password_hash</code> e <code>check_password_hash</code></li><li>Gere o hash de uma senha e depois verifique se uma tentativa bate</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex02_hash.py</span></div><pre class="code">from werkzeug.security import generate_password_hash, check_password_hash
+
+senha = "tuacaneca123"
+
+# guardar ISTO no banco (nunca a senha!):
+hash_senha = generate_password_hash(senha)
+print("Hash:", hash_senha[:40], "...")
+
+# na hora do login, verifica:
+print(check_password_hash(hash_senha, "tuacaneca123"))  # True (senha certa)
+print(check_password_hash(hash_senha, "errada"))         # False</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Hash: scrypt:32768:8:1$abc123... ...
+True
+False</pre></div><details class="dica"><summary>💡 Mão única</summary><div class="inner">O <code>generate_password_hash</code> embaralha a senha de um jeito IRREVERSÍVEL (e ainda adiciona um "sal" aleatório, então duas pessoas com a mesma senha têm hashes diferentes!). O <code>check_password_hash</code> verifica sem nunca "desembaralhar". É matemática a seu favor: fácil de verificar, impossível de reverter.</div></details>
     </div>
   </article>
 </section>
 
 <section class="parte" id="p2">
-  <div class="parte-head"><span class="num">02</span><h2>add e commit: salvando versões</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>O ciclo básico do Git tem dois passos: o <code>git add</code> escolhe as mudanças que entram na próxima "fotografia", e o <code>git commit</code> tira a foto com uma etiqueta (a mensagem). Repita esse ciclo a cada avanço pequeno — commits frequentes e focados são a marca de quem versiona bem.</p></div>
-  <article class="ex" id="ex2">
-    <div class="ex-head">
-      <span class="ex-num">EX 02</span>
-      <h3>add + commit: a primeira fotografia 📸</h3>
-      <span class="stars">⭐⭐ médio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex2"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Salvar a primeira versão do projeto na linha do tempo.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>O fluxo tem 2 passos: <code>git add</code> ESCOLHE o que entra na foto; <code>git commit</code> TIRA a foto</li><li>Adicione tudo: <code>git add .</code></li><li>Commite com mensagem: <code>git commit -m "Primeira versao da API Tua Caneca"</code></li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">$ git add .
-$ git commit -m "Primeira versao da API Tua Caneca"
-[main (root-commit) a1b2c3d] Primeira versao da API Tua Caneca
- 3 files changed, 180 insertions(+)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(primeiro commit feito — a versão está eternizada)</pre></div><details class="dica"><summary>💡 Por que dois passos?</summary><div class="inner">O <code>add</code> existe para você MONTAR a foto: dá para commitar só um arquivo mexido e deixar outro para o próximo commit. Pense no add como "colocar na caixinha" e no commit como "lacrar a caixinha com uma etiqueta". A etiqueta (mensagem) importa — já já falamos dela.</div></details>
-    </div>
-  </article>
-
+  <div class="parte-head"><span class="num">02</span><h2>A tabela de usuários e o cadastro</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Vamos guardar os usuários no MariaDB (Semana 26), salvando o HASH da senha. O endpoint de cadastro recebe usuário e senha, gera o hash e grava.</p></div>
   <article class="ex" id="ex3">
     <div class="ex-head">
       <span class="ex-num">EX 03</span>
-      <h3>A arte da mensagem de commit ✍️</h3>
+      <h3>Tabela de usuários + cadastro</h3>
       <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex3"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Escrever mensagens que o seu "eu do futuro" agradece.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Compare os dois históricos abaixo — qual deles ajuda a achar onde o bug do desconto entrou?</li><li>Regra prática: a mensagem completa a frase "Este commit... [adiciona validação no POST]"</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">historico_ruim.txt</span></div><pre class="output" style="color:#FF9B94">git log --oneline
-9f8e7d6 arrumei
-5c4b3a2 mudancas
-1a2b3c4 agora vai
-d4e5f6a coisas</pre></div><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">historico_bom.txt</span></div><pre class="output">git log --oneline
-9f8e7d6 Corrige calculo do desconto acima de 100
-5c4b3a2 Adiciona validacao de nome no POST /api/produtos
-1a2b3c4 Protege rotas de escrita com @token_required
-d4e5f6a Cria endpoints GET de produtos</pre></div><details class="dica"><summary>💡 Commits contam a história</summary><div class="inner">Um bom histórico é a NARRATIVA do projeto: dá para entender a evolução sem abrir código. Convenção comum: verbo no presente ("Adiciona", "Corrige", "Remove") + o quê + onde. Times sérios recusam commits com mensagem vaga — e recrutadores olham seu histórico no GitHub!</div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Criar a tabela usuarios e o endpoint de cadastro com hash.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>No DBeaver (ou por código), crie a tabela <code>usuarios</code> (id, usuario único, senha_hash)</li><li>Endpoint <code>POST /api/cadastro</code>: recebe usuario e senha no JSON</li><li>Gere o hash com generate_password_hash e faça o INSERT (com %s!)</li><li>Nunca guarde a senha — só o hash</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">cadastro.sql</span></div><pre class="code">CREATE TABLE IF NOT EXISTS usuarios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    usuario VARCHAR(50) UNIQUE,
+    senha_hash VARCHAR(255)
+);</pre></div><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex03_cadastro.py</span></div><pre class="code">from flask import Flask, jsonify, request
+from werkzeug.security import generate_password_hash
+from db import conectar   # Semana 26
+
+app = Flask(__name__)
+
+@app.route("/api/cadastro", methods=["POST"])
+def cadastro():
+    dados = request.get_json()
+    usuario = dados.get("usuario", "").strip()
+    senha = dados.get("senha", "")
+    if not usuario or not senha:
+        return jsonify({"erro": "usuario e senha obrigatórios"}), 400
+
+    hash_senha = generate_password_hash(senha)
+    con = conectar(); cur = con.cursor()
+    cur.execute("INSERT INTO usuarios (usuario, senha_hash) VALUES (%s, %s)",
+                (usuario, hash_senha))
+    con.commit(); con.close()
+    return jsonify({"ok": True, "usuario": usuario}), 201
+
+app.run(debug=True)</pre></div><span class="tag saida">✅ Exemplo</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">POST /api/cadastro {"usuario": "robson", "senha": "..."} -&gt; 201</pre></div><details class="dica"><summary>💡 VARCHAR(255) para o hash</summary><div class="inner">O hash é uma string longa — por isso <code>VARCHAR(255)</code>. E o <code>UNIQUE</code> no usuário impede dois cadastros com o mesmo nome (o banco recusa sozinho). Confira no DBeaver: a coluna senha_hash guarda aquele embaralhado, nunca a senha legível. 🔒</div></details>
     </div>
   </article>
 </section>
 
 <section class="parte" id="p3">
-  <div class="parte-head"><span class="num">03</span><h2>Viajando no tempo: log, diff e restore</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Com commits acumulados, o Git vira sua máquina do tempo: <code>git log</code> mostra a linha do tempo, <code>git diff</code> mostra o que mudou desde a última foto, e <code>git restore</code> desfaz bagunça.</p></div>
+  <div class="parte-head"><span class="num">03</span><h2>Login: verificando a senha e emitindo o JWT</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>O login faz duas coisas: confere a senha (com <code>check_password_hash</code>) e, se bater, devolve um <strong>JWT</strong> (JSON Web Token) — um "crachá digital" assinado que o cliente vai apresentar nas próximas requisições. Usamos a biblioteca <strong>PyJWT</strong> (<code>pip install pyjwt</code>).</p></div>
   <article class="ex" id="ex4">
     <div class="ex-head">
       <span class="ex-num">EX 04</span>
-      <h3>log e diff: o que mudou? 🔍</h3>
-      <span class="stars">⭐⭐ médio</span>
+      <h3>O endpoint de login 🎫</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex4"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Inspecionar o histórico e as mudanças pendentes.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Mexa em algum arquivo (mude uma linha da API)</li><li>Rode <code>git diff</code>: as linhas removidas aparecem com <code>-</code>, as novas com <code>+</code></li><li>Rode <code>git log --oneline</code> para ver a linha do tempo resumida</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">$ git diff
-- return jsonify({"ok": True})
-+ return jsonify({"ok": True, "id": novo_id}), 201
+<span class="tag obj">🎯 Objetivo</span><p>Verificar a senha e gerar um token JWT assinado.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Busque o usuário no banco; se não existe ou a senha não bate (check_password_hash), retorne 401</li><li>Se bate, gere o token com <code>jwt.encode</code>: um payload com o usuário e uma EXPIRAÇÃO (exp)</li><li>A chave secreta vem do ambiente (<code>JWT_SECRET</code>) — nunca no código!</li><li>Devolva o token no JSON</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex04_login.py</span></div><pre class="code">import os
+import jwt
+from datetime import datetime, timedelta, timezone
+from flask import Flask, jsonify, request
+from werkzeug.security import check_password_hash
+from db import conectar
 
-$ git log --oneline
-5c4b3a2 Adiciona validacao de nome no POST
-1a2b3c4 Primeira versao da API</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(você enxerga exatamente o que mudou antes de commitar)</pre></div><details class="dica"><summary>💡 O diff antes do commit</summary><div class="inner">Hábito de ouro: rodar <code>git diff</code> ANTES de todo commit, para conferir o que vai na foto. Quantas vezes um <code>print</code> de debug esquecido foi parar em produção porque ninguém olhou o diff... Não seja essa pessoa. 😄</div></details>
-    </div>
-  </article>
+app = Flask(__name__)
+SEGREDO = os.environ.get("JWT_SECRET", "troque-este-segredo")
 
-  <article class="ex" id="ex5">
-    <div class="ex-head">
-      <span class="ex-num">EX 05</span>
-      <h3>restore: o botão de desfazer 🧯</h3>
-      <span class="stars">⭐⭐ médio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex5"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Recuperar um arquivo depois de uma bagunça.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Estrague um arquivo de propósito (apague metade do api.py e salve!)</li><li>Respire: <code>git restore api.py</code></li><li>Abra o arquivo: ele voltou à última foto. Crise cancelada</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(o arquivo restaurado, idêntico ao último commit)</pre></div><details class="dica"><summary>💡 A rede embaixo do trapézio</summary><div class="inner">Esse é o momento em que o Git muda sua vida: errar deixa de ser perigoso. Refatorações ousadas, experimentos, testes destrutivos — tudo fica seguro, porque a última versão commitada está a um <code>git restore</code> de distância. Commite cedo, commite sempre.</div></details>
+@app.route("/api/login", methods=["POST"])
+def login():
+    dados = request.get_json()
+    usuario = dados.get("usuario", "")
+    senha = dados.get("senha", "")
+
+    con = conectar(); cur = con.cursor()
+    cur.execute("SELECT senha_hash FROM usuarios WHERE usuario = %s", (usuario,))
+    r = cur.fetchone(); con.close()
+
+    if r is None or not check_password_hash(r[0], senha):
+        return jsonify({"erro": "usuario ou senha invalidos"}), 401
+
+    token = jwt.encode(
+        {"usuario": usuario,
+         "exp": datetime.now(timezone.utc) + timedelta(hours=2)},
+        SEGREDO, algorithm="HS256")
+    return jsonify({"token": token})
+
+app.run(debug=True)</pre></div><span class="tag saida">✅ Exemplo</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">POST /api/login {"usuario": "robson", "senha": "..."}
+-&gt; {"token": "eyJhbGciOiJIUzI1NiIs..."}   (ou 401 se errado)</pre></div><details class="dica"><summary>💡 O que tem no token?</summary><div class="inner">O <code>jwt.encode</code> embala o payload (quem é o usuário + quando expira) e ASSINA com o segredo. Qualquer alteração no token quebra a assinatura. O <code>exp</code> faz o token "vencer" em 2 horas — segurança extra. E note o 401 genérico ("usuario OU senha inválidos"): nunca diga QUAL está errado, para não ajudar invasores. 🕵️</div></details>
     </div>
   </article>
 </section>
 
 <section class="parte" id="p4">
-  <div class="parte-head"><span class="num">04</span><h2>.gitignore: o segurança do repositório</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>NEM TUDO deve entrar na linha do tempo: senhas (<code>.env</code>!), lixo gerado (<code>__pycache__</code>), o banco local. O arquivo <code>.gitignore</code> lista o que o Git deve fingir que não existe. <strong>Esta é uma lição de segurança séria:</strong> segredo commitado é segredo vazado.</p></div>
+  <div class="parte-head"><span class="num">04</span><h2>Protegendo rotas com o token</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Agora o cliente envia o token a cada requisição, no cabeçalho <code>Authorization: Bearer &lt;token&gt;</code>. A rota protegida LÊ esse cabeçalho, valida o token com <code>jwt.decode</code> e só então executa. Token inválido ou ausente → <code>401</code>.</p></div>
+  <article class="ex" id="ex5">
+    <div class="ex-head">
+      <span class="ex-num">EX 05</span>
+      <h3>Anatomia do JWT 🔬</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex5"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Espiar o que há dentro de um token e validá-lo.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Um JWT tem 3 partes separadas por ponto: <code>header.payload.signature</code></li><li>Use <code>jwt.decode</code> (com o segredo e o algoritmo) para LER o payload de volta</li><li>Veja que o usuário e a expiração estão lá dentro</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex05_decode.py</span></div><pre class="code">import os
+import jwt
+
+SEGREDO = os.environ.get("JWT_SECRET", "troque-este-segredo")
+
+# token recebido (ex. veio do login)
+token = "COLE_AQUI_UM_TOKEN_DO_LOGIN"
+
+dados = jwt.decode(token, SEGREDO, algorithms=["HS256"])
+print("Payload:", dados)
+print("Usuário do token:", dados["usuario"])</pre></div><span class="tag saida">✅ Exemplo</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Payload: {'usuario': 'robson', 'exp': 1751300000}
+Usuário do token: robson</pre></div><details class="dica"><summary>💡 Assinado, não criptografado</summary><div class="inner">O payload do JWT NÃO é secreto — qualquer um consegue ler o conteúdo (em jwt.io dá para colar e ver!). O que ele garante é AUTENTICIDADE: como é assinado com o seu segredo, ninguém consegue FORJAR um token válido. Por isso: nunca coloque senha ou dado sensível dentro do payload!</div></details>
+    </div>
+  </article>
+
   <article class="ex" id="ex6">
     <div class="ex-head">
       <span class="ex-num">EX 06</span>
-      <h3>Montando o .gitignore 🛡️</h3>
-      <span class="stars">⭐⭐ médio</span>
+      <h3>A rota protegida 🚪</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex6"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Proteger segredos e excluir lixo do repositório.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie o arquivo <code>.gitignore</code> na raiz do projeto com o conteúdo abaixo</li><li>Rode <code>git status</code>: os itens listados SOMEM da lista de untracked</li><li>Commite o próprio .gitignore (ele sim, vai para o repositório!)</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">.gitignore</span></div><pre class="code"># segredos — NUNCA no repositorio!
-.env
+<span class="tag obj">🎯 Objetivo</span><p>Exigir um token válido para acessar uma rota.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Leia o cabeçalho: <code>request.headers.get("Authorization")</code></li><li>Extraia o token depois do "Bearer "</li><li>Valide com <code>jwt.decode</code>; se falhar, retorne 401</li><li>Se passar, execute normalmente (você até sabe QUEM é, pelo payload!)</li></ol><span class="tag saida">✅ Exemplo</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">GET /api/protegido  (com Bearer token válido) -&gt; {"mensagem": "Olá, robson!"}
+GET /api/protegido  (sem token)              -&gt; 401</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex06.py</span></div><pre class="code">import os, jwt
+from flask import Flask, jsonify, request
 
-# lixo do Python
-__pycache__/
-*.pyc
+app = Flask(__name__)
+SEGREDO = os.environ.get("JWT_SECRET", "troque-este-segredo")
 
-# ambiente virtual (Semana 34)
-venv/
+@app.route("/api/protegido")
+def protegido():
+    cabecalho = request.headers.get("Authorization", "")
+    if not cabecalho.startswith("Bearer "):
+        return jsonify({"erro": "token ausente"}), 401
 
-# banco local de testes
-*.db</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(git status limpo — os segredos invisíveis para o Git)</pre></div><details class="dica"><summary>💡 A regra que salva carreiras</summary><div class="inner">Robôs varrem o GitHub 24h por dia atrás de senhas e chaves commitadas — um <code>.env</code> público é sequestrado em MINUTOS (lembra da lição da Semana 24?). E atenção: o Git guarda o HISTÓRICO — remover o arquivo depois não apaga as versões antigas! Por isso o .gitignore vem PRIMEIRO, antes do primeiro commit. Grave isso. 🔐</div></details>
+    token = cabecalho.split(" ")[1]
+    try:
+        dados = jwt.decode(token, SEGREDO, algorithms=["HS256"])
+    except jwt.InvalidTokenError:
+        return jsonify({"erro": "token invalido"}), 401
+
+    return jsonify({"mensagem": f"Olá, {dados['usuario']}!"})
+
+app.run(debug=True)</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex7">
+    <div class="ex-head">
+      <span class="ex-num">EX 07</span>
+      <h3>O decorator @token_required ♻️</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex7"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Empacotar a verificação num decorator reutilizável — DRY para a segurança.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Imagine repetir aquela verificação em 10 rotas... melhor criar um <code>@token_required</code></li><li>O decorator (pesquise "decorator Python"!) faz a checagem ANTES da rota e passa o usuário adiante</li><li>Aí cada rota protegida ganha só uma linha: o <code>@token_required</code> em cima dela</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(uma única verificação, reaproveitada em todas as rotas protegidas)</pre></div><details class="dica"><summary>💡 DRY na segurança</summary><div class="inner">Lembra do princípio "não se repita" (Semana 6)? Um decorator de autenticação centraliza a regra de segurança num lugar só. Se você mudar a forma de validar, muda UMA função e todas as rotas protegidas acompanham. É o padrão profissional para proteger APIs.</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">auth.py</span></div><pre class="code">import os, jwt
+from functools import wraps
+from flask import jsonify, request
+
+SEGREDO = os.environ.get("JWT_SECRET", "troque-este-segredo")
+
+def token_required(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        cabecalho = request.headers.get("Authorization", "")
+        if not cabecalho.startswith("Bearer "):
+            return jsonify({"erro": "token ausente"}), 401
+        token = cabecalho.split(" ")[1]
+        try:
+            dados = jwt.decode(token, SEGREDO, algorithms=["HS256"])
+        except jwt.ExpiredSignatureError:
+            return jsonify({"erro": "token expirado"}), 401
+        except jwt.InvalidTokenError:
+            return jsonify({"erro": "token invalido"}), 401
+        # passa o usuário logado para a rota
+        return f(usuario_logado=dados["usuario"], *args, **kwargs)
+    return wrapper
+
+# uso:
+# @app.route("/api/produtos", methods=["POST"])
+# @token_required
+# def criar(usuario_logado):
+#     ...</pre></div></div></details>
     </div>
   </article>
 </section>
 
 <section class="parte" id="p5">
-  <div class="parte-head"><span class="num">05</span><h2>GitHub: publicando (e as branches)</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>O Git guarda a história na SUA máquina; o <strong>GitHub</strong> a hospeda na nuvem — backup, vitrine e ponto de colaboração. O fluxo: criar o repositório no site, conectar com <code>git remote add</code>, enviar com <code>git push</code>.</p></div>
-  <article class="ex" id="ex7">
-    <div class="ex-head">
-      <span class="ex-num">EX 07</span>
-      <h3>Subindo para o GitHub ☁️</h3>
-      <span class="stars">⭐⭐ médio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex7"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Publicar seu repositório local no GitHub.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>No github.com: New repository → nome (ex.: <code>tua-caneca-api</code>) → SEM inicializar com nada → Create</li><li>Conecte e envie com os comandos que o próprio GitHub mostra:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="code">git remote add origin https://github.com/SEU-USUARIO/tua-caneca-api.git
-git branch -M main
-git push -u origin main</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(atualize a página do GitHub: seu código está lá, com todo o histórico!)</pre></div><details class="dica"><summary>💡 remote, origin, push</summary><div class="inner"><code>remote</code> = um endereço de repositório na nuvem; <code>origin</code> = o apelido padrão dele; <code>push</code> = "empurrar" seus commits para lá. O caminho de volta é o <code>git clone URL</code> — que baixa qualquer repositório público para sua máquina (ótimo para estudar código dos outros!).</div></details>
-    </div>
-  </article>
-
+  <div class="parte-head"><span class="num">05</span><h2>Os erros de autenticação (401)</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Três coisas podem dar errado com um token, e todas respondem <code>401</code> (Unauthorized): o token pode estar <strong>ausente</strong>, <strong>inválido</strong> (adulterado ou com segredo errado) ou <strong>expirado</strong> (passou das 2h). O PyJWT tem exceções específicas para cada caso.</p></div>
   <article class="ex" id="ex8">
     <div class="ex-head">
       <span class="ex-num">EX 08</span>
-      <h3>Branches: o universo paralelo 🌿</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
+      <h3>Tratando token ausente, inválido e expirado</h3>
+      <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex8"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Desenvolver uma novidade sem tocar na versão que funciona.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie e entre numa branch: <code>git switch -c relatorio-clientes</code></li><li>Faça commits nela (mexa num arquivo, add, commit) — a <code>main</code> fica intacta!</li><li>Volte para a main (<code>git switch main</code>) e traga a novidade: <code>git merge relatorio-clientes</code></li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">$ git switch -c relatorio-clientes
-Switched to a new branch 'relatorio-clientes'
-$ git add . &amp;&amp; git commit -m "Adiciona relatorio por cliente"
-$ git switch main
-$ git merge relatorio-clientes
-Fast-forward
- api.py | 12 ++++++++++++</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(a novidade desenvolvida em paralelo e trazida para a main)</pre></div><details class="dica"><summary>💡 Como os times trabalham</summary><div class="inner">Em empresas, a <code>main</code> é sagrada (é o que está no ar!) e TODA mudança nasce numa branch — que só entra via merge depois de revisão e testes (a suíte da Semana 32!). Você acabou de experimentar o fluxo de trabalho de 99% dos times de software do planeta.</div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Responder com a mensagem certa para cada falha de token.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Sem cabeçalho Authorization → "token ausente" (401)</li><li><code>jwt.ExpiredSignatureError</code> → "token expirado" (401)</li><li><code>jwt.InvalidTokenError</code> → "token inválido" (401)</li><li>Mensagens claras ajudam o frontend a reagir (ex.: token expirado → pedir login de novo)</li></ol><span class="tag saida">✅ Comportamento esperado</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">sem token      -&gt; 401 {"erro": "token ausente"}
+token mexido   -&gt; 401 {"erro": "token invalido"}
+token vencido  -&gt; 401 {"erro": "token expirado"}</pre></div><details class="dica"><summary>💡 Por que distinguir?</summary><div class="inner">O frontend (Semana 29) USA essas mensagens: "token expirado" pode disparar um relogin automático; "token inválido" indica adulteração (logout imediato). Tratar cada caso é o que torna a experiência de login fluida e segura. Note que <code>ExpiredSignatureError</code> é um tipo de <code>InvalidTokenError</code> — por isso o expirado vem PRIMEIRO no except (Semana 7!).</div></details>
     </div>
   </article>
 </section>
@@ -419,24 +505,44 @@ Fast-forward
   <article class="ex" id="ex9">
     <div class="ex-head">
       <span class="ex-num">EX 09</span>
-      <h3>Projeto: os repositórios da Tua Caneca 🐙</h3>
+      <h3>Projeto: a API protegida da Tua Caneca 🔐</h3>
       <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex9"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Publicar o sistema completo no GitHub — backend e frontend, como manda o figurino.</p><span class="tag passos">🧭 Requisitos</span><ol><li>DOIS repositórios (arquitetura desacoplada, lembra?): <code>tua-caneca-api</code> e <code>tua-caneca-frontend</code></li><li>Em cada um: <code>.gitignore</code> ANTES de tudo (o .env do backend jamais pode subir!)</li><li>Histórico com commits de mensagens claras (não vale um commit gigante "projeto inteiro")</li><li>Suba os dois e confira no GitHub</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(dois repositórios públicos, com histórico limpo e zero segredos)</pre></div><details class="dica"><summary>💡 Portfólio em construção</summary><div class="inner">Dois repositórios conectados (API + frontend) mostram que você entende arquitetura — algo que UM zipzão de código nunca mostraria. O próximo exercício adiciona a peça que transforma repositório em portfólio: o README.</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><p>Checklist de conferência: <strong>(1)</strong> o <code>.env</code> NÃO aparece no GitHub (se aparecer: troque as senhas imediatamente e refaça o repositório — o histórico guarda tudo!); <strong>(2)</strong> <code>git log --oneline</code> conta uma história legível; <strong>(3)</strong> os dois repositórios clonam e rodam em outra máquina seguindo apenas as instruções. Se os três passam, você publicou como profissional.</p></div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Adicionar autenticação à API REST da Semana 27 — leitura pública, escrita protegida.</p><span class="tag passos">🧭 Requisitos</span><ol><li>Junte tudo: <code>/api/cadastro</code>, <code>/api/login</code> (emite JWT) e o decorator <code>@token_required</code></li><li>Mantenha <code>GET /api/produtos</code> PÚBLICO (qualquer um lê o catálogo)</li><li>Proteja <code>POST</code>, <code>PUT</code> e <code>DELETE</code> com <code>@token_required</code> (só logados alteram)</li><li>Teste com requests: tente criar SEM token (401) e COM token (201)</li></ol><span class="tag saida">✅ Exemplo</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">POST /api/produtos (sem token)  -&gt; 401
+POST /api/login -&gt; recebe token
+POST /api/produtos (com Bearer token) -&gt; 201</pre></div><details class="dica"><summary>💡 Leitura pública, escrita protegida</summary><div class="inner">Esse padrão — GET aberto, POST/PUT/DELETE exigindo login — é pensadíssimo: o catálogo precisa ser visível a todos (clientes!), mas só funcionários autenticados mudam os dados. Decidir o que proteger e o que liberar é design de segurança de verdade. Você está pensando como um arquiteto de sistemas. 🏛️</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">teste_protegido.py</span></div><pre class="code">import requests
+
+BASE = "http://localhost:5000/api"
+
+# 1) Tenta criar SEM token -&gt; deve dar 401
+r = requests.post(f"{BASE}/produtos",
+                  json={"nome": "x", "preco": 1, "estoque": 1}, timeout=5)
+print("Sem token:", r.status_code)   # 401
+
+# 2) Faz login -&gt; recebe token
+r = requests.post(f"{BASE}/login",
+                  json={"usuario": "robson", "senha": "tuacaneca123"}, timeout=5)
+token = r.json()["token"]
+
+# 3) Cria COM token no cabeçalho -&gt; deve dar 201
+headers = {"Authorization": f"Bearer {token}"}
+r = requests.post(f"{BASE}/produtos", headers=headers,
+                  json={"nome": "caneca nova", "preco": 30, "estoque": 5}, timeout=5)
+print("Com token:", r.status_code)   # 201</pre></div></div></details>
     </div>
   </article>
 
   <article class="ex" id="ex10">
     <div class="ex-head">
       <span class="ex-num">EX 10</span>
-      <h3>Projeto bônus: o README que contrata 📄</h3>
+      <h3>Projeto bônus: /me e o conceito de logout 🚪</h3>
       <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex10"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Escrever a porta de entrada dos seus repositórios (sem código pronto!).</p><span class="tag passos">🧭 Roteiro</span><ol><li>Crie um <code>README.md</code> em cada repositório (Markdown: <code>#</code> títulos, <code>```</code> blocos de código, <code>-</code> listas)</li><li>Estrutura sugerida: o que é o projeto → tecnologias → como rodar (passo a passo!) → endpoints da API (tabela) → aprendizados</li><li>Inclua o comando de rodar os testes (Semana 32) — isso impressiona</li><li>Capriche: o README é a primeira (às vezes única) coisa que um recrutador lê</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(dois READMEs que explicam, ensinam a rodar e vendem o projeto)</pre></div><details class="dica"><summary>💡 O produto é você</summary><div class="inner">Um bom README responde em 30 segundos: o que faz? como rodo? o autor sabe o que está fazendo? Projetos com README caprichado passam a impressão de cuidado — a mesma que um portfólio bem montado passa num processo seletivo. Você construiu 33 semanas de conteúdo; agora aprenda a APRESENTÁ-LO. 🎯</div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Criar uma rota de perfil e entender por que logout no JWT é diferente (sem código pronto!).</p><span class="tag passos">🧭 Roteiro</span><ol><li>Rota <code>GET /api/me</code> protegida: devolve os dados do usuário logado (pegando do token)</li><li>Pesquise: por que, com JWT, o "logout" acontece no CLIENTE (que descarta o token), e não no servidor?</li><li>Reflita sobre "stateless": o servidor não guarda sessão — cada requisição se prova sozinha pelo token</li></ol><span class="tag saida">✅ Exemplo</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">GET /api/me (com token) -&gt; {"usuario": "robson"}</pre></div><details class="dica"><summary>💡 Stateless: a chave do REST</summary><div class="inner">APIs REST são "stateless": o servidor NÃO guarda quem está logado — cada requisição carrega seu próprio token como prova. Por isso o logout é o cliente simplesmente JOGAR FORA o token (Semana 29 fará isso). Essa ausência de "memória de sessão" é o que permite a uma API atender milhões de clientes sem se atrapalhar. Conceito poderoso — e você acabou de dominá-lo. 🧠</div></details>
     </div>
   </article>
 </section>
@@ -444,29 +550,29 @@ Fast-forward
 <div class="checklist" id="checklist">
   <h2>✅ Checklist de fim de semana</h2>
   <p>Antes de seguir para a próxima semana, confirme que você consegue:</p>
-<label class="check-item"><input type="checkbox"><span>Explicar o que é controle de versão e por que todo time usa</span></label>
-<label class="check-item"><input type="checkbox"><span>Iniciar um repositório com git init e ler o git status</span></label>
-<label class="check-item"><input type="checkbox"><span>Preparar e salvar mudanças com git add e git commit</span></label>
-<label class="check-item"><input type="checkbox"><span>Escrever mensagens de commit claras e úteis</span></label>
-<label class="check-item"><input type="checkbox"><span>Ver o histórico com git log e as mudanças com git diff</span></label>
-<label class="check-item"><input type="checkbox"><span>Proteger segredos e lixo com o .gitignore (.env, __pycache__)</span></label>
-<label class="check-item"><input type="checkbox"><span>Criar um repositório no GitHub e conectar com remote</span></label>
-<label class="check-item"><input type="checkbox"><span>Enviar e baixar código com git push e git clone</span></label>
-<label class="check-item"><input type="checkbox"><span>Trabalhar numa branch e trazer com merge</span></label>
-<label class="check-item"><input type="checkbox"><span>Publicar projetos com um README profissional</span></label>
+<label class="check-item"><input type="checkbox"><span>Explicar por que nunca se guarda senha em texto puro</span></label>
+<label class="check-item"><input type="checkbox"><span>Gerar e verificar hash de senha (generate/check_password_hash)</span></label>
+<label class="check-item"><input type="checkbox"><span>Criar uma tabela de usuários no MariaDB</span></label>
+<label class="check-item"><input type="checkbox"><span>Implementar um endpoint de cadastro com a senha hasheada</span></label>
+<label class="check-item"><input type="checkbox"><span>Implementar /login que verifica a senha e devolve um JWT</span></label>
+<label class="check-item"><input type="checkbox"><span>Entender a estrutura de um JWT (header.payload.signature)</span></label>
+<label class="check-item"><input type="checkbox"><span>Proteger rotas exigindo o token (Authorization: Bearer ...)</span></label>
+<label class="check-item"><input type="checkbox"><span>Criar um decorator reutilizável de proteção (@token_required)</span></label>
+<label class="check-item"><input type="checkbox"><span>Tratar token ausente, inválido ou expirado com status 401</span></label>
+<label class="check-item"><input type="checkbox"><span>Guardar a chave secreta do JWT em variável de ambiente</span></label>
 </div>
 
 <div class="win-banner" id="winBanner">
-  <h2>🏆 SEMANA 33 COMPLETA!</h2>
-  <p>Você concluiu todos os exercícios. Seu código tem memória (todo o histórico), proteção (segredos fora do repositório) e vitrine (GitHub) — como o de qualquer time profissional!</p>
+  <h2>🏆 SEMANA 28 COMPLETA!</h2>
+  <p>Você concluiu todos os exercícios. Sua API tem autenticação de verdade — senhas seguras e rotas protegidas por token, como em qualquer sistema sério!</p>
 </div>
 
 <div class="preview-s2">
-<h2>📅 Prévia da Semana 34</h2><p>Código testado e versionado — falta deixá-lo pronto para o MUNDO. Na próxima semana, <strong>produção e deploy</strong>: congelar dependências no <code>requirements.txt</code>, ambientes virtuais, configuração por <code>.env</code>, desligar o debug (você vai entender o perigo!), o papel do Docker e o caminho para colocar frontend e API no ar. A última milha! 🚀</p></div>
+<h2>📅 Prévia da Semana 29</h2><p>Backend pronto e protegido — falta a cara! Na próxima semana, o <strong>frontend desacoplado</strong>: uma página HTML/JS separada que consome sua API com <strong>fetch</strong>, faz login, guarda o token e mostra os produtos na tela. Finalmente os dois lados conversando: frontend chama, API responde. A arquitetura completa! 🖥️</p></div>
 
 </main>
 
-<footer>python_para_iniciantes // semana_33 // exercícios guiados</footer>
+<footer>python_para_iniciantes // semana_28 // exercícios guiados</footer>
 
 <script>
 // ===== Syntax highlight leve para Python =====
@@ -478,7 +584,7 @@ Fast-forward
     src = src.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     // uma passada só, com alternação (comentário | string | builtin | bool | número)
     src = src.replace(
-      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|insert|int|float|str|len|range|type|abs|round|max|min|sum|sorted|sort|reverse|append|remove|split|strip|upper|lower|replace|title|randint|random|get|keys|values|items|open|readlines|read|write|close|count|index|pop|update|list|dict|tuple|enumerate|sqrt|floor|ceil|choice|shuffle|sample|sleep|now|today|strftime|dumps|dump|loads|load|isinstance|datetime|date|DictReader|DictWriter|writerows|writerow|writeheader|writer|reader|csv|Workbook|load_workbook|save|iter_rows|Font|listdir|makedirs|getcwd|rename|exists|getsize|splitext|join|endswith|startswith|copytree|copy|move|requests|status_code|json|DataFrame|read_csv|read_excel|to_excel|to_csv|head|describe|groupby|sort_values|value_counts|mean|idxmax|bar|barh|pie|plot|savefig|show|title|xlabel|ylabel|figure|legend|axhline|tight_layout|close|Flask|route|run|render_template|jsonify|redirect|request|connect|cursor|execute|executemany|fetchall|fetchone|commit|environ|getenv|post|encode|decode|abort|make_response|raises|approx|load_dotenv)\b|\b(True|False|None|if|elif|else|while|for|in|and|or|not|break|continue|import|from|def|return|try|except|finally|with|as|del|global|pass|class|self|super|lambda)\b|(\b\d+(?:\.\d+)?\b)/g,
+      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|insert|int|float|str|len|range|type|abs|round|max|min|sum|sorted|sort|reverse|append|remove|split|strip|upper|lower|replace|title|randint|random|get|keys|values|items|open|readlines|read|write|close|count|index|pop|update|list|dict|tuple|enumerate|sqrt|floor|ceil|choice|shuffle|sample|sleep|now|today|strftime|dumps|dump|loads|load|isinstance|datetime|date|DictReader|DictWriter|writerows|writerow|writeheader|writer|reader|csv|Workbook|load_workbook|save|iter_rows|Font|listdir|makedirs|getcwd|rename|exists|getsize|splitext|join|endswith|startswith|copytree|copy|move|requests|status_code|json|DataFrame|read_csv|read_excel|to_excel|to_csv|head|describe|groupby|sort_values|value_counts|mean|idxmax|bar|barh|pie|plot|savefig|show|title|xlabel|ylabel|figure|legend|axhline|tight_layout|close|Flask|route|run|render_template|jsonify|redirect|request|connect|cursor|execute|executemany|fetchall|fetchone|commit|environ|getenv|post|encode|decode|abort|make_response)\b|\b(True|False|None|if|elif|else|while|for|in|and|or|not|break|continue|import|from|def|return|try|except|finally|with|as|del|global|pass|class|self|super|lambda)\b|(\b\d+(?:\.\d+)?\b)/g,
       function(m, com, str, fn, bool, num){
         if(com)  return '<span class="tk-com">'+com+'</span>';
         if(str)  return '<span class="tk-str">'+str+'</span>';
@@ -497,7 +603,7 @@ Fast-forward
 // no navegador. Se o localStorage estiver indisponível (modo restrito,
 // pré-visualização, etc.), o progresso funciona só em memória, sem quebrar.
 const storage = (function(){
-  const KEY = 'python_semana33_progresso';
+  const KEY = 'python_semana28_progresso';
   let memoria = {};
   let disponivel = false;
   try{

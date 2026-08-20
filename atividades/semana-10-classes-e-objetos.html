@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Semana 13 — CSV e Planilhas</title>
+<title>Semana 10 — Classes e Objetos</title>
 <style>
   :root{
     --ink:#16243A;
@@ -57,7 +57,7 @@
     color:#fff;padding:56px 20px 48px;text-align:center;position:relative;overflow:hidden;
   }
   header.hero::before{
-    content:"import csv  DictReader  openpyxl  Workbook  .xlsx";
+    content:"class  __init__  self  objeto.metodo()  atributos";
     position:absolute;inset:auto 0 8px 0;font-family:var(--mono);font-size:.78rem;
     color:rgba(255,255,255,.14);letter-spacing:.4em;white-space:nowrap;overflow:hidden;
   }
@@ -234,295 +234,316 @@
 <div class="progress-wrap" role="region" aria-label="Progresso da semana">
   <span class="label">XP DA SEMANA</span>
   <div class="progress-bar"><div class="progress-fill" id="pfill"></div></div>
-  <span class="progress-count" id="pcount">0 / 13</span>
+  <span class="progress-count" id="pcount">0 / 14</span>
   <span class="progress-msg" id="pmsg">Marque os exercícios concluídos ✔</span>
   <button class="reset-btn" id="resetBtn" title="Apagar todo o progresso salvo">↺ Resetar</button>
 </div>
 
 <header class="hero">
   <div class="kicker">Python para Iniciantes · Exercícios Guiados</div>
-  <h1>SEMANA 13 — CSV e Excel:<br>Python no mundo do Office<span class="cursor" aria-hidden="true"></span></h1>
-  <p class="sub">O módulo csv profissional (reader, DictReader, DictWriter) e a biblioteca openpyxl: criar, ler e formatar planilhas .xlsx de verdade — com fórmulas e tudo.</p>
+  <h1>SEMANA 10 — Classes e Objetos:<br>a virada de chave da POO<span class="cursor" aria-hidden="true"></span></h1>
+  <p class="sub">Programação Orientada a Objetos: class, o famoso self, __init__, atributos, métodos, __str__ e listas de objetos. Spoiler: você já usa objetos desde a Semana 1!</p>
   <div class="howto">
     <strong>Como usar:</strong> digite o código você mesmo (não copie e cole!), compare com a saída esperada e marque <strong>✔ Concluído</strong> em cada exercício para encher sua barra de XP. As <strong>dicas</strong> e <strong>soluções</strong> ficam escondidas — só abra depois de tentar! Seu progresso fica salvo no navegador.
   </div>
 </header>
 
-<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · Lendo CSV</a><a href="#p2">2 · Gravando CSV</a><a href="#p3">3 · openpyxl</a><a href="#p4">4 · Planilhas reais</a><a href="#p5">5 · CSV → Excel</a><a href="#p6">6 · Projetos</a><a href="#checklist">✅ Checklist</a></nav>
+<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · class</a><a href="#p2">2 · __init__</a><a href="#p3">3 · Métodos</a><a href="#p4">4 · __str__</a><a href="#p5">5 · Listas de objetos</a><a href="#p6">6 · Projetos</a><a href="#checklist">✅ Checklist</a></nav>
 
 <main>
 
 <section class="parte" id="p1">
-  <div class="parte-head"><span class="num">01</span><h2>Lendo CSV do jeito profissional</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Na Semana 7 você inventou o "CSV caseiro" com <code>split(";")</code>. O Python tem um módulo oficial que trata os casos difíceis (vírgulas dentro de textos, aspas...): o <code>csv</code>. Primeiro, crie o arquivo de testes <code>vendas.csv</code> no Bloco de Notas (ou via código):</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">vendas.csv</span></div><pre class="output">produto,qtd,total
-caneca branca,3,75.00
-caneca preta,2,55.00
-azulejo,1,40.00</pre></div></div>
+  <div class="parte-head"><span class="num">01</span><h2>class: o molde e os bolos</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Uma <strong>classe</strong> é um molde; um <strong>objeto</strong> é o que sai do molde. O molde "Cachorro" define que todo cachorro tem nome; Rex e Bidu são objetos — cada um com SEU nome.</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">estrutura.py</span></div><pre class="code">class Cachorro:                  # o molde (nome com Maiúscula!)
+    def __init__(self, nome):    # executa ao criar o objeto
+        self.nome = nome         # guarda o atributo NO objeto
+
+rex = Cachorro("Rex")            # cria um objeto a partir do molde
+print(rex.nome)                  # acessa o atributo</pre></div><p><strong>E aqui o segredo:</strong> você já usa objetos desde sempre! <code>"abc".upper()</code>, <code>lista.append(...)</code>, <code>datetime.now().year</code> — strings, listas e datas SÃO objetos, com métodos e atributos. Agora você vai criar os seus.</p></div>
   <article class="ex" id="ex1">
     <div class="ex-head">
       <span class="ex-num">EX 01</span>
-      <h3>csv.reader: cada linha vira lista</h3>
-      <span class="stars">⭐⭐ médio</span>
+      <h3>Primeira classe 🐶</h3>
+      <span class="stars">⭐ básico</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex1"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Ler um CSV com o módulo oficial.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Com o vendas.csv na mesma pasta, execute:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex01_reader.py</span></div><pre class="code">import csv
+<span class="tag obj">🎯 Objetivo</span><p>Criar um molde e o primeiro objeto dele.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Digite e execute:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex01_classe.py</span></div><pre class="code">class Cachorro:
+    def __init__(self, nome):
+        self.nome = nome
 
-with open("vendas.csv", "r", encoding="utf-8") as arquivo:
-    leitor = csv.reader(arquivo)
-    for linha in leitor:
-        print(linha)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">['produto', 'qtd', 'total']
-['caneca branca', '3', '75.00']
-['caneca preta', '2', '55.00']
-['azulejo', '1', '40.00']</pre></div><details class="dica"><summary>💡 Duas observações</summary><div class="inner">(1) TUDO chega como texto — converta com int/float quando precisar. (2) A primeira linha é o cabeçalho: pule-a com <code>next(leitor)</code> antes do for. E se seu Excel salvar com ponto e vírgula, use <code>csv.reader(arquivo, delimiter=";")</code>.</div></details>
+rex = Cachorro("Rex")
+
+print(rex.nome)
+print(type(rex))</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Rex
+&lt;class '__main__.Cachorro'&gt;</pre></div><details class="dica"><summary>💡 Olha que bonito</summary><div class="inner">O <code>type()</code> da Semana 1 revela: rex é do tipo... Cachorro! Você acabou de criar um TIPO NOVO no Python, do mesmo nível de int, str e list. 🤯</div></details>
     </div>
   </article>
 
   <article class="ex" id="ex2">
     <div class="ex-head">
       <span class="ex-num">EX 02</span>
-      <h3>DictReader: cada linha vira dicionário 🤩</h3>
+      <h3>Vários objetos, um molde</h3>
       <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex2"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>A forma mais elegante de ler CSV — direto para dicionários.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Troque o reader por DictReader e acesse por NOME de coluna:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex02_dictreader.py</span></div><pre class="code">import csv
+<span class="tag obj">🎯 Objetivo</span><p>Comprovar que cada objeto é independente.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Continue do exercício anterior e PREVEJA:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex02_objetos.py</span></div><pre class="code">rex = Cachorro("Rex")
+bidu = Cachorro("Bidu")
 
-with open("vendas.csv", "r", encoding="utf-8") as arquivo:
-    leitor = csv.DictReader(arquivo)
-    for linha in leitor:
-        print(f"{linha['produto']}: {linha['qtd']} un. — R$ {linha['total']}")</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">caneca branca: 3 un. — R$ 75.00
-caneca preta: 2 un. — R$ 55.00
-azulejo: 1 un. — R$ 40.00</pre></div><details class="dica"><summary>💡 Olha a Semana 5 aí</summary><div class="inner">O DictReader usa o cabeçalho como chaves e entrega... uma lista de dicionários — a "tabela" que você já domina! Nada de contar posição de coluna.</div></details>
+print(rex.nome, "|", bidu.nome)
+
+bidu.nome = "Bidu Jr."
+print(rex.nome, "|", bidu.nome)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Rex | Bidu
+Rex | Bidu Jr.</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner">Mudar o Bidu não afeta o Rex: cada objeto tem suas PRÓPRIAS gavetas de atributos. O molde é compartilhado; os dados, não.</div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex3">
+    <div class="ex-head">
+      <span class="ex-num">EX 03</span>
+      <h3>O mistério do self</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex3"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Entender o self provocando o erro clássico de quem esquece ele.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Execute este código <strong>com erro proposital</strong>:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex03_self.py</span></div><pre class="code">class Cachorro:
+    def latir():            # faltou o self!
+        print("Au au!")
+
+rex = Cachorro()
+rex.latir()</pre></div><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output" style="color:#FF9B94">TypeError: Cachorro.latir() takes 0 positional arguments but 1 was given</pre></div><span class="tag passos">🧭 Continue</span><ol><li>Leia o erro: "recebeu 1 argumento"... mas você não passou nenhum! Quem passou?</li><li>Corrija: <code>def latir(self):</code></li></ol><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><p>Quando você chama <code>rex.latir()</code>, o Python passa o PRÓPRIO rex como primeiro argumento, escondido. O <code>self</code> é o parâmetro que recebe ele — é como o método sabe EM QUAL objeto está trabalhando. Regra: <strong>todo método começa com self</strong>, e dentro dele os atributos são <code>self.alguma_coisa</code>.</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex03.py</span></div><pre class="code">class Cachorro:
+    def latir(self):
+        print("Au au!")
+
+rex = Cachorro()
+rex.latir()</pre></div></div></details>
     </div>
   </article>
 </section>
 
 <section class="parte" id="p2">
-  <div class="parte-head"><span class="num">02</span><h2>Gravando CSV</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Para escrever, a dupla <code>csv.writer</code> + <code>writerow</code> — com um detalhe OBRIGATÓRIO no Windows: <code>newline=""</code> no open (sem ele, o arquivo sai com linhas em branco entre os dados!).</p></div>
-  <article class="ex" id="ex3">
-    <div class="ex-head">
-      <span class="ex-num">EX 03</span>
-      <h3>Primeiro CSV gerado</h3>
-      <span class="stars">⭐⭐ médio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex3"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Gravar um CSV linha a linha.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Digite, execute e abra o resultado no Excel ou Bloco de Notas:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex03_writer.py</span></div><pre class="code">import csv
-
-with open("clientes.csv", "w", newline="", encoding="utf-8") as arquivo:
-    escritor = csv.writer(arquivo)
-    escritor.writerow(["nome", "cidade"])
-    escritor.writerow(["Ana", "Porto Alegre"])
-    escritor.writerow(["Bruno", "Caxias do Sul"])
-
-print("clientes.csv gerado ✔")</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">clientes.csv gerado ✔</pre></div><details class="dica"><summary>💡 O bug das linhas em branco</summary><div class="inner">Esqueceu o <code>newline=""</code>? No Windows, cada linha de dados ganha uma linha vazia embaixo. É a pegadinha número 1 do módulo csv — agora você está vacinado!</div></details>
-    </div>
-  </article>
-
+  <div class="parte-head"><span class="num">02</span><h2>__init__ e os atributos</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>O <code>__init__</code> (dois underlines de cada lado!) é o método de inicialização: roda automaticamente quando o objeto nasce. É nele que os atributos são criados — vindos de parâmetros ou com valores fixos de fábrica.</p></div>
   <article class="ex" id="ex4">
     <div class="ex-head">
       <span class="ex-num">EX 04</span>
-      <h3>DictWriter: gravando dicionários</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
+      <h3>Ficha completa</h3>
+      <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex4"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>O par do DictReader: gravar a partir de dicionários.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Defina <code>campos = ["nome", "nota"]</code></li><li>Crie o DictWriter com <code>fieldnames=campos</code></li><li>Chame <code>writeheader()</code> (grava o cabeçalho) e depois writerow com dicionários</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex04_dictwriter.py</span></div><pre class="code">import csv
+<span class="tag obj">🎯 Objetivo</span><p>Criar um __init__ com vários parâmetros e um atributo de fábrica.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie a classe com nome, raça e idade vindos de parâmetros</li><li>Adicione <code>self.energia = 100</code> — TODO cachorro nasce com 100, sem parâmetro</li><li>Crie um objeto e imprima os 4 atributos</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex04_init.py</span></div><pre class="code">class Cachorro:
+    def __init__(self, nome, raca, idade):
+        self.nome = nome
+        self.raca = raca
+        self.idade = idade
+        self.energia = 100    # valor de fábrica
 
-campos = ["nome", "nota"]
-alunos = [
-    {"nome": "Ana", "nota": 8.5},
-    {"nome": "Bruno", "nota": 6.0},
-    {"nome": "Carla", "nota": 9.5}
-]
-
-with open("notas.csv", "w", newline="", encoding="utf-8") as arquivo:
-    escritor = csv.DictWriter(arquivo, fieldnames=campos)
-    escritor.writeheader()
-    for aluno in alunos:
-        escritor.writerow(aluno)
-
-print("notas.csv gerado ✔")</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">notas.csv gerado ✔</pre></div>
+rex = Cachorro("Rex", "vira-lata", 3)
+print(rex.nome, "|", rex.raca, "|", rex.idade, "|", rex.energia)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Rex | vira-lata | 3 | 100</pre></div>
     </div>
   </article>
 
   <article class="ex" id="ex5">
     <div class="ex-head">
       <span class="ex-num">EX 05</span>
-      <h3>Filtro CSV → CSV</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
+      <h3>Atributos mudam</h3>
+      <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex5"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>O pipeline clássico de dados: ler, filtrar, gravar.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Leia o <code>notas.csv</code> com DictReader</li><li>Filtre quem tem nota ≥ 7 (lembre: converta com <code>float(linha["nota"])</code>!)</li><li>Grave os aprovados em <code>aprovados.csv</code> com DictWriter</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">2 aprovados gravados em aprovados.csv ✔</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex05.py</span></div><pre class="code">import csv
-
-aprovados = []
-
-with open("notas.csv", "r", encoding="utf-8") as arquivo:
-    leitor = csv.DictReader(arquivo)
-    for linha in leitor:
-        if float(linha["nota"]) &gt;= 7:
-            aprovados.append(linha)
-
-with open("aprovados.csv", "w", newline="", encoding="utf-8") as arquivo:
-    escritor = csv.DictWriter(arquivo, fieldnames=["nome", "nota"])
-    escritor.writeheader()
-    for aluno in aprovados:
-        escritor.writerow(aluno)
-
-print(f"{len(aprovados)} aprovados gravados em aprovados.csv ✔")</pre></div><p>Ler → transformar → gravar: você acabou de fazer um mini-ETL, o trabalho diário de quem mexe com dados!</p></div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Alterar o estado de um objeto.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Faça o Rex fazer aniversário: <code>rex.idade = rex.idade + 1</code></li><li>Faça-o gastar energia: <code>rex.energia -= 30</code></li><li>Imprima antes e depois</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Antes: 3 anos, energia 100
+Depois: 4 anos, energia 70</pre></div><details class="dica"><summary>💡 Reflexão</summary><div class="inner">Funciona, mas mexer nos atributos "por fora" espalha a lógica pelo programa. O jeito ORGANIZADO de mudar um objeto é com métodos — próxima parte! 👇</div></details>
     </div>
   </article>
 </section>
 
 <section class="parte" id="p3">
-  <div class="parte-head"><span class="num">03</span><h2>openpyxl: o Excel de verdade</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>CSV é texto puro — sem abas, fórmulas ou formatação. Para .xlsx de verdade, a biblioteca <code>openpyxl</code>. Instale no terminal: <code>pip install openpyxl</code> (Semana 9!). O modelo mental: <strong>Workbook</strong> = o arquivo · <strong>aba</strong> (worksheet) = cada planilha · <strong>célula</strong> = <code>aba["A1"]</code>.</p></div>
+  <div class="parte-head"><span class="num">03</span><h2>Métodos: o que o objeto sabe fazer</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Atributos = o que o objeto TEM. Métodos = o que o objeto FAZ. Um método é uma função dentro da classe, sempre com <code>self</code> — e por isso enxerga os atributos do próprio objeto.</p></div>
   <article class="ex" id="ex6">
     <div class="ex-head">
       <span class="ex-num">EX 06</span>
-      <h3>Primeira planilha .xlsx</h3>
+      <h3>Latir e brincar</h3>
       <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex6"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Criar um Excel do zero com Python.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Com o openpyxl instalado, execute:</li><li>Depois ABRA o vendas.xlsx no Excel e admire 😄</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex06_workbook.py</span></div><pre class="code">from openpyxl import Workbook
+<span class="tag obj">🎯 Objetivo</span><p>Criar métodos que usam e alteram atributos.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Adicione os métodos <code>latir</code> e <code>brincar(horas)</code> (cada hora gasta 10 de energia)</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex06_metodos.py</span></div><pre class="code">class Cachorro:
+    def __init__(self, nome):
+        self.nome = nome
+        self.energia = 100
 
-planilha = Workbook()
-aba = planilha.active
-aba.title = "Vendas"
+    def latir(self):
+        print(f"{self.nome}: Au au!")
 
-aba["A1"] = "Produto"
-aba["B1"] = "Total"
-aba["A2"] = "caneca branca"
-aba["B2"] = 75.0
+    def brincar(self, horas):
+        self.energia = self.energia - horas * 10
+        print(f"{self.nome} brincou {horas}h! Energia: {self.energia}")
 
-planilha.save("vendas.xlsx")
-print("vendas.xlsx criado ✔")</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">vendas.xlsx criado ✔</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner">Números vão SEM aspas (<code>aba["B2"] = 75.0</code>) — assim o Excel os trata como números de verdade, somáveis. Com aspas virariam texto!</div></details>
+rex = Cachorro("Rex")
+rex.latir()
+rex.brincar(3)
+rex.brincar(2)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Rex: Au au!
+Rex brincou 3h! Energia: 70
+Rex brincou 2h! Energia: 50</pre></div><details class="dica"><summary>💡 Repare</summary><div class="inner">Você chama <code>rex.brincar(3)</code> com UM argumento, mas o método tem dois parâmetros (self, horas). O rex preenche o self sozinho!</div></details>
     </div>
   </article>
 
   <article class="ex" id="ex7">
     <div class="ex-head">
       <span class="ex-num">EX 07</span>
-      <h3>Lendo uma planilha</h3>
-      <span class="stars">⭐⭐ médio</span>
+      <h3>Métodos que respondem</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex7"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Abrir um .xlsx existente e percorrer os dados.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Use <code>load_workbook</code> para abrir o arquivo do exercício anterior:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex07_load.py</span></div><pre class="code">from openpyxl import load_workbook
+<span class="tag obj">🎯 Objetivo</span><p>Métodos com return — incluindo o padrão True/False da Semana 6.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Adicione <code>esta_cansado(self)</code> que retorna <code>self.energia &lt; 30</code></li><li>Adicione <code>dormir(self)</code> que restaura a energia para 100</li><li>Use num if: se cansado → dormir</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Rex brincou 8h! Energia: 20
+Rex está cansado? True
+Rex dormiu! Energia: 100</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex07.py</span></div><pre class="code">class Cachorro:
+    def __init__(self, nome):
+        self.nome = nome
+        self.energia = 100
 
-planilha = load_workbook("vendas.xlsx")
-aba = planilha.active
+    def brincar(self, horas):
+        self.energia = self.energia - horas * 10
+        print(f"{self.nome} brincou {horas}h! Energia: {self.energia}")
 
-print(aba["A1"].value)
+    def esta_cansado(self):
+        return self.energia &lt; 30
 
-for linha in aba.iter_rows(min_row=2, values_only=True):
-    print(linha)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Produto
-('caneca branca', 75.0)</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner"><code>.value</code> pega o conteúdo da célula. O <code>iter_rows(min_row=2, values_only=True)</code> percorre a partir da linha 2 (pulando o cabeçalho) e entrega cada linha como TUPLA (Semana 5!).</div></details>
+    def dormir(self):
+        self.energia = 100
+        print(f"{self.nome} dormiu! Energia: {self.energia}")
+
+rex = Cachorro("Rex")
+rex.brincar(8)
+print(f"Rex está cansado? {rex.esta_cansado()}")
+
+if rex.esta_cansado():
+    rex.dormir()</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex8">
+    <div class="ex-head">
+      <span class="ex-num">EX 08</span>
+      <h3>Conta bancária 🏦</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex8"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>O exercício clássico de POO: estado protegido por métodos com regras.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Classe <code>ContaBancaria</code>: titular e saldo (padrão 0 — parâmetro padrão da Semana 6!)</li><li><code>depositar(valor)</code>: soma e confirma</li><li><code>sacar(valor)</code>: só permite se houver saldo (senão avisa)</li><li><code>extrato()</code>: mostra titular e saldo formatado</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Depósito de R$ 100.00 ✔
+Saque de R$ 30.00 ✔
+Saldo insuficiente!
+Ana: R$ 70.00</pre></div><details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Adicione <code>self.historico = []</code> e registre cada operação. O <code>extrato()</code> lista tudo!</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex08.py</span></div><pre class="code">class ContaBancaria:
+    def __init__(self, titular, saldo=0):
+        self.titular = titular
+        self.saldo = saldo
+
+    def depositar(self, valor):
+        self.saldo = self.saldo + valor
+        print(f"Depósito de R$ {valor:.2f} ✔")
+
+    def sacar(self, valor):
+        if valor &gt; self.saldo:
+            print("Saldo insuficiente!")
+        else:
+            self.saldo = self.saldo - valor
+            print(f"Saque de R$ {valor:.2f} ✔")
+
+    def extrato(self):
+        print(f"{self.titular}: R$ {self.saldo:.2f}")
+
+conta = ContaBancaria("Ana")
+conta.depositar(100)
+conta.sacar(30)
+conta.sacar(500)
+conta.extrato()</pre></div><p>Sente a elegância: NINGUÉM mexe no saldo diretamente — toda mudança passa pelos métodos, que aplicam as regras. Isso é <strong>encapsulamento</strong>, um dos pilares da POO.</p></div></details>
     </div>
   </article>
 </section>
 
 <section class="parte" id="p4">
-  <div class="parte-head"><span class="num">04</span><h2>Planilhas de gente grande</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Dois upgrades que separam o amador do profissional: montar tabelas com <code>append()</code> (uma linha por vez, como nas listas!) e dar acabamento — negrito com <code>Font(bold=True)</code> e <strong>fórmulas do próprio Excel</strong> escritas pelo Python.</p></div>
-  <article class="ex" id="ex8">
-    <div class="ex-head">
-      <span class="ex-num">EX 08</span>
-      <h3>Tabela com append</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex8"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Despejar uma lista de dados na planilha.</p><span class="tag passos">🧭 Passo a passo</span><ol><li><code>aba.append(lista)</code> grava uma linha inteira de uma vez</li><li>Monte cabeçalho + 3 linhas de dados:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex08_append.py</span></div><pre class="code">from openpyxl import Workbook
-
-dados = [
-    ("caneca branca", 3, 75.0),
-    ("caneca preta", 2, 55.0),
-    ("azulejo", 1, 40.0)
-]
-
-planilha = Workbook()
-aba = planilha.active
-
-aba.append(["Produto", "Qtd", "Total"])
-for linha in dados:
-    aba.append(linha)
-
-planilha.save("tabela.xlsx")
-print("tabela.xlsx criada ✔")</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">tabela.xlsx criada ✔</pre></div>
-    </div>
-  </article>
-
+  <div class="parte-head"><span class="num">04</span><h2>__str__: o print bonito</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>O que acontece se você der <code>print(rex)</code>? Algo feio: <code>&lt;__main__.Cachorro object at 0x000001E...&gt;</code>. O método especial <code>__str__</code> resolve: ele define COMO o objeto vira texto.</p></div>
   <article class="ex" id="ex9">
     <div class="ex-head">
       <span class="ex-num">EX 09</span>
-      <h3>Negrito e fórmula =SUM 🧮</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
+      <h3>De feio para bonito</h3>
+      <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex9"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Formatar o cabeçalho e deixar o EXCEL calcular o total.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Importe <code>from openpyxl.styles import Font</code></li><li>Negrito no cabeçalho: <code>for celula in aba[1]: celula.font = Font(bold=True)</code></li><li>Fórmula como texto: <code>aba["C5"] = "=SUM(C2:C4)"</code> — o Excel calcula ao abrir!</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">tabela.xlsx atualizada ✔ (abra e veja o total calculado!)</pre></div><details class="dica"><summary>💡 Por que fórmula e não soma em Python?</summary><div class="inner">Você PODE somar em Python e gravar o número. Mas a fórmula deixa a planilha VIVA: se alguém editar um valor no Excel, o total se atualiza. Escolha conforme o uso!</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex09.py</span></div><pre class="code">from openpyxl import Workbook
-from openpyxl.styles import Font
+<span class="tag obj">🎯 Objetivo</span><p>Implementar o __str__.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Primeiro dê <code>print(rex)</code> SEM __str__ e veja o endereço feio</li><li>Adicione o método e imprima de novo:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex09_str.py</span></div><pre class="code">class Cachorro:
+    def __init__(self, nome, idade):
+        self.nome = nome
+        self.idade = idade
 
-dados = [
-    ("caneca branca", 3, 75.0),
-    ("caneca preta", 2, 55.0),
-    ("azulejo", 1, 40.0)
-]
+    def __str__(self):
+        return f"🐶 {self.nome} ({self.idade} anos)"
 
-planilha = Workbook()
-aba = planilha.active
-
-aba.append(["Produto", "Qtd", "Total"])
-for celula in aba[1]:
-    celula.font = Font(bold=True)
-
-for linha in dados:
-    aba.append(linha)
-
-aba["B5"] = "TOTAL:"
-aba["C5"] = "=SUM(C2:C4)"
-aba["B5"].font = Font(bold=True)
-
-planilha.save("tabela.xlsx")
-print("tabela.xlsx atualizada ✔")</pre></div></div></details>
+rex = Cachorro("Rex", 3)
+print(rex)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">🐶 Rex (3 anos)</pre></div><details class="dica"><summary>💡 Regra do __str__</summary><div class="inner">Ele deve RETORNAR uma string (não usar print dentro!). Sempre que o objeto precisar virar texto — print, f-string — o Python chama seu __str__ automaticamente.</div></details>
     </div>
   </article>
 </section>
 
 <section class="parte" id="p5">
-  <div class="parte-head"><span class="num">05</span><h2>CSV → Excel: a conversão mágica</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>O combo das duas metades da semana: ler um CSV cru e entregar um .xlsx formatado. É um dos scripts mais pedidos em qualquer escritório!</p></div>
+  <div class="parte-head"><span class="num">05</span><h2>Listas de objetos</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>O combo final: objetos dentro de listas. Tudo que você sabe de listas (Semana 4) funciona — só que agora cada item é um objeto completo, com atributos e métodos.</p></div>
   <article class="ex" id="ex10">
     <div class="ex-head">
       <span class="ex-num">EX 10</span>
-      <h3>O conversor</h3>
+      <h3>O canil 🏠</h3>
       <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex10"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Transformar vendas.csv numa planilha Excel com números de verdade.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Leia o vendas.csv com csv.reader</li><li>O cabeçalho vai direto com append; nas linhas de dados, CONVERTA: qtd → int, total → float</li><li>Salve como <code>vendas_convertidas.xlsx</code></li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Convertido: vendas.csv → vendas_convertidas.xlsx ✔</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex10.py</span></div><pre class="code">import csv
-from openpyxl import Workbook
+<span class="tag obj">🎯 Objetivo</span><p>Percorrer uma lista de objetos chamando métodos.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie 3 cachorros numa lista</li><li>Percorra com for: imprima cada um (graças ao __str__!) e mande latir</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">🐶 Rex (3 anos)
+Rex: Au au!
+🐶 Bidu (5 anos)
+Bidu: Au au!
+🐶 Mel (1 anos)
+Mel: Au au!</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex10.py</span></div><pre class="code">class Cachorro:
+    def __init__(self, nome, idade):
+        self.nome = nome
+        self.idade = idade
 
-planilha = Workbook()
-aba = planilha.active
+    def latir(self):
+        print(f"{self.nome}: Au au!")
 
-with open("vendas.csv", "r", encoding="utf-8") as arquivo:
-    leitor = csv.reader(arquivo)
-    cabecalho = next(leitor)
-    aba.append(cabecalho)
-    for linha in leitor:
-        produto = linha[0]
-        qtd = int(linha[1])
-        total = float(linha[2])
-        aba.append([produto, qtd, total])
+    def __str__(self):
+        return f"🐶 {self.nome} ({self.idade} anos)"
 
-planilha.save("vendas_convertidas.xlsx")
-print("Convertido: vendas.csv → vendas_convertidas.xlsx ✔")</pre></div><p>Sem a conversão int/float, os números chegariam como TEXTO no Excel (alinhados à esquerda, não somáveis). Esse detalhe é o que faz seu conversor ser melhor que muito script por aí!</p></div></details>
+canil = [Cachorro("Rex", 3), Cachorro("Bidu", 5), Cachorro("Mel", 1)]
+
+for cachorro in canil:
+    print(cachorro)
+    cachorro.latir()</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex11">
+    <div class="ex-head">
+      <span class="ex-num">EX 11</span>
+      <h3>Busca no canil</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex11"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Encontrar um objeto pelo atributo (o padrão de busca da Semana 5, agora com objetos).</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Peça um nome</li><li>Percorra o canil comparando <code>cachorro.nome == busca</code></li><li>Use a flag <code>encontrado</code> para o caso de não achar</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Buscar: Bidu
+Encontrado: 🐶 Bidu (5 anos)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex11.py</span></div><pre class="code">busca = input("Buscar: ")
+encontrado = False
+
+for cachorro in canil:
+    if cachorro.nome == busca:
+        print(f"Encontrado: {cachorro}")
+        encontrado = True
+
+if not encontrado:
+    print("Não está no canil!")</pre></div><p>Compare com a Semana 5: lá era <code>aluno['nome']</code> (dicionário), aqui é <code>cachorro.nome</code> (objeto). Mesmo padrão, sintaxe mais limpa — e o objeto ainda traz os métodos junto!</p></div></details>
     </div>
   </article>
 </section>
@@ -530,112 +551,125 @@ print("Convertido: vendas.csv → vendas_convertidas.xlsx ✔")</pre></div><p>Se
 <section class="parte" id="p6">
   <div class="parte-head"><span class="num">06</span><h2>Projetos da semana: juntando tudo!</h2></div>
 
-  <article class="ex" id="ex11">
-    <div class="ex-head">
-      <span class="ex-num">EX 11</span>
-      <h3>Projeto: Relatório de vendas em Excel ☕📊</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex11"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>O relatório da Tua Caneca sai do terminal e vira uma planilha apresentável.</p><span class="tag passos">🧭 Requisitos</span><ol><li>Monte os dados de vendas (lista de tuplas ou leia do seu vendas.csv)</li><li>Planilha com: cabeçalho em negrito, dados, linha de TOTAL com =SUM</li><li>Bônus: uma segunda aba "Resumo" com <code>planilha.create_sheet("Resumo")</code> contendo o campeão de vendas</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">relatorio_vendas.xlsx gerado ✔</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex11.py</span></div><pre class="code">from openpyxl import Workbook
-from openpyxl.styles import Font
-
-vendas = [
-    ("caneca branca", 3, 75.0),
-    ("caneca preta", 12, 270.0),
-    ("azulejo", 2, 80.0)
-]
-
-planilha = Workbook()
-aba = planilha.active
-aba.title = "Vendas"
-
-aba.append(["Produto", "Qtd", "Total (R$)"])
-for celula in aba[1]:
-    celula.font = Font(bold=True)
-
-for venda in vendas:
-    aba.append(venda)
-
-linha_total = len(vendas) + 2
-aba[f"B{linha_total}"] = "TOTAL:"
-aba[f"C{linha_total}"] = f"=SUM(C2:C{len(vendas) + 1})"
-
-resumo = planilha.create_sheet("Resumo")
-campeao = ""
-maior = 0
-for nome, qtd, total in vendas:
-    if qtd &gt; maior:
-        maior = qtd
-        campeao = nome
-resumo["A1"] = "Campeão de vendas"
-resumo["B1"] = campeao
-
-planilha.save("relatorio_vendas.xlsx")
-print("relatorio_vendas.xlsx gerado ✔")</pre></div></div></details>
-    </div>
-  </article>
-
   <article class="ex" id="ex12">
     <div class="ex-head">
       <span class="ex-num">EX 12</span>
-      <h3>Projeto: Boletim CSV → Excel 🎓</h3>
+      <h3>Projeto: classe Produto ☕</h3>
       <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex12"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Pipeline completo: notas em CSV viram boletim Excel com situação calculada.</p><span class="tag passos">🧭 Requisitos</span><ol><li>Leia o notas.csv com DictReader</li><li>Para cada aluno, calcule a situação (média ≥ 7 → Aprovado)</li><li>Grave boletim.xlsx com 3 colunas: Nome, Nota, Situação (cabeçalho em negrito)</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">boletim.xlsx gerado: 3 alunos ✔</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex12.py</span></div><pre class="code">import csv
-from openpyxl import Workbook
-from openpyxl.styles import Font
+<span class="tag obj">🎯 Objetivo</span><p>O Produto da Tua Caneca vira uma classe de verdade — peça-chave do projeto final!</p><span class="tag passos">🧭 Requisitos</span><ol><li>Atributos: nome, preco, estoque</li><li><code>vender(qtd)</code>: valida o estoque; se ok, dá baixa e retorna True; senão avisa e retorna False</li><li><code>repor(qtd)</code>: aumenta o estoque</li><li><code>__str__</code>: "caneca branca — R$ 25.00 (10 un.)"</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">caneca branca — R$ 25.00 (10 un.)
+Vendido: 3x caneca branca
+caneca branca — R$ 25.00 (7 un.)
+Estoque insuficiente!</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex12.py</span></div><pre class="code">class Produto:
+    def __init__(self, nome, preco, estoque):
+        self.nome = nome
+        self.preco = preco
+        self.estoque = estoque
 
-planilha = Workbook()
-aba = planilha.active
-aba.append(["Nome", "Nota", "Situação"])
-for celula in aba[1]:
-    celula.font = Font(bold=True)
+    def vender(self, qtd):
+        if qtd &lt;= 0 or qtd &gt; self.estoque:
+            print("Estoque insuficiente!")
+            return False
+        self.estoque = self.estoque - qtd
+        print(f"Vendido: {qtd}x {self.nome}")
+        return True
 
-contador = 0
-with open("notas.csv", "r", encoding="utf-8") as arquivo:
-    leitor = csv.DictReader(arquivo)
-    for linha in leitor:
-        nota = float(linha["nota"])
-        if nota &gt;= 7:
-            situacao = "Aprovado"
-        else:
-            situacao = "Recuperação"
-        aba.append([linha["nome"], nota, situacao])
-        contador = contador + 1
+    def repor(self, qtd):
+        self.estoque = self.estoque + qtd
+        print(f"Reposição: +{qtd} {self.nome}")
 
-planilha.save("boletim.xlsx")
-print(f"boletim.xlsx gerado: {contador} alunos ✔")</pre></div></div></details>
+    def __str__(self):
+        return f"{self.nome} — R$ {self.preco:.2f} ({self.estoque} un.)"
+
+caneca = Produto("caneca branca", 25.0, 10)
+print(caneca)
+caneca.vender(3)
+print(caneca)
+caneca.vender(50)</pre></div></div></details>
     </div>
   </article>
 
   <article class="ex" id="ex13">
     <div class="ex-head">
       <span class="ex-num">EX 13</span>
-      <h3>Projeto bônus: JSON → Excel</h3>
+      <h3>Projeto: classe Aluno 🎓</h3>
       <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex13"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Fechar o ciclo dos formatos: o catálogo da Semana 11 vira planilha (sem código pronto!).</p><span class="tag passos">🧭 Roteiro</span><ol><li>Carregue o <code>catalogo.json</code> (ou crie um com 3 produtos)</li><li>Gere <code>catalogo.xlsx</code> com Nome, Preço e Estoque</li><li>Acrescente uma coluna calculada: "Valor em estoque" = preço × estoque</li><li>Reflita: você agora converte entre JSON ↔ CSV ↔ Excel — é oficialmente uma pessoa que domina formatos de dados!</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">catalogo.xlsx gerado ✔</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex13.py</span></div><pre class="code">import json
-from openpyxl import Workbook
+<span class="tag obj">🎯 Objetivo</span><p>Um Aluno que guarda as próprias notas e sabe se avaliar.</p><span class="tag passos">🧭 Requisitos</span><ol><li>Atributos: nome e <code>self.notas = []</code> (nasce vazia!)</li><li><code>adicionar_nota(nota)</code>: append na lista interna</li><li><code>media()</code>: retorna a média (cuidado com lista vazia → retorne 0)</li><li><code>situacao()</code>: "Aprovado" se média ≥ 7, senão "Recuperação"</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Ana: média 8.0 — Aprovado
+Bruno: média 5.5 — Recuperação</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex13.py</span></div><pre class="code">class Aluno:
+    def __init__(self, nome):
+        self.nome = nome
+        self.notas = []
 
-with open("catalogo.json", "r", encoding="utf-8") as arquivo:
-    produtos = json.load(arquivo)
+    def adicionar_nota(self, nota):
+        self.notas.append(nota)
 
-planilha = Workbook()
-aba = planilha.active
-aba.append(["Nome", "Preço", "Estoque", "Valor em estoque"])
+    def media(self):
+        if len(self.notas) == 0:
+            return 0
+        return sum(self.notas) / len(self.notas)
 
-for p in produtos:
-    valor = p["preco"] * p["estoque"]
-    aba.append([p["nome"], p["preco"], p["estoque"], valor])
+    def situacao(self):
+        if self.media() &gt;= 7:
+            return "Aprovado"
+        return "Recuperação"
 
-planilha.save("catalogo.xlsx")
-print("catalogo.xlsx gerado ✔")</pre></div></div></details>
+ana = Aluno("Ana")
+ana.adicionar_nota(8)
+ana.adicionar_nota(8)
+
+bruno = Aluno("Bruno")
+bruno.adicionar_nota(6)
+bruno.adicionar_nota(5)
+
+for aluno in [ana, bruno]:
+    print(f"{aluno.nome}: média {aluno.media():.1f} — {aluno.situacao()}")</pre></div><p>Repare: <code>situacao()</code> chama <code>self.media()</code> — métodos podem usar outros métodos do próprio objeto!</p></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex14">
+    <div class="ex-head">
+      <span class="ex-num">EX 14</span>
+      <h3>Projeto bônus: A batalha ⚔️</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex14"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Um mini-RPG: dois objetos da mesma classe duelando (sem código pronto!).</p><span class="tag passos">🧭 Roteiro</span><ol><li>Classe <code>Personagem</code>: nome, vida (padrão 100), força (padrão 15)</li><li><code>atacar(alvo)</code>: dano aleatório de 5 até a força, descontado da vida DO ALVO (um objeto mexendo em outro!)</li><li><code>esta_vivo()</code>: retorna <code>self.vida &gt; 0</code></li><li>Loop de batalha: herói e dragão se atacam alternadamente até alguém cair</li></ol><span class="tag saida">✅ Exemplo (varia!)</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Herói causou 12 em Dragão (vida: 108)
+Dragão causou 18 em Herói (vida: 82)
+(...)
+🏆 O herói venceu!</pre></div><details class="dica"><summary>💡 O pulo do gato</summary><div class="inner">No <code>atacar(self, alvo)</code>, o <code>self</code> é quem bate e o <code>alvo</code> é outro OBJETO que apanha: <code>alvo.vida -= dano</code>. Objetos interagindo entre si — é assim que sistemas grandes funcionam!</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex14.py</span></div><pre class="code">import random
+
+class Personagem:
+    def __init__(self, nome, vida=100, forca=15):
+        self.nome = nome
+        self.vida = vida
+        self.forca = forca
+
+    def atacar(self, alvo):
+        dano = random.randint(5, self.forca)
+        alvo.vida = alvo.vida - dano
+        print(f"{self.nome} causou {dano} em {alvo.nome} (vida: {alvo.vida})")
+
+    def esta_vivo(self):
+        return self.vida &gt; 0
+
+heroi = Personagem("Herói")
+dragao = Personagem("Dragão", vida=120, forca=20)
+
+while heroi.esta_vivo() and dragao.esta_vivo():
+    heroi.atacar(dragao)
+    if dragao.esta_vivo():
+        dragao.atacar(heroi)
+
+if heroi.esta_vivo():
+    print("🏆 O herói venceu!")
+else:
+    print("💀 O dragão venceu!")</pre></div></div></details>
     </div>
   </article>
 </section>
@@ -643,29 +677,29 @@ print("catalogo.xlsx gerado ✔")</pre></div></div></details>
 <div class="checklist" id="checklist">
   <h2>✅ Checklist de fim de semana</h2>
   <p>Antes de seguir para a próxima semana, confirme que você consegue:</p>
-<label class="check-item"><input type="checkbox"><span>Ler um CSV com csv.reader (e pular o cabeçalho com next)</span></label>
-<label class="check-item"><input type="checkbox"><span>Ler um CSV com DictReader (cada linha vira dicionário!)</span></label>
-<label class="check-item"><input type="checkbox"><span>Gravar CSV com writer/writerow — lembrando do newline=""</span></label>
-<label class="check-item"><input type="checkbox"><span>Usar DictWriter com fieldnames e writeheader</span></label>
-<label class="check-item"><input type="checkbox"><span>Filtrar dados de um CSV gravando outro CSV</span></label>
-<label class="check-item"><input type="checkbox"><span>Criar um .xlsx do zero com Workbook e save</span></label>
-<label class="check-item"><input type="checkbox"><span>Ler células e linhas com load_workbook e iter_rows</span></label>
-<label class="check-item"><input type="checkbox"><span>Montar tabelas com append e cabeçalho em negrito (Font)</span></label>
-<label class="check-item"><input type="checkbox"><span>Inserir fórmulas do Excel (=SUM) via Python</span></label>
-<label class="check-item"><input type="checkbox"><span>Converter um CSV em planilha Excel formatada</span></label>
+<label class="check-item"><input type="checkbox"><span>Explicar a diferença entre classe (molde) e objeto (produto do molde)</span></label>
+<label class="check-item"><input type="checkbox"><span>Criar uma classe com class e um objeto chamando Classe(...)</span></label>
+<label class="check-item"><input type="checkbox"><span>Escrever um __init__ que recebe parâmetros e cria atributos</span></label>
+<label class="check-item"><input type="checkbox"><span>Explicar o que é o self (e por que todo método precisa dele)</span></label>
+<label class="check-item"><input type="checkbox"><span>Criar atributos com valor inicial fixo (ex.: energia = 100)</span></label>
+<label class="check-item"><input type="checkbox"><span>Escrever métodos que alteram os atributos do próprio objeto</span></label>
+<label class="check-item"><input type="checkbox"><span>Escrever métodos que retornam valores (inclusive True/False)</span></label>
+<label class="check-item"><input type="checkbox"><span>Implementar __str__ para o print(objeto) ficar bonito</span></label>
+<label class="check-item"><input type="checkbox"><span>Guardar vários objetos numa lista e percorrê-los</span></label>
+<label class="check-item"><input type="checkbox"><span>Buscar um objeto na lista por um atributo</span></label>
 </div>
 
 <div class="win-banner" id="winBanner">
-  <h2>🏆 SEMANA 13 COMPLETA!</h2>
-  <p>Você concluiu todos os exercícios. Python e Excel agora trabalham juntos no seu time!</p>
+  <h2>🏆 SEMANA 10 COMPLETA!</h2>
+  <p>Você concluiu todos os exercícios. Bem-vindo ao clube da POO — o jeito como o software profissional se organiza!</p>
 </div>
 
 <div class="preview-s2">
-<h2>📅 Prévia da Semana 14</h2><p>Na próxima semana: <strong>automações de arquivos e pastas</strong> — <code>os</code> e <code>shutil</code> para listar, criar, renomear, mover e copiar em lote. O famoso "organizador de Downloads" e backups automáticos com data no nome. Seu Python vira um assistente de verdade! 🤖</p></div>
+<h2>📅 Prévia da Semana 11</h2><p>Na próxima semana, POO parte 2: <strong>herança</strong> (classes que herdam de classes — escreva uma vez, especialize depois), <strong>composição</strong> (objetos dentro de objetos) e <strong>JSON</strong> — o formato universal para salvar seus objetos em arquivo e conversar com o mundo.</p></div>
 
 </main>
 
-<footer>python_para_iniciantes // semana_13 // exercícios guiados</footer>
+<footer>python_para_iniciantes // semana_10 // exercícios guiados</footer>
 
 <script>
 // ===== Syntax highlight leve para Python =====
@@ -677,7 +711,7 @@ print("catalogo.xlsx gerado ✔")</pre></div></div></details>
     src = src.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     // uma passada só, com alternação (comentário | string | builtin | bool | número)
     src = src.replace(
-      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|insert|int|float|str|len|range|type|abs|round|max|min|sum|sorted|sort|reverse|append|remove|split|strip|upper|lower|replace|title|randint|random|get|keys|values|items|open|readlines|read|write|close|count|index|pop|update|list|dict|tuple|enumerate|sqrt|floor|ceil|choice|shuffle|sample|sleep|now|today|strftime|dumps|dump|loads|load|isinstance|datetime|date|DictReader|DictWriter|writerows|writerow|writeheader|writer|reader|csv|Workbook|load_workbook|save|iter_rows|Font|listdir|makedirs|getcwd|rename|exists|getsize|splitext|join|endswith|startswith|copytree|copy|move|requests|status_code|json)\b|\b(True|False|None|if|elif|else|while|for|in|and|or|not|break|continue|import|from|def|return|try|except|finally|with|as|del|global|pass|class|self|super|lambda)\b|(\b\d+(?:\.\d+)?\b)/g,
+      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|insert|int|float|str|len|range|type|abs|round|max|min|sum|sorted|sort|reverse|append|remove|split|strip|upper|lower|replace|title|randint|random|get|keys|values|items|open|readlines|read|write|close|count|index|pop|update|list|dict|tuple|enumerate|sqrt|floor|ceil|choice|shuffle|sample|sleep|now|today|strftime|dumps|dump|loads|load|isinstance|datetime|date)\b|\b(True|False|None|if|elif|else|while|for|in|and|or|not|break|continue|import|from|def|return|try|except|finally|with|as|del|global|pass|class|self|super|lambda)\b|(\b\d+(?:\.\d+)?\b)/g,
       function(m, com, str, fn, bool, num){
         if(com)  return '<span class="tk-com">'+com+'</span>';
         if(str)  return '<span class="tk-str">'+str+'</span>';
@@ -696,7 +730,7 @@ print("catalogo.xlsx gerado ✔")</pre></div></div></details>
 // no navegador. Se o localStorage estiver indisponível (modo restrito,
 // pré-visualização, etc.), o progresso funciona só em memória, sem quebrar.
 const storage = (function(){
-  const KEY = 'python_semana13_progresso';
+  const KEY = 'python_semana10_progresso';
   let memoria = {};
   let disponivel = false;
   try{
@@ -744,9 +778,9 @@ const storage = (function(){
     [0,  'Marque os exercícios concluídos ✔'],
     [1,  'Boa! Continue assim 💪'],
     [4,  'Pegando o ritmo! 🔥'],
-    [6, 'Metade do caminho! 🚀'],
+    [7, 'Metade do caminho! 🚀'],
     [10, 'Quase lá... força! ⚡'],
-    [13, 'SEMANA COMPLETA! 🏆']
+    [14, 'SEMANA COMPLETA! 🏆']
   ];
 
   function estadoAtual(){

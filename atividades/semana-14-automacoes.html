@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Semana 15 — APIs e Internet</title>
+<title>Semana 14 — Automações</title>
 <style>
   :root{
     --ink:#16243A;
@@ -57,7 +57,7 @@
     color:#fff;padding:56px 20px 48px;text-align:center;position:relative;overflow:hidden;
   }
   header.hero::before{
-    content:"import requests  get(  status_code  .json()  API";
+    content:"import os  os.listdir(  shutil.move(  makedirs  backup";
     position:absolute;inset:auto 0 8px 0;font-family:var(--mono);font-size:.78rem;
     color:rgba(255,255,255,.14);letter-spacing:.4em;white-space:nowrap;overflow:hidden;
   }
@@ -234,255 +234,280 @@
 <div class="progress-wrap" role="region" aria-label="Progresso da semana">
   <span class="label">XP DA SEMANA</span>
   <div class="progress-bar"><div class="progress-fill" id="pfill"></div></div>
-  <span class="progress-count" id="pcount">0 / 11</span>
+  <span class="progress-count" id="pcount">0 / 12</span>
   <span class="progress-msg" id="pmsg">Marque os exercícios concluídos ✔</span>
   <button class="reset-btn" id="resetBtn" title="Apagar todo o progresso salvo">↺ Resetar</button>
 </div>
 
 <header class="hero">
   <div class="kicker">Python para Iniciantes · Exercícios Guiados</div>
-  <h1>SEMANA 15 — APIs:<br>seu Python conectado ao mundo<span class="cursor" aria-hidden="true"></span></h1>
-  <p class="sub">A biblioteca requests e o universo das APIs: consultar CEP no ViaCEP, cotação do dólar ao vivo, salvar respostas em cache e construir sistemas que conversam com a internet.</p>
+  <h1>SEMANA 14 — Automações:<br>Python arruma sua bagunça<span class="cursor" aria-hidden="true"></span></h1>
+  <p class="sub">Os módulos os e shutil: listar, criar, renomear, mover e copiar arquivos em lote — com segurança! O organizador de Downloads e backups automáticos com data.</p>
   <div class="howto">
     <strong>Como usar:</strong> digite o código você mesmo (não copie e cole!), compare com a saída esperada e marque <strong>✔ Concluído</strong> em cada exercício para encher sua barra de XP. As <strong>dicas</strong> e <strong>soluções</strong> ficam escondidas — só abra depois de tentar! Seu progresso fica salvo no navegador.
   </div>
 </header>
 
-<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · O que é API</a><a href="#p2">2 · Consultas dinâmicas</a><a href="#p3">3 · Cotações</a><a href="#p4">4 · API + seu arsenal</a><a href="#p5">5 · Boas práticas</a><a href="#p6">6 · Projetos</a><a href="#checklist">✅ Checklist</a></nav>
+<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · Explorando</a><a href="#p2">2 · Criando & renomeando</a><a href="#p3">3 · shutil</a><a href="#p4">4 · Caminhos & tamanhos</a><a href="#p5">5 · Segurança</a><a href="#p6">6 · Projetos</a><a href="#checklist">✅ Checklist</a></nav>
 
 <main>
 
 <section class="parte" id="p1">
-  <div class="parte-head"><span class="num">01</span><h2>O que é uma API?</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Uma <strong>API</strong> é o "garçom" de um sistema: você faz um pedido (requisição), ele leva para a cozinha (o servidor) e volta com o prato (a resposta — quase sempre em JSON, que você JÁ domina!). A biblioteca para fazer pedidos é a <code>requests</code>: instale com <code>pip install requests</code>.</p><p>Nosso primeiro garçom será o <strong>ViaCEP</strong> — uma API pública brasileira e gratuita que responde endereços a partir do CEP.</p></div>
+  <div class="parte-head"><span class="num">01</span><h2>Explorando pastas com o módulo os</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>O módulo <code>os</code> é a ponte entre o Python e o sistema operacional. <strong>⚠️ REGRA DE OURO DA SEMANA:</strong> automação de arquivos se aprende numa <strong>pasta de laboratório</strong> — nunca treine direto nos seus arquivos reais! O primeiro exercício monta o laboratório.</p></div>
   <article class="ex" id="ex1">
     <div class="ex-head">
       <span class="ex-num">EX 01</span>
-      <h3>Primeiro GET 🌐</h3>
-      <span class="stars">⭐⭐ médio</span>
+      <h3>Montando o laboratório 🧪</h3>
+      <span class="stars">⭐ básico</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex1"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Fazer sua primeira requisição e inspecionar a resposta.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Com o requests instalado e internet ligada, execute:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex01_get.py</span></div><pre class="code">import requests
+<span class="tag obj">🎯 Objetivo</span><p>Criar uma pasta de testes com arquivos falsos — seu campo de treino seguro.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Execute este script: ele cria a pasta <code>laboratorio</code> com 7 arquivos de mentira</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex01_setup.py</span></div><pre class="code">import os
 
-resposta = requests.get("https://viacep.com.br/ws/90010-000/json/")
+os.makedirs("laboratorio", exist_ok=True)
 
-print(resposta.status_code)
-print(resposta.json())</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">200
-{'cep': '90010-000', 'logradouro': 'Rua dos Andradas', 'bairro': 'Centro Histórico', 'localidade': 'Porto Alegre', 'uf': 'RS', ...}</pre></div><details class="dica"><summary>💡 Decifrando</summary><div class="inner"><code>status_code</code> 200 = "deu certo" (o famoso 404 = "não existe"). E <code>.json()</code> converte a resposta direto para... um dicionário Python! Toda a Semana 5 acabou de virar superpoder de internet.</div></details>
+nomes = ["foto1.jpg", "foto2.png", "relatorio.pdf", "notas.txt",
+         "planilha.xlsx", "musica.mp3", "rascunho.txt"]
+
+for nome in nomes:
+    caminho = os.path.join("laboratorio", nome)
+    with open(caminho, "w") as arquivo:
+        arquivo.write("arquivo de teste\n")
+
+print("Laboratório montado com", len(nomes), "arquivos ✔")</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Laboratório montado com 7 arquivos ✔</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner">Tudo nesta semana acontece DENTRO da pasta laboratorio. Se algo der errado, é só apagá-la e rodar este script de novo. Errar de graça é o luxo do laboratório!</div></details>
     </div>
   </article>
 
   <article class="ex" id="ex2">
     <div class="ex-head">
       <span class="ex-num">EX 02</span>
-      <h3>Explorando a resposta</h3>
+      <h3>Onde estou? O que tem aqui?</h3>
       <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex2"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Navegar no dicionário que a API devolveu.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Guarde <code>dados = resposta.json()</code></li><li>Imprima campos específicos: logradouro, bairro, localidade e uf</li><li>Formate como um endereço de verdade</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Rua dos Andradas, Centro Histórico
-Porto Alegre - RS</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex02.py</span></div><pre class="code">import requests
+<span class="tag obj">🎯 Objetivo</span><p>Os dois comandos de orientação: getcwd e listdir.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>PREVEJA e execute:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex02_explorar.py</span></div><pre class="code">import os
 
-resposta = requests.get("https://viacep.com.br/ws/90010-000/json/")
-dados = resposta.json()
+print("Pasta atual:", os.getcwd())
+print("Conteúdo do laboratório:")
 
-print(f"{dados['logradouro']}, {dados['bairro']}")
-print(f"{dados['localidade']} - {dados['uf']}")</pre></div></div></details>
+for nome in os.listdir("laboratorio"):
+    print("-", nome)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Pasta atual: C:\Users\voce\projetos
+Conteúdo do laboratório:
+- foto1.jpg
+- foto2.png
+- relatorio.pdf
+- notas.txt
+- planilha.xlsx
+- musica.mp3
+- rascunho.txt</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner"><code>os.listdir(pasta)</code> devolve uma LISTA de nomes — e tudo que você sabe de listas funciona: len(), in, sort(), filtros com for + if...</div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex3">
+    <div class="ex-head">
+      <span class="ex-num">EX 03</span>
+      <h3>Censo por extensão 📊</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex3"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Filtrar e contar arquivos por tipo — o dict contador ataca novamente!</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Liste só os .txt usando <code>if nome.endswith(".txt")</code></li><li>Depois conte TODOS os tipos: a extensão é <code>nome.split(".")[-1]</code> — use o padrão <code>contagem.get(ext, 0) + 1</code></li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Arquivos .txt: ['notas.txt', 'rascunho.txt']
+Censo: {'jpg': 1, 'png': 1, 'pdf': 1, 'txt': 2, 'xlsx': 1, 'mp3': 1}</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex03.py</span></div><pre class="code">import os
+
+arquivos = os.listdir("laboratorio")
+
+txts = []
+for nome in arquivos:
+    if nome.endswith(".txt"):
+        txts.append(nome)
+print(f"Arquivos .txt: {txts}")
+
+contagem = {}
+for nome in arquivos:
+    ext = nome.split(".")[-1]
+    contagem[ext] = contagem.get(ext, 0) + 1
+print(f"Censo: {contagem}")</pre></div></div></details>
     </div>
   </article>
 </section>
 
 <section class="parte" id="p2">
-  <div class="parte-head"><span class="num">02</span><h2>Consultas dinâmicas</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>API de verdade se usa com dados do usuário: o CEP digitado entra na URL via f-string. E como a internet é traiçoeira (sem conexão, CEP inexistente...), as defesas das Semanas 2 e 7 entram em campo.</p></div>
-  <article class="ex" id="ex3">
-    <div class="ex-head">
-      <span class="ex-num">EX 03</span>
-      <h3>Buscador de CEP 🔎</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex3"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>O consultor completo: input + URL dinâmica + validações.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Peça o CEP (só números, 8 dígitos)</li><li>Monte a URL: <code>f"https://viacep.com.br/ws/{cep}/json/"</code></li><li>Defesa 1: <code>status_code != 200</code> → CEP em formato inválido</li><li>Defesa 2: o ViaCEP devolve <code>{"erro": true}</code> para CEP inexistente — teste <code>if "erro" in dados</code></li><li>Defesa 3: try/except em volta de tudo (sem internet não pode derrubar o programa!)</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Digite o CEP (só números): 90010000
-Rua dos Andradas, Centro Histórico
-Porto Alegre - RS</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex03.py</span></div><pre class="code">import requests
-
-cep = input("Digite o CEP (só números): ")
-
-try:
-    resposta = requests.get(f"https://viacep.com.br/ws/{cep}/json/", timeout=5)
-
-    if resposta.status_code != 200:
-        print("CEP em formato inválido!")
-    else:
-        dados = resposta.json()
-        if "erro" in dados:
-            print("CEP não encontrado!")
-        else:
-            print(f"{dados['logradouro']}, {dados['bairro']}")
-            print(f"{dados['localidade']} - {dados['uf']}")
-except Exception:
-    print("Falha de conexão — verifique sua internet.")</pre></div><p>Três camadas de defesa = programa profissional. O <code>timeout=5</code> impede o programa de congelar para sempre se a API não responder.</p></div></details>
-    </div>
-  </article>
-</section>
-
-<section class="parte" id="p3">
-  <div class="parte-head"><span class="num">03</span><h2>Cotações ao vivo 💵</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Segundo garçom: a <strong>AwesomeAPI</strong>, que responde cotações de moedas em tempo real. A URL <code>https://economia.awesomeapi.com.br/json/last/USD-BRL</code> devolve o dólar; troque por EUR-BRL ou BTC-BRL para euro e bitcoin.</p></div>
+  <div class="parte-head"><span class="num">02</span><h2>Criando pastas e renomeando em lote</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Criar: <code>os.makedirs(caminho, exist_ok=True)</code> (o exist_ok evita erro se já existir). Conferir: <code>os.path.exists(caminho)</code>. Renomear: <code>os.rename(antigo, novo)</code> — que em lote, dentro de um for, vira uma máquina de produtividade.</p></div>
   <article class="ex" id="ex4">
     <div class="ex-head">
       <span class="ex-num">EX 04</span>
-      <h3>Quanto está o dólar?</h3>
+      <h3>Criando a estrutura</h3>
       <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex4"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Consultar a cotação em tempo real.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Execute e explore a resposta — o valor de compra está no campo <code>"bid"</code>:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex04_dolar.py</span></div><pre class="code">import requests
+<span class="tag obj">🎯 Objetivo</span><p>Criar várias subpastas de uma vez.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Dentro do laboratório, crie as pastas Imagens, Documentos e Outros</li><li>Use um for sobre a lista de nomes + <code>os.path.join</code></li><li>Confira com <code>os.path.exists</code> e liste o laboratório de novo</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Pasta Imagens criada ✔
+Pasta Documentos criada ✔
+Pasta Outros criada ✔</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex04.py</span></div><pre class="code">import os
 
-url = "https://economia.awesomeapi.com.br/json/last/USD-BRL"
-resposta = requests.get(url, timeout=5)
-dados = resposta.json()
+pastas = ["Imagens", "Documentos", "Outros"]
 
-cotacao = float(dados["USDBRL"]["bid"])
-print(f"Dólar agora: R$ {cotacao:.2f}")</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Dólar agora: R$ 5.43 (valor varia — é AO VIVO!)</pre></div><details class="dica"><summary>💡 Dicionário dentro de dicionário</summary><div class="inner">A resposta tem dois níveis: <code>dados["USDBRL"]</code> pega o bloco da moeda, e <code>["bid"]</code> pega o valor lá dentro. E vem como TEXTO — por isso o float()!</div></details>
+for pasta in pastas:
+    caminho = os.path.join("laboratorio", pasta)
+    os.makedirs(caminho, exist_ok=True)
+    if os.path.exists(caminho):
+        print(f"Pasta {pasta} criada ✔")</pre></div></div></details>
     </div>
   </article>
 
   <article class="ex" id="ex5">
     <div class="ex-head">
       <span class="ex-num">EX 05</span>
-      <h3>Conversor ao vivo 💱</h3>
+      <h3>Renomeando em lote 🏷️</h3>
       <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex5"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Reais ↔ dólares com a cotação do momento.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Busque a cotação (função <code>cotacao_dolar()</code> que RETORNA o valor — Semana 6!)</li><li>Menu: 1-Reais para dólares · 2-Dólares para reais</li><li>Peça o valor e converta</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Cotação atual: R$ 5.43
-1-R$ → US$  2-US$ → R$
-Opção: 1
-Valor em reais: 500
-US$ 92.08</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex05.py</span></div><pre class="code">import requests
+<span class="tag obj">🎯 Objetivo</span><p>Adicionar um prefixo a todos os .txt — o clássico pedido de escritório.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Percorra o laboratório filtrando os .txt</li><li>Para cada um, monte o nome novo: <code>"2026_" + nome</code></li><li>Renomeie com <code>os.rename(caminho_antigo, caminho_novo)</code> — SEMPRE com os caminhos completos via join!</li><li>Liste a pasta para conferir</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">notas.txt → 2026_notas.txt
+rascunho.txt → 2026_rascunho.txt</pre></div><details class="dica"><summary>💡 Cuidado clássico</summary><div class="inner">O rename precisa do CAMINHO completo dos dois lados. Só o nome do arquivo funciona apenas se o script estiver rodando dentro da própria pasta — e aí qualquer descuido renomeia a coisa errada!</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex05.py</span></div><pre class="code">import os
 
-def cotacao_dolar():
-    url = "https://economia.awesomeapi.com.br/json/last/USD-BRL"
-    resposta = requests.get(url, timeout=5)
-    return float(resposta.json()["USDBRL"]["bid"])
-
-dolar = cotacao_dolar()
-print(f"Cotação atual: R$ {dolar:.2f}")
-
-print("1-R$ → US$  2-US$ → R$")
-opcao = input("Opção: ")
-valor = float(input("Valor: "))
-
-if opcao == "1":
-    print(f"US$ {valor / dolar:.2f}")
-elif opcao == "2":
-    print(f"R$ {valor * dolar:.2f}")</pre></div></div></details>
+for nome in os.listdir("laboratorio"):
+    if nome.endswith(".txt"):
+        antigo = os.path.join("laboratorio", nome)
+        novo = os.path.join("laboratorio", "2026_" + nome)
+        os.rename(antigo, novo)
+        print(f"{nome} → 2026_{nome}")</pre></div></div></details>
     </div>
   </article>
 </section>
 
-<section class="parte" id="p4">
-  <div class="parte-head"><span class="num">04</span><h2>API + todo o seu arsenal</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>A mágica de 15 semanas de bagagem: a resposta da API é um dicionário — então TUDO funciona em cima dela: salvar em JSON (cache!), gravar relatórios em CSV, carimbar com datetime, processar em loop...</p></div>
+<section class="parte" id="p3">
+  <div class="parte-head"><span class="num">03</span><h2>shutil: copiar e mover</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>O <code>os</code> organiza; o <code>shutil</code> transporta: <code>shutil.copy(origem, destino)</code> copia (o original fica) e <code>shutil.move(origem, destino)</code> move (o original vai embora). O destino pode ser uma PASTA — o arquivo entra nela com o mesmo nome.</p></div>
   <article class="ex" id="ex6">
     <div class="ex-head">
       <span class="ex-num">EX 06</span>
-      <h3>Cache: salvando a consulta 📦</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
+      <h3>Primeira cópia</h3>
+      <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex6"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Guardar a resposta da API em JSON local com carimbo de data.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Consulte o dólar e monte um dicionário: cotação + <code>datetime.now().strftime(...)</code></li><li>Salve em <code>cache_dolar.json</code></li><li>Por que isso importa? Sem internet, seu programa pode usar a última cotação salva em vez de quebrar!</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Cotação salva: R$ 5.43 em 12/06/2026 16:10 ✔</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex06.py</span></div><pre class="code">import json
-import requests
-from datetime import datetime
+<span class="tag obj">🎯 Objetivo</span><p>Copiar um arquivo para outra pasta.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Copie o relatorio.pdf para a pasta Documentos:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex06_copy.py</span></div><pre class="code">import os
+import shutil
 
-url = "https://economia.awesomeapi.com.br/json/last/USD-BRL"
-cotacao = float(requests.get(url, timeout=5).json()["USDBRL"]["bid"])
+origem = os.path.join("laboratorio", "relatorio.pdf")
+destino = os.path.join("laboratorio", "Documentos")
 
-cache = {
-    "cotacao": cotacao,
-    "consultado_em": datetime.now().strftime("%d/%m/%Y %H:%M")
-}
-
-with open("cache_dolar.json", "w", encoding="utf-8") as arquivo:
-    json.dump(cache, arquivo, indent=2, ensure_ascii=False)
-
-print(f"Cotação salva: R$ {cache['cotacao']:.2f} em {cache['consultado_em']} ✔")</pre></div></div></details>
+shutil.copy(origem, destino)
+print("Copiado ✔")
+print(os.listdir(destino))</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Copiado ✔
+['relatorio.pdf']</pre></div><details class="dica"><summary>💡 copy vs move</summary><div class="inner">Depois de copiar, o relatorio.pdf existe NOS DOIS lugares. Teste a diferença: troque por <code>shutil.move</code> e veja o original sumir da raiz do laboratório.</div></details>
     </div>
   </article>
 
   <article class="ex" id="ex7">
     <div class="ex-head">
       <span class="ex-num">EX 07</span>
-      <h3>Lote de CEPs → CSV 📋</h3>
+      <h3>Movendo por extensão</h3>
       <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex7"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Várias consultas em loop, resultado em planilha.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie uma lista com 3 CEPs</li><li>Para cada um: consulte, extraia cidade e UF, guarde num dicionário</li><li>EDUCAÇÃO COM A API: <code>time.sleep(1)</code> entre as chamadas (Semana 9!)</li><li>Grave tudo em <code>enderecos.csv</code> com DictWriter (Semana 13!)</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">90010-000 → Porto Alegre/RS
-01310-100 → São Paulo/SP
-20040-010 → Rio de Janeiro/RJ
-enderecos.csv gerado ✔</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex07.py</span></div><pre class="code">import csv
-import time
-import requests
+<span class="tag obj">🎯 Objetivo</span><p>O coração do organizador: cada tipo para sua pasta.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Percorra os arquivos da RAIZ do laboratório (pule as pastas! use <code>os.path.isfile</code> ou confira se tem ponto no nome)</li><li>jpg/png → Imagens · pdf/txt/xlsx → Documentos · resto → Outros</li><li>Mova com shutil.move e relate cada movimento</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">foto1.jpg → Imagens
+foto2.png → Imagens
+2026_notas.txt → Documentos
+(...)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex07.py</span></div><pre class="code">import os
+import shutil
 
-ceps = ["90010000", "01310100", "20040010"]
-resultados = []
+LAB = "laboratorio"
 
-for cep in ceps:
-    resposta = requests.get(f"https://viacep.com.br/ws/{cep}/json/", timeout=5)
-    dados = resposta.json()
-    resultados.append({
-        "cep": dados["cep"],
-        "cidade": dados["localidade"],
-        "uf": dados["uf"]
-    })
-    print(f"{dados['cep']} → {dados['localidade']}/{dados['uf']}")
-    time.sleep(1)   # pausa educada entre as chamadas
+for nome in os.listdir(LAB):
+    caminho = os.path.join(LAB, nome)
+    if not os.path.isfile(caminho):
+        continue   # pula as pastas!
 
-with open("enderecos.csv", "w", newline="", encoding="utf-8") as arquivo:
-    escritor = csv.DictWriter(arquivo, fieldnames=["cep", "cidade", "uf"])
-    escritor.writeheader()
-    for linha in resultados:
-        escritor.writerow(linha)
+    if nome.endswith(".jpg") or nome.endswith(".png"):
+        destino = "Imagens"
+    elif nome.endswith(".pdf") or nome.endswith(".txt") or nome.endswith(".xlsx"):
+        destino = "Documentos"
+    else:
+        destino = "Outros"
 
-print("enderecos.csv gerado ✔")</pre></div></div></details>
+    shutil.move(caminho, os.path.join(LAB, destino))
+    print(f"{nome} → {destino}")</pre></div><p>O <code>continue</code> da Semana 3 salvando o dia: pastas não devem ser movidas para dentro de pastas! E repare que o <code>os.path.isfile</code> distingue arquivo de pasta.</p></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p4">
+  <div class="parte-head"><span class="num">04</span><h2>Caminhos portáteis e tamanhos</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Dois detalhes de profissional: <code>os.path.join</code> monta caminhos que funcionam em Windows, Linux e Mac (nada de colar "\\" na mão!), e <code>os.path.getsize</code> devolve o tamanho em <strong>bytes</strong> (÷ 1024 = KB).</p></div>
+  <article class="ex" id="ex8">
+    <div class="ex-head">
+      <span class="ex-num">EX 08</span>
+      <h3>Relatório de tamanhos</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex8"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Medir cada arquivo da pasta Documentos.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Percorra a pasta com listdir</li><li>Para cada arquivo: <code>os.path.getsize(caminho)</code> e converta para KB</li><li>Exiba alinhado e some o total</li></ol><span class="tag saida">✅ Exemplo (tamanhos variam)</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">relatorio.pdf — 0.02 KB
+2026_notas.txt — 0.02 KB
+(...)
+TOTAL: 0.08 KB</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex08.py</span></div><pre class="code">import os
+
+pasta = os.path.join("laboratorio", "Documentos")
+total = 0
+
+for nome in os.listdir(pasta):
+    caminho = os.path.join(pasta, nome)
+    tamanho_kb = os.path.getsize(caminho) / 1024
+    total = total + tamanho_kb
+    print(f"{nome} — {tamanho_kb:.2f} KB")
+
+print(f"TOTAL: {total:.2f} KB")</pre></div></div></details>
     </div>
   </article>
 </section>
 
 <section class="parte" id="p5">
-  <div class="parte-head"><span class="num">05</span><h2>Boas práticas de quem consome APIs</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>O kit do consumidor responsável: <strong>timeout</strong> sempre (a API pode demorar), <strong>conferir o status</strong> antes de confiar, <strong>pausas</strong> entre chamadas em lote (martelar API gratuita é deselegante — e pode te bloquear!) e <strong>plano B offline</strong> (cache ou valor padrão).</p></div>
-  <article class="ex" id="ex8">
+  <div class="parte-head"><span class="num">05</span><h2>Segurança: o dry run</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>A prática que separa o automatizador confiável do destruidor de pastas: o <strong>dry run</strong> (ensaio). O script primeiro SÓ MOSTRA o que faria; a ação real só roda depois de uma confirmação explícita. Mover arquivo errado dá trabalho; em lote, dá MUITO trabalho.</p></div>
+  <article class="ex" id="ex9">
     <div class="ex-head">
-      <span class="ex-num">EX 08</span>
-      <h3>O plano B offline 🔌</h3>
-      <span class="stars">⭐⭐ médio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex8"> Concluído</label>
+      <span class="ex-num">EX 09</span>
+      <h3>Ensaiando antes de mover 🛡️</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex9"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Uma função de cotação que NUNCA quebra: API → cache → padrão.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Tente a API; se falhar, tente ler o cache_dolar.json; se nem ele existir, retorne 5.00 com aviso</li><li>Teste os 3 caminhos (desligue o Wi-Fi para testar o segundo! 😄)</li></ol><span class="tag saida">✅ Exemplo do plano B</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(sem internet) Usando cache: R$ 5.43 de 12/06/2026 16:10</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex08.py</span></div><pre class="code">import json
-import requests
+<span class="tag obj">🎯 Objetivo</span><p>Adicionar modo simulação ao organizador.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Refaça o Exercício 7 em DUAS passadas:</li><li>Passada 1: só imprime "MOVERIA: x → y" (nenhum move!)</li><li>Pergunte: "Confirmar? (sim/não)" — só execute os moves de verdade no "sim"</li><li>Dica de estrutura: guarde os pares (origem, destino) numa lista na passada 1</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">MOVERIA: foto1.jpg → Imagens
+MOVERIA: musica.mp3 → Outros
+Confirmar? (sim/não): sim
+2 arquivos movidos ✔</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex09.py</span></div><pre class="code">import os
+import shutil
 
-def cotacao_segura():
-    try:
-        url = "https://economia.awesomeapi.com.br/json/last/USD-BRL"
-        return float(requests.get(url, timeout=5).json()["USDBRL"]["bid"])
-    except Exception:
-        try:
-            with open("cache_dolar.json", "r", encoding="utf-8") as arquivo:
-                cache = json.load(arquivo)
-            print(f"(sem internet) Usando cache: R$ {cache['cotacao']:.2f} de {cache['consultado_em']}")
-            return cache["cotacao"]
-        except FileNotFoundError:
-            print("(sem internet e sem cache) Usando cotação padrão R$ 5.00")
-            return 5.00
+LAB = "laboratorio"
+planos = []
 
-print(f"Cotação: R$ {cotacao_segura():.2f}")</pre></div><p>Três degraus de fallback — guarde esta função: ela entra direto no projeto final da Semana 16!</p></div></details>
+for nome in os.listdir(LAB):
+    caminho = os.path.join(LAB, nome)
+    if not os.path.isfile(caminho):
+        continue
+    if nome.endswith(".jpg") or nome.endswith(".png"):
+        destino = "Imagens"
+    else:
+        destino = "Outros"
+    planos.append((caminho, os.path.join(LAB, destino)))
+    print(f"MOVERIA: {nome} → {destino}")
+
+if len(planos) == 0:
+    print("Nada a mover.")
+else:
+    resposta = input("Confirmar? (sim/não): ")
+    if resposta == "sim":
+        for origem, destino in planos:
+            shutil.move(origem, destino)
+        print(f"{len(planos)} arquivos movidos ✔")
+    else:
+        print("Operação cancelada — nada foi alterado.")</pre></div><p>Repare na lista de TUPLAS (Semana 5!) guardando os planos e no desempacotamento no for final. Esse padrão "planejar → confirmar → executar" vale para QUALQUER automação perigosa.</p></div></details>
     </div>
   </article>
 </section>
@@ -490,133 +515,110 @@ print(f"Cotação: R$ {cotacao_segura():.2f}")</pre></div><p>Três degraus de fa
 <section class="parte" id="p6">
   <div class="parte-head"><span class="num">06</span><h2>Projetos da semana: juntando tudo!</h2></div>
 
-  <article class="ex" id="ex9">
-    <div class="ex-head">
-      <span class="ex-num">EX 09</span>
-      <h3>Projeto: Cadastro com endereço automático ☕📮</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex9"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>A Tua Caneca agora entrega: o cliente digita o CEP e o sistema preenche o endereço sozinho.</p><span class="tag passos">🧭 Requisitos</span><ol><li>Menu: 1-Cadastrar cliente · 2-Listar · 3-Salvar e sair</li><li>No cadastro: nome + CEP → consulta no ViaCEP → confirma cidade/UF com o usuário</li><li>Guarde cada cliente como dicionário (nome, cep, cidade, uf) e persista em <code>clientes.json</code></li><li>CEP não encontrado ou sem internet? Permita digitar a cidade manualmente (fallback!)</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Nome: Ana
-CEP: 90010000
-Endereço encontrado: Porto Alegre - RS ✔
-Cliente cadastrado!</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex09.py</span></div><pre class="code">import json
-import requests
-
-def consultar_cep(cep):
-    try:
-        resposta = requests.get(f"https://viacep.com.br/ws/{cep}/json/", timeout=5)
-        dados = resposta.json()
-        if resposta.status_code == 200 and "erro" not in dados:
-            return dados["localidade"], dados["uf"]
-    except Exception:
-        pass
-    return None, None
-
-def carregar():
-    try:
-        with open("clientes.json", "r", encoding="utf-8") as arquivo:
-            return json.load(arquivo)
-    except FileNotFoundError:
-        return []
-
-clientes = carregar()
-
-while True:
-    print()
-    print("1-Cadastrar  2-Listar  3-Salvar e sair")
-    opcao = input("Opção: ")
-
-    if opcao == "1":
-        nome = input("Nome: ")
-        cep = input("CEP: ")
-        cidade, uf = consultar_cep(cep)
-        if cidade is None:
-            print("CEP não localizado — preencha manualmente.")
-            cidade = input("Cidade: ")
-            uf = input("UF: ")
-        else:
-            print(f"Endereço encontrado: {cidade} - {uf} ✔")
-        clientes.append({"nome": nome, "cep": cep, "cidade": cidade, "uf": uf})
-        print("Cliente cadastrado!")
-    elif opcao == "2":
-        for c in clientes:
-            print(f"— {c['nome']}: {c['cidade']}/{c['uf']}")
-    elif opcao == "3":
-        with open("clientes.json", "w", encoding="utf-8") as arquivo:
-            json.dump(clientes, arquivo, indent=2, ensure_ascii=False)
-        break</pre></div></div></details>
-    </div>
-  </article>
-
   <article class="ex" id="ex10">
     <div class="ex-head">
       <span class="ex-num">EX 10</span>
-      <h3>Projeto: Monitor de moedas 📈</h3>
+      <h3>Projeto: Organizador de Downloads 🗂️</h3>
       <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex10"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Painel de cotações com histórico em CSV.</p><span class="tag passos">🧭 Requisitos</span><ol><li>Consulte USD-BRL, EUR-BRL e BTC-BRL (a URL aceita: <code>.../last/USD-BRL,EUR-BRL,BTC-BRL</code> — uma chamada só!)</li><li>Exiba um painel formatado</li><li>Acrescente uma linha por moeda em <code>historico.csv</code> (modo append do CSV: abra com <code>"a"</code>) com data e hora</li><li>Rode em horários diferentes e veja o histórico crescer!</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">=== COTAÇÕES 12/06/2026 16:30 ===
-Dólar:   R$ 5.43
-Euro:    R$ 6.21
-Bitcoin: R$ 580450.00
-historico.csv atualizado ✔</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex10.py</span></div><pre class="code">import csv
-import requests
-from datetime import datetime
+<span class="tag obj">🎯 Objetivo</span><p>O organizador definitivo, com dicionário de regras e dry run.</p><span class="tag passos">🧭 Requisitos</span><ol><li>Regras num dicionário: <code>{"Imagens": [".jpg", ".png", ".gif"], "Documentos": [".pdf", ".docx", ".txt", ".xlsx"], "Musicas": [".mp3"]}</code> — extensão fora das regras vai para "Outros"</li><li>Crie as pastas necessárias (makedirs exist_ok)</li><li>Dry run completo + confirmação + execução</li><li>TREINE NO LABORATÓRIO! Só aponte para a pasta Downloads real quando estiver 100% confiante</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">MOVERIA: foto_ferias.jpg → Imagens
+MOVERIA: boleto.pdf → Documentos
+Confirmar? (sim/não): sim
+2 arquivos organizados ✔</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex10.py</span></div><pre class="code">import os
+import shutil
 
-url = "https://economia.awesomeapi.com.br/json/last/USD-BRL,EUR-BRL,BTC-BRL"
-dados = requests.get(url, timeout=5).json()
+PASTA = "laboratorio"   # troque para sua pasta real SÓ quando dominar!
 
-agora = datetime.now().strftime("%d/%m/%Y %H:%M")
-moedas = [
-    ("Dólar", dados["USDBRL"]["bid"]),
-    ("Euro", dados["EURBRL"]["bid"]),
-    ("Bitcoin", dados["BTCBRL"]["bid"])
-]
+REGRAS = {
+    "Imagens": [".jpg", ".png", ".gif"],
+    "Documentos": [".pdf", ".docx", ".txt", ".xlsx"],
+    "Musicas": [".mp3"]
+}
 
-print(f"=== COTAÇÕES {agora} ===")
-for nome, valor in moedas:
-    print(f"{nome}: R$ {float(valor):.2f}")
+def descobrir_destino(nome):
+    for pasta, extensoes in REGRAS.items():
+        for ext in extensoes:
+            if nome.endswith(ext):
+                return pasta
+    return "Outros"
 
-with open("historico.csv", "a", newline="", encoding="utf-8") as arquivo:
-    escritor = csv.writer(arquivo)
-    for nome, valor in moedas:
-        escritor.writerow([agora, nome, valor])
+planos = []
+for nome in os.listdir(PASTA):
+    caminho = os.path.join(PASTA, nome)
+    if not os.path.isfile(caminho):
+        continue
+    destino = descobrir_destino(nome)
+    planos.append((caminho, destino))
+    print(f"MOVERIA: {nome} → {destino}")
 
-print("historico.csv atualizado ✔")</pre></div></div></details>
+if planos and input("Confirmar? (sim/não): ") == "sim":
+    for origem, destino in planos:
+        os.makedirs(os.path.join(PASTA, destino), exist_ok=True)
+        shutil.move(origem, os.path.join(PASTA, destino))
+    print(f"{len(planos)} arquivos organizados ✔")</pre></div></div></details>
     </div>
   </article>
 
   <article class="ex" id="ex11">
     <div class="ex-head">
       <span class="ex-num">EX 11</span>
-      <h3>Projeto bônus: Calculadora de frete 📦</h3>
+      <h3>Projeto: Backup com data 💾</h3>
       <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex11"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Frete por região a partir do CEP (sem código pronto!).</p><span class="tag passos">🧭 Roteiro</span><ol><li>Tabela de frete num dicionário por UF (ex.: RS 10 · SC/PR 15 · SP/RJ/MG/ES 20 · resto 30)</li><li>O cliente digita o CEP → ViaCEP devolve a UF → o dicionário devolve o frete</li><li>Mostre o resumo: cidade, UF e valor do frete</li><li>Desafio: frete grátis para a mesma cidade da loja!</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">CEP de entrega: 88010000
-Florianópolis/SC — Frete: R$ 15.00</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex11.py</span></div><pre class="code">import requests
+<span class="tag obj">🎯 Objetivo</span><p>Cópia de segurança automática da pasta inteira, carimbada com datetime.</p><span class="tag passos">🧭 Passo a passo</span><ol><li><code>shutil.copytree(origem, destino)</code> copia uma PASTA inteira (com subpastas!)</li><li>O nome do destino leva a data: <code>datetime.now().strftime("backup_%Y-%m-%d_%H-%M")</code></li><li>Faça o backup do laboratório e rode duas vezes — dois backups, cada um com seu horário!</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Backup criado: backup_2026-06-12_15-30 ✔</pre></div><details class="dica"><summary>💡 Por que ano-mês-dia?</summary><div class="inner">No formato %Y-%m-%d, a ordem ALFABÉTICA das pastas é também a ordem CRONOLÓGICA — seus backups se organizam sozinhos na listagem!</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex11.py</span></div><pre class="code">import shutil
+from datetime import datetime
 
-FRETES = {"RS": 10.0, "SC": 15.0, "PR": 15.0,
-          "SP": 20.0, "RJ": 20.0, "MG": 20.0, "ES": 20.0}
+nome = datetime.now().strftime("backup_%Y-%m-%d_%H-%M")
+shutil.copytree("laboratorio", nome)
+print(f"Backup criado: {nome} ✔")</pre></div></div></details>
+    </div>
+  </article>
 
-cep = input("CEP de entrega: ")
+  <article class="ex" id="ex12">
+    <div class="ex-head">
+      <span class="ex-num">EX 12</span>
+      <h3>Projeto bônus: Raio-X da pasta 🔬</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex12"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Um relatório completo da pasta, gravado em CSV (olá, Semana 13!) — sem código pronto.</p><span class="tag passos">🧭 Roteiro</span><ol><li>Percorra o laboratório (e subpastas, se quiser ousar com <code>os.walk</code> — pesquise!)</li><li>Para cada arquivo: nome, extensão, tamanho em KB</li><li>Grave tudo em <code>raio_x.csv</code> com DictWriter</li><li>No final, exiba: total de arquivos, tamanho total e o MAIOR arquivo (padrão maior/menor da Semana 3!)</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">raio_x.csv gerado: 7 arquivos, 0.14 KB no total
+Maior arquivo: planilha.xlsx (0.02 KB)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex12.py</span></div><pre class="code">import os
+import csv
 
-try:
-    dados = requests.get(f"https://viacep.com.br/ws/{cep}/json/", timeout=5).json()
-    if "erro" in dados:
-        print("CEP não encontrado!")
-    else:
-        uf = dados["uf"]
-        frete = FRETES.get(uf, 30.0)   # fora da tabela → 30
-        if dados["localidade"] == "Porto Alegre":
-            frete = 0.0   # frete grátis na cidade da loja!
-        print(f"{dados['localidade']}/{uf} — Frete: R$ {frete:.2f}")
-except Exception:
-    print("Falha na consulta — tente novamente.")</pre></div></div></details>
+PASTA = "laboratorio"
+
+linhas = []
+for nome in os.listdir(PASTA):
+    caminho = os.path.join(PASTA, nome)
+    if os.path.isfile(caminho):
+        linhas.append({
+            "nome": nome,
+            "extensao": nome.split(".")[-1],
+            "kb": round(os.path.getsize(caminho) / 1024, 2)
+        })
+
+with open("raio_x.csv", "w", newline="", encoding="utf-8") as arquivo:
+    escritor = csv.DictWriter(arquivo, fieldnames=["nome", "extensao", "kb"])
+    escritor.writeheader()
+    for linha in linhas:
+        escritor.writerow(linha)
+
+total_kb = 0
+maior_nome = ""
+maior_kb = 0
+for linha in linhas:
+    total_kb = total_kb + linha["kb"]
+    if linha["kb"] &gt; maior_kb:
+        maior_kb = linha["kb"]
+        maior_nome = linha["nome"]
+
+print(f"raio_x.csv gerado: {len(linhas)} arquivos, {total_kb:.2f} KB no total")
+print(f"Maior arquivo: {maior_nome} ({maior_kb} KB)")</pre></div></div></details>
     </div>
   </article>
 </section>
@@ -624,29 +626,29 @@ except Exception:
 <div class="checklist" id="checklist">
   <h2>✅ Checklist de fim de semana</h2>
   <p>Antes de seguir para a próxima semana, confirme que você consegue:</p>
-<label class="check-item"><input type="checkbox"><span>Explicar o que é uma API com a analogia do garçom</span></label>
-<label class="check-item"><input type="checkbox"><span>Fazer um GET com requests.get(url)</span></label>
-<label class="check-item"><input type="checkbox"><span>Conferir o status_code (200 = sucesso)</span></label>
-<label class="check-item"><input type="checkbox"><span>Converter a resposta em dicionário com .json()</span></label>
-<label class="check-item"><input type="checkbox"><span>Montar URLs dinâmicas com f-string e input</span></label>
-<label class="check-item"><input type="checkbox"><span>Tratar o "não encontrado" da API (campo de erro)</span></label>
-<label class="check-item"><input type="checkbox"><span>Proteger as chamadas com try/except e timeout</span></label>
-<label class="check-item"><input type="checkbox"><span>Salvar respostas em JSON local (cache com data)</span></label>
-<label class="check-item"><input type="checkbox"><span>Fazer várias consultas em loop (com pausa educada)</span></label>
-<label class="check-item"><input type="checkbox"><span>Combinar API + CSV + JSON num sistema só</span></label>
+<label class="check-item"><input type="checkbox"><span>Descobrir a pasta atual com os.getcwd() e listar com os.listdir()</span></label>
+<label class="check-item"><input type="checkbox"><span>Filtrar arquivos por extensão com endswith()</span></label>
+<label class="check-item"><input type="checkbox"><span>Criar pastas com os.makedirs(exist_ok=True)</span></label>
+<label class="check-item"><input type="checkbox"><span>Verificar existência com os.path.exists()</span></label>
+<label class="check-item"><input type="checkbox"><span>Renomear arquivos em lote com os.rename()</span></label>
+<label class="check-item"><input type="checkbox"><span>Copiar com shutil.copy() e mover com shutil.move()</span></label>
+<label class="check-item"><input type="checkbox"><span>Montar caminhos portáteis com os.path.join()</span></label>
+<label class="check-item"><input type="checkbox"><span>Medir tamanhos com os.path.getsize()</span></label>
+<label class="check-item"><input type="checkbox"><span>Fazer um "dry run" (simulação) antes de executar de verdade</span></label>
+<label class="check-item"><input type="checkbox"><span>Criar um backup com data no nome usando copytree</span></label>
 </div>
 
 <div class="win-banner" id="winBanner">
-  <h2>🏆 SEMANA 15 COMPLETA!</h2>
-  <p>Você concluiu todos os exercícios. Seu Python agora fala com a internet!</p>
+  <h2>🏆 SEMANA 14 COMPLETA!</h2>
+  <p>Você concluiu todos os exercícios. As tarefas repetitivas do computador agora são problema do Python!</p>
 </div>
 
 <div class="preview-s2">
-<h2>📅 Prévia da Semana 16</h2><p>A grande final do módulo avançado: o <strong>PROJETO FINAL 3 — Central Tua Caneca</strong>: importa vendas de CSV, analisa, consulta a cotação do dólar na API, gera relatório Excel formatado e faz backup automático. CSV + openpyxl + os/shutil + requests, tudo num sistema só. Rumo à formatura definitiva! 🏆</p></div>
+<h2>📅 Prévia da Semana 15</h2><p>Na próxima semana: <strong>Python e a internet</strong>! A biblioteca <code>requests</code> para consumir <strong>APIs</strong> de verdade: consultar CEP no ViaCEP, cotação do dólar ao vivo e construir sistemas que conversam com o mundo. 🌐</p></div>
 
 </main>
 
-<footer>python_para_iniciantes // semana_15 // exercícios guiados</footer>
+<footer>python_para_iniciantes // semana_14 // exercícios guiados</footer>
 
 <script>
 // ===== Syntax highlight leve para Python =====
@@ -677,7 +679,7 @@ except Exception:
 // no navegador. Se o localStorage estiver indisponível (modo restrito,
 // pré-visualização, etc.), o progresso funciona só em memória, sem quebrar.
 const storage = (function(){
-  const KEY = 'python_semana15_progresso';
+  const KEY = 'python_semana14_progresso';
   let memoria = {};
   let disponivel = false;
   try{
@@ -724,10 +726,10 @@ const storage = (function(){
   const MSGS = [
     [0,  'Marque os exercícios concluídos ✔'],
     [1,  'Boa! Continue assim 💪'],
-    [3,  'Pegando o ritmo! 🔥'],
+    [4,  'Pegando o ritmo! 🔥'],
     [6, 'Metade do caminho! 🚀'],
-    [8, 'Quase lá... força! ⚡'],
-    [11, 'SEMANA COMPLETA! 🏆']
+    [9, 'Quase lá... força! ⚡'],
+    [12, 'SEMANA COMPLETA! 🏆']
   ];
 
   function estadoAtual(){

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Semana 17 — Análise de Dados com pandas</title>
+<title>Semana 8 — Projeto Final</title>
 <style>
   :root{
     --ink:#16243A;
@@ -57,7 +57,7 @@
     color:#fff;padding:56px 20px 48px;text-align:center;position:relative;overflow:hidden;
   }
   header.hero::before{
-    content:"import pandas as pd  DataFrame  read_csv(  groupby(";
+    content:"def  { }  try  open(  while  return  🎓";
     position:absolute;inset:auto 0 8px 0;font-family:var(--mono);font-size:.78rem;
     color:rgba(255,255,255,.14);letter-spacing:.4em;white-space:nowrap;overflow:hidden;
   }
@@ -234,339 +234,385 @@
 <div class="progress-wrap" role="region" aria-label="Progresso da semana">
   <span class="label">XP DA SEMANA</span>
   <div class="progress-bar"><div class="progress-fill" id="pfill"></div></div>
-  <span class="progress-count" id="pcount">0 / 14</span>
+  <span class="progress-count" id="pcount">0 / 10</span>
   <span class="progress-msg" id="pmsg">Marque os exercícios concluídos ✔</span>
   <button class="reset-btn" id="resetBtn" title="Apagar todo o progresso salvo">↺ Resetar</button>
 </div>
 
 <header class="hero">
   <div class="kicker">Python para Iniciantes · Exercícios Guiados</div>
-  <h1>SEMANA 17 — pandas:<br>análise de dados de verdade<span class="cursor" aria-hidden="true"></span></h1>
-  <p class="sub">A biblioteca número 1 de dados do planeta: DataFrames, ler CSV e Excel numa linha, filtros, colunas calculadas e o lendário groupby — seu relatório de 30 linhas vira 1.</p>
+  <h1>SEMANA 8 — Projeto Final:<br>o sistema completo 🎓<span class="cursor" aria-hidden="true"></span></h1>
+  <p class="sub">A prova de fogo: revisão relâmpago, caça aos bugs e a construção guiada — etapa por etapa — do Sistema Tua Caneca: menu, estoque, vendas com desconto, relatório, arquivo e try/except.</p>
   <div class="howto">
     <strong>Como usar:</strong> digite o código você mesmo (não copie e cole!), compare com a saída esperada e marque <strong>✔ Concluído</strong> em cada exercício para encher sua barra de XP. As <strong>dicas</strong> e <strong>soluções</strong> ficam escondidas — só abra depois de tentar! Seu progresso fica salvo no navegador.
   </div>
 </header>
 
-<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · DataFrame</a><a href="#p2">2 · Lendo arquivos</a><a href="#p3">3 · Explorando</a><a href="#p4">4 · groupby</a><a href="#p5">5 · Exportando</a><a href="#p6">6 · Projetos</a><a href="#checklist">✅ Checklist</a></nav>
+<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · Revisão</a><a href="#p2">2 · Etapas 1-2</a><a href="#p3">3 · Etapas 3-4</a><a href="#p4">4 · Etapas 5-6</a><a href="#p5">5 · Desafios livres</a><a href="#checklist">✅ Checklist</a></nav>
 
 <main>
 
 <section class="parte" id="p1">
-  <div class="parte-head"><span class="num">01</span><h2>O DataFrame: sua tabela superpoderosa</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Instale com <code>pip install pandas openpyxl</code>. O <strong>DataFrame</strong> é a tabela do pandas: linhas e colunas com nome — a evolução natural da "lista de dicionários" que você usa desde a Semana 5, agora com centenas de operações prontas. A convenção mundial é importar como <code>import pandas as pd</code>.</p></div>
+  <div class="parte-head"><span class="num">01</span><h2>Revisão relâmpago</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Antes do projeto, dois aquecimentos para destravar a memória das 7 semanas. Sem pressa e sem culpa: se travar em algum item, é só voltar na semana correspondente — elas continuam aí. 😉</p></div>
   <article class="ex" id="ex1">
     <div class="ex-head">
       <span class="ex-num">EX 01</span>
-      <h3>Primeiro DataFrame 🐼</h3>
+      <h3>Quiz: preveja as 8 saídas 🧠</h3>
       <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex1"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Criar uma tabela a partir de um dicionário de listas.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Digite e execute — repare no formato: cada CHAVE vira uma coluna:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex01_dataframe.py</span></div><pre class="code">import pandas as pd
+<span class="tag obj">🎯 Objetivo</span><p>Testar a memória de TODAS as semanas num código só.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Para CADA print, anote sua previsão num papel</li><li>Só depois execute e confira. Quantas você acertou?</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex01_quiz.py</span></div><pre class="code">print(10 % 3)
+print("py" + "thon")
+print(len([1, 2, 3]) == 3 and not False)
+print([10, 20, 30][-1])
+print("banana".count("a"))
+print(list(range(2, 11, 3)))
+print({"a": 1, "b": 2}.get("c", 0))
 
-dados = {
-    "produto": ["caneca branca", "caneca preta", "azulejo"],
-    "qtd": [3, 12, 2],
-    "total": [75.0, 270.0, 80.0]
-}
-
-df = pd.DataFrame(dados)
-print(df)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">         produto  qtd  total
-0  caneca branca    3   75.0
-1   caneca preta   12  270.0
-2        azulejo    2   80.0</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner">A coluna de números à esquerda (0, 1, 2) é o ÍNDICE — o pandas numera as linhas sozinho, como os índices de lista da Semana 4. E "df" é a abreviação universal de DataFrame.</div></details>
+x, y = 5, 2
+x, y = y, x
+print(x, y)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">1
+python
+True
+30
+3
+[2, 5, 8]
+0
+2 5</pre></div><details class="dica"><summary>💡 Gabarito comentado</summary><div class="inner">Linha a linha: resto da divisão (S1) · concatenação (S1) · lógica com and/not (S2) · índice negativo (S4) · método count (S4) · range com passo (S3) · get com padrão (S5) · troca por desempacotamento (S5). 6+ acertos = pronto para o projeto!</div></details>
     </div>
   </article>
 
   <article class="ex" id="ex2">
     <div class="ex-head">
       <span class="ex-num">EX 02</span>
-      <h3>Conhecendo a tabela</h3>
-      <span class="stars">⭐⭐ médio</span>
+      <h3>Caça aos bugs 🐛🔍</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex2"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>As primeiras perguntas que se faz a qualquer dado.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Continue com o df e PREVEJA:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex02_conhecendo.py</span></div><pre class="code">print(len(df))
-print(list(df.columns))
-print(df.head(2))</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">3
-['produto', 'qtd', 'total']
-         produto  qtd  total
-0  caneca branca    3   75.0
-1   caneca preta   12  270.0</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner"><code>len(df)</code> conta as linhas, <code>df.columns</code> lista as colunas e <code>head(n)</code> espia as primeiras n linhas — essencial quando o arquivo tem 50 mil linhas e você só quer dar uma olhada!</div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Encontrar 5 erros plantados num código — habilidade essencial de programador.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>O código abaixo deveria calcular a média de uma lista, mas tem <strong>5 bugs</strong>: alguns quebram o programa, um é silencioso e só estraga o resultado</li><li>Encontre todos ANTES de executar. Depois corrija um por um, rodando a cada correção</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex02_bugs.py</span></div><pre class="code">def calcular_media(notas)
+    soma = 0
+    for nota in nota:
+        soma =+ nota
+    media = soma / len(notas
+    return Media
+
+print(calcular_media([8, 7, 9]))</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><p><strong>Os 5 bugs:</strong> (1) falta <code>:</code> após <code>def calcular_media(notas)</code> → SyntaxError. (2) <code>for nota in nota</code> deveria ser <code>in notas</code>. (3) <code>soma =+ nota</code> é o traiçoeiro: NÃO dá erro! Significa <code>soma = +nota</code> (atribui o valor positivo) — o certo é <code>+=</code>. (4) falta fechar o parêntese em <code>len(notas</code>. (5) <code>Media</code> com maiúscula não existe — Python diferencia maiúsculas.</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex02.py</span></div><pre class="code">def calcular_media(notas):
+    soma = 0
+    for nota in notas:
+        soma += nota
+    media = soma / len(notas)
+    return media
+
+print(calcular_media([8, 7, 9]))</pre></div></div></details>
     </div>
   </article>
 </section>
 
 <section class="parte" id="p2">
-  <div class="parte-head"><span class="num">02</span><h2>Lendo arquivos numa linha</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Lembra do DictReader, da conversão de tipos, do loop de leitura? O pandas faz TUDO isso numa linha: <code>pd.read_csv("arquivo.csv")</code> — e ainda detecta os tipos sozinho. Primeiro, garanta o arquivo de testes <code>vendas.csv</code>:</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">vendas.csv</span></div><pre class="output">data,produto,qtd,total
-10/06/2026,caneca branca,3,75.0
-10/06/2026,caneca preta,12,270.0
-11/06/2026,azulejo,2,80.0
-11/06/2026,caneca preta,5,137.5
-12/06/2026,caneca branca,4,100.0
-12/06/2026,azulejo,1,40.0</pre></div></div>
+  <div class="parte-head"><span class="num">02</span><h2>Sistema Tua Caneca — Etapas 1 e 2</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p><strong>O projeto:</strong> um sistema de vendas completo para a loja de canecas, construído em 6 etapas. A cada etapa o programa FUNCIONA — você só vai adicionando músculos. O plano:</p><table><tr><th>Etapa</th><th>O que entra</th><th>Semanas usadas</th></tr><tr><td>1</td><td>Menu em loop + estoque</td><td>2, 3, 5</td></tr><tr><td>2</td><td>Consulta de estoque</td><td>5, 6</td></tr><tr><td>3</td><td>Venda com desconto e baixa</td><td>2, 5, 6</td></tr><tr><td>4</td><td>Relatório com campeã de vendas</td><td>3, 5</td></tr><tr><td>5</td><td>Salvar/carregar em arquivo</td><td>7</td></tr><tr><td>6</td><td>Blindagem com try/except</td><td>7</td></tr></table></div>
   <article class="ex" id="ex3">
     <div class="ex-head">
       <span class="ex-num">EX 03</span>
-      <h3>read_csv: adeus, DictReader</h3>
+      <h3>Etapa 1: o esqueleto</h3>
       <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex3"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Ler um CSV completo com uma linha de código.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Com o vendas.csv na pasta, execute:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex03_readcsv.py</span></div><pre class="code">import pandas as pd
+<span class="tag obj">🎯 Objetivo</span><p>Montar a estrutura: dados iniciais + menu em loop.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie o arquivo <code>sistema_tuacaneca.py</code> — ele vai crescer a semana toda!</li><li>Dados: <code>PRECO = 25.00</code>, <code>estoque = {"branca": 10, "preta": 8, "azul": 5}</code> e <code>vendas = []</code></li><li>Menu em <code>while True</code>: 1-Estoque · 2-Venda · 3-Relatório · 4-Sair</li><li>Por enquanto, cada opção só imprime "[em construção]" — e a 4 dá break</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">=== SISTEMA TUA CANECA ===
+1-Estoque  2-Venda  3-Relatório  4-Sair
+Opção: 2
+[em construção]</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">etapa1.py</span></div><pre class="code">PRECO = 25.00
+estoque = {"branca": 10, "preta": 8, "azul": 5}
+vendas = []
 
-df = pd.read_csv("vendas.csv")
-print(df)
-print(df["qtd"].sum())   # já vem como número!</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">         data        produto  qtd  total
-0  10/06/2026  caneca branca    3   75.0
-(...)
-27</pre></div><details class="dica"><summary>💡 Compare com a Semana 13</summary><div class="inner">Lá: open + DictReader + loop + int() + float(). Aqui: UMA linha, tipos detectados. Os loops que você aprendeu não foram em vão — agora você ENTENDE o que o pandas faz por baixo!</div></details>
+while True:
+    print()
+    print("=== SISTEMA TUA CANECA ===")
+    print("1-Estoque  2-Venda  3-Relatório  4-Sair")
+    opcao = int(input("Opção: "))
+
+    if opcao == 1:
+        print("[em construção]")
+    elif opcao == 2:
+        print("[em construção]")
+    elif opcao == 3:
+        print("[em construção]")
+    elif opcao == 4:
+        print("Até logo!")
+        break
+    else:
+        print("Opção inválida!")</pre></div></div></details>
     </div>
   </article>
 
   <article class="ex" id="ex4">
     <div class="ex-head">
       <span class="ex-num">EX 04</span>
-      <h3>read_excel: planilhas direto</h3>
+      <h3>Etapa 2: consulta de estoque</h3>
       <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex4"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Ler um .xlsx sem abrir o Excel.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Use alguma planilha sua das semanas 13/16 (ou gere uma com to_excel — Exercício 11!)</li><li><code>df = pd.read_excel("relatorio_vendas.xlsx")</code> e explore com head()</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(as primeiras linhas da sua planilha)</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner">O read_excel usa o openpyxl por baixo dos panos — por isso instalamos os dois juntos. Dá até para escolher a aba: <code>pd.read_excel("arq.xlsx", sheet_name="Resumo")</code>.</div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Primeira função do sistema.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie <code>def consultar(estoque):</code> que percorre com <code>.items()</code> e mostra cada cor</li><li>Chame-a na opção 1 do menu (adeus, "[em construção]")</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">--- ESTOQUE ---
+branca: 10 unidades
+preta: 8 unidades
+azul: 5 unidades</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">etapa2.py</span></div><pre class="code">def consultar(estoque):
+    print("--- ESTOQUE ---")
+    for cor, qtd in estoque.items():
+        print(f"{cor}: {qtd} unidades")
+
+# ... e no menu:
+#    if opcao == 1:
+#        consultar(estoque)</pre></div></div></details>
     </div>
   </article>
 </section>
 
 <section class="parte" id="p3">
-  <div class="parte-head"><span class="num">03</span><h2>Explorando: colunas, contas e filtros</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Selecionar uma coluna: <code>df["total"]</code>. Ela aceita contas em massa: <code>.sum()</code>, <code>.mean()</code>, <code>.max()</code>, <code>.min()</code> — sem nenhum for!</p></div>
+  <div class="parte-head"><span class="num">03</span><h2>Sistema Tua Caneca — Etapas 3 e 4</h2></div>
+
   <article class="ex" id="ex5">
     <div class="ex-head">
       <span class="ex-num">EX 05</span>
-      <h3>Contas em massa</h3>
-      <span class="stars">⭐⭐ médio</span>
+      <h3>Etapa 3: registrar venda 💰</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex5"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Estatísticas de uma coluna inteira sem loop.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>PREVEJA com a calculadora (ou confie no pandas 😄):</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex05_contas.py</span></div><pre class="code">import pandas as pd
+<span class="tag obj">🎯 Objetivo</span><p>O coração do sistema: validação, desconto progressivo e baixa no estoque.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Recupere <code>definir_desconto(quantidade)</code> da Semana 6 (20+ → 15% · 10+ → 10%)</li><li>Crie <code>def registrar_venda(estoque, vendas):</code> que pede cor e quantidade</li><li>Valide: cor existe? quantidade entre 1 e o disponível? Se não → avise e <code>return</code></li><li>Se ok: calcule o total com desconto, dê baixa no estoque e guarde um DICIONÁRIO na lista vendas: <code>{"cor": ..., "qtd": ..., "total": ...}</code></li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Cor: preta
+Quantidade: 12
+Venda registrada! Total: R$ 270.00</pre></div><details class="dica"><summary>💡 O return de saída rápida</summary><div class="inner">Repare no padrão: validou, deu ruim, <code>return</code> — a função termina ali e o menu continua. Sem else aninhado em else. Código profissional adora essas "saídas rápidas".</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">etapa3.py</span></div><pre class="code">def definir_desconto(quantidade):
+    if quantidade &gt;= 20:
+        return 0.15
+    elif quantidade &gt;= 10:
+        return 0.10
+    return 0
 
-df = pd.read_csv("vendas.csv")
-
-print(f"Faturamento: R$ {df['total'].sum():.2f}")
-print(f"Ticket médio: R$ {df['total'].mean():.2f}")
-print(f"Maior venda: R$ {df['total'].max():.2f}")</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Faturamento: R$ 702.50
-Ticket médio: R$ 117.08
-Maior venda: R$ 270.00</pre></div>
+def registrar_venda(estoque, vendas):
+    cor = input("Cor: ")
+    if cor not in estoque:
+        print("Cor não cadastrada!")
+        return
+    quantidade = int(input("Quantidade: "))
+    if quantidade &lt;= 0 or quantidade &gt; estoque[cor]:
+        print(f"Quantidade inválida! Disponível: {estoque[cor]}")
+        return
+    desconto = definir_desconto(quantidade)
+    total = quantidade * PRECO * (1 - desconto)
+    estoque[cor] = estoque[cor] - quantidade
+    vendas.append({"cor": cor, "qtd": quantidade, "total": total})
+    print(f"Venda registrada! Total: R$ {total:.2f}")</pre></div></div></details>
     </div>
   </article>
 
   <article class="ex" id="ex6">
     <div class="ex-head">
       <span class="ex-num">EX 06</span>
-      <h3>Filtros booleanos 🎯</h3>
+      <h3>Etapa 4: o relatório 📊</h3>
       <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex6"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>O filtro da Semana 4, em sintaxe pandas.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>A expressão <code>df["total"] &gt; 100</code> gera uma coluna de True/False (olá, Semana 2!)</li><li>Colocada DENTRO de <code>df[...]</code>, ela filtra as linhas:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex06_filtros.py</span></div><pre class="code">grandes = df[df["total"] &gt; 100]
-print(grandes)
+<span class="tag obj">🎯 Objetivo</span><p>Transformar a lista de vendas em informação: totais e a cor campeã.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie <code>def relatorio(vendas):</code> — se a lista estiver vazia, avise e return</li><li>Percorra as vendas acumulando faturamento e total de canecas</li><li>Use um dict contador (<code>.get(cor, 0)</code>, Semana 5!) para somar canecas por cor</li><li>Encontre a mais vendida com o padrão maior/menor da Semana 3</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Faturamento: R$ 345.00
+Canecas vendidas: 15
+Mais vendida: preta (12 un.)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">etapa4.py</span></div><pre class="code">def relatorio(vendas):
+    if len(vendas) == 0:
+        print("Nenhuma venda registrada.")
+        return
+    faturamento = 0
+    canecas = 0
+    por_cor = {}
+    for venda in vendas:
+        faturamento = faturamento + venda["total"]
+        canecas = canecas + venda["qtd"]
+        cor = venda["cor"]
+        por_cor[cor] = por_cor.get(cor, 0) + venda["qtd"]
 
-pretas = df[df["produto"] == "caneca preta"]
-print(f"Vendas de caneca preta: {len(pretas)}")</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">         data       produto  qtd  total
-1  10/06/2026  caneca preta   12  270.0
-3  11/06/2026  caneca preta    5  137.5
-Vendas de caneca preta: 2</pre></div><details class="dica"><summary>💡 Tradução mental</summary><div class="inner">Leia <code>df[df["total"] &gt; 100]</code> como: "do df, as linhas onde total > 100". É o for + if + append da Semana 4 espremido numa expressão!</div></details>
+    print(f"Faturamento: R$ {faturamento:.2f}")
+    print(f"Canecas vendidas: {canecas}")
+
+    mais_vendida = ""
+    maior = 0
+    for cor, qtd in por_cor.items():
+        if qtd &gt; maior:
+            maior = qtd
+            mais_vendida = cor
+    print(f"Mais vendida: {mais_vendida} ({maior} un.)")</pre></div></div></details>
     </div>
   </article>
+</section>
+
+<section class="parte" id="p4">
+  <div class="parte-head"><span class="num">04</span><h2>Sistema Tua Caneca — Etapas 5 e 6</h2></div>
 
   <article class="ex" id="ex7">
     <div class="ex-head">
       <span class="ex-num">EX 07</span>
-      <h3>Ordenando</h3>
-      <span class="stars">⭐⭐ médio</span>
+      <h3>Etapa 5: estoque que sobrevive 💾</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex7"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>sort_values: o sort() das tabelas.</p><span class="tag passos">🧭 Passo a passo</span><ol><li><code>df.sort_values("total")</code> ordena crescente; <code>ascending=False</code> inverte</li><li>Mostre o TOP 3 de vendas combinando com <code>.head(3)</code></li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(as 3 maiores vendas, da maior para a menor)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex07.py</span></div><pre class="code">import pandas as pd
+<span class="tag obj">🎯 Objetivo</span><p>Persistência: o estoque é carregado ao abrir e salvo ao sair.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie <code>salvar_estoque(estoque)</code>: grava cada par como <code>cor;quantidade</code> (CSV caseiro!)</li><li>Crie <code>carregar_estoque()</code>: lê o arquivo e remonta o dicionário; se não existir (<code>FileNotFoundError</code>), retorna o estoque padrão</li><li>No início do programa: <code>estoque = carregar_estoque()</code></li><li>Na opção 4 (sair): salve antes do break. Venda tudo, feche, abra: a baixa persistiu! 🎉</li></ol><span class="tag saida">✅ Ao sair</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Estoque salvo. Até logo! 🎓</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">etapa5.py</span></div><pre class="code">def salvar_estoque(estoque):
+    with open("estoque.txt", "w", encoding="utf-8") as arquivo:
+        for cor, qtd in estoque.items():
+            arquivo.write(f"{cor};{qtd}\n")
 
-df = pd.read_csv("vendas.csv")
-
-top3 = df.sort_values("total", ascending=False).head(3)
-print(top3)</pre></div><p>Repare no encadeamento: ordena E pega as 3 primeiras na mesma linha. Métodos de pandas adoram trabalhar em fila!</p></div></details>
+def carregar_estoque():
+    try:
+        estoque = {}
+        with open("estoque.txt", "r", encoding="utf-8") as arquivo:
+            for linha in arquivo:
+                cor, qtd = linha.strip().split(";")
+                estoque[cor] = int(qtd)
+        return estoque
+    except FileNotFoundError:
+        return {"branca": 10, "preta": 8, "azul": 5}</pre></div></div></details>
     </div>
   </article>
 
   <article class="ex" id="ex8">
     <div class="ex-head">
       <span class="ex-num">EX 08</span>
-      <h3>Coluna calculada</h3>
-      <span class="stars">⭐⭐ médio</span>
+      <h3>Etapa 6: a blindagem final 🛡️</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex8"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Criar uma coluna nova a partir das existentes.</p><span class="tag passos">🧭 Passo a passo</span><ol><li><code>df["unitario"] = df["total"] / df["qtd"]</code> — a conta acontece linha a linha, sem for!</li><li>Confira o resultado com print(df)</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">         data        produto  qtd  total  unitario
-0  10/06/2026  caneca branca    3   75.0      25.0
-1  10/06/2026   caneca preta   12  270.0      22.5
-(...)</pre></div><details class="dica"><summary>💡 Olha o desconto aparecendo!</summary><div class="inner">O unitário de 22.5 nas vendas grandes denuncia o desconto progressivo que VOCÊ programou lá na Semana 2. Os dados contam a história do seu código. 🤯</div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Nenhuma entrada errada derruba o sistema — e o projeto fica COMPLETO.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Adicione sua <code>pedir_inteiro(mensagem)</code> da Semana 7</li><li>Troque TODOS os <code>int(input(...))</code> por ela (menu e quantidade)</li><li>Teste de estresse: digite "abc" no menu, letras na quantidade, venda mais do que tem... o sistema aguenta tudo?</li><li>Confira seu código com a versão integrada completa na solução 👇</li></ol><span class="tag saida">✅ Teste de estresse</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Opção: abc
+Digite um número inteiro!
+Opção: 2
+Cor: preta
+Quantidade: doze
+Digite um número inteiro!
+Quantidade: 12
+Venda registrada! Total: R$ 270.00</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">sistema_tuacaneca.py</span></div><pre class="code">PRECO = 25.00
+
+def pedir_inteiro(mensagem):
+    while True:
+        try:
+            return int(input(mensagem))
+        except ValueError:
+            print("Digite um número inteiro!")
+
+def carregar_estoque():
+    try:
+        estoque = {}
+        with open("estoque.txt", "r", encoding="utf-8") as arquivo:
+            for linha in arquivo:
+                cor, qtd = linha.strip().split(";")
+                estoque[cor] = int(qtd)
+        return estoque
+    except FileNotFoundError:
+        return {"branca": 10, "preta": 8, "azul": 5}
+
+def salvar_estoque(estoque):
+    with open("estoque.txt", "w", encoding="utf-8") as arquivo:
+        for cor, qtd in estoque.items():
+            arquivo.write(f"{cor};{qtd}\n")
+
+def consultar(estoque):
+    print("--- ESTOQUE ---")
+    for cor, qtd in estoque.items():
+        print(f"{cor}: {qtd} unidades")
+
+def definir_desconto(quantidade):
+    if quantidade &gt;= 20:
+        return 0.15
+    elif quantidade &gt;= 10:
+        return 0.10
+    return 0
+
+def registrar_venda(estoque, vendas):
+    cor = input("Cor: ")
+    if cor not in estoque:
+        print("Cor não cadastrada!")
+        return
+    quantidade = pedir_inteiro("Quantidade: ")
+    if quantidade &lt;= 0 or quantidade &gt; estoque[cor]:
+        print(f"Quantidade inválida! Disponível: {estoque[cor]}")
+        return
+    desconto = definir_desconto(quantidade)
+    total = quantidade * PRECO * (1 - desconto)
+    estoque[cor] = estoque[cor] - quantidade
+    vendas.append({"cor": cor, "qtd": quantidade, "total": total})
+    print(f"Venda registrada! Total: R$ {total:.2f}")
+
+def relatorio(vendas):
+    if len(vendas) == 0:
+        print("Nenhuma venda registrada.")
+        return
+    faturamento = 0
+    canecas = 0
+    por_cor = {}
+    for venda in vendas:
+        faturamento = faturamento + venda["total"]
+        canecas = canecas + venda["qtd"]
+        por_cor[venda["cor"]] = por_cor.get(venda["cor"], 0) + venda["qtd"]
+    print(f"Faturamento: R$ {faturamento:.2f}")
+    print(f"Canecas vendidas: {canecas}")
+    mais_vendida = ""
+    maior = 0
+    for cor, qtd in por_cor.items():
+        if qtd &gt; maior:
+            maior = qtd
+            mais_vendida = cor
+    print(f"Mais vendida: {mais_vendida} ({maior} un.)")
+
+# ===== PROGRAMA PRINCIPAL =====
+estoque = carregar_estoque()
+vendas = []
+
+while True:
+    print()
+    print("=== SISTEMA TUA CANECA ===")
+    print("1-Estoque  2-Venda  3-Relatório  4-Salvar e sair")
+    opcao = pedir_inteiro("Opção: ")
+
+    if opcao == 1:
+        consultar(estoque)
+    elif opcao == 2:
+        registrar_venda(estoque, vendas)
+    elif opcao == 3:
+        relatorio(vendas)
+    elif opcao == 4:
+        salvar_estoque(estoque)
+        print("Estoque salvo. Até logo! 🎓")
+        break
+    else:
+        print("Opção inválida!")</pre></div><p><strong>~80 linhas que usam TODAS as 8 semanas.</strong> Olhe para trás: na Semana 1 você descobria o print. Hoje você lê esse sistema inteiro e entende cada linha. 👏</p></div></details>
     </div>
   </article>
 </section>
 
-<section class="parte" id="p4">
-  <div class="parte-head"><span class="num">04</span><h2>groupby: o relatório em uma linha</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>O momento mais emocionante da semana. Lembra do dict contador, do loop acumulando por produto, do padrão maior/menor para achar o campeão? Observe:</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">magia.py</span></div><pre class="code">df.groupby("produto")["qtd"].sum()</pre></div><p>Leia: "agrupe por produto, pegue a qtd, some por grupo". UMA linha. Semanas 3, 5 e 8 mandam lembranças. 🤯</p></div>
+<section class="parte" id="p5">
+  <div class="parte-head"><span class="num">05</span><h2>Desafios livres: agora é com você</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Sem código pronto e sem solução completa — como na vida real. Use o sistema como base e voe. 🕊️</p></div>
   <article class="ex" id="ex9">
     <div class="ex-head">
       <span class="ex-num">EX 09</span>
-      <h3>O groupby revelado</h3>
+      <h3>Desafio: clientes no sistema 🧑‍🤝‍🧑</h3>
       <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex9"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Substituir o relatório inteiro por groupby.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Execute e compare com seus relatórios das semanas 8/12/16:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex09_groupby.py</span></div><pre class="code">import pandas as pd
-
-df = pd.read_csv("vendas.csv")
-
-print(df.groupby("produto")["qtd"].sum())
-print()
-print(df.groupby("produto")["total"].sum())
-print()
-print("Campeão:", df.groupby("produto")["qtd"].sum().idxmax())</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">produto
-azulejo           3
-caneca branca     7
-caneca preta     17
-Name: qtd, dtype: int64
-
-produto
-azulejo          120.0
-caneca branca    175.0
-caneca preta     407.5
-Name: total, dtype: float64
-
-Campeão: caneca preta</pre></div><details class="dica"><summary>💡 idxmax</summary><div class="inner">O <code>.idxmax()</code> devolve o RÓTULO do maior valor — exatamente o seu padrão "campeão" das semanas anteriores, pronto de fábrica.</div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Integrar um cadastro de clientes às vendas.</p><span class="tag passos">🧭 Roteiro</span><ol><li>Na venda, pergunte também o nome do cliente e guarde no dicionário da venda</li><li>Nova opção no menu: "Relatório por cliente" — total gasto por cada um (dict contador com o total!)</li><li>Bônus: salve as vendas em <code>vendas.txt</code> para o relatório sobreviver ao fechamento</li></ol><details class="dica"><summary>💡 Empurrãozinho</summary><div class="inner">O relatório por cliente é IGUAL ao "por cor" da Etapa 4 — só muda a chave do contador e o que você acumula (total em vez de qtd). Reconhecer padrões é programar!</div></details>
     </div>
   </article>
 
   <article class="ex" id="ex10">
     <div class="ex-head">
       <span class="ex-num">EX 10</span>
-      <h3>value_counts: o censo instantâneo</h3>
-      <span class="stars">⭐⭐ médio</span>
+      <h3>Desafio final: o sistema é SEU 🚀</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex10"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Contar quantas vezes cada categoria aparece.</p><span class="tag passos">🧭 Passo a passo</span><ol><li><code>df["produto"].value_counts()</code> — o dict contador da Semana 5 em uma chamada</li><li>Conte também as vendas por data</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">produto
-caneca preta     2
-caneca branca    2
-azulejo          2
-Name: count, dtype: int64</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex10.py</span></div><pre class="code">import pandas as pd
-
-df = pd.read_csv("vendas.csv")
-print(df["produto"].value_counts())
-print(df["data"].value_counts())</pre></div></div></details>
-    </div>
-  </article>
-</section>
-
-<section class="parte" id="p5">
-  <div class="parte-head"><span class="num">05</span><h2>Exportando resultados</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Análise pronta vira entrega: <code>df.to_excel("saida.xlsx", index=False)</code> e <code>df.to_csv("saida.csv", index=False)</code>. O <code>index=False</code> evita exportar aquela coluna 0,1,2... que ninguém pediu.</p></div>
-  <article class="ex" id="ex11">
-    <div class="ex-head">
-      <span class="ex-num">EX 11</span>
-      <h3>Análise → Excel</h3>
-      <span class="stars">⭐⭐ médio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex11"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Exportar um resultado de groupby como planilha.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Agrupe o faturamento por produto</li><li>Use <code>.reset_index()</code> para o resultado virar tabela de novo</li><li>Exporte com to_excel(index=False) e abra no Excel</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">resumo.xlsx gerado ✔</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex11.py</span></div><pre class="code">import pandas as pd
-
-df = pd.read_csv("vendas.csv")
-
-resumo = df.groupby("produto")["total"].sum().reset_index()
-resumo.to_excel("resumo.xlsx", index=False)
-print("resumo.xlsx gerado ✔")</pre></div></div></details>
-    </div>
-  </article>
-</section>
-
-<section class="parte" id="p6">
-  <div class="parte-head"><span class="num">06</span><h2>Projetos da semana: juntando tudo!</h2></div>
-
-  <article class="ex" id="ex12">
-    <div class="ex-head">
-      <span class="ex-num">EX 12</span>
-      <h3>Projeto: Análise completa Tua Caneca 📊</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex12"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Refazer a análise da Central (Semana 16) inteirinha em pandas — e sentir a diferença.</p><span class="tag passos">🧭 Requisitos</span><ol><li>Leia o vendas.csv</li><li>Calcule: faturamento, unidades, ticket médio, campeão (groupby + idxmax)</li><li>Crie a coluna "unitario" e identifique a venda com MENOR preço unitário (o maior desconto!)</li><li>Exporte o resumo por produto para resumo_pandas.xlsx</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Faturamento: R$ 702.50
-Unidades: 27
-Ticket médio: R$ 117.08
-Campeão: caneca preta
-Maior desconto: caneca preta a R$ 22.50/un.
-resumo_pandas.xlsx gerado ✔</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex12.py</span></div><pre class="code">import pandas as pd
-
-df = pd.read_csv("vendas.csv")
-
-print(f"Faturamento: R$ {df['total'].sum():.2f}")
-print(f"Unidades: {df['qtd'].sum()}")
-print(f"Ticket médio: R$ {df['total'].mean():.2f}")
-print(f"Campeão: {df.groupby('produto')['qtd'].sum().idxmax()}")
-
-df["unitario"] = df["total"] / df["qtd"]
-barata = df.sort_values("unitario").head(1)
-produto = barata["produto"].values[0]
-unitario = barata["unitario"].values[0]
-print(f"Maior desconto: {produto} a R$ {unitario:.2f}/un.")
-
-resumo = df.groupby("produto")["total"].sum().reset_index()
-resumo.to_excel("resumo_pandas.xlsx", index=False)
-print("resumo_pandas.xlsx gerado ✔")</pre></div><p>Compare com a função analisar() da Semana 16: o conhecimento dos loops fez você ENTENDER; o pandas faz você VOAR.</p></div></details>
-    </div>
-  </article>
-
-  <article class="ex" id="ex13">
-    <div class="ex-head">
-      <span class="ex-num">EX 13</span>
-      <h3>Projeto: Boletim turbinado 🎓</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex13"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>A análise da turma com médias por aluno via groupby.</p><span class="tag passos">🧭 Requisitos</span><ol><li>Monte (ou leia de CSV) notas com colunas aluno e nota — vários registros por aluno</li><li>Média por aluno: <code>groupby("aluno")["nota"].mean()</code></li><li>Filtre os aprovados (média ≥ 7) e exporte boletim_pandas.xlsx</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">aluno
-Ana      8.25
-Bruno    5.50
-Carla    9.50
-Aprovados: 2</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex13.py</span></div><pre class="code">import pandas as pd
-
-notas = pd.DataFrame({
-    "aluno": ["Ana", "Ana", "Bruno", "Bruno", "Carla", "Carla"],
-    "nota": [8.0, 8.5, 6.0, 5.0, 9.5, 9.5]
-})
-
-medias = notas.groupby("aluno")["nota"].mean()
-print(medias)
-
-aprovados = medias[medias &gt;= 7]
-print(f"Aprovados: {len(aprovados)}")
-
-medias.reset_index().to_excel("boletim_pandas.xlsx", index=False)</pre></div></div></details>
-    </div>
-  </article>
-
-  <article class="ex" id="ex14">
-    <div class="ex-head">
-      <span class="ex-num">EX 14</span>
-      <h3>Projeto bônus: describe() e descobertas livres 🔍</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex14"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Explorar dados como um analista (sem código pronto!).</p><span class="tag passos">🧭 Roteiro</span><ol><li>Rode <code>df.describe()</code> no vendas.csv e INTERPRETE cada linha (count, mean, min, max...)</li><li>Formule 3 perguntas suas sobre os dados e responda com filtros/groupby — ex.: "qual dia faturou mais?", "qual % do faturamento vem das canecas pretas?"</li><li>Anote as respostas em comentários no código — análise sem interpretação é só conta!</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(as estatísticas do describe + suas 3 descobertas)</pre></div><details class="dica"><summary>💡 Você virou analista</summary><div class="inner">Fazer perguntas aos dados e respondê-las com código É o trabalho de análise de dados. As empresas chamam isso de "insights" — você chama de terça-feira. 😄</div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Adaptar tudo para outro negócio — a prova definitiva de que você entendeu.</p><span class="tag passos">🧭 Roteiro</span><ol><li>Escolha um negócio: lanchonete, papelaria, banca de pastel, brechó...</li><li>Adapte: o estoque pode virar cardápio (com preços diferentes por item — dict de dicts!), o desconto pode virar combo...</li><li>Mantenha os 6 pilares: menu · dados em dict · vendas em lista · relatório · arquivo · try/except</li><li>Mostre para alguém e explique o código em voz alta — é o teste supremo de aprendizado!</li></ol><details class="dica"><summary>💡 Última dica do curso</summary><div class="inner">Se você travou em "preços diferentes por item": <code>cardapio = {"pastel": 8.0, "caldo de cana": 6.0}</code> — o preço sai de <code>cardapio[item]</code> em vez da constante PRECO. Pequena mudança, sistema novo. 😉</div></details>
     </div>
   </article>
 </section>
@@ -574,29 +620,29 @@ medias.reset_index().to_excel("boletim_pandas.xlsx", index=False)</pre></div></d
 <div class="checklist" id="checklist">
   <h2>✅ Checklist de fim de semana</h2>
   <p>Antes de seguir para a próxima semana, confirme que você consegue:</p>
-<label class="check-item"><input type="checkbox"><span>Criar um DataFrame a partir de um dicionário de listas</span></label>
-<label class="check-item"><input type="checkbox"><span>Ler um CSV com pd.read_csv (e um Excel com read_excel)</span></label>
-<label class="check-item"><input type="checkbox"><span>Selecionar uma coluna e usar .sum(), .mean(), .max()</span></label>
-<label class="check-item"><input type="checkbox"><span>Filtrar linhas com condições booleanas df[df["col"] &gt; x]</span></label>
-<label class="check-item"><input type="checkbox"><span>Ordenar com sort_values</span></label>
-<label class="check-item"><input type="checkbox"><span>Criar uma coluna calculada a partir de outras</span></label>
-<label class="check-item"><input type="checkbox"><span>Agrupar e somar com groupby — em UMA linha</span></label>
-<label class="check-item"><input type="checkbox"><span>Contar categorias com value_counts</span></label>
-<label class="check-item"><input type="checkbox"><span>Exportar com to_excel/to_csv usando index=False</span></label>
-<label class="check-item"><input type="checkbox"><span>Explicar quando pandas vale mais que loops manuais</span></label>
+<label class="check-item"><input type="checkbox"><span>Prever a saída de código misturando tudo das 7 semanas</span></label>
+<label class="check-item"><input type="checkbox"><span>Encontrar bugs de sintaxe E de lógica num código alheio</span></label>
+<label class="check-item"><input type="checkbox"><span>Estruturar um programa em funções antes de escrever a primeira linha</span></label>
+<label class="check-item"><input type="checkbox"><span>Montar um menu em loop que despacha para funções</span></label>
+<label class="check-item"><input type="checkbox"><span>Manter o estoque num dicionário e dar baixa nas vendas</span></label>
+<label class="check-item"><input type="checkbox"><span>Acumular registros de venda numa lista de dicionários</span></label>
+<label class="check-item"><input type="checkbox"><span>Gerar um relatório com totais e "campeão" usando dict contador</span></label>
+<label class="check-item"><input type="checkbox"><span>Salvar e carregar o estado do sistema em arquivo</span></label>
+<label class="check-item"><input type="checkbox"><span>Blindar todas as entradas numéricas com try/except</span></label>
+<label class="check-item"><input type="checkbox"><span>Explicar seu código em voz alta para outra pessoa (teste supremo!)</span></label>
 </div>
 
 <div class="win-banner" id="winBanner">
-  <h2>🏆 SEMANA 17 COMPLETA!</h2>
-  <p>Você concluiu todos os exercícios. Bem-vindo ao clube de quem analisa dados com a ferramenta dos profissionais!</p>
+  <h2>🏆 SEMANA 8 COMPLETA!</h2>
+  <p>MÓDULO BÁSICO COMPLETO! De "o que é um algoritmo?" a um sistema com persistência e tratamento de erros. E a jornada continua na Semana 9! 🎓🐍</p>
 </div>
 
 <div class="preview-s2">
-<h2>📅 Prévia da Semana 18</h2><p>Dados analisados pedem para ser VISTOS: na próxima semana, <strong>matplotlib</strong> — gráficos de barras, pizza e linha, salvos em PNG e até gerados direto do pandas com <code>.plot()</code>. Seus relatórios vão ganhar olhos! 📊</p></div>
+<h2>📅 Prévia da Semana 9</h2><p>A jornada continua! Na próxima semana: <strong>módulos e bibliotecas</strong> — <code>import</code>, <code>math</code>, <code>random</code> a fundo, datas com <code>datetime</code>, seu PRÓPRIO módulo e a porta de entrada para o universo do <code>pip</code>. Você vai parar de reinventar a roda e começar a usar superpoderes prontos! 🚀</p></div>
 
 </main>
 
-<footer>python_para_iniciantes // semana_17 // exercícios guiados</footer>
+<footer>python_para_iniciantes // semana_08 // exercícios guiados</footer>
 
 <script>
 // ===== Syntax highlight leve para Python =====
@@ -608,7 +654,7 @@ medias.reset_index().to_excel("boletim_pandas.xlsx", index=False)</pre></div></d
     src = src.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     // uma passada só, com alternação (comentário | string | builtin | bool | número)
     src = src.replace(
-      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|insert|int|float|str|len|range|type|abs|round|max|min|sum|sorted|sort|reverse|append|remove|split|strip|upper|lower|replace|title|randint|random|get|keys|values|items|open|readlines|read|write|close|count|index|pop|update|list|dict|tuple|enumerate|sqrt|floor|ceil|choice|shuffle|sample|sleep|now|today|strftime|dumps|dump|loads|load|isinstance|datetime|date|DictReader|DictWriter|writerows|writerow|writeheader|writer|reader|csv|Workbook|load_workbook|save|iter_rows|Font|listdir|makedirs|getcwd|rename|exists|getsize|splitext|join|endswith|startswith|copytree|copy|move|requests|status_code|json|DataFrame|read_csv|read_excel|to_excel|to_csv|head|describe|groupby|sort_values|value_counts|mean|idxmax|bar|barh|pie|plot|savefig|show|title|xlabel|ylabel|figure|legend|axhline|tight_layout|close|Flask|route|run|render_template|jsonify|redirect|request)\b|\b(True|False|None|if|elif|else|while|for|in|and|or|not|break|continue|import|from|def|return|try|except|finally|with|as|del|global|pass|class|self|super|lambda)\b|(\b\d+(?:\.\d+)?\b)/g,
+      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|insert|int|float|str|len|range|type|abs|round|max|min|sum|sorted|sort|reverse|append|remove|split|strip|upper|lower|replace|title|randint|random|get|keys|values|items|open|readlines|read|write|close|count|index|pop|update|list|dict|tuple|enumerate|sqrt|floor|ceil|choice|shuffle|sample|sleep|now|today|strftime|dumps|dump|loads|load|isinstance|datetime|date)\b|\b(True|False|None|if|elif|else|while|for|in|and|or|not|break|continue|import|from|def|return|try|except|finally|with|as|del|global|pass|class|self|super|lambda)\b|(\b\d+(?:\.\d+)?\b)/g,
       function(m, com, str, fn, bool, num){
         if(com)  return '<span class="tk-com">'+com+'</span>';
         if(str)  return '<span class="tk-str">'+str+'</span>';
@@ -627,7 +673,7 @@ medias.reset_index().to_excel("boletim_pandas.xlsx", index=False)</pre></div></d
 // no navegador. Se o localStorage estiver indisponível (modo restrito,
 // pré-visualização, etc.), o progresso funciona só em memória, sem quebrar.
 const storage = (function(){
-  const KEY = 'python_semana17_progresso';
+  const KEY = 'python_semana08_progresso';
   let memoria = {};
   let disponivel = false;
   try{
@@ -674,10 +720,10 @@ const storage = (function(){
   const MSGS = [
     [0,  'Marque os exercícios concluídos ✔'],
     [1,  'Boa! Continue assim 💪'],
-    [4,  'Pegando o ritmo! 🔥'],
-    [7, 'Metade do caminho! 🚀'],
-    [10, 'Quase lá... força! ⚡'],
-    [14, 'SEMANA COMPLETA! 🏆']
+    [3,  'Pegando o ritmo! 🔥'],
+    [5, 'Metade do caminho! 🚀'],
+    [8, 'Quase lá... força! ⚡'],
+    [10, 'SEMANA COMPLETA! 🏆']
   ];
 
   function estadoAtual(){

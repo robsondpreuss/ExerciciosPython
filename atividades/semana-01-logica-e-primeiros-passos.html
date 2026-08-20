@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Semana 20 — Projeto Final 4</title>
+<title>Semana 1 — Lógica e Primeiros Passos com Python</title>
 <style>
   :root{
     --ink:#16243A;
@@ -57,7 +57,7 @@
     color:#fff;padding:56px 20px 48px;text-align:center;position:relative;overflow:hidden;
   }
   header.hero::before{
-    content:"pandas  matplotlib  Flask  dashboard  🏆";
+    content:"print(  input(  int(  float(  =  //  %  **  f\"  {  }  #  ==";
     position:absolute;inset:auto 0 8px 0;font-family:var(--mono);font-size:.78rem;
     color:rgba(255,255,255,.14);letter-spacing:.4em;white-space:nowrap;overflow:hidden;
   }
@@ -231,421 +231,1263 @@
 </head>
 <body>
 
+<!-- ===== BARRA DE PROGRESSO ===== -->
 <div class="progress-wrap" role="region" aria-label="Progresso da semana">
   <span class="label">XP DA SEMANA</span>
   <div class="progress-bar"><div class="progress-fill" id="pfill"></div></div>
-  <span class="progress-count" id="pcount">0 / 10</span>
+  <span class="progress-count" id="pcount">0 / 25</span>
   <span class="progress-msg" id="pmsg">Marque os exercícios concluídos ✔</span>
   <button class="reset-btn" id="resetBtn" title="Apagar todo o progresso salvo">↺ Resetar</button>
 </div>
 
+<!-- ===== HERO ===== -->
 <header class="hero">
   <div class="kicker">Python para Iniciantes · Exercícios Guiados</div>
-  <h1>SEMANA 20 — Projeto Final 4:<br>o Dashboard Web 🏆<span class="cursor" aria-hidden="true"></span></h1>
-  <p class="sub">A obra-prima absoluta: pandas analisa, matplotlib desenha, Flask serve. Um dashboard de verdade no navegador — números, gráficos, API e botão de atualizar.</p>
+  <h1>SEMANA 1 — Lógica de Programação<br>e Primeiros Passos<span class="cursor" aria-hidden="true"></span></h1>
+  <p class="sub">Entenda o que é um algoritmo, aprenda a "pensar como um programador" e dê os primeiros passos com Python: variáveis, tipos de dados, entrada e saída, e operadores matemáticos.</p>
   <div class="howto">
-    <strong>Como usar:</strong> digite o código você mesmo (não copie e cole!), compare com a saída esperada e marque <strong>✔ Concluído</strong> em cada exercício para encher sua barra de XP. As <strong>dicas</strong> e <strong>soluções</strong> ficam escondidas — só abra depois de tentar! Seu progresso fica salvo no navegador.
+    <strong>Como usar:</strong> digite o código você mesmo (não copie e cole!), compare com a saída esperada e marque <strong>✔ Concluído</strong> em cada exercício para encher sua barra de XP. As <strong>dicas</strong> e <strong>soluções</strong> ficam escondidas — só abra depois de tentar!
   </div>
 </header>
 
-<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · Revisão</a><a href="#p2">2 · Etapas 1-2</a><a href="#p3">3 · Etapas 3-4</a><a href="#p4">4 · Etapas 5-6</a><a href="#p5">5 · A última formatura</a><a href="#checklist">✅ Checklist</a></nav>
+<!-- ===== NAVEGAÇÃO ===== -->
+<nav class="parts" aria-label="Partes da semana">
+  <a href="#p1">1 · Lógica</a>
+  <a href="#p2">2 · print()</a>
+  <a href="#p3">3 · Variáveis</a>
+  <a href="#p4">4 · Tipos & input()</a>
+  <a href="#p5">5 · Operadores</a>
+  <a href="#p6">6 · Projetos</a>
+  <a href="#checklist">✅ Checklist</a>
+</nav>
 
 <main>
 
+<!-- ============ PARTE 1 ============ -->
 <section class="parte" id="p1">
-  <div class="parte-head"><span class="num">01</span><h2>Revisão relâmpago</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>O último aquecimento de todos. Capriche — é pela honra! 😄</p></div>
+  <div class="parte-head"><span class="num">01</span><h2>Lógica de Programação: pensando antes de programar</h2></div>
+  <div class="parte-intro">
+    <h3>Conceito</h3>
+    <p>Um <strong>algoritmo</strong> é uma sequência de passos ordenados para resolver um problema. Antes de escrever código, todo programador pensa nos passos.</p>
+    <p><strong>Exemplo do mundo real — algoritmo para fazer café:</strong> pegar a garrafa térmica → ferver a água → colocar o pó no filtro → despejar a água quente → esperar coar → servir.</p>
+    <p>Repare: a <strong>ordem importa</strong>! Se você despejar a água antes de colocar o pó, o resultado será errado. Programação é exatamente isso: dar instruções claras, completas e na ordem certa.</p>
+  </div>
+
+  <!-- EX 1 -->
   <article class="ex" id="ex1">
     <div class="ex-head">
       <span class="ex-num">EX 01</span>
-      <h3>Quiz: preveja as 8 saídas 🧠</h3>
-      <span class="stars">⭐⭐ médio</span>
+      <h3>Algoritmo em português (sem código!)</h3>
+      <span class="stars">⭐ básico</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex1"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>pandas, rotas, f-strings com CSS e os eternos clássicos.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Anote as previsões. Última chance de gabarito da jornada!</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex01_quiz.py</span></div><pre class="code">import pandas as pd
-
-df = pd.DataFrame({"p": ["a", "b", "a"], "v": [10, 20, 30]})
-
-print(len(df))
-print(df["v"].sum())
-print(df[df["p"] == "a"]["v"].sum())
-print(df.groupby("p")["v"].sum().idxmax())
-
-print(f"{{ color: red }}")
-print("/api/produtos".startswith("/api"))
-
-rota = "/tabuada/&lt;int:n&gt;"
-print("int" in rota)
-
-x = [1, 2, 3]
-print(x[::-1])</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">3
-60
-40
-a
-{ color: red }
-True
-True
-[3, 2, 1]</pre></div><details class="dica"><summary>💡 Gabarito comentado</summary><div class="inner">3 linhas · soma da coluna inteira · filtro p=="a" soma 10+30=40 · idxmax dos grupos {a: 40, b: 20} → "a" é o campeão · chaves duplas {{ }} viram chaves simples na f-string (S19!) · startswith (S14) · "int" é substring da rota · fatia reversa [::-1] (S4). 6+ acertos? Rumo ao dashboard!</div></details>
+      <span class="tag obj">🎯 Objetivo</span>
+      <p>Praticar o pensamento sequencial antes de programar.</p>
+      <p><strong>Tarefa:</strong> escreva em um papel (ou num arquivo de texto) o algoritmo passo a passo para <strong>trocar uma lâmpada queimada</strong>.</p>
+      <span class="tag passos">🧭 Passo a passo</span>
+      <ol>
+        <li>Pense: qual é o <strong>estado inicial</strong>? (lâmpada queimada no soquete)</li>
+        <li>Pense: qual é o <strong>estado final desejado</strong>? (lâmpada nova funcionando)</li>
+        <li>Liste TODOS os passos intermediários, sem pular nenhum</li>
+        <li>Revise: um robô que não sabe nada conseguiria seguir suas instruções?</li>
+      </ol>
+      <p><strong>Critério de sucesso:</strong> pelo menos 8 passos, incluindo detalhes como "verificar se o interruptor está desligado" e "pegar uma escada se necessário".</p>
+      <details class="dica"><summary>💡 Dica</summary><div class="inner">Programadores iniciantes erram por <strong>pular passos óbvios</strong>. Para o computador, NADA é óbvio!</div></details>
     </div>
   </article>
 
+  <!-- EX 2 -->
   <article class="ex" id="ex2">
     <div class="ex-head">
       <span class="ex-num">EX 02</span>
-      <h3>Caça aos bugs do dashboard 🐛🔍</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
+      <h3>Encontrando o erro no algoritmo</h3>
+      <span class="stars">⭐ básico</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex2"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Os 5 bugs que travam dashboards de iniciantes.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>O código deveria gerar um gráfico e servir uma página — ache os 5 bugs ANTES de rodar</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex02_bugs.py</span></div><pre class="code">import pandas as pd
-import matplotlib.pyplot as plt
-from flask import Flask
-
-app = Flask(__name__)
-
-def grafico():
-    df = pd.read_csv("vendas.csv")
-    df.groupby("produto")["total"].sum().plot(kind="bar")
-    plt.show()
-    plt.savefig("grafico.png")
-
-@app.route("/")
-def painel():
-    return f"&lt;style&gt;body { background: red }&lt;/style&gt;&lt;h1&gt;Painel&lt;/h1&gt;"
-
-def api():
-    return jsonify({"ok": True})
-
-app.run(debug=True)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><p><strong>Os 5 bugs:</strong> (1) <code>plt.show()</code> num app web abre janela no SERVIDOR e trava tudo — em dashboard, NUNCA use show; use savefig (e o modo "Agg", que você verá na Etapa 3). (2) savefig DEPOIS do show = PNG em branco (Semana 18!). (3) O gráfico salvou fora da pasta <code>static</code> — o Flask não vai servi-lo. (4) Chaves SIMPLES no CSS dentro da f-string → erro; precisa <code>{{ }}</code>. (5) A função api() está sem o decorador <code>@app.route("/api")</code> (e sem importar jsonify) — sem o decorador, a rota simplesmente não existe.</p></div></details>
+      <span class="tag obj">🎯 Objetivo</span>
+      <p>Desenvolver olhar crítico para sequências lógicas.</p>
+      <p><strong>Tarefa:</strong> o algoritmo abaixo para "fazer um sanduíche" tem <strong>3 erros de lógica</strong> (passos fora de ordem ou faltando). Encontre-os:</p>
+      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">algoritmo_sanduiche.txt</span></div>
+<pre class="output"><span class="prompt-in">1. Pegar duas fatias de pão
+2. Comer o sanduíche
+3. Passar maionese na fatia de baixo
+4. Fechar o sanduíche com a fatia de cima
+5. Colocar o queijo e o presunto</span></pre></div>
+      <span class="tag passos">🧭 Passo a passo</span>
+      <ol>
+        <li>Leia o algoritmo na ordem, imaginando cada ação</li>
+        <li>Pergunte-se: "neste ponto, isso é possível?"</li>
+        <li>Anote os problemas que encontrar</li>
+        <li>Reescreva o algoritmo na ordem correta</li>
+      </ol>
+      <details class="dica"><summary>💡 Dica</summary><div class="inner">O passo 2 está claramente no lugar errado. Há também algo sendo feito <em>depois</em> de quando deveria.</div></details>
+      <details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p>
+        <p><strong>Erros:</strong> (1) "Comer o sanduíche" deveria ser o ÚLTIMO passo; (2) "Colocar queijo e presunto" deveria vir ANTES de fechar; (3) a ordem dos recheios ficou confusa — a maionese deve vir antes de tudo.</p>
+        <p><strong>Ordem correta:</strong> pegar o pão → passar maionese → colocar queijo e presunto → fechar → comer.</p>
+      </div></details>
     </div>
   </article>
-</section>
 
-<section class="parte" id="p2">
-  <div class="parte-head"><span class="num">02</span><h2>Dashboard — Etapas 1 e 2</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p><strong>A arquitetura da obra-prima:</strong></p><table><tr><th>Camada</th><th>Ferramenta</th><th>Semanas</th></tr><tr><td>Dados</td><td>vendas.csv + pandas</td><td>13, 17</td></tr><tr><td>Análise</td><td>groupby em funções</td><td>6, 17</td></tr><tr><td>Visual</td><td>matplotlib → PNG em static/</td><td>18</td></tr><tr><td>Entrega</td><td>Flask: painel + API + atualizar</td><td>19</td></tr></table><p>Estrutura de pastas: <code>app.py</code> · <code>dados/vendas.csv</code> · <code>static/</code> (gráficos). Crie o <code>app.py</code> e vamos por etapas!</p></div>
+  <!-- EX 3 -->
   <article class="ex" id="ex3">
     <div class="ex-head">
       <span class="ex-num">EX 03</span>
-      <h3>Etapa 1: dados no lugar</h3>
+      <h3>Algoritmo do caixa eletrônico</h3>
       <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex3"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Pastas + CSV de exemplo + carregamento com pandas.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Funções <code>preparar()</code> (makedirs de dados/ e static/) e <code>gerar_exemplo()</code> (o vendas.csv da Semana 17, se não existir — reuse o gerador da Semana 16!)</li><li><code>carregar_dados()</code>: retorna <code>pd.read_csv(os.path.join("dados", "vendas.csv"))</code></li><li>Teste: imprima <code>len(df)</code> e o head()</li></ol><span class="tag saida">✅ Teste da etapa</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">6 vendas carregadas ✔</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">etapa1.py</span></div><pre class="code">import os
-import pandas as pd
-
-def preparar():
-    os.makedirs("dados", exist_ok=True)
-    os.makedirs("static", exist_ok=True)
-
-def gerar_exemplo():
-    caminho = os.path.join("dados", "vendas.csv")
-    if os.path.exists(caminho):
-        return
-    conteudo = """data,produto,qtd,total
-10/06/2026,caneca branca,3,75.0
-10/06/2026,caneca preta,12,270.0
-11/06/2026,azulejo,2,80.0
-11/06/2026,caneca preta,5,137.5
-12/06/2026,caneca branca,4,100.0
-12/06/2026,azulejo,1,40.0
-"""
-    with open(caminho, "w", encoding="utf-8") as arquivo:
-        arquivo.write(conteudo)
-
-def carregar_dados():
-    return pd.read_csv(os.path.join("dados", "vendas.csv"))
-
-preparar()
-gerar_exemplo()
-df = carregar_dados()
-print(f"{len(df)} vendas carregadas ✔")</pre></div></div></details>
+      <span class="tag obj">🎯 Objetivo</span>
+      <p>Pensar em algoritmos que envolvem <strong>decisões</strong> (preparação para a Semana 2!).</p>
+      <p><strong>Tarefa:</strong> escreva o algoritmo para <strong>sacar dinheiro num caixa eletrônico</strong>, desde a chegada até a saída.</p>
+      <span class="tag passos">🧭 Passo a passo</span>
+      <ol>
+        <li>Comece com "Inserir o cartão" e termine com "Retirar o dinheiro e o cartão"</li>
+        <li>Inclua os pontos de decisão usando a estrutura "SE... ENTÃO...":<br>— SE a senha estiver errada, ENTÃO...<br>— SE o saldo for insuficiente, ENTÃO...</li>
+        <li>Seu algoritmo deve ter pelo menos 10 passos e 2 decisões</li>
+      </ol>
+      <details class="dica"><summary>💡 Dica</summary><div class="inner">Decisões ("SE isso, faça aquilo") são o coração da programação. Na Semana 2 você vai escrevê-las em Python com <code>if</code>!</div></details>
     </div>
   </article>
+</section>
 
+<!-- ============ PARTE 2 ============ -->
+<section class="parte" id="p2">
+  <div class="parte-head"><span class="num">02</span><h2>Primeiro código: o comando print()</h2></div>
+  <div class="parte-intro">
+    <h3>Conceito</h3>
+    <p>O comando <code>print()</code> exibe informações na tela. Tudo que estiver entre aspas (simples <code>'</code> ou duplas <code>"</code>) é um <strong>texto</strong> (chamado de <em>string</em>).</p>
+  </div>
+
+  <!-- EX 4 -->
   <article class="ex" id="ex4">
     <div class="ex-head">
       <span class="ex-num">EX 04</span>
-      <h3>Etapa 2: a análise em pandas</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
+      <h3>Seu primeiro programa em Python! 🎉</h3>
+      <span class="stars">⭐ básico</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex4"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>A função analisar() — agora na versão de uma linha por métrica.</p><span class="tag passos">🧭 Passo a passo</span><ol><li><code>analisar(df)</code> retorna o dicionário: faturamento (sum), unidades (sum), campeão (groupby + idxmax), ticket (mean)</li><li>Detalhe de gente grande: converta com <code>float()</code> e <code>int()</code> — os números do pandas têm tipos próprios que o jsonify da API não engole!</li></ol><span class="tag saida">✅ Teste da etapa</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">{'faturamento': 702.5, 'unidades': 27, 'campeao': 'caneca preta', 'ticket': 117.08}</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">etapa2.py</span></div><pre class="code">def analisar(df):
-    return {
-        "faturamento": float(df["total"].sum()),
-        "unidades": int(df["qtd"].sum()),
-        "campeao": df.groupby("produto")["qtd"].sum().idxmax(),
-        "ticket": round(float(df["total"].mean()), 2)
-    }</pre></div></div></details>
+      <span class="tag obj">🎯 Objetivo</span>
+      <p>Executar seu primeiro código e entender o comando <code>print()</code>.</p>
+      <span class="tag passos">🧭 Passo a passo</span>
+      <ol>
+        <li>Abra o Python (IDLE, VS Code, ou o site replit.com)</li>
+        <li>Crie um arquivo chamado <code>ex04_ola.py</code></li>
+        <li>Digite, execute (F5 no IDLE ou botão Run) e depois adicione as outras linhas:</li>
+      </ol>
+      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex04_ola.py</span></div>
+<pre class="code">print("Olá, mundo!")
+print("Meu nome é [SEU NOME]")
+print("Estou aprendendo Python!")</pre></div>
+      <span class="tag saida">✅ Saída esperada</span>
+      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div>
+<pre class="output">Olá, mundo!
+Meu nome é Robson
+Estou aprendendo Python!</pre></div>
     </div>
   </article>
-</section>
 
-<section class="parte" id="p3">
-  <div class="parte-head"><span class="num">03</span><h2>Dashboard — Etapas 3 e 4</h2></div>
-
+  <!-- EX 5 -->
   <article class="ex" id="ex5">
     <div class="ex-head">
       <span class="ex-num">EX 05</span>
-      <h3>Etapa 3: gráficos em modo servidor 🖼️</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
+      <h3>Arte com print (ASCII art) 🌲</h3>
+      <span class="stars">⭐ básico</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex5"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Gerar os PNGs por código — sem janela nenhuma (o segredo do modo Agg).</p><span class="tag passos">🧭 Passo a passo</span><ol><li>ANTES de importar o pyplot: <code>import matplotlib</code> e <code>matplotlib.use("Agg")</code> — o modo "só gerar imagem", obrigatório em servidores!</li><li><code>gerar_graficos(df)</code>: barras do faturamento por produto e linha por dia, salvos em static/ com tight_layout</li><li>Feche cada figura com <code>plt.close()</code> (servidor que não fecha figuras enche a memória!)</li></ol><span class="tag saida">✅ Teste da etapa</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">2 gráficos gerados em static/ ✔</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">etapa3.py</span></div><pre class="code">import matplotlib
-matplotlib.use("Agg")   # modo servidor: gera PNG sem abrir janela
-import matplotlib.pyplot as plt
-
-def gerar_graficos(df):
-    por_produto = df.groupby("produto")["total"].sum()
-    plt.figure(figsize=(6, 4))
-    plt.bar(por_produto.index, por_produto.values, color="#3776AB")
-    plt.title("Faturamento por produto")
-    plt.ylabel("R$")
-    plt.tight_layout()
-    plt.savefig("static/por_produto.png", dpi=120)
-    plt.close()
-
-    por_dia = df.groupby("data")["total"].sum()
-    plt.figure(figsize=(6, 4))
-    plt.plot(por_dia.index, por_dia.values, marker="o", color="#FFB000")
-    plt.title("Faturamento por dia")
-    plt.ylabel("R$")
-    plt.tight_layout()
-    plt.savefig("static/por_dia.png", dpi=120)
-    plt.close()
-    print("2 gráficos gerados em static/ ✔")</pre></div></div></details>
+      <span class="tag obj">🎯 Objetivo</span>
+      <p>Praticar múltiplos <code>print()</code> e atenção aos detalhes (espaços contam!).</p>
+      <p><strong>Tarefa:</strong> faça um programa que desenhe esta árvore na tela:</p>
+      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div>
+<pre class="output">   *
+  ***
+ *****
+*******
+   |</pre></div>
+      <span class="tag passos">🧭 Passo a passo</span>
+      <ol>
+        <li>Crie o arquivo <code>ex05_arvore.py</code></li>
+        <li>Cada linha do desenho é um <code>print()</code> separado</li>
+        <li>Conte os espaços ANTES dos asteriscos em cada linha — eles fazem parte do texto!</li>
+        <li>Execute e compare visualmente com o desenho acima</li>
+      </ol>
+      <details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Desenhe suas iniciais em letras grandes feitas de <code>#</code>. Exemplo para a letra R:
+<pre style="font-family:var(--mono);font-size:.85rem;background:#EDF2F9;border-radius:8px;padding:10px;margin-top:8px">###
+# #
+###
+# #
+# #</pre></div></details>
     </div>
   </article>
 
+  <!-- EX 6 -->
   <article class="ex" id="ex6">
     <div class="ex-head">
       <span class="ex-num">EX 06</span>
-      <h3>Etapa 4: o painel e a API 🌐</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
+      <h3>Descobrindo erros de digitação</h3>
+      <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex6"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>A rota / com os cartões de números + gráficos, e a /api/resumo.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Rota /: carregue, analise e monte o HTML — cartões com os 4 números e as duas imagens de /static/</li><li>Lembre das chaves duplas no CSS da f-string!</li><li>Rota /api/resumo: <code>jsonify(analisar(carregar_dados()))</code> — seu dashboard também é uma API</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(localhost:5000 → o painel com cartões e gráficos!)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">etapa4.py</span></div><pre class="code">from flask import Flask, jsonify
-
-app = Flask(__name__)
-
-@app.route("/")
-def painel():
-    r = analisar(carregar_dados())
-    return f"""
-    &lt;html&gt;&lt;head&gt;&lt;title&gt;Dashboard Tua Caneca&lt;/title&gt;
-    &lt;style&gt;
-      body {{ font-family: Arial; background: #F5F8FC; margin: 40px; }}
-      h1 {{ color: #3776AB; }}
-      .cartao {{ background: white; display: inline-block; padding: 18px 28px;
-                 margin: 8px; border-radius: 12px; box-shadow: 0 2px 8px #0002; }}
-      img {{ border-radius: 12px; margin: 10px; box-shadow: 0 2px 8px #0002; }}
-    &lt;/style&gt;&lt;/head&gt;&lt;body&gt;
-    &lt;h1&gt;☕ Dashboard Tua Caneca&lt;/h1&gt;
-    &lt;div class="cartao"&gt;&lt;b&gt;Faturamento&lt;/b&gt;&lt;br&gt;R$ {r["faturamento"]:.2f}&lt;/div&gt;
-    &lt;div class="cartao"&gt;&lt;b&gt;Unidades&lt;/b&gt;&lt;br&gt;{r["unidades"]}&lt;/div&gt;
-    &lt;div class="cartao"&gt;&lt;b&gt;Campeão&lt;/b&gt;&lt;br&gt;{r["campeao"]}&lt;/div&gt;
-    &lt;div class="cartao"&gt;&lt;b&gt;Ticket médio&lt;/b&gt;&lt;br&gt;R$ {r["ticket"]:.2f}&lt;/div&gt;
-    &lt;br&gt;
-    &lt;img src="/static/por_produto.png" width="440"&gt;
-    &lt;img src="/static/por_dia.png" width="440"&gt;
-    &lt;/body&gt;&lt;/html&gt;
-    """
-
-@app.route("/api/resumo")
-def api_resumo():
-    return jsonify(analisar(carregar_dados()))</pre></div></div></details>
+      <span class="tag obj">🎯 Objetivo</span>
+      <p>Aprender a ler mensagens de erro desde o início.</p>
+      <p><strong>Tarefa:</strong> cada linha abaixo tem UM erro. Digite uma de cada vez, execute, leia o erro e corrija:</p>
+      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex06_erros.py</span></div>
+<pre class="code"># Erro 1:
+print("Olá, mundo!
+# Erro 2:
+Print("Olá, mundo!")
+# Erro 3:
+print(Olá, mundo!)</pre></div>
+      <span class="tag passos">🧭 Passo a passo</span>
+      <ol>
+        <li>Digite o Erro 1, execute e leia a mensagem (<code>SyntaxError</code>... o que faltou?)</li>
+        <li>Corrija, depois teste o Erro 2 (<code>NameError</code>... Python diferencia maiúsculas!)</li>
+        <li>Por fim o Erro 3 (texto sem aspas confunde o Python)</li>
+        <li>Anote com suas palavras o que causou cada erro</li>
+      </ol>
+      <details class="dica"><summary>💡 Lição importante</summary><div class="inner">Ler mensagens de erro é uma habilidade essencial. O Python sempre tenta te dizer ONDE e QUAL é o problema.</div></details>
+      <details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p>
+        <p><strong>Erro 1:</strong> faltou fechar as aspas e o parêntese → <code>SyntaxError</code><br>
+        <strong>Erro 2:</strong> "Print" com P maiúsculo não existe; o correto é <code>print</code> → <code>NameError</code><br>
+        <strong>Erro 3:</strong> texto sem aspas; o Python acha que "Olá" e "mundo" são variáveis → <code>SyntaxError</code>/<code>NameError</code></p>
+      </div></details>
     </div>
   </article>
 </section>
 
-<section class="parte" id="p4">
-  <div class="parte-head"><span class="num">04</span><h2>Dashboard — Etapas 5 e 6</h2></div>
+<!-- ============ PARTE 3 ============ -->
+<section class="parte" id="p3">
+  <div class="parte-head"><span class="num">03</span><h2>Variáveis: a memória do programa</h2></div>
+  <div class="parte-intro">
+    <h3>Conceito</h3>
+    <p>Uma <strong>variável</strong> é como uma caixinha com etiqueta onde guardamos um valor para usar depois.</p>
+    <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">exemplo.py</span></div>
+<pre class="code">nome = "Maria"      # caixinha "nome" guarda o texto Maria
+idade = 25          # caixinha "idade" guarda o número 25
+altura = 1.68       # caixinha "altura" guarda o decimal 1.68</pre></div>
+    <p><strong>Regras para nomes de variáveis:</strong></p>
+    <ul>
+      <li>✅ Pode: letras, números e underline (<code>_</code>) → <code>nome_completo</code>, <code>idade2</code></li>
+      <li>❌ Não pode: começar com número → <code>2nome</code> (erro!)</li>
+      <li>❌ Não pode: espaços → <code>nome completo</code> (erro!)</li>
+      <li>⚠️ Acentos: tecnicamente funcionam, mas evite! Use <code>salario</code> em vez de <code>salário</code></li>
+    </ul>
+  </div>
 
+  <!-- EX 7 -->
   <article class="ex" id="ex7">
     <div class="ex-head">
       <span class="ex-num">EX 07</span>
-      <h3>Etapa 5: o botão de atualizar 🔄</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
+      <h3>Criando suas primeiras variáveis</h3>
+      <span class="stars">⭐ básico</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex7"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>A rota /atualizar: regenera os gráficos e volta ao painel.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Importe também o <code>redirect</code></li><li>Rota /atualizar: <code>gerar_graficos(carregar_dados())</code> e <code>return redirect("/")</code></li><li>No painel, adicione o link: <code>&lt;a href="/atualizar"&gt;🔄 Atualizar&lt;/a&gt;</code></li><li>Teste de verdade: edite o vendas.csv (adicione uma venda!), clique em atualizar e veja os números E os gráficos mudarem</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(clique → gráficos novos → de volta ao painel!)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">etapa5.py</span></div><pre class="code">from flask import redirect
+      <span class="tag obj">🎯 Objetivo</span>
+      <p>Criar variáveis e exibi-las com <code>print()</code>.</p>
+      <span class="tag passos">🧭 Passo a passo</span>
+      <ol>
+        <li>Crie um arquivo <code>ex07_variaveis.py</code></li>
+        <li>Crie <code>nome</code> com seu nome e <code>cidade</code> com sua cidade</li>
+        <li>Crie <code>idade</code> com sua idade (sem aspas — é número!)</li>
+        <li>Exiba as três variáveis, uma em cada linha</li>
+      </ol>
+      <p><strong>Código inicial (complete os espaços):</strong></p>
+      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex07_variaveis.py</span></div>
+<pre class="code">nome = "______"
+cidade = "______"
+idade = ______
 
-@app.route("/atualizar")
-def atualizar():
-    gerar_graficos(carregar_dados())
-    return redirect("/")</pre></div></div></details>
+print(nome)
+print(cidade)
+print(idade)</pre></div>
+      <span class="tag saida">✅ Saída esperada (exemplo)</span>
+      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div>
+<pre class="output">Robson
+Porto Alegre
+35</pre></div>
+      <details class="dica"><summary>💡 Dica</summary><div class="inner">Texto precisa de aspas. Número NÃO usa aspas. <code>"35"</code> é texto, <code>35</code> é número — e isso fará diferença mais adiante!</div></details>
     </div>
   </article>
 
+  <!-- EX 8 -->
   <article class="ex" id="ex8">
     <div class="ex-head">
       <span class="ex-num">EX 08</span>
-      <h3>Etapa 6: a obra-prima integrada 🏁</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
+      <h3>Nomes válidos ou inválidos?</h3>
+      <span class="stars">⭐ básico</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex8"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Montar o app.py final — e dar o play na sua formatura.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Junte as 5 etapas no app.py: preparar + gerar_exemplo + gráficos iniciais ANTES do app.run</li><li>Roteiro de teste final: painel → API → editar CSV → atualizar → tudo vivo?</li><li>Confira com a versão integrada na solução — e tire um print da tela: é o seu diploma 🏆</li></ol><span class="tag saida">✅ A formatura</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output"> * Running on http://127.0.0.1:5000
-(e no navegador: o dashboard completo, SEU)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">app.py</span></div><pre class="code">import os
-import pandas as pd
-import matplotlib
-matplotlib.use("Agg")
-import matplotlib.pyplot as plt
-from flask import Flask, jsonify, redirect
-
-app = Flask(__name__)
-
-def preparar():
-    os.makedirs("dados", exist_ok=True)
-    os.makedirs("static", exist_ok=True)
-
-def gerar_exemplo():
-    caminho = os.path.join("dados", "vendas.csv")
-    if os.path.exists(caminho):
-        return
-    conteudo = """data,produto,qtd,total
-10/06/2026,caneca branca,3,75.0
-10/06/2026,caneca preta,12,270.0
-11/06/2026,azulejo,2,80.0
-11/06/2026,caneca preta,5,137.5
-12/06/2026,caneca branca,4,100.0
-12/06/2026,azulejo,1,40.0
-"""
-    with open(caminho, "w", encoding="utf-8") as arquivo:
-        arquivo.write(conteudo)
-
-def carregar_dados():
-    return pd.read_csv(os.path.join("dados", "vendas.csv"))
-
-def analisar(df):
-    return {
-        "faturamento": float(df["total"].sum()),
-        "unidades": int(df["qtd"].sum()),
-        "campeao": df.groupby("produto")["qtd"].sum().idxmax(),
-        "ticket": round(float(df["total"].mean()), 2)
-    }
-
-def gerar_graficos(df):
-    por_produto = df.groupby("produto")["total"].sum()
-    plt.figure(figsize=(6, 4))
-    plt.bar(por_produto.index, por_produto.values, color="#3776AB")
-    plt.title("Faturamento por produto")
-    plt.ylabel("R$")
-    plt.tight_layout()
-    plt.savefig("static/por_produto.png", dpi=120)
-    plt.close()
-
-    por_dia = df.groupby("data")["total"].sum()
-    plt.figure(figsize=(6, 4))
-    plt.plot(por_dia.index, por_dia.values, marker="o", color="#FFB000")
-    plt.title("Faturamento por dia")
-    plt.ylabel("R$")
-    plt.tight_layout()
-    plt.savefig("static/por_dia.png", dpi=120)
-    plt.close()
-
-@app.route("/")
-def painel():
-    r = analisar(carregar_dados())
-    return f"""
-    &lt;html&gt;&lt;head&gt;&lt;title&gt;Dashboard Tua Caneca&lt;/title&gt;
-    &lt;style&gt;
-      body {{ font-family: Arial; background: #F5F8FC; margin: 40px; }}
-      h1 {{ color: #3776AB; }}
-      .cartao {{ background: white; display: inline-block; padding: 18px 28px;
-                 margin: 8px; border-radius: 12px; box-shadow: 0 2px 8px #0002; }}
-      img {{ border-radius: 12px; margin: 10px; box-shadow: 0 2px 8px #0002; }}
-    &lt;/style&gt;&lt;/head&gt;&lt;body&gt;
-    &lt;h1&gt;☕ Dashboard Tua Caneca&lt;/h1&gt;
-    &lt;div class="cartao"&gt;&lt;b&gt;Faturamento&lt;/b&gt;&lt;br&gt;R$ {r["faturamento"]:.2f}&lt;/div&gt;
-    &lt;div class="cartao"&gt;&lt;b&gt;Unidades&lt;/b&gt;&lt;br&gt;{r["unidades"]}&lt;/div&gt;
-    &lt;div class="cartao"&gt;&lt;b&gt;Campeão&lt;/b&gt;&lt;br&gt;{r["campeao"]}&lt;/div&gt;
-    &lt;div class="cartao"&gt;&lt;b&gt;Ticket médio&lt;/b&gt;&lt;br&gt;R$ {r["ticket"]:.2f}&lt;/div&gt;
-    &lt;br&gt;
-    &lt;img src="/static/por_produto.png" width="440"&gt;
-    &lt;img src="/static/por_dia.png" width="440"&gt;
-    &lt;br&gt;&lt;a href="/atualizar"&gt;🔄 Atualizar&lt;/a&gt; · &lt;a href="/api/resumo"&gt;API JSON&lt;/a&gt;
-    &lt;/body&gt;&lt;/html&gt;
-    """
-
-@app.route("/api/resumo")
-def api_resumo():
-    return jsonify(analisar(carregar_dados()))
-
-@app.route("/atualizar")
-def atualizar():
-    gerar_graficos(carregar_dados())
-    return redirect("/")
-
-# ===== INICIALIZAÇÃO =====
-preparar()
-gerar_exemplo()
-gerar_graficos(carregar_dados())
-app.run(debug=True)</pre></div><p><strong>~110 linhas. 4 bibliotecas. 20 semanas.</strong> O aluno da Semana 1 não acreditaria — mas foi ele que começou. 👏🏆</p></div></details>
+      <span class="tag obj">🎯 Objetivo</span>
+      <p>Fixar as regras de nomes de variáveis.</p>
+      <p><strong>Tarefa:</strong> SEM executar, classifique cada nome abaixo como ✅ válido ou ❌ inválido. Depois teste no Python para conferir:</p>
+      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex08_nomes.py</span></div>
+<pre class="code">nome_completo = "Ana"
+2idade = 30
+preço = 10.50
+valor total = 100
+_resultado = 0
+ValorTotal = 100
+nota-final = 8.5</pre></div>
+      <span class="tag passos">🧭 Passo a passo</span>
+      <ol>
+        <li>Aplique as regras: pode começar com número? Pode ter espaço? Pode ter hífen?</li>
+        <li>Anote suas previsões</li>
+        <li>Teste cada linha no Python (uma de cada vez) e compare</li>
+        <li>Para os inválidos: qual mensagem de erro apareceu?</li>
+      </ol>
+      <details class="dica"><summary>💡 Dica</summary><div class="inner">O hífen (<code>-</code>) é interpretado como subtração! <code>nota-final</code> parece um nome, mas o Python lê como <code>nota</code> menos <code>final</code>.</div></details>
+      <details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p>
+        <p><code>nome_completo</code> ✅ válido · <code>2idade</code> ❌ começa com número · <code>preço</code> ⚠️ funciona, mas evite acentos · <code>valor total</code> ❌ tem espaço · <code>_resultado</code> ✅ pode começar com underline · <code>ValorTotal</code> ✅ válido (mas preferimos <code>valor_total</code>) · <code>nota-final</code> ❌ hífen é subtração</p>
+      </div></details>
     </div>
   </article>
-</section>
 
-<section class="parte" id="p5">
-  <div class="parte-head"><span class="num">05</span><h2>A última formatura</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Os dois desafios finais da jornada inteira. Sem soluções — sua assinatura no diploma é resolvê-los. 🏆</p></div>
+  <!-- EX 9 -->
   <article class="ex" id="ex9">
     <div class="ex-head">
       <span class="ex-num">EX 09</span>
-      <h3>Desafio: o dashboard cresce 📈</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
+      <h3>Combinando texto e variáveis (f-strings)</h3>
+      <span class="stars">⭐ básico</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex9"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Três evoluções dignas de produção.</p><span class="tag passos">🧭 Roteiro</span><ol><li>Filtro por produto: rota <code>/produto/&lt;nome&gt;</code> mostrando só os dados daquele produto (pandas filtra, Flask serve!)</li><li>Upload simples: pesquise "flask upload file" e permita enviar um vendas.csv novo pelo navegador</li><li>O toque da Semana 15: um cartão com o faturamento em dólares, via sua cotacao_segura()</li><li>Cada item integra uma semana diferente — escolha pelo menos um e implemente</li></ol><details class="dica"><summary>💡 Pesquisar É programar</summary><div class="inner">Repare: este desafio manda você PESQUISAR. Programadores profissionais pesquisam o dia inteiro — a diferença é que agora você entende o que encontra.</div></details>
+      <span class="tag obj">🎯 Objetivo</span>
+      <p>Aprender a montar frases com variáveis usando f-strings.</p>
+      <p><strong>Conceito:</strong> a <strong>f-string</strong> permite inserir variáveis dentro de um texto. Basta colocar <code>f</code> antes das aspas e a variável entre chaves <code>{}</code>:</p>
+      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">exemplo.py</span></div>
+<pre class="code">nome = "Ana"
+print(f"Bem-vinda, {nome}!")   # Exibe: Bem-vinda, Ana!</pre></div>
+      <span class="tag passos">🧭 Passo a passo</span>
+      <ol>
+        <li>Reaproveite as variáveis do Exercício 7</li>
+        <li>Use UMA f-string para exibir: <em>"Meu nome é ___, tenho ___ anos e moro em ___."</em></li>
+        <li>Execute e confira</li>
+      </ol>
+      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex09_fstring.py</span></div>
+<pre class="code">nome = "______"
+cidade = "______"
+idade = ______
+
+print(f"Meu nome é {nome}, tenho {____} anos e moro em {____}.")</pre></div>
+      <span class="tag saida">✅ Saída esperada (exemplo)</span>
+      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div>
+<pre class="output">Meu nome é Robson, tenho 35 anos e moro em Porto Alegre.</pre></div>
+      <details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Crie uma variável <code>ano_atual = 2026</code> e exiba: <em>"Eu nasci aproximadamente em [ano]"</em>, calculando o ano de nascimento dentro da f-string: <code>{ano_atual - idade}</code>.</div></details>
+      <details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p>
+<div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex09.py</span></div>
+<pre class="code">nome = "Robson"
+cidade = "Porto Alegre"
+idade = 35
+
+print(f"Meu nome é {nome}, tenho {idade} anos e moro em {cidade}.")
+
+# Desafio extra:
+ano_atual = 2026
+print(f"Eu nasci aproximadamente em {ano_atual - idade}")
+# Dentro das chaves {} pode haver CONTAS, não só variáveis!</pre></div>
+      </div></details>
     </div>
   </article>
 
+  <!-- EX 10 -->
   <article class="ex" id="ex10">
     <div class="ex-head">
       <span class="ex-num">EX 10</span>
-      <h3>O desafio de todos os desafios 🏆</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
+      <h3>Variáveis mudam de valor!</h3>
+      <span class="stars">⭐ básico</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex10"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>O projeto-assinatura: um dashboard web para um problema 100% seu.</p><span class="tag passos">🧭 Roteiro</span><ol><li>Escolha os dados da SUA vida: vendas do negócio, notas das turmas, finanças, treinos...</li><li>Pipeline completo: CSV/Excel → pandas → matplotlib → Flask</li><li>README caprichado + GitHub + screenshot no LinkedIn</li><li>Apresente para alguém — de preferência, ensinando. Foi assim que esta jornada toda foi feita. 😉</li><li>E então... comece o próximo projeto. Sempre o próximo projeto. 🚀</li></ol><details class="dica"><summary>💡 A última palavra</summary><div class="inner">20 semanas, ~270 exercícios, 4 sistemas completos. Você não terminou um curso: você se tornou alguém que transforma problemas em código. O resto é prática — e a prática, agora, é vida. Obrigado pela jornada, e bons códigos para sempre! 🏆🎓🐍</div></details>
+      <span class="tag obj">🎯 Objetivo</span>
+      <p>Entender que uma variável pode ser <strong>atualizada</strong>.</p>
+      <span class="tag passos">🧭 Passo a passo</span>
+      <ol>
+        <li>Digite o código abaixo e, ANTES de executar, escreva num papel o que você acha que vai aparecer na tela</li>
+        <li>Execute e compare com sua previsão</li>
+        <li>Reflita: o que aconteceu na linha <code>pontos = pontos + 5</code>?</li>
+      </ol>
+      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex10_pontos.py</span></div>
+<pre class="code">pontos = 10
+print(pontos)
+
+pontos = 25
+print(pontos)
+
+pontos = pontos + 5
+print(pontos)</pre></div>
+      <span class="tag saida">✅ Saída esperada</span>
+      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div>
+<pre class="output">10
+25
+30</pre></div>
+      <details class="dica"><summary>💡 Explicação importante</summary><div class="inner"><code>pontos = pontos + 5</code> significa: "pegue o valor atual de pontos (25), some 5, e guarde o resultado (30) de volta na mesma caixinha". O sinal <code>=</code> em programação significa <strong>atribuição</strong> (guardar), não igualdade matemática!</div></details>
+    </div>
+  </article>
+
+  <!-- EX 11 -->
+  <article class="ex" id="ex11">
+    <div class="ex-head">
+      <span class="ex-num">EX 11</span>
+      <h3>A troca de valores (clássico!)</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex11"> Concluído</label>
+    </div>
+    <div class="ex-body">
+      <span class="tag obj">🎯 Objetivo</span>
+      <p>Resolver um dos problemas mais clássicos da lógica de programação.</p>
+      <p><strong>Contexto:</strong> você tem duas variáveis e precisa <strong>trocar os valores entre elas</strong>:</p>
+      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex11_troca.py</span></div>
+<pre class="code">a = "café"
+b = "leite"
+# Objetivo: no final, a deve valer "leite" e b deve valer "café"</pre></div>
+      <span class="tag passos">🧭 Passo a passo</span>
+      <ol>
+        <li>Primeiro tente o jeito ingênuo e veja por que NÃO funciona:
+<div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">tentativa_errada.py</span></div>
+<pre class="code">a = b   # a agora vale "leite"... mas o "café" foi perdido!
+b = a   # b recebe "leite" de novo. Deu errado!</pre></div></li>
+        <li>Pense na vida real: para trocar o conteúdo de dois copos, você precisa de um <strong>terceiro copo</strong> auxiliar</li>
+        <li>Use uma variável auxiliar e complete:
+<div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex11_troca.py</span></div>
+<pre class="code">auxiliar = a    # guarda o "café" em segurança
+a = ____        # complete
+b = ____        # complete</pre></div></li>
+        <li>Confira com <code>print(a)</code> e <code>print(b)</code></li>
+      </ol>
+      <span class="tag saida">✅ Saída esperada</span>
+      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div>
+<pre class="output">leite
+café</pre></div>
+      <details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Python tem um atalho elegante que dispensa a variável auxiliar: <code>a, b = b, a</code>. Teste e comprove!</div></details>
+      <details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p>
+<div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex11.py</span></div>
+<pre class="code">a = "café"
+b = "leite"
+
+auxiliar = a    # guarda "café" em segurança
+a = b           # a recebe "leite"
+b = auxiliar    # b recebe o "café" que estava guardado
+
+print(a)   # leite
+print(b)   # café
+
+# Desafio extra — o jeito "pythônico":
+a, b = b, a    # troca os dois de uma vez só!</pre></div>
+      </div></details>
     </div>
   </article>
 </section>
 
+<!-- ============ PARTE 4 ============ -->
+<section class="parte" id="p4">
+  <div class="parte-head"><span class="num">04</span><h2>Tipos de dados e entrada do usuário</h2></div>
+  <div class="parte-intro">
+    <h3>Conceito</h3>
+    <table>
+      <tr><th>Tipo</th><th>Nome em Python</th><th>Exemplo</th></tr>
+      <tr><td>Texto</td><td><code>str</code> (string)</td><td><code>"Olá"</code>, <code>"123"</code></td></tr>
+      <tr><td>Número inteiro</td><td><code>int</code> (integer)</td><td><code>10</code>, <code>-3</code>, <code>2026</code></td></tr>
+      <tr><td>Número decimal</td><td><code>float</code></td><td><code>1.75</code>, <code>-0.5</code></td></tr>
+      <tr><td>Verdadeiro/Falso</td><td><code>bool</code> (boolean)</td><td><code>True</code>, <code>False</code></td></tr>
+    </table>
+    <p>E o comando <code>input()</code> permite que o <strong>usuário digite</strong> algo:</p>
+    <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">exemplo.py</span></div>
+<pre class="code">nome = input("Digite seu nome: ")
+print(f"Olá, {nome}!")</pre></div>
+    <p>⚠️ <strong>MUITO IMPORTANTE:</strong> <code>input()</code> SEMPRE retorna texto (<code>str</code>), mesmo que o usuário digite um número! Para converter: <code>int(input(...))</code> → inteiro · <code>float(input(...))</code> → decimal.</p>
+  </div>
+
+  <!-- EX 12 -->
+  <article class="ex" id="ex12">
+    <div class="ex-head">
+      <span class="ex-num">EX 12</span>
+      <h3>Descobrindo os tipos</h3>
+      <span class="stars">⭐ básico</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex12"> Concluído</label>
+    </div>
+    <div class="ex-body">
+      <span class="tag obj">🎯 Objetivo</span>
+      <p>Usar a função <code>type()</code> para identificar tipos de dados.</p>
+      <span class="tag passos">🧭 Passo a passo</span>
+      <ol>
+        <li>Crie o arquivo <code>ex12_tipos.py</code></li>
+        <li>Digite o código abaixo e PREVEJA a saída antes de executar</li>
+        <li>Execute e confira. A variável <code>d</code> te surpreendeu?</li>
+      </ol>
+      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex12_tipos.py</span></div>
+<pre class="code">a = "Python"
+b = 42
+c = 3.14
+d = "42"
+e = True
+
+print(type(a))
+print(type(b))
+print(type(c))
+print(type(d))
+print(type(e))</pre></div>
+      <span class="tag saida">✅ Saída esperada</span>
+      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div>
+<pre class="output">&lt;class 'str'&gt;
+&lt;class 'int'&gt;
+&lt;class 'float'&gt;
+&lt;class 'str'&gt;
+&lt;class 'bool'&gt;</pre></div>
+      <details class="dica"><summary>💡 Dica</summary><div class="inner"><code>"42"</code> com aspas é TEXTO, não número. Você não consegue fazer matemática com ele diretamente!</div></details>
+    </div>
+  </article>
+
+  <!-- EX 13 -->
+  <article class="ex" id="ex13">
+    <div class="ex-head">
+      <span class="ex-num">EX 13</span>
+      <h3>Texto + texto = ?</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex13"> Concluído</label>
+    </div>
+    <div class="ex-body">
+      <span class="tag obj">🎯 Objetivo</span>
+      <p>Descobrir o que acontece quando "somamos" e "multiplicamos" textos.</p>
+      <span class="tag passos">🧭 Passo a passo</span>
+      <ol>
+        <li>PREVEJA o resultado de cada linha, depois execute</li>
+        <li>Compare suas previsões com o resultado real</li>
+        <li>Explique com suas palavras: o que <code>+</code> faz com textos? E o <code>*</code>?</li>
+      </ol>
+      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex13_textos.py</span></div>
+<pre class="code">print("2" + "3")
+print(2 + 3)
+print("ha" * 3)
+print("=" * 20)
+print("2" * 3)</pre></div>
+      <span class="tag saida">✅ Saída esperada</span>
+      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div>
+<pre class="output">23
+5
+hahaha
+====================
+222</pre></div>
+      <details class="dica"><summary>💡 Explicação</summary><div class="inner">Com textos, <code>+</code> <strong>junta</strong> (concatena) e <code>*</code> <strong>repete</strong>. Por isso <code>"2" + "3"</code> vira <code>"23"</code> e não <code>5</code>! O tipo do dado muda completamente o comportamento da operação.</div></details>
+    </div>
+  </article>
+
+  <!-- EX 14 -->
+  <article class="ex" id="ex14">
+    <div class="ex-head">
+      <span class="ex-num">EX 14</span>
+      <h3>Programa interativo: cadastro simples</h3>
+      <span class="stars">⭐ básico</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex14"> Concluído</label>
+    </div>
+    <div class="ex-body">
+      <span class="tag obj">🎯 Objetivo</span>
+      <p>Usar <code>input()</code> para coletar dados do usuário.</p>
+      <span class="tag passos">🧭 Passo a passo</span>
+      <ol>
+        <li>Crie o arquivo <code>ex14_cadastro.py</code></li>
+        <li>Peça ao usuário: nome, cidade e comida favorita (3 inputs)</li>
+        <li>No final, exiba um resumo formatado com f-string</li>
+      </ol>
+      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex14_cadastro.py</span></div>
+<pre class="code">print("=== CADASTRO ===")
+
+nome = input("Qual é o seu nome? ")
+cidade = input("____________________")
+comida = input("____________________")
+
+print()  # linha em branco
+print("=== RESUMO ===")
+print(f"Olá, {nome}! Você mora em ______ e adora comer ______.")</pre></div>
+      <span class="tag saida">✅ Exemplo de execução</span>
+      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div>
+<pre class="output">=== CADASTRO ===
+Qual é o seu nome? Carlos
+Em que cidade você mora? Santa Maria
+Qual sua comida favorita? Churrasco
+
+=== RESUMO ===
+Olá, Carlos! Você mora em Santa Maria e adora comer Churrasco.</pre></div>
+      <details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p>
+<div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex14.py</span></div>
+<pre class="code">print("=== CADASTRO ===")
+
+nome = input("Qual é o seu nome? ")
+cidade = input("Em que cidade você mora? ")
+comida = input("Qual sua comida favorita? ")
+
+print()
+print("=== RESUMO ===")
+print(f"Olá, {nome}! Você mora em {cidade} e adora comer {comida}.")</pre></div>
+      </div></details>
+    </div>
+  </article>
+
+  <!-- EX 15 -->
+  <article class="ex" id="ex15">
+    <div class="ex-head">
+      <span class="ex-num">EX 15</span>
+      <h3>A pegadinha do input numérico</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex15"> Concluído</label>
+    </div>
+    <div class="ex-body">
+      <span class="tag obj">🎯 Objetivo</span>
+      <p>Entender por que precisamos converter tipos.</p>
+      <span class="tag passos">🧭 Passo a passo</span>
+      <ol>
+        <li>Digite e execute este código <strong>com erro proposital</strong>:</li>
+      </ol>
+      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex15_erro.py</span></div>
+<pre class="code">idade = input("Digite sua idade: ")
+daqui_10_anos = idade + 10
+print(f"Daqui a 10 anos você terá {daqui_10_anos} anos")</pre></div>
+      <ol start="2">
+        <li>Você verá um <strong>erro</strong> parecido com:</li>
+      </ol>
+      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div>
+<pre class="output" style="color:#FF9B94">TypeError: can only concatenate str (not "int") to str</pre></div>
+      <ol start="3">
+        <li>Leia o erro: ele diz que não dá para somar texto (<code>str</code>) com número (<code>int</code>)</li>
+        <li>Agora <strong>corrija</strong> convertendo o input para inteiro:</li>
+      </ol>
+      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex15_corrigido.py</span></div>
+<pre class="code">idade = int(input("Digite sua idade: "))
+daqui_10_anos = idade + 10
+print(f"Daqui a 10 anos você terá {daqui_10_anos} anos")</pre></div>
+      <span class="tag saida">✅ Exemplo de execução (corrigido)</span>
+      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div>
+<pre class="output">Digite sua idade: 30
+Daqui a 10 anos você terá 40 anos</pre></div>
+      <details class="dica"><summary>💡 Lição</summary><div class="inner">Errar de propósito é uma ótima forma de aprender!</div></details>
+      <details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Peça o ano de nascimento da pessoa e calcule a idade aproximada dela em 2026.
+<div class="term-window" style="margin-top:10px"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_desafio.py</span></div>
+<pre class="code">ano_nascimento = int(input("Em que ano você nasceu? "))
+idade = 2026 - ano_nascimento
+print(f"Você tem aproximadamente {idade} anos")</pre></div></div></details>
+    </div>
+  </article>
+
+  <!-- EX 16 -->
+  <article class="ex" id="ex16">
+    <div class="ex-head">
+      <span class="ex-num">EX 16</span>
+      <h3>Ficha de personagem de RPG 🎲</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex16"> Concluído</label>
+    </div>
+    <div class="ex-body">
+      <span class="tag obj">🎯 Objetivo</span>
+      <p>Consolidar input, conversão de tipos e f-strings num programa maior.</p>
+      <p><strong>Tarefa:</strong> crie um programa que monta a ficha de um personagem de jogo, perguntando: nome do personagem (texto), classe (texto), nível (inteiro) e pontos de vida (inteiro). No final, exiba a ficha formatada.</p>
+      <span class="tag passos">🧭 Passo a passo</span>
+      <ol>
+        <li>Crie o arquivo <code>ex16_rpg.py</code></li>
+        <li>Faça os 4 inputs (atenção aos tipos: quais precisam de <code>int()</code>?)</li>
+        <li>Calcule também o <strong>dano base</strong> do personagem: <code>nivel * 3</code></li>
+        <li>Exiba a ficha no formato abaixo</li>
+      </ol>
+      <span class="tag saida">✅ Exemplo de execução</span>
+      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div>
+<pre class="output">=== CRIAÇÃO DE PERSONAGEM ===
+Nome do personagem: Thorin
+Classe: Guerreiro
+Nível: 5
+Pontos de vida: 120
+
+========== FICHA ==========
+🛡️  Thorin — Guerreiro
+⭐ Nível: 5
+❤️  Vida: 120 HP
+⚔️  Dano base: 15
+===========================</pre></div>
+      <details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Adicione o atributo "mana" e calcule o "poder mágico" como <code>mana * 2 + nivel</code>.</div></details>
+      <details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p>
+<div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex16.py</span></div>
+<pre class="code">print("=== CRIAÇÃO DE PERSONAGEM ===")
+
+nome = input("Nome do personagem: ")
+classe = input("Classe: ")
+nivel = int(input("Nível: "))          # número → precisa de int()
+vida = int(input("Pontos de vida: "))  # número → precisa de int()
+
+dano_base = nivel * 3
+
+print()
+print("========== FICHA ==========")
+print(f"🛡️  {nome} — {classe}")
+print(f"⭐ Nível: {nivel}")
+print(f"❤️  Vida: {vida} HP")
+print(f"⚔️  Dano base: {dano_base}")
+print("===========================")</pre></div>
+      </div></details>
+    </div>
+  </article>
+</section>
+
+<!-- ============ PARTE 5 ============ -->
+<section class="parte" id="p5">
+  <div class="parte-head"><span class="num">05</span><h2>Operadores matemáticos</h2></div>
+  <div class="parte-intro">
+    <h3>Conceito</h3>
+    <table>
+      <tr><th>Operador</th><th>Operação</th><th>Exemplo</th><th>Resultado</th></tr>
+      <tr><td><code>+</code></td><td>Soma</td><td><code>5 + 3</code></td><td><code>8</code></td></tr>
+      <tr><td><code>-</code></td><td>Subtração</td><td><code>5 - 3</code></td><td><code>2</code></td></tr>
+      <tr><td><code>*</code></td><td>Multiplicação</td><td><code>5 * 3</code></td><td><code>15</code></td></tr>
+      <tr><td><code>/</code></td><td>Divisão</td><td><code>7 / 2</code></td><td><code>3.5</code></td></tr>
+      <tr><td><code>//</code></td><td>Divisão inteira</td><td><code>7 // 2</code></td><td><code>3</code></td></tr>
+      <tr><td><code>%</code></td><td>Resto da divisão (módulo)</td><td><code>7 % 2</code></td><td><code>1</code></td></tr>
+      <tr><td><code>**</code></td><td>Potência</td><td><code>2 ** 3</code></td><td><code>8</code></td></tr>
+    </table>
+    <p>⚠️ A divisão <code>/</code> SEMPRE retorna <code>float</code>, mesmo que o resultado seja exato: <code>10 / 2</code> → <code>5.0</code></p>
+  </div>
+
+  <!-- EX 17 -->
+  <article class="ex" id="ex17">
+    <div class="ex-head">
+      <span class="ex-num">EX 17</span>
+      <h3>Calculadora de previsões</h3>
+      <span class="stars">⭐ básico</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex17"> Concluído</label>
+    </div>
+    <div class="ex-body">
+      <span class="tag obj">🎯 Objetivo</span>
+      <p>Praticar todos os operadores.</p>
+      <span class="tag passos">🧭 Passo a passo</span>
+      <ol>
+        <li>Crie o arquivo <code>ex17_operadores.py</code> com <code>a = 17</code> e <code>b = 5</code></li>
+        <li>Exiba o resultado de TODAS as 7 operações da tabela, com etiquetas</li>
+        <li>ANTES de executar, calcule mentalmente cada resultado!</li>
+      </ol>
+      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex17_operadores.py</span></div>
+<pre class="code">a = 17
+b = 5
+
+print(f"Soma: {a + b}")
+print(f"Subtração: {a - b}")
+print(f"Multiplicação: {____}")
+print(f"Divisão: {____}")
+print(f"Divisão inteira: {____}")
+print(f"Resto: {____}")
+print(f"Potência: {____}")</pre></div>
+      <span class="tag saida">✅ Saída esperada</span>
+      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div>
+<pre class="output">Soma: 22
+Subtração: 12
+Multiplicação: 85
+Divisão: 3.4
+Divisão inteira: 3
+Resto: 2
+Potência: 1419857</pre></div>
+      <details class="dica"><summary>💡 Dica sobre o % (resto)</summary><div class="inner">Ele é MUITO usado! Por exemplo, <code>numero % 2</code> retorna <code>0</code> se o número for par e <code>1</code> se for ímpar. Guarde essa!</div></details>
+      <details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p>
+<div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex17.py</span></div>
+<pre class="code">a = 17
+b = 5
+
+print(f"Soma: {a + b}")              # 22
+print(f"Subtração: {a - b}")          # 12
+print(f"Multiplicação: {a * b}")      # 85
+print(f"Divisão: {a / b}")            # 3.4 (sempre float!)
+print(f"Divisão inteira: {a // b}")   # 3 (descarta a parte decimal)
+print(f"Resto: {a % b}")              # 2 (17 = 3*5 + 2)
+print(f"Potência: {a ** b}")          # 1419857 (17 elevado a 5)</pre></div>
+      </div></details>
+    </div>
+  </article>
+
+  <!-- EX 18 -->
+  <article class="ex" id="ex18">
+    <div class="ex-head">
+      <span class="ex-num">EX 18</span>
+      <h3>A ordem das operações</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex18"> Concluído</label>
+    </div>
+    <div class="ex-body">
+      <span class="tag obj">🎯 Objetivo</span>
+      <p>Entender a precedência dos operadores (o que o Python calcula primeiro).</p>
+      <span class="tag passos">🧭 Passo a passo</span>
+      <ol>
+        <li>PREVEJA o resultado de cada linha, depois execute</li>
+        <li>Compare suas previsões</li>
+        <li>Conclua: a ordem é a mesma da matemática? Os parênteses funcionam igual?</li>
+      </ol>
+      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex18_ordem.py</span></div>
+<pre class="code">print(2 + 3 * 4)
+print((2 + 3) * 4)
+print(10 - 4 / 2)
+print((10 - 4) / 2)
+print(2 ** 3 * 2)</pre></div>
+      <span class="tag saida">✅ Saída esperada</span>
+      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div>
+<pre class="output">14
+20
+8.0
+3.0
+16</pre></div>
+      <details class="dica"><summary>💡 Regra</summary><div class="inner">Python segue a matemática: parênteses primeiro, depois potência, depois multiplicação/divisão, depois soma/subtração. <strong>Na dúvida, use parênteses</strong> — eles deixam o código mais claro!</div></details>
+    </div>
+  </article>
+
+  <!-- EX 19 -->
+  <article class="ex" id="ex19">
+    <div class="ex-head">
+      <span class="ex-num">EX 19</span>
+      <h3>Calculadora de média escolar</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex19"> Concluído</label>
+    </div>
+    <div class="ex-body">
+      <span class="tag obj">🎯 Objetivo</span>
+      <p>Resolver um problema real combinando input, conversão e operadores.</p>
+      <span class="tag passos">🧭 Passo a passo</span>
+      <ol>
+        <li>Crie o arquivo <code>ex19_media.py</code></li>
+        <li>Peça 3 notas ao usuário (use <code>float(input(...))</code> — notas podem ter decimais!)</li>
+        <li>Calcule a média: <code>(nota1 + nota2 + nota3) / 3</code></li>
+        <li>Exiba a média formatada</li>
+      </ol>
+      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex19_media.py</span></div>
+<pre class="code">print("=== CALCULADORA DE MÉDIA ===")
+
+nota1 = float(input("Digite a 1ª nota: "))
+nota2 = ____________________
+nota3 = ____________________
+
+media = ____________________
+
+print(f"Sua média final é: {media:.1f}")</pre></div>
+      <span class="tag saida">✅ Exemplo de execução</span>
+      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div>
+<pre class="output">=== CALCULADORA DE MÉDIA ===
+Digite a 1ª nota: 7.5
+Digite a 2ª nota: 8
+Digite a 3ª nota: 6.5
+Sua média final é: 7.3</pre></div>
+      <details class="dica"><summary>💡 Sobre {media:.1f}</summary><div class="inner">O <code>:.1f</code> dentro da f-string formata o número com <strong>1 casa decimal</strong>. Use <code>:.2f</code> para duas casas, e assim por diante.</div></details>
+      <details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">E se a média fosse <strong>ponderada</strong>? Nota 1 com peso 2, nota 2 com peso 3 e nota 3 com peso 5. Fórmula: <code>(n1*2 + n2*3 + n3*5) / 10</code></div></details>
+      <details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p>
+<div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex19.py</span></div>
+<pre class="code">print("=== CALCULADORA DE MÉDIA ===")
+
+nota1 = float(input("Digite a 1ª nota: "))
+nota2 = float(input("Digite a 2ª nota: "))
+nota3 = float(input("Digite a 3ª nota: "))
+
+media = (nota1 + nota2 + nota3) / 3   # parênteses são essenciais!
+# Sem parênteses, seria nota1 + nota2 + (nota3/3) — errado!
+
+print(f"Sua média final é: {media:.1f}")
+
+# Desafio extra — média ponderada:
+media_ponderada = (nota1 * 2 + nota2 * 3 + nota3 * 5) / 10
+print(f"Média ponderada: {media_ponderada:.1f}")</pre></div>
+      </div></details>
+    </div>
+  </article>
+
+  <!-- EX 20 -->
+  <article class="ex" id="ex20">
+    <div class="ex-head">
+      <span class="ex-num">EX 20</span>
+      <h3>Troco da padaria 🥖</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex20"> Concluído</label>
+    </div>
+    <div class="ex-body">
+      <span class="tag obj">🎯 Objetivo</span>
+      <p>Usar divisão inteira e módulo num problema do dia a dia.</p>
+      <p><strong>Contexto:</strong> você comprou pães e quer saber quantas notas de R$ 10 cabem no seu troco e quanto sobra.</p>
+      <span class="tag passos">🧭 Passo a passo</span>
+      <ol>
+        <li>Crie a variável <code>troco = 47</code></li>
+        <li>Use <code>//</code> para descobrir quantas notas de 10 cabem em 47</li>
+        <li>Use <code>%</code> para descobrir o que sobra</li>
+        <li>Exiba o resultado</li>
+      </ol>
+      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex20_troco.py</span></div>
+<pre class="code">troco = 47
+
+notas_de_10 = troco ____ 10
+sobra = troco ____ 10
+
+print(f"Troco de R$ {troco}:")
+print(f"→ {notas_de_10} notas de R$ 10")
+print(f"→ R$ {sobra} de sobra")</pre></div>
+      <span class="tag saida">✅ Saída esperada</span>
+      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div>
+<pre class="output">Troco de R$ 47:
+→ 4 notas de R$ 10
+→ R$ 7 de sobra</pre></div>
+      <details class="desafio"><summary>🚀 Desafio extra (difícil!)</summary><div class="inner">Decomponha o troco completo: quantas notas de 10, de 5 e moedas de 1? Dica: depois de calcular as notas de 10, use a sobra para calcular as notas de 5.</div></details>
+      <details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p>
+<div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex20.py</span></div>
+<pre class="code">troco = 47
+
+notas_de_10 = troco // 10   # 4 (quantas vezes 10 "cabe" em 47)
+sobra = troco % 10          # 7 (o que resta)
+
+print(f"Troco de R$ {troco}:")
+print(f"→ {notas_de_10} notas de R$ 10")
+print(f"→ R$ {sobra} de sobra")
+
+# Desafio extra — decomposição completa:
+notas_de_5 = sobra // 5     # 1 nota de 5 (na sobra de 7)
+moedas_de_1 = sobra % 5     # 2 moedas de 1
+print(f"→ {notas_de_5} notas de R$ 5")
+print(f"→ {moedas_de_1} moedas de R$ 1")</pre></div>
+      </div></details>
+    </div>
+  </article>
+
+  <!-- EX 21 -->
+  <article class="ex" id="ex21">
+    <div class="ex-head">
+      <span class="ex-num">EX 21</span>
+      <h3>Conversor de segundos ⏱️</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex21"> Concluído</label>
+    </div>
+    <div class="ex-body">
+      <span class="tag obj">🎯 Objetivo</span>
+      <p>Aplicar <code>//</code> e <code>%</code> em sequência (problema clássico de lógica!).</p>
+      <p><strong>Tarefa:</strong> dado um total de segundos, converta para horas, minutos e segundos.</p>
+      <span class="tag passos">🧭 Passo a passo</span>
+      <ol>
+        <li>Crie a variável <code>total_segundos = 7385</code></li>
+        <li>Pense na lógica:<br>
+          — 1 hora = 3600 segundos → <code>horas = total_segundos // 3600</code><br>
+          — O que sobra depois das horas: <code>resto = total_segundos % 3600</code><br>
+          — 1 minuto = 60 segundos → <code>minutos = resto // 60</code><br>
+          — Segundos finais: <code>segundos = resto % 60</code></li>
+        <li>Monte e exiba o resultado</li>
+      </ol>
+      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex21_segundos.py</span></div>
+<pre class="code">total_segundos = 7385
+
+horas = total_segundos // 3600
+resto = total_segundos % 3600
+minutos = ____________________
+segundos = ____________________
+
+print(f"{total_segundos} segundos = {horas}h {minutos}min {segundos}s")</pre></div>
+      <span class="tag saida">✅ Saída esperada</span>
+      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div>
+<pre class="output">7385 segundos = 2h 3min 5s</pre></div>
+      <details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Transforme em programa interativo: peça os segundos com <code>int(input(...))</code>.</div></details>
+      <details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p>
+<div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex21.py</span></div>
+<pre class="code">total_segundos = 7385
+
+horas = total_segundos // 3600    # 2 (7385 ÷ 3600 = 2, ignorando resto)
+resto = total_segundos % 3600     # 185 segundos restantes
+minutos = resto // 60             # 3
+segundos = resto % 60             # 5
+
+print(f"{total_segundos} segundos = {horas}h {minutos}min {segundos}s")</pre></div>
+      </div></details>
+    </div>
+  </article>
+
+  <!-- EX 22 -->
+  <article class="ex" id="ex22">
+    <div class="ex-head">
+      <span class="ex-num">EX 22</span>
+      <h3>Calculadora de IMC ⚖️</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex22"> Concluído</label>
+    </div>
+    <div class="ex-body">
+      <span class="tag obj">🎯 Objetivo</span>
+      <p>Usar potência e divisão num cálculo do mundo real.</p>
+      <p><strong>Conceito:</strong> o IMC (Índice de Massa Corporal) é calculado por: <code>peso / altura²</code></p>
+      <span class="tag passos">🧭 Passo a passo</span>
+      <ol>
+        <li>Crie o arquivo <code>ex22_imc.py</code></li>
+        <li>Peça peso (kg) e altura (m) com <code>float(input(...))</code></li>
+        <li>Calcule: <code>imc = peso / altura ** 2</code> (ou <code>peso / (altura * altura)</code>)</li>
+        <li>Exiba com 1 casa decimal</li>
+      </ol>
+      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex22_imc.py</span></div>
+<pre class="code">print("=== CALCULADORA DE IMC ===")
+
+peso = float(input("Seu peso (kg): "))
+altura = ____________________
+
+imc = ____________________
+
+print(f"Seu IMC é: {imc:.1f}")</pre></div>
+      <span class="tag saida">✅ Exemplo de execução</span>
+      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div>
+<pre class="output">=== CALCULADORA DE IMC ===
+Seu peso (kg): 80
+Sua altura (m): 1.75
+Seu IMC é: 26.1</pre></div>
+      <details class="dica"><summary>💡 Atenção</summary><div class="inner">A altura deve ser digitada com PONTO (<code>1.75</code>), não vírgula (<code>1,75</code>) — Python usa o padrão internacional. Teste com vírgula e veja o erro que aparece!</div></details>
+      <details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p>
+<div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex22.py</span></div>
+<pre class="code">print("=== CALCULADORA DE IMC ===")
+
+peso = float(input("Seu peso (kg): "))
+altura = float(input("Sua altura (m): "))
+
+imc = peso / altura ** 2   # potência (**) é calculada antes da divisão
+
+print(f"Seu IMC é: {imc:.1f}")</pre></div>
+      </div></details>
+    </div>
+  </article>
+
+  <!-- EX 23 -->
+  <article class="ex" id="ex23">
+    <div class="ex-head">
+      <span class="ex-num">EX 23</span>
+      <h3>Dividindo a conta do restaurante 🍕</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex23"> Concluído</label>
+    </div>
+    <div class="ex-body">
+      <span class="tag obj">🎯 Objetivo</span>
+      <p>Combinar vários operadores num problema cotidiano.</p>
+      <span class="tag passos">🧭 Passo a passo</span>
+      <ol>
+        <li>Pergunte o valor total da conta (<code>float</code>)</li>
+        <li>Pergunte o número de pessoas (<code>int</code>)</li>
+        <li>Calcule a gorjeta de 10%: <code>total * 0.10</code></li>
+        <li>Calcule o valor final com gorjeta</li>
+        <li>Divida pelo número de pessoas</li>
+        <li>Exiba quanto cada um paga, com 2 casas decimais</li>
+      </ol>
+      <span class="tag saida">✅ Exemplo de execução</span>
+      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div>
+<pre class="output">=== DIVIDIR A CONTA ===
+Valor da conta: R$ 230
+Número de pessoas: 4
+
+Gorjeta (10%): R$ 23.00
+Total com gorjeta: R$ 253.00
+Cada pessoa paga: R$ 63.25</pre></div>
+      <details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Pergunte também a porcentagem da gorjeta (algumas pessoas dão 12%, 15%...). Dica: <code>gorjeta = total * (porcentagem / 100)</code>.</div></details>
+      <details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p>
+<div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex23.py</span></div>
+<pre class="code">print("=== DIVIDIR A CONTA ===")
+
+total = float(input("Valor da conta: R$ "))
+pessoas = int(input("Número de pessoas: "))
+
+gorjeta = total * 0.10
+total_final = total + gorjeta
+por_pessoa = total_final / pessoas
+
+print()
+print(f"Gorjeta (10%): R$ {gorjeta:.2f}")
+print(f"Total com gorjeta: R$ {total_final:.2f}")
+print(f"Cada pessoa paga: R$ {por_pessoa:.2f}")
+
+# Desafio extra:
+# porcentagem = float(input("Porcentagem da gorjeta: "))
+# gorjeta = total * (porcentagem / 100)</pre></div>
+      </div></details>
+    </div>
+  </article>
+</section>
+
+<!-- ============ PARTE 6 ============ -->
+<section class="parte" id="p6">
+  <div class="parte-head"><span class="num">06</span><h2>Projetos da semana: juntando tudo!</h2></div>
+
+  <!-- EX 24 -->
+  <article class="ex" id="ex24">
+    <div class="ex-head">
+      <span class="ex-num">EX 24</span>
+      <h3>Projeto: Orçamento de Canecas Personalizadas ☕</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex24"> Concluído</label>
+    </div>
+    <div class="ex-body">
+      <span class="tag obj">🎯 Objetivo</span>
+      <p>Construir um programa completo usando TUDO da semana: variáveis, input, conversão de tipos, operadores e f-strings.</p>
+      <p><strong>Contexto:</strong> você tem uma lojinha de canecas personalizadas. Cada caneca custa <strong>R$ 25,00</strong>. Crie um programa que monta um orçamento para o cliente.</p>
+      <span class="tag passos">🧭 Requisitos</span>
+      <ol>
+        <li>Exibir um cabeçalho bonito com o nome da loja</li>
+        <li>Perguntar o nome do cliente</li>
+        <li>Perguntar a quantidade de canecas desejada (inteiro)</li>
+        <li>Calcular o valor total</li>
+        <li>Calcular também um valor com 10% de desconto (<code>total * 0.9</code>)</li>
+        <li>Exibir o orçamento completo formatado</li>
+      </ol>
+      <p><strong>Comece pelo esqueleto abaixo e complete:</strong></p>
+      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex24_projeto.py</span></div>
+<pre class="code">print("=" * 35)
+print("    ☕ TUA CANECA - ORÇAMENTO ☕")
+print("=" * 35)
+
+PRECO_CANECA = 25.00
+
+nome_cliente = input("Nome do cliente: ")
+quantidade = ____________________
+
+total = ____________________
+total_com_desconto = ____________________
+
+print()
+print("=" * 35)
+print(f"Cliente: {nome_cliente}")
+print(f"Quantidade: {quantidade} canecas")
+print(f"Valor unitário: R$ {PRECO_CANECA:.2f}")
+print(f"TOTAL: R$ {total:.2f}")
+print(f"À vista (10% desc.): R$ {total_com_desconto:.2f}")
+print("=" * 35)</pre></div>
+      <span class="tag saida">✅ Exemplo de execução</span>
+      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div>
+<pre class="output">===================================
+    ☕ TUA CANECA - ORÇAMENTO ☕
+===================================
+Nome do cliente: Fernanda
+Quantidade de canecas: 8
+
+===================================
+Cliente: Fernanda
+Quantidade: 8 canecas
+Valor unitário: R$ 25.00
+TOTAL: R$ 200.00
+À vista (10% desc.): R$ 180.00
+===================================</pre></div>
+      <details class="dica"><summary>💡 Curiosidade</summary><div class="inner"><code>PRECO_CANECA</code> está em maiúsculas por convenção: indica um valor que não muda durante o programa (constante). E <code>"=" * 35</code> repete o caractere 35 vezes!</div></details>
+      <details class="desafio"><summary>🚀 Desafios extras (escolha pelo menos um)</summary><div class="inner">
+        <ol>
+          <li>Adicione um campo de frete fixo de R$ 15,00 ao total</li>
+          <li>Pergunte também a cor da caneca e exiba no orçamento</li>
+          <li>Calcule o valor de cada parcela se o cliente dividir em 3x (sem desconto)</li>
+        </ol>
+      </div></details>
+      <details class="solucao"><summary>🔑 Ver solução (com os 3 desafios)</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p>
+<div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex24.py</span></div>
+<pre class="code">print("=" * 35)
+print("    ☕ TUA CANECA - ORÇAMENTO ☕")
+print("=" * 35)
+
+PRECO_CANECA = 25.00
+FRETE = 15.00  # desafio extra 1
+
+nome_cliente = input("Nome do cliente: ")
+quantidade = int(input("Quantidade de canecas: "))
+cor = input("Cor da caneca: ")  # desafio extra 2
+
+total = quantidade * PRECO_CANECA + FRETE
+total_com_desconto = total * 0.9   # 10% de desconto = pagar 90%
+parcela = total / 3                # desafio extra 3
+
+print()
+print("=" * 35)
+print(f"Cliente: {nome_cliente}")
+print(f"Quantidade: {quantidade} canecas ({cor})")
+print(f"Valor unitário: R$ {PRECO_CANECA:.2f}")
+print(f"Frete: R$ {FRETE:.2f}")
+print(f"TOTAL: R$ {total:.2f}")
+print(f"À vista (10% desc.): R$ {total_com_desconto:.2f}")
+print(f"Ou 3x de R$ {parcela:.2f}")
+print("=" * 35)</pre></div>
+      </div></details>
+    </div>
+  </article>
+
+  <!-- EX 25 -->
+  <article class="ex" id="ex25">
+    <div class="ex-head">
+      <span class="ex-num">EX 25</span>
+      <h3>Projeto bônus: Conta de energia elétrica 💡</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex25"> Concluído</label>
+    </div>
+    <div class="ex-body">
+      <span class="tag obj">🎯 Objetivo</span>
+      <p>Resolver um problema completo sozinho, com menos ajuda (teste final da semana!).</p>
+      <p><strong>Contexto:</strong> a conta de luz é calculada assim:</p>
+      <ul>
+        <li>Consumo em kWh × tarifa de R$ 0,95 por kWh</li>
+        <li>+ taxa de iluminação pública fixa de R$ 12,50</li>
+        <li>+ 18% de imposto sobre o valor do consumo (sem a taxa)</li>
+      </ul>
+      <span class="tag passos">🧭 Roteiro (sem código pronto desta vez!)</span>
+      <ol>
+        <li>Defina as constantes: <code>TARIFA = 0.95</code>, <code>TAXA_ILUMINACAO = 12.50</code></li>
+        <li>Peça o consumo com <code>float(input(...))</code></li>
+        <li>Calcule: valor do consumo, imposto (<code>valor_consumo * 0.18</code>) e total</li>
+        <li>Exiba tudo detalhado, com 2 casas decimais</li>
+      </ol>
+      <span class="tag saida">✅ Exemplo de execução</span>
+      <div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div>
+<pre class="output">=== CONTA DE ENERGIA ===
+Consumo do mês (kWh): 200
+
+Consumo: R$ 190.00
+Imposto (18%): R$ 34.20
+Iluminação pública: R$ 12.50
+TOTAL A PAGAR: R$ 236.70</pre></div>
+      <details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p>
+<div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex25.py</span></div>
+<pre class="code">print("=== CONTA DE ENERGIA ===")
+
+TARIFA = 0.95
+TAXA_ILUMINACAO = 12.50
+
+consumo = float(input("Consumo do mês (kWh): "))
+
+valor_consumo = consumo * TARIFA
+imposto = valor_consumo * 0.18
+total = valor_consumo + imposto + TAXA_ILUMINACAO
+
+print()
+print(f"Consumo: R$ {valor_consumo:.2f}")
+print(f"Imposto (18%): R$ {imposto:.2f}")
+print(f"Iluminação pública: R$ {TAXA_ILUMINACAO:.2f}")
+print(f"TOTAL A PAGAR: R$ {total:.2f}")</pre></div>
+      </div></details>
+    </div>
+  </article>
+</section>
+
+<!-- ============ CHECKLIST ============ -->
 <div class="checklist" id="checklist">
   <h2>✅ Checklist de fim de semana</h2>
-  <p>Antes de seguir para a próxima semana, confirme que você consegue:</p>
-<label class="check-item"><input type="checkbox"><span>Prever saídas misturando pandas, Flask e os clássicos</span></label>
-<label class="check-item"><input type="checkbox"><span>Caçar os bugs típicos de dashboards (show no servidor, chaves em f-string...)</span></label>
-<label class="check-item"><input type="checkbox"><span>Estruturar um projeto web: dados/, static/, app.py</span></label>
-<label class="check-item"><input type="checkbox"><span>Carregar e analisar dados com pandas em funções</span></label>
-<label class="check-item"><input type="checkbox"><span>Gerar gráficos em PNG por código (modo Agg, sem janela!)</span></label>
-<label class="check-item"><input type="checkbox"><span>Montar o painel HTML com números e imagens</span></label>
-<label class="check-item"><input type="checkbox"><span>Expor a análise via API própria com jsonify</span></label>
-<label class="check-item"><input type="checkbox"><span>Criar a rota /atualizar com redirect</span></label>
-<label class="check-item"><input type="checkbox"><span>Integrar 4 bibliotecas num sistema coeso</span></label>
-<label class="check-item"><input type="checkbox"><span>Apresentar o dashboard rodando — sua obra-prima</span></label>
+  <p>Antes de seguir para a Semana 2, confirme que você consegue:</p>
+  <label class="check-item"><input type="checkbox"><span>Explicar o que é um algoritmo com suas palavras</span></label>
+  <label class="check-item"><input type="checkbox"><span>Criar variáveis de texto, inteiro e decimal</span></label>
+  <label class="check-item"><input type="checkbox"><span>Saber quais nomes de variáveis são válidos</span></label>
+  <label class="check-item"><input type="checkbox"><span>Usar print() com f-strings (f"..." e {variavel})</span></label>
+  <label class="check-item"><input type="checkbox"><span>Pedir dados ao usuário com input()</span></label>
+  <label class="check-item"><input type="checkbox"><span>Converter texto em número com int() e float()</span></label>
+  <label class="check-item"><input type="checkbox"><span>Trocar valores entre duas variáveis</span></label>
+  <label class="check-item"><input type="checkbox"><span>Usar os 7 operadores matemáticos, incluindo // e %</span></label>
+  <label class="check-item"><input type="checkbox"><span>Formatar decimais com :.2f</span></label>
+  <label class="check-item"><input type="checkbox"><span>Ler uma mensagem de erro sem entrar em pânico 😄</span></label>
 </div>
 
+<!-- banner de conclusão -->
 <div class="win-banner" id="winBanner">
-  <h2>🏆 SEMANA 20 COMPLETA!</h2>
-  <p>JORNADA ABSOLUTA COMPLETA! 20 semanas, ~270 exercícios, 4 projetos finais — do print() a um dashboard web. Não há mais curso à sua frente: há o mundo. Vá programar nele! 🏆🎓🐍✨</p>
+  <h2>🏆 SEMANA 1 COMPLETA!</h2>
+  <p>Você concluiu os 25 exercícios. Está pronto para a Semana 2!</p>
 </div>
 
+<!-- prévia semana 2 -->
 <div class="preview-s2">
-<h2>🏆 A última formatura: 20 semanas</h2><p>Olhe a estrada: <strong>Fundamentos</strong> (1-8), <strong>POO e dados</strong> (9-12), <strong>Mundo real</strong> (13-16) e <strong>Dados &amp; Web</strong> (17-20). Você lê código, escreve código, conserta código — e agora SERVE código na web. Daqui em diante: aprofunde uma trilha (pandas avançado, Django, automação com bots, IA via APIs), mantenha o GitHub vivo, participe de comunidades e — o conselho eterno — <strong>construa coisas reais</strong>. Esta página é a última do curso, mas a primeira da sua carreira. Obrigado pela jornada! 🏆🎓🐍</p></div>
+  <h2>📅 Prévia da Semana 2</h2>
+  <p>Na próxima semana: <strong>estruturas condicionais</strong> (<code>if</code>, <code>elif</code>, <code>else</code>), operadores de comparação (<code>==</code>, <code>&gt;</code>, <code>&lt;</code>) e operadores lógicos (<code>and</code>, <code>or</code>, <code>not</code>) — seu programa vai começar a <strong>tomar decisões</strong>!</p>
+</div>
 
 </main>
 
-<footer>python_para_iniciantes // semana_20 // exercícios guiados</footer>
+<footer>python_para_iniciantes // semana_01 // exercícios guiados</footer>
 
 <script>
 // ===== Syntax highlight leve para Python =====
@@ -657,7 +1499,7 @@ app.run(debug=True)</pre></div><p><strong>~110 linhas. 4 bibliotecas. 20 semanas
     src = src.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     // uma passada só, com alternação (comentário | string | builtin | bool | número)
     src = src.replace(
-      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|insert|int|float|str|len|range|type|abs|round|max|min|sum|sorted|sort|reverse|append|remove|split|strip|upper|lower|replace|title|randint|random|get|keys|values|items|open|readlines|read|write|close|count|index|pop|update|list|dict|tuple|enumerate|sqrt|floor|ceil|choice|shuffle|sample|sleep|now|today|strftime|dumps|dump|loads|load|isinstance|datetime|date|DictReader|DictWriter|writerows|writerow|writeheader|writer|reader|csv|Workbook|load_workbook|save|iter_rows|Font|listdir|makedirs|getcwd|rename|exists|getsize|splitext|join|endswith|startswith|copytree|copy|move|requests|status_code|json|DataFrame|read_csv|read_excel|to_excel|to_csv|head|describe|groupby|sort_values|value_counts|mean|idxmax|bar|barh|pie|plot|savefig|show|title|xlabel|ylabel|figure|legend|axhline|tight_layout|close|Flask|route|run|render_template|jsonify|redirect|request)\b|\b(True|False|None|if|elif|else|while|for|in|and|or|not|break|continue|import|from|def|return|try|except|finally|with|as|del|global|pass|class|self|super|lambda)\b|(\b\d+(?:\.\d+)?\b)/g,
+      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|int|float|type)\b|\b(True|False)\b|(\b\d+(?:\.\d+)?\b)/g,
       function(m, com, str, fn, bool, num){
         if(com)  return '<span class="tk-com">'+com+'</span>';
         if(str)  return '<span class="tk-str">'+str+'</span>';
@@ -676,7 +1518,7 @@ app.run(debug=True)</pre></div><p><strong>~110 linhas. 4 bibliotecas. 20 semanas
 // no navegador. Se o localStorage estiver indisponível (modo restrito,
 // pré-visualização, etc.), o progresso funciona só em memória, sem quebrar.
 const storage = (function(){
-  const KEY = 'python_semana20_progresso';
+  const KEY = 'python_semana01_progresso';
   let memoria = {};
   let disponivel = false;
   try{
@@ -723,10 +1565,10 @@ const storage = (function(){
   const MSGS = [
     [0,  'Marque os exercícios concluídos ✔'],
     [1,  'Boa! Continue assim 💪'],
-    [3,  'Pegando o ritmo! 🔥'],
-    [5, 'Metade do caminho! 🚀'],
-    [8, 'Quase lá... força! ⚡'],
-    [10, 'SEMANA COMPLETA! 🏆']
+    [7,  'Pegando o ritmo! 🔥'],
+    [13, 'Metade do caminho! 🚀'],
+    [19, 'Quase lá... força! ⚡'],
+    [25, 'SEMANA COMPLETA! 🏆']
   ];
 
   function estadoAtual(){

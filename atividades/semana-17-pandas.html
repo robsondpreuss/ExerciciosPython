@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Semana 9 — Módulos e Bibliotecas</title>
+<title>Semana 17 — Análise de Dados com pandas</title>
 <style>
   :root{
     --ink:#16243A;
@@ -57,7 +57,7 @@
     color:#fff;padding:56px 20px 48px;text-align:center;position:relative;overflow:hidden;
   }
   header.hero::before{
-    content:"import  from  math.  random.  datetime  pip install";
+    content:"import pandas as pd  DataFrame  read_csv(  groupby(";
     position:absolute;inset:auto 0 8px 0;font-family:var(--mono);font-size:.78rem;
     color:rgba(255,255,255,.14);letter-spacing:.4em;white-space:nowrap;overflow:hidden;
   }
@@ -234,325 +234,260 @@
 <div class="progress-wrap" role="region" aria-label="Progresso da semana">
   <span class="label">XP DA SEMANA</span>
   <div class="progress-bar"><div class="progress-fill" id="pfill"></div></div>
-  <span class="progress-count" id="pcount">0 / 16</span>
+  <span class="progress-count" id="pcount">0 / 14</span>
   <span class="progress-msg" id="pmsg">Marque os exercícios concluídos ✔</span>
   <button class="reset-btn" id="resetBtn" title="Apagar todo o progresso salvo">↺ Resetar</button>
 </div>
 
 <header class="hero">
   <div class="kicker">Python para Iniciantes · Exercícios Guiados</div>
-  <h1>SEMANA 9 — Módulos:<br>superpoderes prontos para usar<span class="cursor" aria-hidden="true"></span></h1>
-  <p class="sub">Pare de reinventar a roda: import, a matemática do math, o random a fundo, datas e horas com datetime, seu PRÓPRIO módulo e a porta de entrada do pip.</p>
+  <h1>SEMANA 17 — pandas:<br>análise de dados de verdade<span class="cursor" aria-hidden="true"></span></h1>
+  <p class="sub">A biblioteca número 1 de dados do planeta: DataFrames, ler CSV e Excel numa linha, filtros, colunas calculadas e o lendário groupby — seu relatório de 30 linhas vira 1.</p>
   <div class="howto">
     <strong>Como usar:</strong> digite o código você mesmo (não copie e cole!), compare com a saída esperada e marque <strong>✔ Concluído</strong> em cada exercício para encher sua barra de XP. As <strong>dicas</strong> e <strong>soluções</strong> ficam escondidas — só abra depois de tentar! Seu progresso fica salvo no navegador.
   </div>
 </header>
 
-<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · import & math</a><a href="#p2">2 · random a fundo</a><a href="#p3">3 · datetime</a><a href="#p4">4 · Seu módulo</a><a href="#p5">5 · time & pip</a><a href="#p6">6 · Projetos</a><a href="#checklist">✅ Checklist</a></nav>
+<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · DataFrame</a><a href="#p2">2 · Lendo arquivos</a><a href="#p3">3 · Explorando</a><a href="#p4">4 · groupby</a><a href="#p5">5 · Exportando</a><a href="#p6">6 · Projetos</a><a href="#checklist">✅ Checklist</a></nav>
 
 <main>
 
 <section class="parte" id="p1">
-  <div class="parte-head"><span class="num">01</span><h2>import e o módulo math</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Um <strong>módulo</strong> é um arquivo de funções prontas. O Python vem com uma "biblioteca padrão" gigante — e a chave de acesso é o <code>import</code>:</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">formas.py</span></div><pre class="code">import math               # traz o módulo inteiro
-print(math.sqrt(25))      # usa com o prefixo math.
-
-from math import sqrt     # traz só o que você quer
-print(sqrt(25))           # usa sem prefixo</pre></div><p>Você já fez isso na Semana 3 com <code>import random</code>! Agora vamos conhecer o ecossistema de verdade.</p></div>
+  <div class="parte-head"><span class="num">01</span><h2>O DataFrame: sua tabela superpoderosa</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Instale com <code>pip install pandas openpyxl</code>. O <strong>DataFrame</strong> é a tabela do pandas: linhas e colunas com nome — a evolução natural da "lista de dicionários" que você usa desde a Semana 5, agora com centenas de operações prontas. A convenção mundial é importar como <code>import pandas as pd</code>.</p></div>
   <article class="ex" id="ex1">
     <div class="ex-head">
       <span class="ex-num">EX 01</span>
-      <h3>Explorando o math</h3>
-      <span class="stars">⭐ básico</span>
+      <h3>Primeiro DataFrame 🐼</h3>
+      <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex1"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Conhecer as funções matemáticas mais usadas.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>PREVEJA cada saída, depois execute</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex01_math.py</span></div><pre class="code">import math
+<span class="tag obj">🎯 Objetivo</span><p>Criar uma tabela a partir de um dicionário de listas.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Digite e execute — repare no formato: cada CHAVE vira uma coluna:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex01_dataframe.py</span></div><pre class="code">import pandas as pd
 
-print(math.sqrt(25))
-print(math.pi)
-print(math.floor(7.8))
-print(math.ceil(7.2))</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">5.0
-3.141592653589793
-7
-8</pre></div><details class="dica"><summary>💡 Tradução</summary><div class="inner"><code>sqrt</code> = raiz quadrada (square root) · <code>pi</code> = a constante π · <code>floor</code> = arredonda para BAIXO (chão) · <code>ceil</code> = para CIMA (teto). Repare: sqrt devolve float (5.0), mesmo quando a raiz é exata.</div></details>
+dados = {
+    "produto": ["caneca branca", "caneca preta", "azulejo"],
+    "qtd": [3, 12, 2],
+    "total": [75.0, 270.0, 80.0]
+}
+
+df = pd.DataFrame(dados)
+print(df)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">         produto  qtd  total
+0  caneca branca    3   75.0
+1   caneca preta   12  270.0
+2        azulejo    2   80.0</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner">A coluna de números à esquerda (0, 1, 2) é o ÍNDICE — o pandas numera as linhas sozinho, como os índices de lista da Semana 4. E "df" é a abreviação universal de DataFrame.</div></details>
     </div>
   </article>
 
   <article class="ex" id="ex2">
     <div class="ex-head">
       <span class="ex-num">EX 02</span>
-      <h3>As duas formas de importar</h3>
+      <h3>Conhecendo a tabela</h3>
       <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex2"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Escolher entre import e from ... import.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Reescreva o exercício anterior usando <code>from math import sqrt, pi, floor, ceil</code></li><li>Agora as chamadas ficam sem o prefixo: <code>sqrt(25)</code></li><li>Reflita: qual forma deixa mais claro DE ONDE veio cada função?</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">5.0
-3.141592653589793
-7
-8</pre></div><details class="dica"><summary>💡 Quando usar cada uma?</summary><div class="inner"><code>import math</code> deixa o código mais legível (você vê o math. na frente). <code>from ... import</code> encurta quando você usa MUITO uma função. Evite <code>from math import *</code> (importa tudo sem prefixo) — vira bagunça!</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex02.py</span></div><pre class="code">from math import sqrt, pi, floor, ceil
-
-print(sqrt(25))
-print(pi)
-print(floor(7.8))
-print(ceil(7.2))</pre></div></div></details>
-    </div>
-  </article>
-
-  <article class="ex" id="ex3">
-    <div class="ex-head">
-      <span class="ex-num">EX 03</span>
-      <h3>Calculadora de círculo ⭕</h3>
-      <span class="stars">⭐⭐ médio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex3"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Usar math.pi num cálculo real, organizado em funções.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie <code>area(raio)</code> que retorna <code>math.pi * raio ** 2</code></li><li>Crie <code>perimetro(raio)</code> que retorna <code>2 * math.pi * raio</code></li><li>Peça o raio e exiba os dois resultados com 2 casas decimais</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Raio do círculo: 5
-Área: 78.54
-Perímetro: 31.42</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex03.py</span></div><pre class="code">import math
-
-def area(raio):
-    return math.pi * raio ** 2
-
-def perimetro(raio):
-    return 2 * math.pi * raio
-
-raio = float(input("Raio do círculo: "))
-print(f"Área: {area(raio):.2f}")
-print(f"Perímetro: {perimetro(raio):.2f}")</pre></div></div></details>
+<span class="tag obj">🎯 Objetivo</span><p>As primeiras perguntas que se faz a qualquer dado.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Continue com o df e PREVEJA:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex02_conhecendo.py</span></div><pre class="code">print(len(df))
+print(list(df.columns))
+print(df.head(2))</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">3
+['produto', 'qtd', 'total']
+         produto  qtd  total
+0  caneca branca    3   75.0
+1   caneca preta   12  270.0</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner"><code>len(df)</code> conta as linhas, <code>df.columns</code> lista as colunas e <code>head(n)</code> espia as primeiras n linhas — essencial quando o arquivo tem 50 mil linhas e você só quer dar uma olhada!</div></details>
     </div>
   </article>
 </section>
 
 <section class="parte" id="p2">
-  <div class="parte-head"><span class="num">02</span><h2>random a fundo</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Você já conhece o <code>randint</code> do jogo de adivinhação. O módulo <code>random</code> tem muito mais:</p><table><tr><th>Função</th><th>O que faz</th></tr><tr><td><code>randint(a, b)</code></td><td>inteiro entre a e b (os dois inclusos)</td></tr><tr><td><code>random()</code></td><td>decimal entre 0 e 1</td></tr><tr><td><code>choice(lista)</code></td><td>sorteia UM item da lista</td></tr><tr><td><code>shuffle(lista)</code></td><td>embaralha a lista (no lugar)</td></tr><tr><td><code>sample(lista, n)</code></td><td>sorteia n itens SEM repetição</td></tr></table></div>
-  <article class="ex" id="ex4">
+  <div class="parte-head"><span class="num">02</span><h2>Lendo arquivos numa linha</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Lembra do DictReader, da conversão de tipos, do loop de leitura? O pandas faz TUDO isso numa linha: <code>pd.read_csv("arquivo.csv")</code> — e ainda detecta os tipos sozinho. Primeiro, garanta o arquivo de testes <code>vendas.csv</code>:</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">vendas.csv</span></div><pre class="output">data,produto,qtd,total
+10/06/2026,caneca branca,3,75.0
+10/06/2026,caneca preta,12,270.0
+11/06/2026,azulejo,2,80.0
+11/06/2026,caneca preta,5,137.5
+12/06/2026,caneca branca,4,100.0
+12/06/2026,azulejo,1,40.0</pre></div></div>
+  <article class="ex" id="ex3">
     <div class="ex-head">
-      <span class="ex-num">EX 04</span>
-      <h3>randint e random</h3>
-      <span class="stars">⭐ básico</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex4"> Concluído</label>
+      <span class="ex-num">EX 03</span>
+      <h3>read_csv: adeus, DictReader</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex3"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Rever o conhecido e conhecer o decimal.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Execute VÁRIAS vezes e observe os valores mudando:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex04_random.py</span></div><pre class="code">import random
+<span class="tag obj">🎯 Objetivo</span><p>Ler um CSV completo com uma linha de código.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Com o vendas.csv na pasta, execute:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex03_readcsv.py</span></div><pre class="code">import pandas as pd
 
-print(random.randint(1, 6))    # dado de 6 faces
-print(random.random())         # decimal entre 0 e 1</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">4
-0.7283519... (varia a cada execução!)</pre></div><details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Simule uma moeda: se <code>random.random() &lt; 0.5</code> → "Cara", senão → "Coroa".</div></details>
+df = pd.read_csv("vendas.csv")
+print(df)
+print(df["qtd"].sum())   # já vem como número!</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">         data        produto  qtd  total
+0  10/06/2026  caneca branca    3   75.0
+(...)
+27</pre></div><details class="dica"><summary>💡 Compare com a Semana 13</summary><div class="inner">Lá: open + DictReader + loop + int() + float(). Aqui: UMA linha, tipos detectados. Os loops que você aprendeu não foram em vão — agora você ENTENDE o que o pandas faz por baixo!</div></details>
     </div>
   </article>
 
+  <article class="ex" id="ex4">
+    <div class="ex-head">
+      <span class="ex-num">EX 04</span>
+      <h3>read_excel: planilhas direto</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex4"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Ler um .xlsx sem abrir o Excel.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Use alguma planilha sua das semanas 13/16 (ou gere uma com to_excel — Exercício 11!)</li><li><code>df = pd.read_excel("relatorio_vendas.xlsx")</code> e explore com head()</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(as primeiras linhas da sua planilha)</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner">O read_excel usa o openpyxl por baixo dos panos — por isso instalamos os dois juntos. Dá até para escolher a aba: <code>pd.read_excel("arq.xlsx", sheet_name="Resumo")</code>.</div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p3">
+  <div class="parte-head"><span class="num">03</span><h2>Explorando: colunas, contas e filtros</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Selecionar uma coluna: <code>df["total"]</code>. Ela aceita contas em massa: <code>.sum()</code>, <code>.mean()</code>, <code>.max()</code>, <code>.min()</code> — sem nenhum for!</p></div>
   <article class="ex" id="ex5">
     <div class="ex-head">
       <span class="ex-num">EX 05</span>
-      <h3>choice e shuffle</h3>
+      <h3>Contas em massa</h3>
       <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex5"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Sortear de listas e embaralhar.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie uma lista de nomes e teste:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex05_choice.py</span></div><pre class="code">import random
+<span class="tag obj">🎯 Objetivo</span><p>Estatísticas de uma coluna inteira sem loop.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>PREVEJA com a calculadora (ou confie no pandas 😄):</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex05_contas.py</span></div><pre class="code">import pandas as pd
 
-nomes = ["Ana", "Bruno", "Carla", "Diego"]
+df = pd.read_csv("vendas.csv")
 
-print(random.choice(nomes))   # sorteia um
-
-random.shuffle(nomes)         # embaralha a própria lista
-print(nomes)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Carla
-['Diego', 'Ana', 'Carla', 'Bruno'] (varia!)</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner">O <code>shuffle</code> é como o <code>sort</code>: mexe na própria lista e não retorna nada. <code>print(random.shuffle(nomes))</code> imprime None!</div></details>
+print(f"Faturamento: R$ {df['total'].sum():.2f}")
+print(f"Ticket médio: R$ {df['total'].mean():.2f}")
+print(f"Maior venda: R$ {df['total'].max():.2f}")</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Faturamento: R$ 702.50
+Ticket médio: R$ 117.08
+Maior venda: R$ 270.00</pre></div>
     </div>
   </article>
 
   <article class="ex" id="ex6">
     <div class="ex-head">
       <span class="ex-num">EX 06</span>
-      <h3>Mega-Sena 🍀</h3>
+      <h3>Filtros booleanos 🎯</h3>
       <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex6"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Sortear sem repetição com sample.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Use <code>random.sample(range(1, 61), 6)</code> — 6 números de 1 a 60, sem repetir</li><li>Ordene com <code>sort()</code> antes de exibir (como no volante!)</li></ol><span class="tag saida">✅ Exemplo (varia!)</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Seus números: [7, 18, 23, 41, 50, 56]</pre></div><details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Pergunte quantos jogos a pessoa quer e gere todos num for.</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex06.py</span></div><pre class="code">import random
+<span class="tag obj">🎯 Objetivo</span><p>O filtro da Semana 4, em sintaxe pandas.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>A expressão <code>df["total"] &gt; 100</code> gera uma coluna de True/False (olá, Semana 2!)</li><li>Colocada DENTRO de <code>df[...]</code>, ela filtra as linhas:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex06_filtros.py</span></div><pre class="code">grandes = df[df["total"] &gt; 100]
+print(grandes)
 
-jogo = random.sample(range(1, 61), 6)
-jogo.sort()
-print(f"Seus números: {jogo}")
-
-# Desafio: vários jogos
-quantos = int(input("Quantos jogos? "))
-for i in range(1, quantos + 1):
-    jogo = random.sample(range(1, 61), 6)
-    jogo.sort()
-    print(f"Jogo {i}: {jogo}")</pre></div></div></details>
+pretas = df[df["produto"] == "caneca preta"]
+print(f"Vendas de caneca preta: {len(pretas)}")</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">         data       produto  qtd  total
+1  10/06/2026  caneca preta   12  270.0
+3  11/06/2026  caneca preta    5  137.5
+Vendas de caneca preta: 2</pre></div><details class="dica"><summary>💡 Tradução mental</summary><div class="inner">Leia <code>df[df["total"] &gt; 100]</code> como: "do df, as linhas onde total > 100". É o for + if + append da Semana 4 espremido numa expressão!</div></details>
     </div>
   </article>
-</section>
 
-<section class="parte" id="p3">
-  <div class="parte-head"><span class="num">03</span><h2>datetime: trabalhando com datas</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Datas são um pesadelo para calcular na mão (meses de 28/30/31 dias, anos bissextos...). O módulo <code>datetime</code> resolve tudo: <code>datetime.now()</code> traz o momento atual como um OBJETO cheio de informações.</p></div>
   <article class="ex" id="ex7">
     <div class="ex-head">
       <span class="ex-num">EX 07</span>
-      <h3>Que dia é hoje?</h3>
+      <h3>Ordenando</h3>
       <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex7"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Explorar o objeto datetime.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Digite e execute:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex07_agora.py</span></div><pre class="code">from datetime import datetime
+<span class="tag obj">🎯 Objetivo</span><p>sort_values: o sort() das tabelas.</p><span class="tag passos">🧭 Passo a passo</span><ol><li><code>df.sort_values("total")</code> ordena crescente; <code>ascending=False</code> inverte</li><li>Mostre o TOP 3 de vendas combinando com <code>.head(3)</code></li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(as 3 maiores vendas, da maior para a menor)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex07.py</span></div><pre class="code">import pandas as pd
 
-agora = datetime.now()
+df = pd.read_csv("vendas.csv")
 
-print(agora)
-print(agora.year)
-print(agora.month)
-print(agora.day)
-print(agora.hour)</pre></div><span class="tag saida">✅ Exemplo (sua data atual!)</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">2026-06-12 14:32:08.123456
-2026
-6
-12
-14</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner"><code>agora</code> não é texto — é um objeto com "gavetas": .year, .month, .day, .hour, .minute, .second. Você acessa cada pedaço separado!</div></details>
+top3 = df.sort_values("total", ascending=False).head(3)
+print(top3)</pre></div><p>Repare no encadeamento: ordena E pega as 3 primeiras na mesma linha. Métodos de pandas adoram trabalhar em fila!</p></div></details>
     </div>
   </article>
 
   <article class="ex" id="ex8">
     <div class="ex-head">
       <span class="ex-num">EX 08</span>
-      <h3>Data formatada à brasileira 🇧🇷</h3>
+      <h3>Coluna calculada</h3>
       <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex8"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Formatar datas com strftime.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>O <code>strftime</code> monta um texto com códigos: <code>%d</code> dia · <code>%m</code> mês · <code>%Y</code> ano · <code>%H</code> hora · <code>%M</code> minuto</li><li>Monte: data brasileira, hora, e as duas juntas</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex08_formato.py</span></div><pre class="code">from datetime import datetime
-
-agora = datetime.now()
-
-print(agora.strftime("%d/%m/%Y"))
-print(agora.strftime("%H:%M"))
-print(agora.strftime("%d/%m/%Y às %H:%M"))</pre></div><span class="tag saida">✅ Exemplo</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">12/06/2026
-14:32
-12/06/2026 às 14:32</pre></div><details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Pesquise o código <code>%A</code> e exiba o dia da semana. Em inglês, né? Pesquise também "locale python" para ver o caminho do português. 😉</div></details>
-    </div>
-  </article>
-
-  <article class="ex" id="ex9">
-    <div class="ex-head">
-      <span class="ex-num">EX 09</span>
-      <h3>Calculadora de datas 📅</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex9"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Calcular idade e contagem regressiva.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Idade: ano atual (<code>datetime.now().year</code>) menos o ano de nascimento</li><li>Contagem: crie <code>date(2026, 12, 25)</code>, subtraia <code>date.today()</code> e pegue <code>.days</code></li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Ano de nascimento: 1990
-Você faz (ou fez) 36 anos em 2026
-Faltam 196 dias para o Natal! 🎄</pre></div><details class="dica"><summary>💡 Mágica das datas</summary><div class="inner">Subtrair duas datas dá um objeto "diferença" — e <code>.days</code> extrai os dias. O Python cuida de bissextos e meses tortos sozinho!</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex09.py</span></div><pre class="code">from datetime import datetime, date
-
-ano_nascimento = int(input("Ano de nascimento: "))
-ano_atual = datetime.now().year
-idade = ano_atual - ano_nascimento
-print(f"Você faz (ou fez) {idade} anos em {ano_atual}")
-
-natal = date(2026, 12, 25)
-hoje = date.today()
-faltam = (natal - hoje).days
-print(f"Faltam {faltam} dias para o Natal! 🎄")</pre></div></div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Criar uma coluna nova a partir das existentes.</p><span class="tag passos">🧭 Passo a passo</span><ol><li><code>df["unitario"] = df["total"] / df["qtd"]</code> — a conta acontece linha a linha, sem for!</li><li>Confira o resultado com print(df)</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">         data        produto  qtd  total  unitario
+0  10/06/2026  caneca branca    3   75.0      25.0
+1  10/06/2026   caneca preta   12  270.0      22.5
+(...)</pre></div><details class="dica"><summary>💡 Olha o desconto aparecendo!</summary><div class="inner">O unitário de 22.5 nas vendas grandes denuncia o desconto progressivo que VOCÊ programou lá na Semana 2. Os dados contam a história do seu código. 🤯</div></details>
     </div>
   </article>
 </section>
 
 <section class="parte" id="p4">
-  <div class="parte-head"><span class="num">04</span><h2>Criando o SEU módulo</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Plot twist: todo arquivo .py JÁ É um módulo! Se <code>ferramentas.py</code> está na mesma pasta que seu script, você pode fazer <code>from ferramentas import calcular_media</code>. A caixa de ferramentas da Semana 6 finalmente vira uma biblioteca de verdade!</p></div>
-  <article class="ex" id="ex10">
+  <div class="parte-head"><span class="num">04</span><h2>groupby: o relatório em uma linha</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>O momento mais emocionante da semana. Lembra do dict contador, do loop acumulando por produto, do padrão maior/menor para achar o campeão? Observe:</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">magia.py</span></div><pre class="code">df.groupby("produto")["qtd"].sum()</pre></div><p>Leia: "agrupe por produto, pegue a qtd, some por grupo". UMA linha. Semanas 3, 5 e 8 mandam lembranças. 🤯</p></div>
+  <article class="ex" id="ex9">
     <div class="ex-head">
-      <span class="ex-num">EX 10</span>
-      <h3>Sua primeira biblioteca 🧰</h3>
+      <span class="ex-num">EX 09</span>
+      <h3>O groupby revelado</h3>
       <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex10"> Concluído</label>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex9"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Separar funções num módulo e importá-las de outro arquivo.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie <code>ferramentas.py</code> com <code>eh_par(n)</code> e <code>calcular_media(lista)</code></li><li>NA MESMA PASTA, crie <code>principal.py</code> que importa e usa as duas</li><li>Execute o principal.py — as funções vieram do outro arquivo!</li></ol><span class="tag saida">✅ Saída do principal.py</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">8 é par? True
-Média: 7.5</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ferramentas.py</span></div><pre class="code">def eh_par(n):
-    return n % 2 == 0
+<span class="tag obj">🎯 Objetivo</span><p>Substituir o relatório inteiro por groupby.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Execute e compare com seus relatórios das semanas 8/12/16:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex09_groupby.py</span></div><pre class="code">import pandas as pd
 
-def calcular_media(notas):
-    return sum(notas) / len(notas)</pre></div><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">principal.py</span></div><pre class="code">from ferramentas import eh_par, calcular_media
+df = pd.read_csv("vendas.csv")
 
-print(f"8 é par? {eh_par(8)}")
-print(f"Média: {calcular_media([8, 7, 7.5])}")</pre></div><p>É assim que projetos grandes se organizam: cada arquivo cuida de um assunto. Os dois arquivos precisam estar na mesma pasta!</p></div></details>
+print(df.groupby("produto")["qtd"].sum())
+print()
+print(df.groupby("produto")["total"].sum())
+print()
+print("Campeão:", df.groupby("produto")["qtd"].sum().idxmax())</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">produto
+azulejo           3
+caneca branca     7
+caneca preta     17
+Name: qtd, dtype: int64
+
+produto
+azulejo          120.0
+caneca branca    175.0
+caneca preta     407.5
+Name: total, dtype: float64
+
+Campeão: caneca preta</pre></div><details class="dica"><summary>💡 idxmax</summary><div class="inner">O <code>.idxmax()</code> devolve o RÓTULO do maior valor — exatamente o seu padrão "campeão" das semanas anteriores, pronto de fábrica.</div></details>
     </div>
   </article>
 
-  <article class="ex" id="ex11">
+  <article class="ex" id="ex10">
     <div class="ex-head">
-      <span class="ex-num">EX 11</span>
-      <h3>O módulo de validações</h3>
+      <span class="ex-num">EX 10</span>
+      <h3>value_counts: o censo instantâneo</h3>
       <span class="stars">⭐⭐ médio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex11"> Concluído</label>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex10"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Empacotar suas entradas blindadas para sempre.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie <code>validacoes.py</code> com a <code>pedir_inteiro(mensagem)</code> da Semana 7 (e crie uma <code>pedir_float</code> também!)</li><li>Importe num programa qualquer: nunca mais escreva validação do zero</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Idade: abc
-Digite um número inteiro!
-Idade: 35</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">validacoes.py</span></div><pre class="code">def pedir_inteiro(mensagem):
-    while True:
-        try:
-            return int(input(mensagem))
-        except ValueError:
-            print("Digite um número inteiro!")
+<span class="tag obj">🎯 Objetivo</span><p>Contar quantas vezes cada categoria aparece.</p><span class="tag passos">🧭 Passo a passo</span><ol><li><code>df["produto"].value_counts()</code> — o dict contador da Semana 5 em uma chamada</li><li>Conte também as vendas por data</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">produto
+caneca preta     2
+caneca branca    2
+azulejo          2
+Name: count, dtype: int64</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex10.py</span></div><pre class="code">import pandas as pd
 
-def pedir_float(mensagem):
-    while True:
-        try:
-            return float(input(mensagem))
-        except ValueError:
-            print("Digite um número!")</pre></div><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">uso.py</span></div><pre class="code">from validacoes import pedir_inteiro
-
-idade = pedir_inteiro("Idade: ")
-print(f"Idade registrada: {idade}")</pre></div></div></details>
+df = pd.read_csv("vendas.csv")
+print(df["produto"].value_counts())
+print(df["data"].value_counts())</pre></div></div></details>
     </div>
   </article>
 </section>
 
 <section class="parte" id="p5">
-  <div class="parte-head"><span class="num">05</span><h2>time e o universo do pip</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Dois finais de semana: o módulo <code>time</code> (pausas dramáticas!) e o <strong>pip</strong> — o instalador que dá acesso a mais de 500 mil bibliotecas criadas pela comunidade mundial.</p></div>
-  <article class="ex" id="ex12">
+  <div class="parte-head"><span class="num">05</span><h2>Exportando resultados</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Análise pronta vira entrega: <code>df.to_excel("saida.xlsx", index=False)</code> e <code>df.to_csv("saida.csv", index=False)</code>. O <code>index=False</code> evita exportar aquela coluna 0,1,2... que ninguém pediu.</p></div>
+  <article class="ex" id="ex11">
     <div class="ex-head">
-      <span class="ex-num">EX 12</span>
-      <h3>Suspense com time.sleep ⏱️</h3>
+      <span class="ex-num">EX 11</span>
+      <h3>Análise → Excel</h3>
       <span class="stars">⭐⭐ médio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex12"> Concluído</label>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex11"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Pausar o programa — e deixar o foguete da Semana 3 dramático.</p><span class="tag passos">🧭 Passo a passo</span><ol><li><code>time.sleep(1)</code> pausa por 1 segundo</li><li>Refaça a contagem regressiva com 1s entre cada número</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex12_foguete.py</span></div><pre class="code">import time
+<span class="tag obj">🎯 Objetivo</span><p>Exportar um resultado de groupby como planilha.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Agrupe o faturamento por produto</li><li>Use <code>.reset_index()</code> para o resultado virar tabela de novo</li><li>Exporte com to_excel(index=False) e abra no Excel</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">resumo.xlsx gerado ✔</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex11.py</span></div><pre class="code">import pandas as pd
 
-print("Preparando o foguete...")
-for i in range(5, 0, -1):
-    print(i)
-    time.sleep(1)
+df = pd.read_csv("vendas.csv")
 
-print("Decolar! 🚀")</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Preparando o foguete...
-5
-4
-3
-2
-1
-Decolar! 🚀  (com 1s entre cada!)</pre></div><details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Faça um "cronômetro de estudo": peça os minutos e avise quando acabar (cuidado: <code>sleep</code> recebe SEGUNDOS).</div></details>
-    </div>
-  </article>
-
-  <article class="ex" id="ex13">
-    <div class="ex-head">
-      <span class="ex-num">EX 13</span>
-      <h3>Conhecendo o pip 📦</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex13"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Instalar sua primeira biblioteca externa.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>No TERMINAL (não no Python!), confira a instalação: <code>pip --version</code></li><li>Instale uma biblioteca divertida: <code>pip install emoji</code></li><li>Veja suas bibliotecas instaladas: <code>pip list</code></li><li>Agora no Python, teste:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex13_emoji.py</span></div><pre class="code">import emoji
-
-print(emoji.emojize("Python é :thumbs_up:"))
-print(emoji.emojize("Formatura chegando :graduation_cap:"))</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Python é 👍
-Formatura chegando 🎓</pre></div><details class="dica"><summary>💡 Se der erro...</summary><div class="inner">"pip não é reconhecido" no Windows? Tente <code>py -m pip install emoji</code>. Sem internet no laboratório? Sem problema — o conceito é o que importa: pip baixa bibliotecas do repositório PyPI. É com ele que se instala pandas, requests e todas as famosas.</div></details>
+resumo = df.groupby("produto")["total"].sum().reset_index()
+resumo.to_excel("resumo.xlsx", index=False)
+print("resumo.xlsx gerado ✔")</pre></div></div></details>
     </div>
   </article>
 </section>
@@ -560,102 +495,78 @@ Formatura chegando 🎓</pre></div><details class="dica"><summary>💡 Se der er
 <section class="parte" id="p6">
   <div class="parte-head"><span class="num">06</span><h2>Projetos da semana: juntando tudo!</h2></div>
 
+  <article class="ex" id="ex12">
+    <div class="ex-head">
+      <span class="ex-num">EX 12</span>
+      <h3>Projeto: Análise completa Tua Caneca 📊</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex12"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Refazer a análise da Central (Semana 16) inteirinha em pandas — e sentir a diferença.</p><span class="tag passos">🧭 Requisitos</span><ol><li>Leia o vendas.csv</li><li>Calcule: faturamento, unidades, ticket médio, campeão (groupby + idxmax)</li><li>Crie a coluna "unitario" e identifique a venda com MENOR preço unitário (o maior desconto!)</li><li>Exporte o resumo por produto para resumo_pandas.xlsx</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Faturamento: R$ 702.50
+Unidades: 27
+Ticket médio: R$ 117.08
+Campeão: caneca preta
+Maior desconto: caneca preta a R$ 22.50/un.
+resumo_pandas.xlsx gerado ✔</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex12.py</span></div><pre class="code">import pandas as pd
+
+df = pd.read_csv("vendas.csv")
+
+print(f"Faturamento: R$ {df['total'].sum():.2f}")
+print(f"Unidades: {df['qtd'].sum()}")
+print(f"Ticket médio: R$ {df['total'].mean():.2f}")
+print(f"Campeão: {df.groupby('produto')['qtd'].sum().idxmax()}")
+
+df["unitario"] = df["total"] / df["qtd"]
+barata = df.sort_values("unitario").head(1)
+produto = barata["produto"].values[0]
+unitario = barata["unitario"].values[0]
+print(f"Maior desconto: {produto} a R$ {unitario:.2f}/un.")
+
+resumo = df.groupby("produto")["total"].sum().reset_index()
+resumo.to_excel("resumo_pandas.xlsx", index=False)
+print("resumo_pandas.xlsx gerado ✔")</pre></div><p>Compare com a função analisar() da Semana 16: o conhecimento dos loops fez você ENTENDER; o pandas faz você VOAR.</p></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex13">
+    <div class="ex-head">
+      <span class="ex-num">EX 13</span>
+      <h3>Projeto: Boletim turbinado 🎓</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex13"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>A análise da turma com médias por aluno via groupby.</p><span class="tag passos">🧭 Requisitos</span><ol><li>Monte (ou leia de CSV) notas com colunas aluno e nota — vários registros por aluno</li><li>Média por aluno: <code>groupby("aluno")["nota"].mean()</code></li><li>Filtre os aprovados (média ≥ 7) e exporte boletim_pandas.xlsx</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">aluno
+Ana      8.25
+Bruno    5.50
+Carla    9.50
+Aprovados: 2</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex13.py</span></div><pre class="code">import pandas as pd
+
+notas = pd.DataFrame({
+    "aluno": ["Ana", "Ana", "Bruno", "Bruno", "Carla", "Carla"],
+    "nota": [8.0, 8.5, 6.0, 5.0, 9.5, 9.5]
+})
+
+medias = notas.groupby("aluno")["nota"].mean()
+print(medias)
+
+aprovados = medias[medias &gt;= 7]
+print(f"Aprovados: {len(aprovados)}")
+
+medias.reset_index().to_excel("boletim_pandas.xlsx", index=False)</pre></div></div></details>
+    </div>
+  </article>
+
   <article class="ex" id="ex14">
     <div class="ex-head">
       <span class="ex-num">EX 14</span>
-      <h3>Projeto: Jogo de dados 🎲</h3>
+      <h3>Projeto bônus: describe() e descobertas livres 🔍</h3>
       <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex14"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Um cassino de dados com saldo, apostas e dois randints.</p><span class="tag passos">🧭 Requisitos</span><ol><li>Comece com <code>saldo = 100</code></li><li>Em loop: mostre o saldo, peça a aposta (0 sai; maior que o saldo → avise e continue)</li><li>Peça o palpite da SOMA de dois dados (2 a 12), role os dados e compare</li><li>Acertou: ganha 5× a aposta. Errou: perde a aposta. Saldo zerou? Fim de jogo!</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Saldo: R$ 100
-Aposta (0 sai): R$ 20
-Palpite da soma (2 a 12): 7
-🎲 Saíram 3 e 4 → soma 7
-ACERTOU! +R$ 100</pre></div><details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Use <code>time.sleep(1)</code> entre os dois dados para criar suspense. 😄</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex14.py</span></div><pre class="code">import random
-
-saldo = 100
-
-while saldo &gt; 0:
-    print(f"\nSaldo: R$ {saldo}")
-    aposta = int(input("Aposta (0 sai): R$ "))
-    if aposta == 0:
-        break
-    if aposta &gt; saldo:
-        print("Saldo insuficiente!")
-        continue
-    palpite = int(input("Palpite da soma (2 a 12): "))
-    d1 = random.randint(1, 6)
-    d2 = random.randint(1, 6)
-    soma = d1 + d2
-    print(f"🎲 Saíram {d1} e {d2} → soma {soma}")
-    if palpite == soma:
-        ganho = aposta * 5
-        saldo = saldo + ganho
-        print(f"ACERTOU! +R$ {ganho}")
-    else:
-        saldo = saldo - aposta
-        print(f"Errou! -R$ {aposta}")
-
-print(f"Fim de jogo. Saldo final: R$ {saldo}")</pre></div></div></details>
-    </div>
-  </article>
-
-  <article class="ex" id="ex15">
-    <div class="ex-head">
-      <span class="ex-num">EX 15</span>
-      <h3>Projeto: Recibo com data e hora ☕🕐</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex15"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Tua Caneca emite recibos carimbados com datetime — e arquiva tudo.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Peça a quantidade e calcule o total (R$ 25,00 cada)</li><li>Carimbe: <code>datetime.now().strftime("%d/%m/%Y %H:%M")</code></li><li>Monte a linha do recibo e grave em <code>recibos.txt</code> com modo <code>"a"</code> (Semana 7!)</li><li>Exiba o recibo na tela também</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Quantidade: 3
-=== RECIBO TUA CANECA ===
-12/06/2026 14:45 - 3 caneca(s) - R$ 75.00</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex15.py</span></div><pre class="code">from datetime import datetime
-
-PRECO = 25.00
-
-qtd = int(input("Quantidade: "))
-total = qtd * PRECO
-agora = datetime.now().strftime("%d/%m/%Y %H:%M")
-
-recibo = f"{agora} - {qtd} caneca(s) - R$ {total:.2f}"
-
-with open("recibos.txt", "a", encoding="utf-8") as arquivo:
-    arquivo.write(recibo + "\n")
-
-print("=== RECIBO TUA CANECA ===")
-print(recibo)</pre></div></div></details>
-    </div>
-  </article>
-
-  <article class="ex" id="ex16">
-    <div class="ex-head">
-      <span class="ex-num">EX 16</span>
-      <h3>Projeto bônus: Amigo secreto 🎁</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex16"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Resolver um problema clássico de sorteio (sem código pronto!).</p><span class="tag passos">🧭 Roteiro</span><ol><li>Monte a lista de participantes (input até "fim")</li><li>Embaralhe com <code>shuffle</code></li><li>O truque: cada pessoa tira a SEGUINTE da lista embaralhada — e a última tira a primeira (círculo fechado, ninguém se tira!)</li><li>Dica do círculo: <code>nomes[(i + 1) % len(nomes)]</code></li></ol><span class="tag saida">✅ Exemplo (varia!)</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Diego tirou Ana
-Ana tirou Carla
-Carla tirou Bruno
-Bruno tirou Diego</pre></div><details class="dica"><summary>💡 Por que o % funciona?</summary><div class="inner">Para 4 nomes, os índices são 0-3. No último (i=3), a conta (3+1) % 4 = 0 — volta ao começo! O resto da divisão (Semana 1!) fecha o círculo.</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex16.py</span></div><pre class="code">import random
-
-nomes = []
-while True:
-    nome = input("Participante (ou 'fim'): ")
-    if nome == "fim":
-        break
-    nomes.append(nome)
-
-random.shuffle(nomes)
-
-print("\n=== RESULTADO DO SORTEIO ===")
-for i in range(len(nomes)):
-    tira = nomes[i]
-    recebe = nomes[(i + 1) % len(nomes)]
-    print(f"{tira} tirou {recebe}")</pre></div></div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Explorar dados como um analista (sem código pronto!).</p><span class="tag passos">🧭 Roteiro</span><ol><li>Rode <code>df.describe()</code> no vendas.csv e INTERPRETE cada linha (count, mean, min, max...)</li><li>Formule 3 perguntas suas sobre os dados e responda com filtros/groupby — ex.: "qual dia faturou mais?", "qual % do faturamento vem das canecas pretas?"</li><li>Anote as respostas em comentários no código — análise sem interpretação é só conta!</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(as estatísticas do describe + suas 3 descobertas)</pre></div><details class="dica"><summary>💡 Você virou analista</summary><div class="inner">Fazer perguntas aos dados e respondê-las com código É o trabalho de análise de dados. As empresas chamam isso de "insights" — você chama de terça-feira. 😄</div></details>
     </div>
   </article>
 </section>
@@ -663,29 +574,29 @@ for i in range(len(nomes)):
 <div class="checklist" id="checklist">
   <h2>✅ Checklist de fim de semana</h2>
   <p>Antes de seguir para a próxima semana, confirme que você consegue:</p>
-<label class="check-item"><input type="checkbox"><span>Importar um módulo com import e usar com o prefixo (math.sqrt)</span></label>
-<label class="check-item"><input type="checkbox"><span>Importar só o que precisa com from ... import</span></label>
-<label class="check-item"><input type="checkbox"><span>Usar math: sqrt, pi, floor e ceil</span></label>
-<label class="check-item"><input type="checkbox"><span>Sortear com randint, random, choice, shuffle e sample</span></label>
-<label class="check-item"><input type="checkbox"><span>Pegar a data/hora atual com datetime.now()</span></label>
-<label class="check-item"><input type="checkbox"><span>Formatar datas no padrão brasileiro com strftime</span></label>
-<label class="check-item"><input type="checkbox"><span>Calcular diferenças entre datas (.days)</span></label>
-<label class="check-item"><input type="checkbox"><span>Criar um módulo próprio e importá-lo de outro arquivo</span></label>
-<label class="check-item"><input type="checkbox"><span>Pausar o programa com time.sleep()</span></label>
-<label class="check-item"><input type="checkbox"><span>Explicar o que o pip faz e como instalar uma biblioteca</span></label>
+<label class="check-item"><input type="checkbox"><span>Criar um DataFrame a partir de um dicionário de listas</span></label>
+<label class="check-item"><input type="checkbox"><span>Ler um CSV com pd.read_csv (e um Excel com read_excel)</span></label>
+<label class="check-item"><input type="checkbox"><span>Selecionar uma coluna e usar .sum(), .mean(), .max()</span></label>
+<label class="check-item"><input type="checkbox"><span>Filtrar linhas com condições booleanas df[df["col"] &gt; x]</span></label>
+<label class="check-item"><input type="checkbox"><span>Ordenar com sort_values</span></label>
+<label class="check-item"><input type="checkbox"><span>Criar uma coluna calculada a partir de outras</span></label>
+<label class="check-item"><input type="checkbox"><span>Agrupar e somar com groupby — em UMA linha</span></label>
+<label class="check-item"><input type="checkbox"><span>Contar categorias com value_counts</span></label>
+<label class="check-item"><input type="checkbox"><span>Exportar com to_excel/to_csv usando index=False</span></label>
+<label class="check-item"><input type="checkbox"><span>Explicar quando pandas vale mais que loops manuais</span></label>
 </div>
 
 <div class="win-banner" id="winBanner">
-  <h2>🏆 SEMANA 9 COMPLETA!</h2>
-  <p>Você concluiu todos os exercícios. Agora você programa em equipe com milhares de desenvolvedores que escreveram os módulos!</p>
+  <h2>🏆 SEMANA 17 COMPLETA!</h2>
+  <p>Você concluiu todos os exercícios. Bem-vindo ao clube de quem analisa dados com a ferramenta dos profissionais!</p>
 </div>
 
 <div class="preview-s2">
-<h2>📅 Prévia da Semana 10</h2><p>Na próxima semana, a virada de chave: <strong>Programação Orientada a Objetos</strong> — <code>class</code>, <code>__init__</code>, o misterioso <code>self</code>, atributos e métodos. Você vai descobrir que JÁ usa objetos desde a Semana 1 sem saber... 🤯</p></div>
+<h2>📅 Prévia da Semana 18</h2><p>Dados analisados pedem para ser VISTOS: na próxima semana, <strong>matplotlib</strong> — gráficos de barras, pizza e linha, salvos em PNG e até gerados direto do pandas com <code>.plot()</code>. Seus relatórios vão ganhar olhos! 📊</p></div>
 
 </main>
 
-<footer>python_para_iniciantes // semana_09 // exercícios guiados</footer>
+<footer>python_para_iniciantes // semana_17 // exercícios guiados</footer>
 
 <script>
 // ===== Syntax highlight leve para Python =====
@@ -697,7 +608,7 @@ for i in range(len(nomes)):
     src = src.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     // uma passada só, com alternação (comentário | string | builtin | bool | número)
     src = src.replace(
-      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|insert|int|float|str|len|range|type|abs|round|max|min|sum|sorted|sort|reverse|append|remove|split|strip|upper|lower|replace|title|randint|random|get|keys|values|items|open|readlines|read|write|close|count|index|pop|update|list|dict|tuple|enumerate|sqrt|floor|ceil|choice|shuffle|sample|sleep|now|today|strftime|dumps|dump|loads|load|isinstance|datetime|date)\b|\b(True|False|None|if|elif|else|while|for|in|and|or|not|break|continue|import|from|def|return|try|except|finally|with|as|del|global|pass|class|self|super|lambda)\b|(\b\d+(?:\.\d+)?\b)/g,
+      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|insert|int|float|str|len|range|type|abs|round|max|min|sum|sorted|sort|reverse|append|remove|split|strip|upper|lower|replace|title|randint|random|get|keys|values|items|open|readlines|read|write|close|count|index|pop|update|list|dict|tuple|enumerate|sqrt|floor|ceil|choice|shuffle|sample|sleep|now|today|strftime|dumps|dump|loads|load|isinstance|datetime|date|DictReader|DictWriter|writerows|writerow|writeheader|writer|reader|csv|Workbook|load_workbook|save|iter_rows|Font|listdir|makedirs|getcwd|rename|exists|getsize|splitext|join|endswith|startswith|copytree|copy|move|requests|status_code|json|DataFrame|read_csv|read_excel|to_excel|to_csv|head|describe|groupby|sort_values|value_counts|mean|idxmax|bar|barh|pie|plot|savefig|show|title|xlabel|ylabel|figure|legend|axhline|tight_layout|close|Flask|route|run|render_template|jsonify|redirect|request)\b|\b(True|False|None|if|elif|else|while|for|in|and|or|not|break|continue|import|from|def|return|try|except|finally|with|as|del|global|pass|class|self|super|lambda)\b|(\b\d+(?:\.\d+)?\b)/g,
       function(m, com, str, fn, bool, num){
         if(com)  return '<span class="tk-com">'+com+'</span>';
         if(str)  return '<span class="tk-str">'+str+'</span>';
@@ -716,7 +627,7 @@ for i in range(len(nomes)):
 // no navegador. Se o localStorage estiver indisponível (modo restrito,
 // pré-visualização, etc.), o progresso funciona só em memória, sem quebrar.
 const storage = (function(){
-  const KEY = 'python_semana09_progresso';
+  const KEY = 'python_semana17_progresso';
   let memoria = {};
   let disponivel = false;
   try{
@@ -763,10 +674,10 @@ const storage = (function(){
   const MSGS = [
     [0,  'Marque os exercícios concluídos ✔'],
     [1,  'Boa! Continue assim 💪'],
-    [5,  'Pegando o ritmo! 🔥'],
-    [8, 'Metade do caminho! 🚀'],
-    [12, 'Quase lá... força! ⚡'],
-    [16, 'SEMANA COMPLETA! 🏆']
+    [4,  'Pegando o ritmo! 🔥'],
+    [7, 'Metade do caminho! 🚀'],
+    [10, 'Quase lá... força! ⚡'],
+    [14, 'SEMANA COMPLETA! 🏆']
   ];
 
   function estadoAtual(){

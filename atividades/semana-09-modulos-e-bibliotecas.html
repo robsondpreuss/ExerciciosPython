@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Semana 30 — Projeto Final 6</title>
+<title>Semana 9 — Módulos e Bibliotecas</title>
 <style>
   :root{
     --ink:#16243A;
@@ -57,7 +57,7 @@
     color:#fff;padding:56px 20px 48px;text-align:center;position:relative;overflow:hidden;
   }
   header.hero::before{
-    content:"MariaDB  REST API  JWT  Frontend  desacoplado  🏆";
+    content:"import  from  math.  random.  datetime  pip install";
     position:absolute;inset:auto 0 8px 0;font-family:var(--mono);font-size:.78rem;
     color:rgba(255,255,255,.14);letter-spacing:.4em;white-space:nowrap;overflow:hidden;
   }
@@ -234,279 +234,428 @@
 <div class="progress-wrap" role="region" aria-label="Progresso da semana">
   <span class="label">XP DA SEMANA</span>
   <div class="progress-bar"><div class="progress-fill" id="pfill"></div></div>
-  <span class="progress-count" id="pcount">0 / 10</span>
+  <span class="progress-count" id="pcount">0 / 16</span>
   <span class="progress-msg" id="pmsg">Marque os exercícios concluídos ✔</span>
   <button class="reset-btn" id="resetBtn" title="Apagar todo o progresso salvo">↺ Resetar</button>
 </div>
 
 <header class="hero">
   <div class="kicker">Python para Iniciantes · Exercícios Guiados</div>
-  <h1>SEMANA 30 — Projeto Final 6:<br>o sistema desacoplado 🏆<span class="cursor" aria-hidden="true"></span></h1>
-  <p class="sub">A formatura definitiva: o sistema Tua Caneca completo e profissional — banco MariaDB, API REST com autenticação JWT e frontend separado, as três peças trabalhando juntas. Do print() ao full-stack.</p>
+  <h1>SEMANA 9 — Módulos:<br>superpoderes prontos para usar<span class="cursor" aria-hidden="true"></span></h1>
+  <p class="sub">Pare de reinventar a roda: import, a matemática do math, o random a fundo, datas e horas com datetime, seu PRÓPRIO módulo e a porta de entrada do pip.</p>
   <div class="howto">
     <strong>Como usar:</strong> digite o código você mesmo (não copie e cole!), compare com a saída esperada e marque <strong>✔ Concluído</strong> em cada exercício para encher sua barra de XP. As <strong>dicas</strong> e <strong>soluções</strong> ficam escondidas — só abra depois de tentar! Seu progresso fica salvo no navegador.
   </div>
 </header>
 
-<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · Revisão</a><a href="#p2">2 · Etapas 1-2</a><a href="#p3">3 · Etapas 3-4</a><a href="#p4">4 · Etapas 5-6</a><a href="#p5">5 · Formatura</a><a href="#checklist">✅ Checklist</a></nav>
+<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · import & math</a><a href="#p2">2 · random a fundo</a><a href="#p3">3 · datetime</a><a href="#p4">4 · Seu módulo</a><a href="#p5">5 · time & pip</a><a href="#p6">6 · Projetos</a><a href="#checklist">✅ Checklist</a></nav>
 
 <main>
 
 <section class="parte" id="p1">
-  <div class="parte-head"><span class="num">01</span><h2>Revisão final da jornada</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>O último aquecimento de todos. Depois dele, você monta seu sistema profissional completo. Vamos com tudo! 🚀</p></div>
+  <div class="parte-head"><span class="num">01</span><h2>import e o módulo math</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Um <strong>módulo</strong> é um arquivo de funções prontas. O Python vem com uma "biblioteca padrão" gigante — e a chave de acesso é o <code>import</code>:</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">formas.py</span></div><pre class="code">import math               # traz o módulo inteiro
+print(math.sqrt(25))      # usa com o prefixo math.
+
+from math import sqrt     # traz só o que você quer
+print(sqrt(25))           # usa sem prefixo</pre></div><p>Você já fez isso na Semana 3 com <code>import random</code>! Agora vamos conhecer o ecossistema de verdade.</p></div>
   <article class="ex" id="ex1">
     <div class="ex-head">
       <span class="ex-num">EX 01</span>
-      <h3>Quiz: prevendo as saídas 🧠</h3>
-      <span class="stars">⭐⭐ médio</span>
+      <h3>Explorando o math</h3>
+      <span class="stars">⭐ básico</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex1"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Testar MariaDB, REST e JWT de uma vez.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Anote suas previsões. Última rodada de gabarito do curso inteiro!</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">quiz.py</span></div><pre class="code"># 1) Placeholder do MariaDB com PyMySQL?
-print("? ou %s")
+<span class="tag obj">🎯 Objetivo</span><p>Conhecer as funções matemáticas mais usadas.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>PREVEJA cada saída, depois execute</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex01_math.py</span></div><pre class="code">import math
 
-# 2) Verbo HTTP para CRIAR um recurso?
-verbos = {"criar": "POST", "ler": "GET", "remover": "DELETE"}
-print(verbos["criar"])
-
-# 3) Status de "criado com sucesso"?
-print(201)
-
-# 4) O que se guarda no banco: a senha ou o hash?
-print("hash")
-
-# 5) Onde o frontend guarda o token?
-print("localStorage")
-
-# 6) Status quando falta autenticação?
-print(401)
-
-# 7) Quantas partes tem um JWT?
-print(len("header.payload.signature".split(".")))</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">? ou %s
-POST
-201
-hash
-localStorage
-401
-3</pre></div><details class="dica"><summary>💡 Gabarito relâmpago</summary><div class="inner">No MariaDB com PyMySQL: <code>%s</code> · CRIAR = POST · criado = 201 · guarda-se o HASH (nunca a senha) · token no localStorage · sem auth = 401 · JWT tem 3 partes. 6+ acertos? Você está pronto para o projeto final. Vamos construir!</div></details>
+print(math.sqrt(25))
+print(math.pi)
+print(math.floor(7.8))
+print(math.ceil(7.2))</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">5.0
+3.141592653589793
+7
+8</pre></div><details class="dica"><summary>💡 Tradução</summary><div class="inner"><code>sqrt</code> = raiz quadrada (square root) · <code>pi</code> = a constante π · <code>floor</code> = arredonda para BAIXO (chão) · <code>ceil</code> = para CIMA (teto). Repare: sqrt devolve float (5.0), mesmo quando a raiz é exata.</div></details>
     </div>
   </article>
 
   <article class="ex" id="ex2">
     <div class="ex-head">
       <span class="ex-num">EX 02</span>
-      <h3>Caça aos bugs do módulo profissional 🐛</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
+      <h3>As duas formas de importar</h3>
+      <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex2"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Os erros mais comuns de API REST + JWT + MariaDB.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Este endpoint protegido deveria criar um produto — ache os 4 bugs:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">bugs.py</span></div><pre class="code">@app.route("/api/produtos")
-def criar(usuario_logado):
-    dados = request.get_json()
-    cursor.execute(
-        "INSERT INTO produtos (nome, preco) VALUES (?, ?)",
-        (dados["nome"], dados["preco"]))
-    return jsonify({"ok": True})</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><p><strong>Os 4 bugs:</strong> (1) a rota não declara o método — para criar, precisa <code>methods=["POST"]</code> (sem isso, só aceita GET). (2) falta o <code>@token_required</code> em cima da rota (ela recebe <code>usuario_logado</code>, mas ninguém o fornece sem o decorator). (3) placeholders <code>?</code> são do SQLite — no MariaDB/PyMySQL é <code>%s</code>! (4) falta o <code>commit()</code> (e idealmente o status <code>201</code> no retorno).</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">corrigido.py</span></div><pre class="code">@app.route("/api/produtos", methods=["POST"])
-@token_required
-def criar(usuario_logado):
-    dados = request.get_json()
-    con = conectar(); cur = con.cursor()
-    cur.execute(
-        "INSERT INTO produtos (nome, preco, estoque) VALUES (%s, %s, %s)",
-        (dados["nome"], dados["preco"], dados["estoque"]))
-    con.commit()
-    novo_id = cur.lastrowid
-    con.close()
-    return jsonify({"id": novo_id, "ok": True}), 201</pre></div><p>Esses quatro — método faltando, decorator esquecido, <code>?</code> no lugar de <code>%s</code> e <code>commit</code> ausente — são os tropeços clássicos do módulo. Reconhecê-los de cara economiza horas!</p></div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Escolher entre import e from ... import.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Reescreva o exercício anterior usando <code>from math import sqrt, pi, floor, ceil</code></li><li>Agora as chamadas ficam sem o prefixo: <code>sqrt(25)</code></li><li>Reflita: qual forma deixa mais claro DE ONDE veio cada função?</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">5.0
+3.141592653589793
+7
+8</pre></div><details class="dica"><summary>💡 Quando usar cada uma?</summary><div class="inner"><code>import math</code> deixa o código mais legível (você vê o math. na frente). <code>from ... import</code> encurta quando você usa MUITO uma função. Evite <code>from math import *</code> (importa tudo sem prefixo) — vira bagunça!</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex02.py</span></div><pre class="code">from math import sqrt, pi, floor, ceil
+
+print(sqrt(25))
+print(pi)
+print(floor(7.8))
+print(ceil(7.2))</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex3">
+    <div class="ex-head">
+      <span class="ex-num">EX 03</span>
+      <h3>Calculadora de círculo ⭕</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex3"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Usar math.pi num cálculo real, organizado em funções.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie <code>area(raio)</code> que retorna <code>math.pi * raio ** 2</code></li><li>Crie <code>perimetro(raio)</code> que retorna <code>2 * math.pi * raio</code></li><li>Peça o raio e exiba os dois resultados com 2 casas decimais</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Raio do círculo: 5
+Área: 78.54
+Perímetro: 31.42</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex03.py</span></div><pre class="code">import math
+
+def area(raio):
+    return math.pi * raio ** 2
+
+def perimetro(raio):
+    return 2 * math.pi * raio
+
+raio = float(input("Raio do círculo: "))
+print(f"Área: {area(raio):.2f}")
+print(f"Perímetro: {perimetro(raio):.2f}")</pre></div></div></details>
     </div>
   </article>
 </section>
 
 <section class="parte" id="p2">
-  <div class="parte-head"><span class="num">02</span><h2>Sistema desacoplado — Etapas 1 e 2</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p><strong>A obra-prima final:</strong> o sistema Tua Caneca profissional, construído em 6 etapas. A arquitetura desacoplada:</p><table><tr><th>Camada</th><th>Tecnologia</th><th>Semanas</th></tr><tr><td>Banco</td><td>MariaDB (gerenciado no DBeaver)</td><td>26</td></tr><tr><td>Backend</td><td>API REST com Flask + JWT</td><td>27, 28</td></tr><tr><td>Frontend</td><td>HTML/JS separado (fetch)</td><td>29</td></tr></table><p>A estrutura de pastas que vamos montar:</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">estrutura</span></div><pre class="code">tua_caneca/
-├── backend/
-│   ├── db.py        (conexão MariaDB)
-│   ├── auth.py      (@token_required)
-│   └── api.py       (a API REST + JWT)
-└── frontend/
-    └── index.html   (o cliente)</pre></div></div>
-  <article class="ex" id="ex3">
-    <div class="ex-head">
-      <span class="ex-num">EX 03</span>
-      <h3>Etapa 1: o banco no MariaDB</h3>
-      <span class="stars">⭐⭐ médio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex3"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Modelar as três tabelas no MariaDB.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>No DBeaver, crie o banco <code>tua_caneca</code> e três tabelas: <code>produtos</code>, <code>vendas</code> e <code>usuarios</code></li><li>Use os tipos do MariaDB (INT AUTO_INCREMENT, VARCHAR, DECIMAL)</li><li>Crie o <code>backend/db.py</code> com a função <code>conectar()</code> (Semana 26)</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">schema.sql</span></div><pre class="code">CREATE DATABASE IF NOT EXISTS tua_caneca;
-USE tua_caneca;
-
-CREATE TABLE IF NOT EXISTS produtos (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nome VARCHAR(100), preco DECIMAL(10,2), estoque INT
-);
-
-CREATE TABLE IF NOT EXISTS vendas (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    produto_id INT, qtd INT, total DECIMAL(10,2)
-);
-
-CREATE TABLE IF NOT EXISTS usuarios (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    usuario VARCHAR(50) UNIQUE, senha_hash VARCHAR(255)
-);</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(banco tua_caneca com as 3 tabelas, visíveis no DBeaver)</pre></div><details class="dica"><summary>💡 Fundação sólida</summary><div class="inner">Três tabelas, três responsabilidades: produtos (o catálogo), vendas (o histórico), usuarios (quem acessa). Modelar bem o banco é o alicerce — tudo o mais se apoia nele. E o DBeaver te dá a visão de cima da estrutura inteira.</div></details>
-    </div>
-  </article>
-
+  <div class="parte-head"><span class="num">02</span><h2>random a fundo</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Você já conhece o <code>randint</code> do jogo de adivinhação. O módulo <code>random</code> tem muito mais:</p><table><tr><th>Função</th><th>O que faz</th></tr><tr><td><code>randint(a, b)</code></td><td>inteiro entre a e b (os dois inclusos)</td></tr><tr><td><code>random()</code></td><td>decimal entre 0 e 1</td></tr><tr><td><code>choice(lista)</code></td><td>sorteia UM item da lista</td></tr><tr><td><code>shuffle(lista)</code></td><td>embaralha a lista (no lugar)</td></tr><tr><td><code>sample(lista, n)</code></td><td>sorteia n itens SEM repetição</td></tr></table></div>
   <article class="ex" id="ex4">
     <div class="ex-head">
       <span class="ex-num">EX 04</span>
-      <h3>Etapa 2: a API REST de produtos</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
+      <h3>randint e random</h3>
+      <span class="stars">⭐ básico</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex4"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>O backend com o CRUD completo (resumo da Semana 27).</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Em <code>backend/api.py</code>: os endpoints GET (lista e item), POST, PUT, DELETE de produtos</li><li>Sobre o MariaDB (%s), com CORS habilitado e status codes corretos (200, 201, 400, 404)</li><li>Teste com requests antes de seguir</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(API REST de produtos no ar, respondendo JSON em localhost:5000)</pre></div><details class="dica"><summary>💡 Você já tem isso</summary><div class="inner">A API REST completa você construiu na Semana 27. Aqui é só trazê-la para a estrutura do projeto. Reaproveitar o que já funciona — em vez de reescrever — é trabalhar como profissional. ♻️</div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Rever o conhecido e conhecer o decimal.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Execute VÁRIAS vezes e observe os valores mudando:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex04_random.py</span></div><pre class="code">import random
+
+print(random.randint(1, 6))    # dado de 6 faces
+print(random.random())         # decimal entre 0 e 1</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">4
+0.7283519... (varia a cada execução!)</pre></div><details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Simule uma moeda: se <code>random.random() &lt; 0.5</code> → "Cara", senão → "Coroa".</div></details>
     </div>
   </article>
-</section>
-
-<section class="parte" id="p3">
-  <div class="parte-head"><span class="num">03</span><h2>Sistema desacoplado — Etapas 3 e 4</h2></div>
 
   <article class="ex" id="ex5">
     <div class="ex-head">
       <span class="ex-num">EX 05</span>
-      <h3>Etapa 3: autenticação JWT</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
+      <h3>choice e shuffle</h3>
+      <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex5"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Proteger a API com login e token (Semana 28).</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie <code>backend/auth.py</code> com o decorator <code>@token_required</code></li><li>Adicione <code>/api/cadastro</code> e <code>/api/login</code> (que emite o JWT) na api.py</li><li>Proteja POST, PUT e DELETE com <code>@token_required</code>; deixe os GET públicos</li><li>Segredo do JWT e credenciais do banco em variáveis de ambiente!</li></ol><span class="tag saida">✅ Comportamento</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">POST /api/produtos sem token -&gt; 401
-POST /api/login -&gt; token
-POST /api/produtos com token -&gt; 201</pre></div><details class="dica"><summary>💡 Leitura aberta, escrita protegida</summary><div class="inner">O padrão da Semana 28: o catálogo (GET) é público, mas mexer nos dados exige login. Decidir o que proteger é design de segurança — e você já domina. 🔐</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">backend/auth.py</span></div><pre class="code">import os, jwt
-from functools import wraps
-from flask import jsonify, request
+<span class="tag obj">🎯 Objetivo</span><p>Sortear de listas e embaralhar.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie uma lista de nomes e teste:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex05_choice.py</span></div><pre class="code">import random
 
-SEGREDO = os.environ.get("JWT_SECRET", "troque-este-segredo")
+nomes = ["Ana", "Bruno", "Carla", "Diego"]
 
-def token_required(f):
-    @wraps(f)
-    def wrapper(*args, **kwargs):
-        cab = request.headers.get("Authorization", "")
-        if not cab.startswith("Bearer "):
-            return jsonify({"erro": "token ausente"}), 401
-        try:
-            dados = jwt.decode(cab.split(" ")[1], SEGREDO, algorithms=["HS256"])
-        except jwt.ExpiredSignatureError:
-            return jsonify({"erro": "token expirado"}), 401
-        except jwt.InvalidTokenError:
-            return jsonify({"erro": "token invalido"}), 401
-        return f(usuario_logado=dados["usuario"], *args, **kwargs)
-    return wrapper</pre></div></div></details>
+print(random.choice(nomes))   # sorteia um
+
+random.shuffle(nomes)         # embaralha a própria lista
+print(nomes)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Carla
+['Diego', 'Ana', 'Carla', 'Bruno'] (varia!)</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner">O <code>shuffle</code> é como o <code>sort</code>: mexe na própria lista e não retorna nada. <code>print(random.shuffle(nomes))</code> imprime None!</div></details>
     </div>
   </article>
 
   <article class="ex" id="ex6">
     <div class="ex-head">
       <span class="ex-num">EX 06</span>
-      <h3>Etapa 4: o frontend conectado</h3>
+      <h3>Mega-Sena 🍀</h3>
       <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex6"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>A tela que consome a API protegida (Semana 29).</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Em <code>frontend/index.html</code>: login (guarda o token), lista de produtos (GET) e formulário de criar (POST com Bearer)</li><li>Botão de excluir (DELETE com token) em cada produto</li><li>Trate o 401 pedindo login</li><li>Rode os dois lados: a API num terminal, o frontend servido em outro</li></ol><span class="tag saida">✅ Como rodar</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Terminal 1: cd backend &amp;&amp; python api.py     (API em :5000)
-Terminal 2: cd frontend &amp;&amp; python -m http.server 8000  (site em :8000)</pre></div><details class="dica"><summary>💡 Os dois lados vivos</summary><div class="inner">Pela primeira vez você roda DOIS servidores ao mesmo tempo: a API (backend) e o servidor de arquivos (frontend). Eles são INDEPENDENTES — conversam só por HTTP, via fetch. Isso é o desacoplamento que você buscou desde a Semana 27, finalmente em pé e funcionando. 🎉</div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Sortear sem repetição com sample.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Use <code>random.sample(range(1, 61), 6)</code> — 6 números de 1 a 60, sem repetir</li><li>Ordene com <code>sort()</code> antes de exibir (como no volante!)</li></ol><span class="tag saida">✅ Exemplo (varia!)</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Seus números: [7, 18, 23, 41, 50, 56]</pre></div><details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Pergunte quantos jogos a pessoa quer e gere todos num for.</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex06.py</span></div><pre class="code">import random
+
+jogo = random.sample(range(1, 61), 6)
+jogo.sort()
+print(f"Seus números: {jogo}")
+
+# Desafio: vários jogos
+quantos = int(input("Quantos jogos? "))
+for i in range(1, quantos + 1):
+    jogo = random.sample(range(1, 61), 6)
+    jogo.sort()
+    print(f"Jogo {i}: {jogo}")</pre></div></div></details>
     </div>
   </article>
 </section>
 
-<section class="parte" id="p4">
-  <div class="parte-head"><span class="num">04</span><h2>Sistema desacoplado — Etapas 5 e 6</h2></div>
-
+<section class="parte" id="p3">
+  <div class="parte-head"><span class="num">03</span><h2>datetime: trabalhando com datas</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Datas são um pesadelo para calcular na mão (meses de 28/30/31 dias, anos bissextos...). O módulo <code>datetime</code> resolve tudo: <code>datetime.now()</code> traz o momento atual como um OBJETO cheio de informações.</p></div>
   <article class="ex" id="ex7">
     <div class="ex-head">
       <span class="ex-num">EX 07</span>
-      <h3>Etapa 5: vendas e relatório 📊</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
+      <h3>Que dia é hoje?</h3>
+      <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex7"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Fechar o sistema com o fluxo de vendas e um relatório.</p><span class="tag passos">🧭 Passo a passo</span><ol><li><code>POST /api/vendas</code> (protegido): recebe produto_id e qtd, confere estoque, dá baixa (UPDATE) e registra (INSERT)</li><li><code>GET /api/relatorio</code>: um GROUP BY (Semana 22) com o total vendido por produto, em JSON</li><li>No frontend, uma área que lista o relatório consumindo esse endpoint</li><li>O sistema agora cadastra, vende e analisa — um ciclo de negócio completo</li></ol><span class="tag saida">✅ Exemplo</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">POST /api/vendas {"produto_id": 1, "qtd": 3} -&gt; 201
-GET /api/relatorio -&gt; [{"produto": "caneca branca", "total_vendido": 3}, ...]</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">backend/api.py (trecho)</span></div><pre class="code">@app.route("/api/vendas", methods=["POST"])
-@token_required
-def vender(usuario_logado):
-    d = request.get_json()
-    con = conectar(); cur = con.cursor()
-    cur.execute("SELECT preco, estoque FROM produtos WHERE id=%s", (d["produto_id"],))
-    r = cur.fetchone()
-    if r is None:
-        con.close(); return jsonify({"erro": "produto inexistente"}), 404
-    if r[1] &lt; d["qtd"]:
-        con.close(); return jsonify({"erro": "estoque insuficiente"}), 400
-    total = float(r[0]) * d["qtd"]
-    cur.execute("UPDATE produtos SET estoque = estoque - %s WHERE id=%s",
-                (d["qtd"], d["produto_id"]))
-    cur.execute("INSERT INTO vendas (produto_id, qtd, total) VALUES (%s, %s, %s)",
-                (d["produto_id"], d["qtd"], total))
-    con.commit(); con.close()
-    return jsonify({"ok": True, "total": total}), 201
+<span class="tag obj">🎯 Objetivo</span><p>Explorar o objeto datetime.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Digite e execute:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex07_agora.py</span></div><pre class="code">from datetime import datetime
 
-@app.route("/api/relatorio")
-def relatorio():
-    con = conectar(); cur = con.cursor()
-    cur.execute("""SELECT p.nome, SUM(v.qtd) AS total
-                   FROM vendas v JOIN produtos p ON p.id = v.produto_id
-                   GROUP BY p.nome ORDER BY total DESC""")
-    dados = [{"produto": n, "total_vendido": int(t)} for n, t in cur.fetchall()]
-    con.close()
-    return jsonify(dados)</pre></div><p>Olha o <code>JOIN</code> aparecendo no relatório — ligando vendas e produtos pelo id! É um passo além do GROUP BY simples (Semana 22), e um ótimo tema para você se aprofundar a seguir.</p></div></details>
+agora = datetime.now()
+
+print(agora)
+print(agora.year)
+print(agora.month)
+print(agora.day)
+print(agora.hour)</pre></div><span class="tag saida">✅ Exemplo (sua data atual!)</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">2026-06-12 14:32:08.123456
+2026
+6
+12
+14</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner"><code>agora</code> não é texto — é um objeto com "gavetas": .year, .month, .day, .hour, .minute, .second. Você acessa cada pedaço separado!</div></details>
     </div>
   </article>
 
   <article class="ex" id="ex8">
     <div class="ex-head">
       <span class="ex-num">EX 08</span>
-      <h3>Etapa 6: integrado + no ar (deploy) 🚀</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
+      <h3>Data formatada à brasileira 🇧🇷</h3>
+      <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex8"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Montar o sistema completo e conhecer o caminho para publicá-lo.</p><span class="tag passos">🧭 Requisitos</span><ol><li>Junte as 5 etapas: banco + API + JWT + frontend + vendas/relatório, na estrutura de pastas</li><li>Roteiro de teste completo: cadastra usuário → login → cria produto → vende → vê relatório → tudo conectado?</li><li>Estude os passos de DEPLOY (publicar): o frontend (estático) pode ir em Netlify, Vercel ou GitHub Pages; a API e o MariaDB num serviço que rode Python e banco (pesquise "deploy Flask" e "MariaDB na nuvem")</li><li>Tire um print do sistema rodando — é o seu diploma de desenvolvedor full-stack 🎓</li></ol><span class="tag saida">✅ A formatura</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">✔ Banco MariaDB (3 tabelas)
-✔ API REST + JWT (backend)
-✔ Frontend desacoplado (fetch)
-✔ Vendas + relatório
-Sistema full-stack completo! 🏆</pre></div><details class="dica"><summary>💡 Do localhost para o mundo</summary><div class="inner">No <code>localhost</code>, o sistema é só seu. O DEPLOY o coloca num endereço público, acessível por qualquer pessoa. A arquitetura desacoplada AJUDA aqui: frontend e backend podem ser publicados separadamente, cada um no serviço ideal. Ver seu sistema rodando num endereço de verdade, acessível do celular de um amigo, é uma das melhores sensações que a programação dá. Vá atrás dela. 🌍</div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Formatar datas com strftime.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>O <code>strftime</code> monta um texto com códigos: <code>%d</code> dia · <code>%m</code> mês · <code>%Y</code> ano · <code>%H</code> hora · <code>%M</code> minuto</li><li>Monte: data brasileira, hora, e as duas juntas</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex08_formato.py</span></div><pre class="code">from datetime import datetime
+
+agora = datetime.now()
+
+print(agora.strftime("%d/%m/%Y"))
+print(agora.strftime("%H:%M"))
+print(agora.strftime("%d/%m/%Y às %H:%M"))</pre></div><span class="tag saida">✅ Exemplo</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">12/06/2026
+14:32
+12/06/2026 às 14:32</pre></div><details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Pesquise o código <code>%A</code> e exiba o dia da semana. Em inglês, né? Pesquise também "locale python" para ver o caminho do português. 😉</div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex9">
+    <div class="ex-head">
+      <span class="ex-num">EX 09</span>
+      <h3>Calculadora de datas 📅</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex9"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Calcular idade e contagem regressiva.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Idade: ano atual (<code>datetime.now().year</code>) menos o ano de nascimento</li><li>Contagem: crie <code>date(2026, 12, 25)</code>, subtraia <code>date.today()</code> e pegue <code>.days</code></li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Ano de nascimento: 1990
+Você faz (ou fez) 36 anos em 2026
+Faltam 196 dias para o Natal! 🎄</pre></div><details class="dica"><summary>💡 Mágica das datas</summary><div class="inner">Subtrair duas datas dá um objeto "diferença" — e <code>.days</code> extrai os dias. O Python cuida de bissextos e meses tortos sozinho!</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex09.py</span></div><pre class="code">from datetime import datetime, date
+
+ano_nascimento = int(input("Ano de nascimento: "))
+ano_atual = datetime.now().year
+idade = ano_atual - ano_nascimento
+print(f"Você faz (ou fez) {idade} anos em {ano_atual}")
+
+natal = date(2026, 12, 25)
+hoje = date.today()
+faltam = (natal - hoje).days
+print(f"Faltam {faltam} dias para o Natal! 🎄")</pre></div></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p4">
+  <div class="parte-head"><span class="num">04</span><h2>Criando o SEU módulo</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Plot twist: todo arquivo .py JÁ É um módulo! Se <code>ferramentas.py</code> está na mesma pasta que seu script, você pode fazer <code>from ferramentas import calcular_media</code>. A caixa de ferramentas da Semana 6 finalmente vira uma biblioteca de verdade!</p></div>
+  <article class="ex" id="ex10">
+    <div class="ex-head">
+      <span class="ex-num">EX 10</span>
+      <h3>Sua primeira biblioteca 🧰</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex10"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Separar funções num módulo e importá-las de outro arquivo.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie <code>ferramentas.py</code> com <code>eh_par(n)</code> e <code>calcular_media(lista)</code></li><li>NA MESMA PASTA, crie <code>principal.py</code> que importa e usa as duas</li><li>Execute o principal.py — as funções vieram do outro arquivo!</li></ol><span class="tag saida">✅ Saída do principal.py</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">8 é par? True
+Média: 7.5</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ferramentas.py</span></div><pre class="code">def eh_par(n):
+    return n % 2 == 0
+
+def calcular_media(notas):
+    return sum(notas) / len(notas)</pre></div><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">principal.py</span></div><pre class="code">from ferramentas import eh_par, calcular_media
+
+print(f"8 é par? {eh_par(8)}")
+print(f"Média: {calcular_media([8, 7, 7.5])}")</pre></div><p>É assim que projetos grandes se organizam: cada arquivo cuida de um assunto. Os dois arquivos precisam estar na mesma pasta!</p></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex11">
+    <div class="ex-head">
+      <span class="ex-num">EX 11</span>
+      <h3>O módulo de validações</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex11"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Empacotar suas entradas blindadas para sempre.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie <code>validacoes.py</code> com a <code>pedir_inteiro(mensagem)</code> da Semana 7 (e crie uma <code>pedir_float</code> também!)</li><li>Importe num programa qualquer: nunca mais escreva validação do zero</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Idade: abc
+Digite um número inteiro!
+Idade: 35</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">validacoes.py</span></div><pre class="code">def pedir_inteiro(mensagem):
+    while True:
+        try:
+            return int(input(mensagem))
+        except ValueError:
+            print("Digite um número inteiro!")
+
+def pedir_float(mensagem):
+    while True:
+        try:
+            return float(input(mensagem))
+        except ValueError:
+            print("Digite um número!")</pre></div><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">uso.py</span></div><pre class="code">from validacoes import pedir_inteiro
+
+idade = pedir_inteiro("Idade: ")
+print(f"Idade registrada: {idade}")</pre></div></div></details>
     </div>
   </article>
 </section>
 
 <section class="parte" id="p5">
-  <div class="parte-head"><span class="num">05</span><h2>Formatura — o diploma final</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Os dois últimos desafios do curso. Sem solução: daqui pra frente, o(a) arquiteto(a) de software é você. 🏆</p></div>
-  <article class="ex" id="ex9">
+  <div class="parte-head"><span class="num">05</span><h2>time e o universo do pip</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Dois finais de semana: o módulo <code>time</code> (pausas dramáticas!) e o <strong>pip</strong> — o instalador que dá acesso a mais de 500 mil bibliotecas criadas pela comunidade mundial.</p></div>
+  <article class="ex" id="ex12">
     <div class="ex-head">
-      <span class="ex-num">EX 09</span>
-      <h3>Desafio: evoluindo o sistema 🔧</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex9"> Concluído</label>
+      <span class="ex-num">EX 12</span>
+      <h3>Suspense com time.sleep ⏱️</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex12"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Levar o sistema profissional ainda mais longe.</p><span class="tag passos">🧭 Roteiro</span><ol><li>Escolha pelo menos um e implemente:</li><li>a) Paginação na API (<code>?pagina=2</code> com <code>LIMIT</code> e <code>OFFSET</code>) — essencial para muitos dados</li><li>b) Um painel de relatório no frontend com os totais (e quem sabe um gráfico — Semana 18)</li><li>c) Níveis de usuário (admin x comum) no JWT, com permissões diferentes</li><li>d) Colocar o sistema NO AR de verdade (deploy) — o desafio mais gratificante</li></ol><details class="dica"><summary>💡 Você tem todas as peças</summary><div class="inner">Paginação é o <code>LIMIT</code> da Semana 22 com um deslocamento. Gráficos são a Semana 18. Permissões são um campo a mais no payload do JWT (Semana 28). Cada evolução combina coisas que você JÁ domina. Programar avançado é, na essência, recombinar fundamentos com criatividade. E fundamentos você tem de sobra. 🧰</div></details><details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">O desafio dos desafios: faça o deploy completo e compartilhe o link. Um sistema full-stack desacoplado, no ar, acessível ao mundo — esse é o tipo de projeto que abre portas de verdade no mercado. 🌐</div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Pausar o programa — e deixar o foguete da Semana 3 dramático.</p><span class="tag passos">🧭 Passo a passo</span><ol><li><code>time.sleep(1)</code> pausa por 1 segundo</li><li>Refaça a contagem regressiva com 1s entre cada número</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex12_foguete.py</span></div><pre class="code">import time
+
+print("Preparando o foguete...")
+for i in range(5, 0, -1):
+    print(i)
+    time.sleep(1)
+
+print("Decolar! 🚀")</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Preparando o foguete...
+5
+4
+3
+2
+1
+Decolar! 🚀  (com 1s entre cada!)</pre></div><details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Faça um "cronômetro de estudo": peça os minutos e avise quando acabar (cuidado: <code>sleep</code> recebe SEGUNDOS).</div></details>
     </div>
   </article>
 
-  <article class="ex" id="ex10">
+  <article class="ex" id="ex13">
     <div class="ex-head">
-      <span class="ex-num">EX 10</span>
-      <h3>O projeto que encerra a jornada 🎓🏆</h3>
+      <span class="ex-num">EX 13</span>
+      <h3>Conhecendo o pip 📦</h3>
       <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex10"> Concluído</label>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex13"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>O sistema-assinatura: full-stack desacoplado para um problema 100% seu.</p><span class="tag passos">🧭 Roteiro</span><ol><li>Escolha um domínio real da SUA vida: gestão de uma clínica, sistema de turmas, controle financeiro, estoque do seu negócio, agenda de serviços...</li><li>Construa as 3 camadas: banco MariaDB, API REST com JWT, frontend desacoplado</li><li>Estruture como projeto profissional: pastas organizadas, READMEs (um para a API, um para o frontend), credenciais em variáveis de ambiente, código limpo</li><li>Suba os dois repositórios no GitHub, coloque os links no LinkedIn e no currículo</li><li>E o mais importante de tudo: APRESENTE para alguém, explicando suas decisões de arquitetura. Ensinar é a forma definitiva de dominar — e você, depois de 30 semanas, sabe disso na pele. 🎓</li></ol><details class="dica"><summary>💡 A última palavra do curso</summary><div class="inner">30 semanas. ~350 exercícios. 6 sistemas completos. Do <code>print("Olá, mundo!")</code> a uma aplicação full-stack desacoplada — banco profissional, API REST autenticada e frontend separado. Você não aprendeu apenas Python: aprendeu a pensar, a arquitetar e a construir software de verdade. A pergunta nunca mais será "será que eu consigo?". Será "qual problema eu resolvo a seguir?". Obrigado por esta jornada incrível. Parabéns, desenvolvedor(a). E bons códigos — para a vida toda. 🏆🐍✨</div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Instalar sua primeira biblioteca externa.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>No TERMINAL (não no Python!), confira a instalação: <code>pip --version</code></li><li>Instale uma biblioteca divertida: <code>pip install emoji</code></li><li>Veja suas bibliotecas instaladas: <code>pip list</code></li><li>Agora no Python, teste:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex13_emoji.py</span></div><pre class="code">import emoji
+
+print(emoji.emojize("Python é :thumbs_up:"))
+print(emoji.emojize("Formatura chegando :graduation_cap:"))</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Python é 👍
+Formatura chegando 🎓</pre></div><details class="dica"><summary>💡 Se der erro...</summary><div class="inner">"pip não é reconhecido" no Windows? Tente <code>py -m pip install emoji</code>. Sem internet no laboratório? Sem problema — o conceito é o que importa: pip baixa bibliotecas do repositório PyPI. É com ele que se instala pandas, requests e todas as famosas.</div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p6">
+  <div class="parte-head"><span class="num">06</span><h2>Projetos da semana: juntando tudo!</h2></div>
+
+  <article class="ex" id="ex14">
+    <div class="ex-head">
+      <span class="ex-num">EX 14</span>
+      <h3>Projeto: Jogo de dados 🎲</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex14"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Um cassino de dados com saldo, apostas e dois randints.</p><span class="tag passos">🧭 Requisitos</span><ol><li>Comece com <code>saldo = 100</code></li><li>Em loop: mostre o saldo, peça a aposta (0 sai; maior que o saldo → avise e continue)</li><li>Peça o palpite da SOMA de dois dados (2 a 12), role os dados e compare</li><li>Acertou: ganha 5× a aposta. Errou: perde a aposta. Saldo zerou? Fim de jogo!</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Saldo: R$ 100
+Aposta (0 sai): R$ 20
+Palpite da soma (2 a 12): 7
+🎲 Saíram 3 e 4 → soma 7
+ACERTOU! +R$ 100</pre></div><details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Use <code>time.sleep(1)</code> entre os dois dados para criar suspense. 😄</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex14.py</span></div><pre class="code">import random
+
+saldo = 100
+
+while saldo &gt; 0:
+    print(f"\nSaldo: R$ {saldo}")
+    aposta = int(input("Aposta (0 sai): R$ "))
+    if aposta == 0:
+        break
+    if aposta &gt; saldo:
+        print("Saldo insuficiente!")
+        continue
+    palpite = int(input("Palpite da soma (2 a 12): "))
+    d1 = random.randint(1, 6)
+    d2 = random.randint(1, 6)
+    soma = d1 + d2
+    print(f"🎲 Saíram {d1} e {d2} → soma {soma}")
+    if palpite == soma:
+        ganho = aposta * 5
+        saldo = saldo + ganho
+        print(f"ACERTOU! +R$ {ganho}")
+    else:
+        saldo = saldo - aposta
+        print(f"Errou! -R$ {aposta}")
+
+print(f"Fim de jogo. Saldo final: R$ {saldo}")</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex15">
+    <div class="ex-head">
+      <span class="ex-num">EX 15</span>
+      <h3>Projeto: Recibo com data e hora ☕🕐</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex15"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Tua Caneca emite recibos carimbados com datetime — e arquiva tudo.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Peça a quantidade e calcule o total (R$ 25,00 cada)</li><li>Carimbe: <code>datetime.now().strftime("%d/%m/%Y %H:%M")</code></li><li>Monte a linha do recibo e grave em <code>recibos.txt</code> com modo <code>"a"</code> (Semana 7!)</li><li>Exiba o recibo na tela também</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Quantidade: 3
+=== RECIBO TUA CANECA ===
+12/06/2026 14:45 - 3 caneca(s) - R$ 75.00</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex15.py</span></div><pre class="code">from datetime import datetime
+
+PRECO = 25.00
+
+qtd = int(input("Quantidade: "))
+total = qtd * PRECO
+agora = datetime.now().strftime("%d/%m/%Y %H:%M")
+
+recibo = f"{agora} - {qtd} caneca(s) - R$ {total:.2f}"
+
+with open("recibos.txt", "a", encoding="utf-8") as arquivo:
+    arquivo.write(recibo + "\n")
+
+print("=== RECIBO TUA CANECA ===")
+print(recibo)</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex16">
+    <div class="ex-head">
+      <span class="ex-num">EX 16</span>
+      <h3>Projeto bônus: Amigo secreto 🎁</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex16"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Resolver um problema clássico de sorteio (sem código pronto!).</p><span class="tag passos">🧭 Roteiro</span><ol><li>Monte a lista de participantes (input até "fim")</li><li>Embaralhe com <code>shuffle</code></li><li>O truque: cada pessoa tira a SEGUINTE da lista embaralhada — e a última tira a primeira (círculo fechado, ninguém se tira!)</li><li>Dica do círculo: <code>nomes[(i + 1) % len(nomes)]</code></li></ol><span class="tag saida">✅ Exemplo (varia!)</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Diego tirou Ana
+Ana tirou Carla
+Carla tirou Bruno
+Bruno tirou Diego</pre></div><details class="dica"><summary>💡 Por que o % funciona?</summary><div class="inner">Para 4 nomes, os índices são 0-3. No último (i=3), a conta (3+1) % 4 = 0 — volta ao começo! O resto da divisão (Semana 1!) fecha o círculo.</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex16.py</span></div><pre class="code">import random
+
+nomes = []
+while True:
+    nome = input("Participante (ou 'fim'): ")
+    if nome == "fim":
+        break
+    nomes.append(nome)
+
+random.shuffle(nomes)
+
+print("\n=== RESULTADO DO SORTEIO ===")
+for i in range(len(nomes)):
+    tira = nomes[i]
+    recebe = nomes[(i + 1) % len(nomes)]
+    print(f"{tira} tirou {recebe}")</pre></div></div></details>
     </div>
   </article>
 </section>
@@ -514,29 +663,29 @@ Sistema full-stack completo! 🏆</pre></div><details class="dica"><summary>💡
 <div class="checklist" id="checklist">
   <h2>✅ Checklist de fim de semana</h2>
   <p>Antes de seguir para a próxima semana, confirme que você consegue:</p>
-<label class="check-item"><input type="checkbox"><span>Prever saídas misturando MariaDB, REST e JWT</span></label>
-<label class="check-item"><input type="checkbox"><span>Caçar bugs típicos de API, token e %s</span></label>
-<label class="check-item"><input type="checkbox"><span>Modelar o banco no MariaDB (produtos, vendas, usuarios)</span></label>
-<label class="check-item"><input type="checkbox"><span>Construir a API REST com CRUD e códigos de status corretos</span></label>
-<label class="check-item"><input type="checkbox"><span>Adicionar autenticação JWT e proteger as rotas de escrita</span></label>
-<label class="check-item"><input type="checkbox"><span>Montar o frontend desacoplado (login, listar, criar, excluir)</span></label>
-<label class="check-item"><input type="checkbox"><span>Registrar vendas e gerar um relatório agregado pela API</span></label>
-<label class="check-item"><input type="checkbox"><span>Integrar as três camadas e rodá-las juntas</span></label>
-<label class="check-item"><input type="checkbox"><span>Conhecer os passos para colocar o sistema no ar (deploy)</span></label>
-<label class="check-item"><input type="checkbox"><span>Apresentar o sistema full-stack completo — sua obra-prima final</span></label>
+<label class="check-item"><input type="checkbox"><span>Importar um módulo com import e usar com o prefixo (math.sqrt)</span></label>
+<label class="check-item"><input type="checkbox"><span>Importar só o que precisa com from ... import</span></label>
+<label class="check-item"><input type="checkbox"><span>Usar math: sqrt, pi, floor e ceil</span></label>
+<label class="check-item"><input type="checkbox"><span>Sortear com randint, random, choice, shuffle e sample</span></label>
+<label class="check-item"><input type="checkbox"><span>Pegar a data/hora atual com datetime.now()</span></label>
+<label class="check-item"><input type="checkbox"><span>Formatar datas no padrão brasileiro com strftime</span></label>
+<label class="check-item"><input type="checkbox"><span>Calcular diferenças entre datas (.days)</span></label>
+<label class="check-item"><input type="checkbox"><span>Criar um módulo próprio e importá-lo de outro arquivo</span></label>
+<label class="check-item"><input type="checkbox"><span>Pausar o programa com time.sleep()</span></label>
+<label class="check-item"><input type="checkbox"><span>Explicar o que o pip faz e como instalar uma biblioteca</span></label>
 </div>
 
 <div class="win-banner" id="winBanner">
-  <h2>🏆 SEMANA 30 COMPLETA!</h2>
-  <p>MÓDULO PROFISSIONAL COMPLETO! 30 semanas, ~350 exercícios, 6 projetos finais — do print() a um sistema full-stack desacoplado com MariaDB, API REST, JWT e frontend separado. E o módulo de engenharia (JOINs, testes, Git e produção) começa na Semana 31! 🏆🎓🐍</p>
+  <h2>🏆 SEMANA 9 COMPLETA!</h2>
+  <p>Você concluiu todos os exercícios. Agora você programa em equipe com milhares de desenvolvedores que escreveram os módulos!</p>
 </div>
 
 <div class="preview-s2">
-<h2>📅 Prévia da Semana 31 — começa o módulo de ENGENHARIA</h2><p>Seu sistema full-stack está de pé... e agora vamos torná-lo à prova de crescimento! Nas Semanas 31-35, o <strong>módulo de engenharia de software</strong>: <strong>JOINs</strong> e chaves estrangeiras (aquele JOIN do relatório vai fazer todo sentido!), <strong>testes automatizados com pytest</strong>, <strong>Git &amp; GitHub</strong> para versionar e publicar, e a preparação completa para <strong>produção e deploy</strong>. Do sistema que funciona ao sistema em que se confia. 🏗️🧪🐙</p></div>
+<h2>📅 Prévia da Semana 10</h2><p>Na próxima semana, a virada de chave: <strong>Programação Orientada a Objetos</strong> — <code>class</code>, <code>__init__</code>, o misterioso <code>self</code>, atributos e métodos. Você vai descobrir que JÁ usa objetos desde a Semana 1 sem saber... 🤯</p></div>
 
 </main>
 
-<footer>python_para_iniciantes // semana_30 // exercícios guiados</footer>
+<footer>python_para_iniciantes // semana_09 // exercícios guiados</footer>
 
 <script>
 // ===== Syntax highlight leve para Python =====
@@ -548,7 +697,7 @@ Sistema full-stack completo! 🏆</pre></div><details class="dica"><summary>💡
     src = src.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     // uma passada só, com alternação (comentário | string | builtin | bool | número)
     src = src.replace(
-      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|insert|int|float|str|len|range|type|abs|round|max|min|sum|sorted|sort|reverse|append|remove|split|strip|upper|lower|replace|title|randint|random|get|keys|values|items|open|readlines|read|write|close|count|index|pop|update|list|dict|tuple|enumerate|sqrt|floor|ceil|choice|shuffle|sample|sleep|now|today|strftime|dumps|dump|loads|load|isinstance|datetime|date|DictReader|DictWriter|writerows|writerow|writeheader|writer|reader|csv|Workbook|load_workbook|save|iter_rows|Font|listdir|makedirs|getcwd|rename|exists|getsize|splitext|join|endswith|startswith|copytree|copy|move|requests|status_code|json|DataFrame|read_csv|read_excel|to_excel|to_csv|head|describe|groupby|sort_values|value_counts|mean|idxmax|bar|barh|pie|plot|savefig|show|title|xlabel|ylabel|figure|legend|axhline|tight_layout|close|Flask|route|run|render_template|jsonify|redirect|request|connect|cursor|execute|executemany|fetchall|fetchone|commit|environ|getenv|post|encode|decode|abort|make_response)\b|\b(True|False|None|if|elif|else|while|for|in|and|or|not|break|continue|import|from|def|return|try|except|finally|with|as|del|global|pass|class|self|super|lambda)\b|(\b\d+(?:\.\d+)?\b)/g,
+      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|insert|int|float|str|len|range|type|abs|round|max|min|sum|sorted|sort|reverse|append|remove|split|strip|upper|lower|replace|title|randint|random|get|keys|values|items|open|readlines|read|write|close|count|index|pop|update|list|dict|tuple|enumerate|sqrt|floor|ceil|choice|shuffle|sample|sleep|now|today|strftime|dumps|dump|loads|load|isinstance|datetime|date)\b|\b(True|False|None|if|elif|else|while|for|in|and|or|not|break|continue|import|from|def|return|try|except|finally|with|as|del|global|pass|class|self|super|lambda)\b|(\b\d+(?:\.\d+)?\b)/g,
       function(m, com, str, fn, bool, num){
         if(com)  return '<span class="tk-com">'+com+'</span>';
         if(str)  return '<span class="tk-str">'+str+'</span>';
@@ -567,7 +716,7 @@ Sistema full-stack completo! 🏆</pre></div><details class="dica"><summary>💡
 // no navegador. Se o localStorage estiver indisponível (modo restrito,
 // pré-visualização, etc.), o progresso funciona só em memória, sem quebrar.
 const storage = (function(){
-  const KEY = 'python_semana30_progresso';
+  const KEY = 'python_semana09_progresso';
   let memoria = {};
   let disponivel = false;
   try{
@@ -614,10 +763,10 @@ const storage = (function(){
   const MSGS = [
     [0,  'Marque os exercícios concluídos ✔'],
     [1,  'Boa! Continue assim 💪'],
-    [3,  'Pegando o ritmo! 🔥'],
-    [5, 'Metade do caminho! 🚀'],
-    [8, 'Quase lá... força! ⚡'],
-    [10, 'SEMANA COMPLETA! 🏆']
+    [5,  'Pegando o ritmo! 🔥'],
+    [8, 'Metade do caminho! 🚀'],
+    [12, 'Quase lá... força! ⚡'],
+    [16, 'SEMANA COMPLETA! 🏆']
   ];
 
   function estadoAtual(){

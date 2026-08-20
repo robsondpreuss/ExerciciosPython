@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Semana 31 — SQL Avançado: JOINs</title>
+<title>Semana 5 — Dicionários e Tuplas</title>
 <style>
   :root{
     --ink:#16243A;
@@ -57,7 +57,7 @@
     color:#fff;padding:56px 20px 48px;text-align:center;position:relative;overflow:hidden;
   }
   header.hero::before{
-    content:"FOREIGN KEY  INNER JOIN  ON  LEFT JOIN  IS NULL";
+    content:"{ }  chave: valor  .get(  .items(  in  ( , )";
     position:absolute;inset:auto 0 8px 0;font-family:var(--mono);font-size:.78rem;
     color:rgba(255,255,255,.14);letter-spacing:.4em;white-space:nowrap;overflow:hidden;
   }
@@ -234,276 +234,367 @@
 <div class="progress-wrap" role="region" aria-label="Progresso da semana">
   <span class="label">XP DA SEMANA</span>
   <div class="progress-bar"><div class="progress-fill" id="pfill"></div></div>
-  <span class="progress-count" id="pcount">0 / 13</span>
+  <span class="progress-count" id="pcount">0 / 18</span>
   <span class="progress-msg" id="pmsg">Marque os exercícios concluídos ✔</span>
   <button class="reset-btn" id="resetBtn" title="Apagar todo o progresso salvo">↺ Resetar</button>
 </div>
 
 <header class="hero">
   <div class="kicker">Python para Iniciantes · Exercícios Guiados</div>
-  <h1>SEMANA 31 — JOINs:<br>ligando as tabelas<span class="cursor" aria-hidden="true"></span></h1>
-  <p class="sub">O superpoder que faltava no seu SQL: relacionamentos com chave estrangeira, INNER JOIN para cruzar tabelas, LEFT JOIN para achar o que NÃO aconteceu e relatórios de três tabelas — o dia a dia de quem trabalha com dados.</p>
+  <h1>SEMANA 5 — Dicionários:<br>dados com nome e sobrenome<span class="cursor" aria-hidden="true"></span></h1>
+  <p class="sub">Organize informações como um cadastro de verdade: pares chave-valor, .get(), percorrer com .items(), dicionários como contadores, listas de dicionários e tuplas.</p>
   <div class="howto">
     <strong>Como usar:</strong> digite o código você mesmo (não copie e cole!), compare com a saída esperada e marque <strong>✔ Concluído</strong> em cada exercício para encher sua barra de XP. As <strong>dicas</strong> e <strong>soluções</strong> ficam escondidas — só abra depois de tentar! Seu progresso fica salvo no navegador.
   </div>
 </header>
 
-<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · Relacionamentos</a><a href="#p2">2 · INNER JOIN</a><a href="#p3">3 · LEFT JOIN</a><a href="#p4">4 · JOIN + GROUP BY</a><a href="#p5">5 · Três tabelas</a><a href="#p6">6 · Projetos</a><a href="#checklist">✅ Checklist</a></nav>
+<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · Criando</a><a href="#p2">2 · Percorrendo</a><a href="#p3">3 · Consultas & contagens</a><a href="#p4">4 · Listas de dicts</a><a href="#p5">5 · Tuplas</a><a href="#p6">6 · Projetos</a><a href="#checklist">✅ Checklist</a></nav>
 
 <main>
 
 <section class="parte" id="p1">
-  <div class="parte-head"><span class="num">01</span><h2>Relacionamentos: a alma do banco relacional</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Na Semana 30 sua tabela <code>vendas</code> guardava <code>produto_id</code> — um NÚMERO apontando para a tabela produtos. Isso é um <strong>relacionamento</strong>, e é ele que dá nome aos "bancos relacionais". A coluna que aponta para outra tabela chama-se <strong>chave estrangeira</strong> (foreign key).</p><p>Por que guardar o id e não o nome? Três motivos: se o nome do produto mudar, muda num lugar só; números ocupam menos espaço e comparam mais rápido; e o banco consegue GARANTIR que a venda aponta para um produto que existe.</p></div>
+  <div class="parte-head"><span class="num">01</span><h2>Criando e acessando dicionários</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>A lista guarda valores por <strong>posição</strong> (0, 1, 2...). O <strong>dicionário</strong> guarda valores por <strong>nome</strong> — cada item é um par <strong>chave: valor</strong>, entre chaves:</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">exemplo.py</span></div><pre class="code">cliente = {
+    "nome": "Ana",
+    "idade": 28,
+    "cidade": "Porto Alegre"
+}</pre></div><p>Para acessar, use a chave no lugar do índice: <code>cliente["nome"]</code> → "Ana". É como um cadastro: você não pede "o campo 2", você pede "a idade".</p></div>
   <article class="ex" id="ex1">
     <div class="ex-head">
       <span class="ex-num">EX 01</span>
-      <h3>Por que produto_id e não o nome? 🤔</h3>
+      <h3>Primeiro dicionário 📇</h3>
       <span class="stars">⭐ básico</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex1"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Sentir na pele o problema de duplicar dados.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Imagine a tabela vendas guardando o NOME do produto em cada linha:</li><li>a) A "caneca branca" vira "caneca branca P" — quantas linhas você teria que atualizar?</li><li>b) Alguém digita "Caneca Branca" (maiúsculas) numa venda — o GROUP BY ainda agrupa certo?</li><li>c) Com produto_id, os dois problemas existem?</li></ol><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><p><strong>a)</strong> Com o nome duplicado, TODAS as vendas antigas precisariam de UPDATE (e se esquecer uma, o relatório quebra). Com o id, muda-se o nome UMA vez na tabela produtos. <strong>b)</strong> "caneca branca" ≠ "Caneca Branca" para o GROUP BY — o relatório dividiria o mesmo produto em dois! Com o id, impossível errar. <strong>c)</strong> Não: o id é único, imutável e verificável. <strong>Regra de ouro da modelagem: cada informação vive num lugar só; as outras tabelas apenas APONTAM para ela.</strong> É o DRY (Semana 6) aplicado a dados!</p></div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Criar um dicionário e acessar valores pela chave.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie o arquivo <code>ex01_dicionario.py</code> com o cadastro do cliente</li><li>PREVEJA cada saída antes de executar</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex01_dicionario.py</span></div><pre class="code">cliente = {
+    "nome": "Ana",
+    "idade": 28,
+    "cidade": "Porto Alegre"
+}
+
+print(cliente)
+print(cliente["nome"])
+print(cliente["cidade"])
+print(len(cliente))</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">{'nome': 'Ana', 'idade': 28, 'cidade': 'Porto Alegre'}
+Ana
+Porto Alegre
+3</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner">As chaves de texto precisam de aspas tanto na criação quanto no acesso: <code>cliente["nome"]</code>. E <code>len()</code> conta os PARES chave-valor, não as letras.</div></details>
     </div>
   </article>
 
   <article class="ex" id="ex2">
     <div class="ex-head">
       <span class="ex-num">EX 02</span>
-      <h3>FOREIGN KEY: o contrato entre tabelas 📜</h3>
+      <h3>KeyError e o salvador .get()</h3>
       <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex2"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Recriar a tabela vendas com uma chave estrangeira de verdade.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>No DBeaver, rode o CREATE abaixo — a novidade é a linha <code>FOREIGN KEY</code></li><li>Ela declara: "produto_id aponta para produtos(id)"</li><li>Agora o banco RECUSA uma venda com produto_id que não existe!</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">fk.sql</span></div><pre class="code">USE tua_caneca;
-
-CREATE TABLE IF NOT EXISTS vendas_v2 (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    produto_id INT,
-    qtd INT,
-    total DECIMAL(10,2),
-    FOREIGN KEY (produto_id) REFERENCES produtos(id)
-);</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(tabela criada — e no DBeaver, a aba "Foreign Keys" mostra o vínculo)</pre></div><details class="dica"><summary>💡 O banco como guardião</summary><div class="inner">Tente inserir uma venda com <code>produto_id = 9999</code> (que não existe): o MariaDB recusa com erro de "foreign key constraint fails". Antes, a validação era só no seu Python; agora o PRÓPRIO BANCO garante a integridade. Defesa em camadas — como a validação no servidor da Semana 23!</div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Conhecer o erro de chave inexistente — e o jeito seguro de consultar.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Com o mesmo dicionário, tente acessar uma chave que não existe:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex02_erro.py</span></div><pre class="code">print(cliente["telefone"])</pre></div><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output" style="color:#FF9B94">KeyError: 'telefone'</pre></div><span class="tag passos">🧭 Continue</span><ol><li>Agora troque pelo método seguro: <code>cliente.get("telefone")</code></li><li>Teste também com um valor padrão: <code>cliente.get("telefone", "não cadastrado")</code></li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">None
+não cadastrado</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><p><code>dicionario[chave]</code> QUEBRA o programa se a chave não existir. <code>dicionario.get(chave)</code> devolve <code>None</code> (ou o valor padrão que você definir no segundo argumento) e a vida segue. Use <code>.get()</code> sempre que não tiver certeza de que a chave existe.</p></div></details>
     </div>
   </article>
 
   <article class="ex" id="ex3">
     <div class="ex-head">
       <span class="ex-num">EX 03</span>
-      <h3>Testando o guardião 🚨</h3>
+      <h3>Atualizando o cadastro</h3>
       <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex3"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Provocar (de propósito) o erro de chave estrangeira.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Pelo Python (pymysql, Semana 26), tente inserir uma venda com um produto_id inexistente</li><li>Leia o erro:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output" style="color:#FF9B94">pymysql.err.IntegrityError: (1452, 'Cannot add or update a child row: a foreign key constraint fails...')</pre></div><span class="tag passos">🧭 Continue</span><ol><li>Erro 1452 = "essa chave estrangeira não existe na tabela-mãe"</li><li>Trate com try/except (Semana 7) para responder um 400 amigável na API</li></ol><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex03.py</span></div><pre class="code">import pymysql
-from db import conectar   # Semana 26
+<span class="tag obj">🎯 Objetivo</span><p>Adicionar, alterar e remover chaves.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>PREVEJA como o dicionário estará ao final, depois execute</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex03_atualizando.py</span></div><pre class="code">cliente = {"nome": "Ana", "idade": 28, "cidade": "Porto Alegre"}
 
-con = conectar()
-cur = con.cursor()
+cliente["telefone"] = "(51) 99999-0000"   # chave nova? ADICIONA
+cliente["idade"] = 29                      # chave existe? ALTERA
+del cliente["cidade"]                      # remove o par inteiro
 
-try:
-    cur.execute(
-        "INSERT INTO vendas_v2 (produto_id, qtd, total) VALUES (%s, %s, %s)",
-        (9999, 1, 10.0))
-    con.commit()
-except pymysql.err.IntegrityError:
-    print("Produto inexistente — venda recusada pelo banco! 🛡️")
-
-con.close()</pre></div><p>O <code>IntegrityError</code> é o banco defendendo a consistência dos SEUS dados. Na API, capture-o e devolva <code>400</code> ou <code>404</code> — nunca deixe o erro cru vazar para o cliente.</p></div></details>
+print(cliente)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">{'nome': 'Ana', 'idade': 29, 'telefone': '(51) 99999-0000'}</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner">A mesma sintaxe <code>dicionario[chave] = valor</code> serve para criar E para atualizar — o Python decide sozinho: se a chave já existe, sobrescreve; se não, cria.</div></details>
     </div>
   </article>
 </section>
 
 <section class="parte" id="p2">
-  <div class="parte-head"><span class="num">02</span><h2>INNER JOIN: cruzando as tabelas</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>A tabela vendas guarda <code>produto_id = 1</code>... mas o relatório precisa mostrar "caneca branca"! O <strong>JOIN</strong> junta as duas tabelas na consulta, seguindo o relacionamento:</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">a_magica.sql</span></div><pre class="code">SELECT v.qtd, p.nome
-FROM vendas v
-JOIN produtos p ON p.id = v.produto_id</pre></div><p>Leia: "pegue as vendas e, PARA CADA UMA, encontre o produto cujo id bate com o produto_id". O <code>ON</code> é a regra do encaixe. Os apelidos <code>v</code> e <code>p</code> (aliases) encurtam a escrita.</p></div>
+  <div class="parte-head"><span class="num">02</span><h2>Percorrendo dicionários</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>O <code>for</code> percorre as <strong>chaves</strong> de um dicionário. Para chave e valor juntos, use <code>.items()</code>:</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">formas.py</span></div><pre class="code">for chave in dicionario:          # só as chaves
+    print(chave, dicionario[chave])
+
+for chave, valor in dicionario.items():   # os dois de uma vez
+    print(chave, valor)</pre></div></div>
   <article class="ex" id="ex4">
     <div class="ex-head">
       <span class="ex-num">EX 04</span>
-      <h3>Seu primeiro JOIN 🤝</h3>
+      <h3>Percorrendo o produto</h3>
       <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex4"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Listar as vendas com o NOME do produto (não o id).</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Monte o SELECT com <code>JOIN produtos p ON p.id = v.produto_id</code></li><li>Peça as colunas com o apelido: <code>p.nome</code>, <code>v.qtd</code>, <code>v.total</code></li><li>Rode no DBeaver primeiro (para VER a tabela cruzada), depois no Python</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex04_join.py</span></div><pre class="code">from db import conectar
+<span class="tag obj">🎯 Objetivo</span><p>Visitar cada par chave-valor com for.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Digite, preveja e execute:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex04_percorrendo.py</span></div><pre class="code">produto = {"nome": "Caneca", "preco": 25.0, "estoque": 12}
 
-con = conectar()
-cur = con.cursor()
-
-cur.execute("""
-    SELECT p.nome, v.qtd, v.total
-    FROM vendas v
-    JOIN produtos p ON p.id = v.produto_id
-""")
-
-for nome, qtd, total in cur.fetchall():
-    print(f"{nome}: {qtd} un. — R$ {total:.2f}")
-
-con.close()</pre></div><span class="tag saida">✅ Exemplo (dados variam)</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">caneca branca: 3 un. — R$ 75.00
-caneca preta: 2 un. — R$ 55.00
-caneca branca: 1 un. — R$ 25.00</pre></div><details class="dica"><summary>💡 O dicionário virou JOIN</summary><div class="inner">Lembra da Semana 8, quando você usava um dict para "traduzir" código→nome dentro de um loop? O JOIN é ISSO, feito pelo banco, em velocidade industrial. Você já tinha a intuição — agora tem a ferramenta definitiva.</div></details>
+for chave in produto:
+    print(f"{chave}: {produto[chave]}")</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">nome: Caneca
+preco: 25.0
+estoque: 12</pre></div>
     </div>
   </article>
 
   <article class="ex" id="ex5">
     <div class="ex-head">
       <span class="ex-num">EX 05</span>
-      <h3>JOIN com filtro e ordenação</h3>
+      <h3>keys, values e items</h3>
       <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex5"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Combinar JOIN com WHERE e ORDER BY — tudo junto.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Liste só as vendas de valor acima de R$ 50 (<code>WHERE v.total &gt; 50</code></li><li>Ordene do maior para o menor total</li><li>Repare: o WHERE e o ORDER BY (Semana 22) funcionam normalmente sobre o resultado cruzado</li></ol><span class="tag saida">✅ Exemplo</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">caneca branca: 3 un. — R$ 75.00
-caneca preta: 2 un. — R$ 55.00</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex05.py</span></div><pre class="code">cur.execute("""
-    SELECT p.nome, v.qtd, v.total
-    FROM vendas v
-    JOIN produtos p ON p.id = v.produto_id
-    WHERE v.total &gt; 50
-    ORDER BY v.total DESC
-""")
-for nome, qtd, total in cur.fetchall():
-    print(f"{nome}: {qtd} un. — R$ {total:.2f}")</pre></div><p>A ordem das cláusulas no SQL: <code>SELECT → FROM/JOIN → WHERE → GROUP BY → ORDER BY</code>. Decore essa sequência — ela vale para toda consulta que você escrever na vida.</p></div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Conhecer as três "visões" de um dicionário.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>PREVEJA e execute:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex05_visoes.py</span></div><pre class="code">produto = {"nome": "Caneca", "preco": 25.0, "estoque": 12}
+
+print(produto.keys())
+print(produto.values())
+
+for chave, valor in produto.items():
+    print(chave, "→", valor)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">dict_keys(['nome', 'preco', 'estoque'])
+dict_values(['Caneca', 25.0, 12])
+nome → Caneca
+preco → 25.0
+estoque → 12</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner"><code>.items()</code> entrega cada par como uma duplinha — por isso o for usa DUAS variáveis: <code>for chave, valor in ...</code>. (Spoiler: essa duplinha é uma tupla, assunto da Parte 5!)</div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex6">
+    <div class="ex-head">
+      <span class="ex-num">EX 06</span>
+      <h3>Tabela de preços ☕</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex6"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Formatar um dicionário como tabela bonita.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie <code>precos = {"branca": 25.0, "preta": 27.5, "personalizada": 35.0}</code></li><li>Percorra com <code>.items()</code> e exiba cada linha como "branca ...... R$ 25.00"</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">=== TABELA DE PREÇOS ===
+branca: R$ 25.00
+preta: R$ 27.50
+personalizada: R$ 35.00</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex06.py</span></div><pre class="code">precos = {"branca": 25.0, "preta": 27.5, "personalizada": 35.0}
+
+print("=== TABELA DE PREÇOS ===")
+for cor, preco in precos.items():
+    print(f"{cor}: R$ {preco:.2f}")</pre></div></div></details>
     </div>
   </article>
 </section>
 
 <section class="parte" id="p3">
-  <div class="parte-head"><span class="num">03</span><h2>LEFT JOIN: o que NÃO aconteceu</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>O <code>INNER JOIN</code> (ou só JOIN) traz apenas as linhas que TÊM par nas duas tabelas. E os produtos que nunca venderam? Eles somem do resultado! O <strong>LEFT JOIN</strong> resolve: traz TODAS as linhas da tabela da esquerda e preenche com <code>NULL</code> onde não houver par. Perguntas de negócio valiosas ("o que está encalhado?") vivem aí.</p></div>
-  <article class="ex" id="ex6">
-    <div class="ex-head">
-      <span class="ex-num">EX 06</span>
-      <h3>LEFT JOIN: todos os produtos, vendidos ou não</h3>
-      <span class="stars">⭐⭐ médio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex6"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Ver a diferença entre INNER e LEFT na prática.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Rode a mesma consulta duas vezes: uma com <code>JOIN</code>, outra com <code>LEFT JOIN</code></li><li>No LEFT, produtos sem venda aparecem com qtd <code>None</code> (o NULL do banco chega como None no Python — Semana 6!)</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex06_left.py</span></div><pre class="code">cur.execute("""
-    SELECT p.nome, v.qtd
-    FROM produtos p
-    LEFT JOIN vendas v ON v.produto_id = p.id
-""")
-for nome, qtd in cur.fetchall():
-    situacao = f"{qtd} un." if qtd is not None else "— nunca vendido!"
-    print(f"{nome}: {situacao}")</pre></div><span class="tag saida">✅ Exemplo</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">caneca branca: 3 un.
-caneca preta: 2 un.
-azulejo: — nunca vendido!</pre></div><details class="dica"><summary>💡 Esquerda de quem?</summary><div class="inner">"LEFT" = a tabela escrita ANTES do JOIN (aqui, produtos). O LEFT JOIN promete: "TODAS as linhas da esquerda entram no resultado, com ou sem par". Por isso o azulejo aparece — com NULL na parte da venda. O INNER o teria escondido.</div></details>
-    </div>
-  </article>
-
+  <div class="parte-head"><span class="num">03</span><h2>Consultas e contagens</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Dois superpoderes dos dicionários: servir de <strong>tabela de consulta</strong> (o <code>in</code> verifica se a chave existe) e de <strong>contador</strong> — o padrão <code>contagem[chave] = contagem.get(chave, 0) + 1</code> conta qualquer coisa.</p></div>
   <article class="ex" id="ex7">
     <div class="ex-head">
       <span class="ex-num">EX 07</span>
-      <h3>Os encalhados: LEFT JOIN + IS NULL 🕵️</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
+      <h3>Mini-tradutor 🇧🇷→🇺🇸</h3>
+      <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex7"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Encontrar produtos que NUNCA venderam — a consulta de detetive.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Parta do LEFT JOIN anterior</li><li>Filtre com <code>WHERE v.id IS NULL</code> — sobram só as linhas SEM par</li><li>Atenção: no SQL é <code>IS NULL</code>, nunca <code>= NULL</code></li></ol><span class="tag saida">✅ Exemplo</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Produtos encalhados:
-azulejo</pre></div><details class="dica"><summary>💡 A pergunta invertida</summary><div class="inner">O INNER JOIN responde "o que aconteceu?"; o LEFT JOIN + IS NULL responde "o que NÃO aconteceu?" — clientes que nunca compraram, produtos parados, alunos sem entrega. Perguntas negativas são ouro para o negócio, e essa é A técnica para respondê-las.</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex07.py</span></div><pre class="code">cur.execute("""
-    SELECT p.nome
-    FROM produtos p
-    LEFT JOIN vendas v ON v.produto_id = p.id
-    WHERE v.id IS NULL
-""")
-print("Produtos encalhados:")
-for (nome,) in cur.fetchall():
-    print(nome)</pre></div><p>Repare no <code>(nome,)</code>: fetchall devolve tuplas mesmo com uma coluna só — a vírgula desempacota (Semana 5!).</p></div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Usar o dicionário como tabela de consulta com in.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie um dicionário com 5 palavras PT → EN (ex.: "gato": "cat")</li><li>Peça uma palavra ao usuário</li><li>Se estiver no dicionário, traduza; senão, avise que não conhece</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Palavra em português: gato
+Em inglês: cat</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner">Com dicionários, o <code>in</code> verifica as CHAVES: <code>if palavra in dicionario</code>.</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex07.py</span></div><pre class="code">dicionario = {
+    "gato": "cat",
+    "cachorro": "dog",
+    "casa": "house",
+    "livro": "book",
+    "caneca": "mug"
+}
+
+palavra = input("Palavra em português: ").lower()
+
+if palavra in dicionario:
+    print(f"Em inglês: {dicionario[palavra]}")
+else:
+    print("Ainda não conheço essa palavra! 😅")</pre></div></div></details>
     </div>
   </article>
-</section>
 
-<section class="parte" id="p4">
-  <div class="parte-head"><span class="num">04</span><h2>JOIN + GROUP BY: relatórios profissionais</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>A dupla mais usada do SQL corporativo: o JOIN cruza, o GROUP BY (Semana 22) resume. Toda pergunta do tipo "total de X por Y" com dados em tabelas diferentes passa por aqui.</p></div>
   <article class="ex" id="ex8">
     <div class="ex-head">
       <span class="ex-num">EX 08</span>
-      <h3>Ranking com nome de verdade 🏆</h3>
+      <h3>Contando votos</h3>
       <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex8"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>O relatório da Semana 30, agora entendido linha por linha.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>JOIN para trazer o nome + GROUP BY p.nome para agrupar</li><li>Some as quantidades e o faturamento por produto</li><li>Ordene pelo total vendido</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex08_ranking.py</span></div><pre class="code">cur.execute("""
-    SELECT p.nome, SUM(v.qtd) AS unidades, SUM(v.total) AS faturamento
-    FROM vendas v
-    JOIN produtos p ON p.id = v.produto_id
-    GROUP BY p.nome
-    ORDER BY unidades DESC
-""")
-print("--- RANKING TUA CANECA ---")
-for nome, unidades, faturamento in cur.fetchall():
-    print(f"{nome}: {unidades} un. — R$ {faturamento:.2f}")</pre></div><span class="tag saida">✅ Exemplo</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">--- RANKING TUA CANECA ---
-caneca branca: 4 un. — R$ 100.00
-caneca preta: 2 un. — R$ 55.00</pre></div><details class="dica"><summary>💡 O AS batiza a coluna</summary><div class="inner">O <code>AS unidades</code> dá um nome ao resultado da agregação — deixa a consulta legível e permite usar <code>ORDER BY unidades</code>. Na Semana 30 você usou essa consulta pronta no relatório da API; agora você a DOMINA peça por peça. 🎓</div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Aprender o padrão contador com dicionário — um dos mais usados em análise de dados!</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie <code>votos = ["ana", "bruno", "ana", "carla", "ana", "bruno"]</code></li><li>Crie <code>contagem = {}</code> vazio</li><li>Percorra os votos: se o nome já está na contagem, some 1; senão, comece com 1</li><li>Exiba o resultado</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">{'ana': 3, 'bruno': 2, 'carla': 1}</pre></div><details class="dica"><summary>💡 O atalho profissional</summary><div class="inner">O if/else inteiro vira UMA linha com o get: <code>contagem[nome] = contagem.get(nome, 0) + 1</code> — "pegue o valor atual (ou 0 se não existir) e some 1".</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex08.py</span></div><pre class="code">votos = ["ana", "bruno", "ana", "carla", "ana", "bruno"]
+contagem = {}
+
+for nome in votos:
+    if nome in contagem:
+        contagem[nome] = contagem[nome] + 1
+    else:
+        contagem[nome] = 1
+
+print(contagem)
+
+# Versão enxuta com .get():
+contagem2 = {}
+for nome in votos:
+    contagem2[nome] = contagem2.get(nome, 0) + 1
+print(contagem2)</pre></div></div></details>
     </div>
   </article>
 
   <article class="ex" id="ex9">
     <div class="ex-head">
       <span class="ex-num">EX 09</span>
-      <h3>Produtos com estoque baixo E vendas altas ⚠️</h3>
+      <h3>Contando letras</h3>
       <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex9"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Uma consulta de decisão: o que repor com urgência (sem código pronto!).</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Combine tudo: JOIN + GROUP BY + HAVING</li><li>Traga produtos com estoque < 5 cujas vendas somam 2+ unidades</li><li>Pesquise o <code>HAVING</code>: é o WHERE dos grupos (filtra DEPOIS do GROUP BY)</li></ol><span class="tag saida">✅ Exemplo</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Repor com urgência:
-caneca branca (estoque 3, vendeu 4)</pre></div><details class="dica"><summary>💡 WHERE vs HAVING</summary><div class="inner">O <code>WHERE</code> filtra LINHAS antes de agrupar; o <code>HAVING</code> filtra GRUPOS depois de agregar. "Estoque < 5" é sobre a linha (WHERE); "vendeu 2+" é sobre a soma do grupo (HAVING). Saber onde cada filtro entra é marca de quem entende SQL de verdade.</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex09.py</span></div><pre class="code">cur.execute("""
-    SELECT p.nome, p.estoque, SUM(v.qtd) AS vendidas
-    FROM produtos p
-    JOIN vendas v ON v.produto_id = p.id
-    WHERE p.estoque &lt; 5
-    GROUP BY p.nome, p.estoque
-    HAVING vendidas &gt;= 2
-""")
-print("Repor com urgência:")
-for nome, estoque, vendidas in cur.fetchall():
-    print(f"{nome} (estoque {estoque}, vendeu {vendidas})")</pre></div></div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Aplicar o padrão contador em um texto.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Peça uma palavra</li><li>Conte quantas vezes cada letra aparece, usando o padrão do exercício anterior</li><li>Teste com "banana"</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Digite uma palavra: banana
+{'b': 1, 'a': 3, 'n': 2}</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex09.py</span></div><pre class="code">palavra = input("Digite uma palavra: ").lower()
+contagem = {}
+
+for letra in palavra:
+    contagem[letra] = contagem.get(letra, 0) + 1
+
+print(contagem)</pre></div></div></details>
     </div>
   </article>
 </section>
 
-<section class="parte" id="p5">
-  <div class="parte-head"><span class="num">05</span><h2>Três tabelas: clientes entram em cena</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Sistemas reais têm MUITAS tabelas relacionadas. Vamos adicionar <code>clientes</code> e ligar: cliente → venda → produto. Um JOIN duplo responde "quem comprou o quê".</p></div>
+<section class="parte" id="p4">
+  <div class="parte-head"><span class="num">04</span><h2>Listas de dicionários: sua primeira "tabela"</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Combine as duas estruturas e você tem uma tabela de banco de dados: a <strong>lista</strong> é o conjunto de linhas, cada <strong>dicionário</strong> é uma linha com colunas nomeadas. É EXATAMENTE assim que APIs e sistemas reais trafegam dados!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">exemplo.py</span></div><pre class="code">produtos = [
+    {"nome": "Caneca branca", "preco": 25.0},
+    {"nome": "Caneca preta", "preco": 27.5},
+    {"nome": "Azulejo", "preco": 40.0}
+]</pre></div></div>
   <article class="ex" id="ex10">
     <div class="ex-head">
       <span class="ex-num">EX 10</span>
-      <h3>A tabela de clientes</h3>
+      <h3>Catálogo de produtos</h3>
       <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex10"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Criar clientes e ligá-los às vendas.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie a tabela <code>clientes</code> (id, nome) e adicione <code>cliente_id</code> às vendas (com FOREIGN KEY)</li><li>Insira 2-3 clientes e registre vendas apontando para eles</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">clientes.sql</span></div><pre class="code">CREATE TABLE IF NOT EXISTS clientes (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nome VARCHAR(100)
-);
+<span class="tag obj">🎯 Objetivo</span><p>Percorrer uma lista de dicionários.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie a lista de produtos do exemplo acima</li><li>Percorra com <code>for produto in produtos</code></li><li>Para cada um, exiba nome e preço formatado</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Caneca branca — R$ 25.00
+Caneca preta — R$ 27.50
+Azulejo — R$ 40.00</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner">Dentro do loop, cada <code>produto</code> é um dicionário completo: acesse os campos com <code>produto['nome']</code>. Repare nas aspas: simples por dentro, duplas por fora (ou vice-versa)!</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex10.py</span></div><pre class="code">produtos = [
+    {"nome": "Caneca branca", "preco": 25.0},
+    {"nome": "Caneca preta", "preco": 27.5},
+    {"nome": "Azulejo", "preco": 40.0}
+]
 
-ALTER TABLE vendas_v2 ADD COLUMN cliente_id INT;
-ALTER TABLE vendas_v2 ADD FOREIGN KEY (cliente_id) REFERENCES clientes(id);</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(clientes criados e vendas apontando para eles — confira o diagrama no DBeaver!)</pre></div><details class="dica"><summary>💡 O diagrama do DBeaver</summary><div class="inner">Clique com o botão direito no banco → View Diagram: o DBeaver DESENHA suas tabelas e as setas dos relacionamentos! Ver o "mapa" do banco ajuda demais a raciocinar — e impressiona em qualquer apresentação. 🗺️</div></details>
+for produto in produtos:
+    print(f"{produto['nome']} — R$ {produto['preco']:.2f}")</pre></div></div></details>
     </div>
   </article>
 
   <article class="ex" id="ex11">
     <div class="ex-head">
       <span class="ex-num">EX 11</span>
-      <h3>JOIN triplo: quem comprou o quê 🔗</h3>
+      <h3>Filtrando por preço</h3>
       <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex11"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Cruzar clientes, vendas e produtos numa consulta só.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Dois JOINs em sequência: vendas→produtos e vendas→clientes</li><li>Cada JOIN tem seu próprio ON</li><li>Traga: nome do cliente, nome do produto, quantidade</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex11_triplo.py</span></div><pre class="code">cur.execute("""
-    SELECT c.nome AS cliente, p.nome AS produto, v.qtd
-    FROM vendas_v2 v
-    JOIN produtos p ON p.id = v.produto_id
-    JOIN clientes c ON c.id = v.cliente_id
-""")
-for cliente, produto, qtd in cur.fetchall():
-    print(f"{cliente} comprou {qtd}x {produto}")</pre></div><span class="tag saida">✅ Exemplo</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Ana comprou 3x caneca branca
-Bruno comprou 2x caneca preta
-Ana comprou 1x caneca personalizada</pre></div><details class="dica"><summary>💡 JOINs empilham</summary><div class="inner">Cada JOIN adiciona uma tabela ao cruzamento — dois, três, cinco JOINs são rotina em sistemas reais. A tabela vendas aqui é o "centro" que conecta tudo (quem + o quê + quanto). Modelagens assim, com uma tabela de eventos ligando entidades, aparecem em TODO sistema comercial.</div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Aplicar o padrão filtro (Semana 4) numa lista de dicionários.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Use a mesma lista de produtos</li><li>Crie uma lista nova só com os produtos de até R$ 30,00</li><li>A condição olha um campo do dicionário: <code>produto['preco'] &lt;= 30</code></li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Até R$ 30,00:
+Caneca branca — R$ 25.00
+Caneca preta — R$ 27.50</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex11.py</span></div><pre class="code">produtos = [
+    {"nome": "Caneca branca", "preco": 25.0},
+    {"nome": "Caneca preta", "preco": 27.5},
+    {"nome": "Azulejo", "preco": 40.0}
+]
+
+baratos = []
+for produto in produtos:
+    if produto["preco"] &lt;= 30:
+        baratos.append(produto)
+
+print("Até R$ 30,00:")
+for produto in baratos:
+    print(f"{produto['nome']} — R$ {produto['preco']:.2f}")</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex12">
+    <div class="ex-head">
+      <span class="ex-num">EX 12</span>
+      <h3>Dicionário com lista dentro</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex12"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Misturar estruturas: as notas de cada aluno.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie <code>notas = {"Ana": [8, 7, 9], "Bruno": [6, 7, 5], "Carla": [10, 9, 10]}</code></li><li>Percorra com <code>.items()</code></li><li>Para cada aluno, calcule a média com <code>sum(lista) / len(lista)</code></li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Ana: média 8.0
+Bruno: média 6.0
+Carla: média 9.7</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex12.py</span></div><pre class="code">notas = {"Ana": [8, 7, 9], "Bruno": [6, 7, 5], "Carla": [10, 9, 10]}
+
+for aluno, lista in notas.items():
+    media = sum(lista) / len(lista)
+    print(f"{aluno}: média {media:.1f}")</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex13">
+    <div class="ex-head">
+      <span class="ex-num">EX 13</span>
+      <h3>Buscando na "tabela"</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex13"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Procurar um registro específico numa lista de dicionários.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie uma lista de 3 alunos (dicionários com nome e curso)</li><li>Peça um nome ao usuário</li><li>Percorra a lista procurando: se achar, mostre os dados</li><li>Use uma variável <code>encontrado = False</code> para saber se deve avisar "não encontrado" no final</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Buscar aluno: Bruno
+Bruno está no curso de Python</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex13.py</span></div><pre class="code">alunos = [
+    {"nome": "Ana", "curso": "Excel"},
+    {"nome": "Bruno", "curso": "Python"},
+    {"nome": "Carla", "curso": "Power BI"}
+]
+
+busca = input("Buscar aluno: ")
+encontrado = False
+
+for aluno in alunos:
+    if aluno["nome"] == busca:
+        print(f"{aluno['nome']} está no curso de {aluno['curso']}")
+        encontrado = True
+
+if not encontrado:
+    print("Aluno não encontrado!")</pre></div></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p5">
+  <div class="parte-head"><span class="num">05</span><h2>Tuplas: a lista que não muda</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>A <strong>tupla</strong> é uma sequência como a lista, mas <strong>imutável</strong> — depois de criada, não dá para alterar. Usa parênteses: <code>coordenada = (10, 25)</code>. Serve para dados que NÃO devem mudar (coordenadas, datas, configurações).</p></div>
+  <article class="ex" id="ex14">
+    <div class="ex-head">
+      <span class="ex-num">EX 14</span>
+      <h3>Tupla e o TypeError</h3>
+      <span class="stars">⭐ básico</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex14"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Comprovar a imutabilidade na prática.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie e acesse uma tupla normalmente</li><li>Depois tente ALTERAR um item (erro proposital!):</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex14_tupla.py</span></div><pre class="code">coordenada = (10, 25)
+
+print(coordenada[0])
+print(len(coordenada))
+
+coordenada[0] = 99   # 💥</pre></div><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output" style="color:#FF9B94">TypeError: 'tuple' object does not support item assignment</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><p>Acesso por índice e <code>len()</code> funcionam igual à lista — mas atribuir um valor a uma posição é proibido. Se você precisa de uma versão alterada, crie uma tupla NOVA. Essa "trava" protege dados que não deveriam mudar por acidente.</p></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex15">
+    <div class="ex-head">
+      <span class="ex-num">EX 15</span>
+      <h3>Desempacotamento ✨</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex15"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Distribuir os valores de uma tupla em variáveis — e fazer o truque da troca.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>PREVEJA e execute:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex15_desempacotar.py</span></div><pre class="code">coordenada = (10, 25)
+x, y = coordenada
+print(f"x = {x}, y = {y}")
+
+a, b = 1, 2
+a, b = b, a   # a famosa troca sem variável auxiliar!
+print(f"a = {a}, b = {b}")</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">x = 10, y = 25
+a = 2, b = 1</pre></div><details class="dica"><summary>💡 Você já usava isso!</summary><div class="inner">O <code>for chave, valor in dicionario.items()</code> da Parte 2 é desempacotamento: cada par vem como tupla e o for distribui nas duas variáveis. Tudo se conecta! 🤯</div></details>
     </div>
   </article>
 </section>
@@ -511,53 +602,121 @@ Ana comprou 1x caneca personalizada</pre></div><details class="dica"><summary>�
 <section class="parte" id="p6">
   <div class="parte-head"><span class="num">06</span><h2>Projetos da semana: juntando tudo!</h2></div>
 
-  <article class="ex" id="ex12">
+  <article class="ex" id="ex16">
     <div class="ex-head">
-      <span class="ex-num">EX 12</span>
-      <h3>Projeto: relatórios profissionais na API 📊</h3>
+      <span class="ex-num">EX 16</span>
+      <h3>Projeto: Estoque Tua Caneca ☕</h3>
       <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex12"> Concluído</label>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex16"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Servir os novos relatórios com JOIN pela API REST (Semanas 27-28).</p><span class="tag passos">🧭 Requisitos</span><ol><li>Endpoint <code>GET /api/relatorio/ranking</code>: o ranking por produto (JOIN + GROUP BY) em JSON</li><li>Endpoint <code>GET /api/relatorio/encalhados</code>: produtos sem venda (LEFT JOIN + IS NULL)</li><li>Endpoint <code>GET /api/relatorio/clientes</code>: total comprado por cliente (JOIN triplo + GROUP BY)</li><li>Proteja-os com <code>@token_required</code> (Semana 28) — relatório é coisa interna!</li></ol><span class="tag saida">✅ Exemplo</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">GET /api/relatorio/encalhados (com token)
--&gt; [{"produto": "azulejo"}]</pre></div><details class="dica"><summary>💡 Você virou analista</summary><div class="inner">Uma API que serve relatórios com JOINs protegidos por autenticação — isso é ferramenta de gestão de verdade. O frontend (Semana 29) pode consumir esses endpoints e montar um painel gerencial. Cada peça que você aprendeu multiplica as anteriores. 📈</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">api_relatorios.py</span></div><pre class="code">@app.route("/api/relatorio/ranking")
-@token_required
-def relatorio_ranking(usuario_logado):
-    con = conectar(); cur = con.cursor()
-    cur.execute("""
-        SELECT p.nome, SUM(v.qtd) AS unidades, SUM(v.total) AS faturamento
-        FROM vendas v JOIN produtos p ON p.id = v.produto_id
-        GROUP BY p.nome ORDER BY unidades DESC""")
-    dados = [{"produto": n, "unidades": int(u), "faturamento": float(f)}
-             for n, u, f in cur.fetchall()]
-    con.close()
-    return jsonify(dados)
+<span class="tag obj">🎯 Objetivo</span><p>Sistema de estoque com dicionário: consulta e venda com baixa automática.</p><span class="tag passos">🧭 Requisitos</span><ol><li>Crie <code>estoque = {"branca": 10, "preta": 6, "azul": 0}</code></li><li>Menu em loop: 1-Consultar · 2-Vender · 3-Sair</li><li>Consultar: peça a cor e mostre a quantidade (cor inexistente → avise)</li><li>Vender: só permita se a cor existir E tiver estoque; dê baixa de 1 unidade</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">1-Consultar  2-Vender  3-Sair
+Opção: 2
+Cor vendida: preta
+Venda registrada! Restam 5
+1-Consultar  2-Vender  3-Sair
+Opção: 2
+Cor vendida: azul
+Sem estoque dessa cor!</pre></div><details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Na opção Consultar, se o usuário digitar "todas", exiba o estoque completo com <code>.items()</code>.</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex16.py</span></div><pre class="code">estoque = {"branca": 10, "preta": 6, "azul": 0}
 
-@app.route("/api/relatorio/encalhados")
-@token_required
-def relatorio_encalhados(usuario_logado):
-    con = conectar(); cur = con.cursor()
-    cur.execute("""
-        SELECT p.nome FROM produtos p
-        LEFT JOIN vendas v ON v.produto_id = p.id
-        WHERE v.id IS NULL""")
-    dados = [{"produto": n} for (n,) in cur.fetchall()]
-    con.close()
-    return jsonify(dados)</pre></div></div></details>
+while True:
+    print()
+    print("1-Consultar  2-Vender  3-Sair")
+    opcao = int(input("Opção: "))
+
+    if opcao == 1:
+        cor = input("Cor: ")
+        if cor in estoque:
+            print(f"Estoque de {cor}: {estoque[cor]}")
+        else:
+            print("Cor não cadastrada!")
+    elif opcao == 2:
+        cor = input("Cor vendida: ")
+        if cor in estoque and estoque[cor] &gt; 0:
+            estoque[cor] = estoque[cor] - 1
+            print(f"Venda registrada! Restam {estoque[cor]}")
+        else:
+            print("Sem estoque dessa cor!")
+    elif opcao == 3:
+        break
+    else:
+        print("Opção inválida!")</pre></div></div></details>
     </div>
   </article>
 
-  <article class="ex" id="ex13">
+  <article class="ex" id="ex17">
     <div class="ex-head">
-      <span class="ex-num">EX 13</span>
-      <h3>Projeto bônus: o histórico do cliente 🧾</h3>
+      <span class="ex-num">EX 17</span>
+      <h3>Projeto: Cadastro de clientes 📇</h3>
       <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex13"> Concluído</label>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex17"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Um endpoint de extrato por cliente (sem código pronto!).</p><span class="tag passos">🧭 Roteiro</span><ol><li><code>GET /api/clientes/&lt;id&gt;/compras</code>: todas as compras de UM cliente, com nome do produto, qtd e total</li><li>JOIN duplo + WHERE pelo id do cliente (placeholder %s!)</li><li>Se o cliente não existir, 404; inclua no JSON um campo com a soma total gasta</li><li>Teste com requests para 2 clientes diferentes</li></ol><span class="tag saida">✅ Exemplo</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">GET /api/clientes/1/compras -&gt;
-{"cliente": "Ana", "total_gasto": 100.0,
- "compras": [{"produto": "caneca branca", "qtd": 3, "total": 75.0}, ...]}</pre></div><details class="dica"><summary>💡 Empurrãozinho</summary><div class="inner">É o JOIN triplo do EX 11 com um WHERE <code>c.id = %s</code>. Para a soma, você pode usar SUM numa segunda consulta ou somar no Python (Semana 3!). Um endpoint desses alimenta a tela "minhas compras" de qualquer loja online — você sabe construir o motor por trás dela. 😉</div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Montar um mini-CRM: lista de dicionários com menu completo.</p><span class="tag passos">🧭 Requisitos</span><ol><li>Comece com <code>clientes = []</code></li><li>Menu: 1-Adicionar (nome + telefone → dicionário → append) · 2-Listar todos · 3-Buscar por nome · 4-Sair</li><li>Reaproveite a busca com flag do Exercício 13!</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">1-Adicionar  2-Listar  3-Buscar  4-Sair
+Opção: 1
+Nome: Ana
+Telefone: (51) 98888-7777
+Cliente cadastrado!
+Opção: 2
+— Ana: (51) 98888-7777</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex17.py</span></div><pre class="code">clientes = []
+
+while True:
+    print()
+    print("1-Adicionar  2-Listar  3-Buscar  4-Sair")
+    opcao = int(input("Opção: "))
+
+    if opcao == 1:
+        nome = input("Nome: ")
+        telefone = input("Telefone: ")
+        clientes.append({"nome": nome, "telefone": telefone})
+        print("Cliente cadastrado!")
+    elif opcao == 2:
+        for cliente in clientes:
+            print(f"— {cliente['nome']}: {cliente['telefone']}")
+    elif opcao == 3:
+        busca = input("Buscar: ")
+        encontrado = False
+        for cliente in clientes:
+            if cliente["nome"] == busca:
+                print(f"{cliente['nome']}: {cliente['telefone']}")
+                encontrado = True
+        if not encontrado:
+            print("Cliente não encontrado!")
+    elif opcao == 4:
+        break
+    else:
+        print("Opção inválida!")</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex18">
+    <div class="ex-head">
+      <span class="ex-num">EX 18</span>
+      <h3>Projeto bônus: Tradutor v2</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex18"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Melhorar o tradutor sozinho (sem código pronto!).</p><span class="tag passos">🧭 Roteiro</span><ol><li>Pegue seu tradutor do Exercício 7</li><li>Coloque-o num loop que traduz até o usuário digitar "sair"</li><li>Quando a palavra NÃO existir, mostre as palavras disponíveis (<code>.keys()</code></li><li>Bônus: ofereça cadastrar a tradução nova na hora (dicionários são mutáveis!)</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Palavra (ou 'sair'): mesa
+Não conheço! Palavras disponíveis: ['gato', 'cachorro', 'casa', 'livro', 'caneca']
+Quer cadastrar? (sim/não): sim
+Tradução de mesa: table
+Cadastrada! ✔</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex18.py</span></div><pre class="code">dicionario = {"gato": "cat", "cachorro": "dog", "casa": "house",
+              "livro": "book", "caneca": "mug"}
+
+while True:
+    palavra = input("Palavra (ou 'sair'): ").lower()
+    if palavra == "sair":
+        break
+    if palavra in dicionario:
+        print(f"Em inglês: {dicionario[palavra]}")
+    else:
+        print(f"Não conheço! Palavras disponíveis: {list(dicionario.keys())}")
+        resposta = input("Quer cadastrar? (sim/não): ")
+        if resposta == "sim":
+            traducao = input(f"Tradução de {palavra}: ")
+            dicionario[palavra] = traducao
+            print("Cadastrada! ✔")</pre></div></div></details>
     </div>
   </article>
 </section>
@@ -565,29 +724,29 @@ def relatorio_encalhados(usuario_logado):
 <div class="checklist" id="checklist">
   <h2>✅ Checklist de fim de semana</h2>
   <p>Antes de seguir para a próxima semana, confirme que você consegue:</p>
-<label class="check-item"><input type="checkbox"><span>Explicar o que é um relacionamento e uma chave estrangeira</span></label>
-<label class="check-item"><input type="checkbox"><span>Justificar por que guardar produto_id em vez do nome do produto</span></label>
-<label class="check-item"><input type="checkbox"><span>Criar tabelas com FOREIGN KEY no MariaDB</span></label>
-<label class="check-item"><input type="checkbox"><span>Ligar duas tabelas com INNER JOIN ... ON</span></label>
-<label class="check-item"><input type="checkbox"><span>Usar apelidos (aliases) para deixar consultas legíveis</span></label>
-<label class="check-item"><input type="checkbox"><span>Diferenciar INNER JOIN de LEFT JOIN</span></label>
-<label class="check-item"><input type="checkbox"><span>Encontrar registros sem correspondência com LEFT JOIN + IS NULL</span></label>
-<label class="check-item"><input type="checkbox"><span>Combinar JOIN com GROUP BY em relatórios</span></label>
-<label class="check-item"><input type="checkbox"><span>Cruzar três tabelas numa consulta (clientes, vendas, produtos)</span></label>
-<label class="check-item"><input type="checkbox"><span>Servir relatórios com JOIN pela API REST</span></label>
+<label class="check-item"><input type="checkbox"><span>Criar um dicionário e acessar valores pela chave</span></label>
+<label class="check-item"><input type="checkbox"><span>Usar .get() para evitar o KeyError</span></label>
+<label class="check-item"><input type="checkbox"><span>Adicionar, alterar e remover chaves (del)</span></label>
+<label class="check-item"><input type="checkbox"><span>Percorrer um dicionário com for e .items()</span></label>
+<label class="check-item"><input type="checkbox"><span>Verificar se uma chave existe com in</span></label>
+<label class="check-item"><input type="checkbox"><span>Usar um dicionário como contador (o padrão get(chave, 0) + 1)</span></label>
+<label class="check-item"><input type="checkbox"><span>Montar uma lista de dicionários (uma "tabela" de dados)</span></label>
+<label class="check-item"><input type="checkbox"><span>Filtrar e buscar dentro de uma lista de dicionários</span></label>
+<label class="check-item"><input type="checkbox"><span>Explicar a diferença entre tupla e lista (imutabilidade)</span></label>
+<label class="check-item"><input type="checkbox"><span>Desempacotar uma tupla em variáveis (x, y = tupla)</span></label>
 </div>
 
 <div class="win-banner" id="winBanner">
-  <h2>🏆 SEMANA 31 COMPLETA!</h2>
-  <p>Você concluiu todos os exercícios. Você domina JOINs e modelagem relacional — a habilidade que separa quem "usa banco" de quem realmente entende dados!</p>
+  <h2>🏆 SEMANA 5 COMPLETA!</h2>
+  <p>Você concluiu todos os exercícios. Seus dados agora têm nome e sobrenome!</p>
 </div>
 
 <div class="preview-s2">
-<h2>📅 Prévia da Semana 32</h2><p>Seu sistema cresce — e como garantir que uma mudança nova não QUEBRA o que já funcionava? Com <strong>testes automatizados</strong>! Na próxima semana, o <strong>pytest</strong>: escrever testes que verificam seu código sozinhos, testar casos extremos, exceções e até a sua API Flask completa (com token e tudo) — sem nem subir o servidor. A rede de segurança dos profissionais. 🧪</p></div>
+<h2>📅 Prévia da Semana 6</h2><p>Na próxima semana: <strong>funções</strong> — <code>def</code>, parâmetros, <code>return</code> e escopo. Você vai parar de repetir código e começar a montar programas como quem monta LEGO: peça por peça, cada uma com sua responsabilidade.</p></div>
 
 </main>
 
-<footer>python_para_iniciantes // semana_31 // exercícios guiados</footer>
+<footer>python_para_iniciantes // semana_05 // exercícios guiados</footer>
 
 <script>
 // ===== Syntax highlight leve para Python =====
@@ -599,7 +758,7 @@ def relatorio_encalhados(usuario_logado):
     src = src.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     // uma passada só, com alternação (comentário | string | builtin | bool | número)
     src = src.replace(
-      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|insert|int|float|str|len|range|type|abs|round|max|min|sum|sorted|sort|reverse|append|remove|split|strip|upper|lower|replace|title|randint|random|get|keys|values|items|open|readlines|read|write|close|count|index|pop|update|list|dict|tuple|enumerate|sqrt|floor|ceil|choice|shuffle|sample|sleep|now|today|strftime|dumps|dump|loads|load|isinstance|datetime|date|DictReader|DictWriter|writerows|writerow|writeheader|writer|reader|csv|Workbook|load_workbook|save|iter_rows|Font|listdir|makedirs|getcwd|rename|exists|getsize|splitext|join|endswith|startswith|copytree|copy|move|requests|status_code|json|DataFrame|read_csv|read_excel|to_excel|to_csv|head|describe|groupby|sort_values|value_counts|mean|idxmax|bar|barh|pie|plot|savefig|show|title|xlabel|ylabel|figure|legend|axhline|tight_layout|close|Flask|route|run|render_template|jsonify|redirect|request|connect|cursor|execute|executemany|fetchall|fetchone|commit|environ|getenv|post|encode|decode|abort|make_response|raises|approx|load_dotenv)\b|\b(True|False|None|if|elif|else|while|for|in|and|or|not|break|continue|import|from|def|return|try|except|finally|with|as|del|global|pass|class|self|super|lambda)\b|(\b\d+(?:\.\d+)?\b)/g,
+      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|insert|int|float|str|len|range|type|abs|round|max|min|sum|sorted|sort|reverse|append|remove|split|strip|upper|lower|replace|title|randint|random|get|keys|values|items|open|readlines|read|write|close|count|index|pop|update|list|dict|tuple|enumerate)\b|\b(True|False|None|if|elif|else|while|for|in|and|or|not|break|continue|import|from|def|return|try|except|finally|with|as|del|global|pass)\b|(\b\d+(?:\.\d+)?\b)/g,
       function(m, com, str, fn, bool, num){
         if(com)  return '<span class="tk-com">'+com+'</span>';
         if(str)  return '<span class="tk-str">'+str+'</span>';
@@ -618,7 +777,7 @@ def relatorio_encalhados(usuario_logado):
 // no navegador. Se o localStorage estiver indisponível (modo restrito,
 // pré-visualização, etc.), o progresso funciona só em memória, sem quebrar.
 const storage = (function(){
-  const KEY = 'python_semana31_progresso';
+  const KEY = 'python_semana05_progresso';
   let memoria = {};
   let disponivel = false;
   try{
@@ -665,10 +824,10 @@ const storage = (function(){
   const MSGS = [
     [0,  'Marque os exercícios concluídos ✔'],
     [1,  'Boa! Continue assim 💪'],
-    [4,  'Pegando o ritmo! 🔥'],
-    [6, 'Metade do caminho! 🚀'],
-    [10, 'Quase lá... força! ⚡'],
-    [13, 'SEMANA COMPLETA! 🏆']
+    [5,  'Pegando o ritmo! 🔥'],
+    [9, 'Metade do caminho! 🚀'],
+    [14, 'Quase lá... força! ⚡'],
+    [18, 'SEMANA COMPLETA! 🏆']
   ];
 
   function estadoAtual(){

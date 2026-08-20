@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Semana 3 — Loops e Repetições</title>
+<title>Semana 25 — Projeto Final 5</title>
 <style>
   :root{
     --ink:#16243A;
@@ -57,7 +57,7 @@
     color:#fff;padding:56px 20px 48px;text-align:center;position:relative;overflow:hidden;
   }
   header.hero::before{
-    content:"while  for  in  range(  break  continue  +=  if  else";
+    content:"Flask  SQLite  CRUD  SQL  API  🏆";
     position:absolute;inset:auto 0 8px 0;font-family:var(--mono);font-size:.78rem;
     color:rgba(255,255,255,.14);letter-spacing:.4em;white-space:nowrap;overflow:hidden;
   }
@@ -234,620 +234,497 @@
 <div class="progress-wrap" role="region" aria-label="Progresso da semana">
   <span class="label">XP DA SEMANA</span>
   <div class="progress-bar"><div class="progress-fill" id="pfill"></div></div>
-  <span class="progress-count" id="pcount">0 / 22</span>
+  <span class="progress-count" id="pcount">0 / 10</span>
   <span class="progress-msg" id="pmsg">Marque os exercícios concluídos ✔</span>
   <button class="reset-btn" id="resetBtn" title="Apagar todo o progresso salvo">↺ Resetar</button>
 </div>
 
 <header class="hero">
   <div class="kicker">Python para Iniciantes · Exercícios Guiados</div>
-  <h1>SEMANA 3 — Loops:<br>repetindo com while e for<span class="cursor" aria-hidden="true"></span></h1>
-  <p class="sub">Faça o computador trabalhar por você: laços while e for, range(), acumuladores e contadores, break, continue e os clássicos FizzBuzz e jogo de adivinhação.</p>
+  <h1>SEMANA 25 — Projeto Final 5:<br>a Loja Tua Caneca Web 🏆<span class="cursor" aria-hidden="true"></span></h1>
+  <p class="sub">A obra-prima da trilha profissional: Flask + SQLite num app web completo — catálogo, CRUD com banco, vendas com baixa de estoque, relatório com SQL e API JSON. Tudo das 25 semanas, num sistema só.</p>
   <div class="howto">
     <strong>Como usar:</strong> digite o código você mesmo (não copie e cole!), compare com a saída esperada e marque <strong>✔ Concluído</strong> em cada exercício para encher sua barra de XP. As <strong>dicas</strong> e <strong>soluções</strong> ficam escondidas — só abra depois de tentar! Seu progresso fica salvo no navegador.
   </div>
 </header>
 
-<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · while</a><a href="#p2">2 · for + range</a><a href="#p3">3 · Acumuladores</a><a href="#p4">4 · break / continue</a><a href="#p5">5 · Strings & desenhos</a><a href="#p6">6 · Projetos</a><a href="#checklist">✅ Checklist</a></nav>
+<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · Revisão</a><a href="#p2">2 · Etapas 1-2</a><a href="#p3">3 · Etapas 3-4</a><a href="#p4">4 · Etapas 5-6</a><a href="#p5">5 · Formatura</a><a href="#checklist">✅ Checklist</a></nav>
 
 <main>
 
 <section class="parte" id="p1">
-  <div class="parte-head"><span class="num">01</span><h2>O laço while</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>O <code>while</code> repete um bloco de código <strong>enquanto</strong> a condição for <code>True</code>. A estrutura clássica usa um <strong>contador</strong>:</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">estrutura.py</span></div><pre class="code">contador = 1            # 1. inicializa
-while contador &lt;= 5:    # 2. condição de parada
-    print(contador)
-    contador = contador + 1   # 3. atualiza (ESSENCIAL!)</pre></div><p>⚠️ Se você esquecer o passo 3, a condição nunca vira <code>False</code> e o programa repete <strong>para sempre</strong> — o famoso loop infinito (você vai criar um de propósito no Exercício 3!).</p></div>
+  <div class="parte-head"><span class="num">01</span><h2>Revisão relâmpago</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>O último aquecimento da trilha. Capriche — você chegou longe demais para não fechar com chave de ouro! 😄</p></div>
   <article class="ex" id="ex1">
     <div class="ex-head">
       <span class="ex-num">EX 01</span>
-      <h3>Contando de 1 a 10</h3>
-      <span class="stars">⭐ básico</span>
+      <h3>Quiz: preveja as 8 saídas 🧠</h3>
+      <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex1"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Executar e entender seu primeiro while.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Digite o código e PREVEJA a saída antes de executar</li><li>Execute e confira</li><li>Mude para contar de 1 a 100. Quantas linhas de código a mais você precisou? (Nenhuma! Esse é o poder do loop)</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex01_contagem.py</span></div><pre class="code">contador = 1
-while contador &lt;= 10:
-    print(contador)
-    contador = contador + 1</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">1
-2
+<span class="tag obj">🎯 Objetivo</span><p>Testar SQL, Flask e os clássicos numa tacada só.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Anote as previsões antes de rodar. Última chance de gabarito da trilha!</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex01_quiz.py</span></div><pre class="code">import sqlite3
+
+con = sqlite3.connect(":memory:")
+cur = con.cursor()
+cur.execute("CREATE TABLE t (nome TEXT, valor INTEGER)")
+cur.executemany("INSERT INTO t VALUES (?, ?)",
+                [("a", 10), ("b", 20), ("a", 30)])
+
+cur.execute("SELECT COUNT(*) FROM t")
+print(cur.fetchone()[0])
+
+cur.execute("SELECT SUM(valor) FROM t WHERE nome = ?", ("a",))
+print(cur.fetchone()[0])
+
+cur.execute("SELECT nome, SUM(valor) FROM t GROUP BY nome ORDER BY SUM(valor) DESC")
+print(cur.fetchall())
+
+print("/produtos".startswith("/"))
+print(f"{{'a': 1}}")
+print(len([x for x in range(5) if x % 2 == 0]))
+print("CRUD"[::-1])</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">3
+40
+[('a', 40), ('b', 20)]
+True
+{'a': 1}
 3
-4
-5
-6
-7
-8
-9
-10</pre></div><details class="dica"><summary>💡 Atalho</summary><div class="inner"><code>contador = contador + 1</code> pode ser escrito como <code>contador += 1</code>. Funciona também com <code>-=</code>, <code>*=</code> e <code>/=</code>.</div></details>
+DURC</pre></div><details class="dica"><summary>💡 Gabarito comentado</summary><div class="inner">3 linhas inseridas · SUM com WHERE nome="a" → 10+30=40 · GROUP BY+ORDER BY: a soma 40, b soma 20 → ordenado decrescente · startswith (S14) · chaves duplas viram simples na f-string (S19!) · list comprehension de pares 0,2,4 → 3 itens (S17) · fatia reversa de "CRUD" (S4). O <code>:memory:</code> cria um banco temporário na RAM — ótimo para testes! 6+ acertos? Rumo à obra-prima!</div></details>
     </div>
   </article>
 
   <article class="ex" id="ex2">
     <div class="ex-head">
       <span class="ex-num">EX 02</span>
-      <h3>Contagem regressiva do foguete 🚀</h3>
-      <span class="stars">⭐ básico</span>
+      <h3>Caça aos bugs de banco + web 🐛🔍</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex2"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Fazer um while que conta para trás.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Comece o contador em 10</li><li>Repita enquanto for maior ou igual a 1, DIMINUINDO 1 a cada volta</li><li>Depois do loop, exiba "Decolar! 🚀"</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex02_foguete.py</span></div><pre class="code">contador = ____
-while contador ____ 1:
-    print(contador)
-    contador = contador ____ 1
+<span class="tag obj">🎯 Objetivo</span><p>Os 5 bugs que mais derrubam apps Flask com banco.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>O código deveria cadastrar um produto pela web — ache os 5 bugs ANTES de rodar</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex02_bugs.py</span></div><pre class="code">from flask import Flask, request
+import sqlite3
 
-print("Decolar! 🚀")</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">10
-9
-8
-7
-6
-5
-4
-3
-2
-1
-Decolar! 🚀</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner">O <code>print("Decolar!")</code> fica SEM indentação — ele não pertence ao loop, então só executa quando o while terminar.</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex02.py</span></div><pre class="code">contador = 10
-while contador &gt;= 1:
-    print(contador)
-    contador = contador - 1
+app = Flask(__name__)
 
-print("Decolar! 🚀")</pre></div></div></details>
+@app.route("/salvar")
+def salvar():
+    nome = request.form.get("nome")
+    conexao = sqlite3.connect("loja.db")
+    cursor = conexao.cursor()
+    cursor.execute("INSERT INTO produtos (nome) VALUES (" + nome + ")")
+    return redirect("/")
+
+app.run(debug=True)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><p><strong>Os 5 bugs:</strong> (1) a rota recebe formulário mas não declara <code>methods=["POST"]</code> — só aceitaria GET. (2) <code>"INSERT ... VALUES (" + nome + ")"</code> é o pecado mortal: concatenação = SQL injection! Use <code>?</code> (Semana 21). (3) faltou <code>conexao.commit()</code> — sem ele o INSERT não é salvo. (4) <code>redirect</code> foi usado mas NÃO importado (<code>from flask import ..., redirect</code>). (5) a conexão nunca é fechada (<code>conexao.close()</code>).</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex02.py</span></div><pre class="code">from flask import Flask, request, redirect
+import sqlite3
+
+app = Flask(__name__)
+
+@app.route("/salvar", methods=["POST"])
+def salvar():
+    nome = request.form.get("nome")
+    conexao = sqlite3.connect("loja.db")
+    cursor = conexao.cursor()
+    cursor.execute("INSERT INTO produtos (nome) VALUES (?)", (nome,))
+    conexao.commit()
+    conexao.close()
+    return redirect("/")
+
+app.run(debug=True)</pre></div><p>Esses 5 são os erros mais comuns de quem começa com Flask + banco. Decorá-los economiza horas de depuração!</p></div></details>
     </div>
   </article>
+</section>
 
+<section class="parte" id="p2">
+  <div class="parte-head"><span class="num">02</span><h2>Loja Tua Caneca Web — Etapas 1 e 2</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p><strong>A obra-prima da trilha:</strong> uma loja web completa, com banco de dados, construída em 6 etapas — cada uma funcionando. <em>(Esta é a versão <strong>monolítica</strong> — um app só com tudo dentro, em SQLite. Nas Semanas 26-30 vamos transformá-la num sistema profissional: MariaDB + API REST + JWT + frontend desacoplado.)</em> A arquitetura:</p><table><tr><th>Etapa</th><th>Entrega</th><th>Semanas</th></tr><tr><td>1</td><td>Banco: tabelas produtos e vendas + dados iniciais</td><td>21, 22</td></tr><tr><td>2</td><td>App Flask: catálogo do banco na web</td><td>19, 23</td></tr><tr><td>3</td><td>CRUD de produtos (cadastrar, excluir)</td><td>23</td></tr><tr><td>4</td><td>Vendas com baixa de estoque</td><td>22, 23</td></tr><tr><td>5</td><td>Relatório SQL (GROUP BY) + API JSON</td><td>22, 19</td></tr><tr><td>6</td><td>App integrado completo</td><td>todas</td></tr></table><p>Crie o <code>app.py</code> — ele cresce etapa por etapa até o sistema final.</p></div>
   <article class="ex" id="ex3">
     <div class="ex-head">
       <span class="ex-num">EX 03</span>
-      <h3>O temido loop infinito ♾️</h3>
+      <h3>Etapa 1: o banco inicializado</h3>
       <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex3"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Criar um loop infinito de propósito — e aprender a escapar dele.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Digite e execute este código <strong>com erro proposital</strong> (prepare o dedo no Ctrl+C!):</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex03_infinito.py</span></div><pre class="code">contador = 1
-while contador &lt;= 5:
-    print("Socorro, não consigo parar!")</pre></div><span class="tag passos">🧭 Continue</span><ol><li>O programa vai imprimir sem parar — pressione <strong>Ctrl + C</strong> no terminal para interrompê-lo</li><li>Analise: por que ele nunca para?</li><li>Corrija adicionando a linha que falta</li></ol><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><p>Faltou atualizar o contador! Como <code>contador</code> fica eternamente em 1, a condição <code>contador &lt;= 5</code> nunca vira False. Correção:</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex03.py</span></div><pre class="code">contador = 1
-while contador &lt;= 5:
-    print("Agora eu paro!")
-    contador += 1</pre></div><p><strong>Regra de ouro do while:</strong> alguma coisa DENTRO do loop precisa mudar a condição.</p></div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Criar as tabelas e semear dados iniciais por código.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Função <code>iniciar_banco()</code>: CREATE TABLE IF NOT EXISTS para <code>produtos</code> e <code>vendas</code></li><li>Se a tabela produtos estiver vazia (COUNT(*) == 0), insira 3 produtos de exemplo</li><li>Rode duas vezes: a segunda não pode duplicar nem quebrar (IF NOT EXISTS + checagem de vazio)</li></ol><span class="tag saida">✅ Primeira execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Banco inicializado ✔ (3 produtos de exemplo)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">etapa1.py</span></div><pre class="code">import sqlite3
+
+def iniciar_banco():
+    conexao = sqlite3.connect("loja.db")
+    cursor = conexao.cursor()
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS produtos (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nome TEXT, preco REAL, estoque INTEGER
+        )
+    """)
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS vendas (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            produto TEXT, qtd INTEGER, total REAL
+        )
+    """)
+    cursor.execute("SELECT COUNT(*) FROM produtos")
+    if cursor.fetchone()[0] == 0:
+        cursor.executemany(
+            "INSERT INTO produtos (nome, preco, estoque) VALUES (?, ?, ?)",
+            [("caneca branca", 25.0, 10),
+             ("caneca preta", 27.5, 8),
+             ("azulejo", 40.0, 5)])
+        print("Banco inicializado ✔ (3 produtos de exemplo)")
+    conexao.commit()
+    conexao.close()
+
+iniciar_banco()</pre></div></div></details>
     </div>
   </article>
 
   <article class="ex" id="ex4">
     <div class="ex-head">
       <span class="ex-num">EX 04</span>
-      <h3>Soma acumuladora (1 a 100)</h3>
+      <h3>Etapa 2: o catálogo na web</h3>
       <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex4"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Conhecer o padrão mais importante dos loops: o acumulador.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie <code>soma = 0</code> ANTES do loop</li><li>Percorra de 1 a 100 com um contador</li><li>A cada volta, faça <code>soma = soma + contador</code></li><li>Depois do loop, exiba a soma total</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">A soma de 1 até 100 é: 5050</pre></div><details class="dica"><summary>💡 Curiosidade</summary><div class="inner">Conta a lenda que o matemático Gauss, ainda criança, calculou isso em segundos: ele percebeu que 1+100, 2+99, 3+98... são 50 pares que somam 101. 50 × 101 = 5050!</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex04.py</span></div><pre class="code">soma = 0
-contador = 1
+<span class="tag obj">🎯 Objetivo</span><p>App Flask que mostra os produtos do banco numa página.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Importe Flask, crie o app e chame <code>iniciar_banco()</code> no início</li><li>Rota /: SELECT dos produtos + tabela HTML (Semanas 19 e 23)</li><li>Rode e veja o catálogo no navegador</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(localhost:5000 → tabela com os 3 produtos do banco)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">etapa2.py</span></div><pre class="code">from flask import Flask
+import sqlite3
 
-while contador &lt;= 100:
-    soma = soma + contador
-    contador += 1
+app = Flask(__name__)
 
-print(f"A soma de 1 até 100 é: {soma}")</pre></div></div></details>
-    </div>
-  </article>
+@app.route("/")
+def catalogo():
+    conexao = sqlite3.connect("loja.db")
+    cursor = conexao.cursor()
+    cursor.execute("SELECT id, nome, preco, estoque FROM produtos ORDER BY nome")
+    linhas = cursor.fetchall()
+    conexao.close()
 
-  <article class="ex" id="ex5">
-    <div class="ex-head">
-      <span class="ex-num">EX 05</span>
-      <h3>Senha: insista até acertar 🔒</h3>
-      <span class="stars">⭐⭐ médio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex5"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Usar o while para repetir uma pergunta até a resposta certa.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Peça a senha UMA vez antes do loop</li><li>Enquanto a senha for diferente de <code>"python123"</code>: avise e peça de novo</li><li>Quando acertar, o loop termina sozinho — exiba "Acesso liberado!"</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Digite a senha: 1234
-Senha incorreta! Tente novamente.
-Digite a senha: python321
-Senha incorreta! Tente novamente.
-Digite a senha: python123
-Acesso liberado! ✔</pre></div><details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Conte as tentativas com um contador e exiba: "Você acertou em X tentativas".</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex05.py</span></div><pre class="code">senha = input("Digite a senha: ")
+    html = "&lt;h1&gt;☕ Loja Tua Caneca&lt;/h1&gt;&lt;table border='1' cellpadding='6'&gt;"
+    html += "&lt;tr&gt;&lt;th&gt;Nome&lt;/th&gt;&lt;th&gt;Preço&lt;/th&gt;&lt;th&gt;Estoque&lt;/th&gt;&lt;/tr&gt;"
+    for id, nome, preco, estoque in linhas:
+        html += f"&lt;tr&gt;&lt;td&gt;{nome}&lt;/td&gt;&lt;td&gt;R$ {preco:.2f}&lt;/td&gt;&lt;td&gt;{estoque}&lt;/td&gt;&lt;/tr&gt;"
+    html += "&lt;/table&gt;"
+    return html
 
-while senha != "python123":
-    print("Senha incorreta! Tente novamente.")
-    senha = input("Digite a senha: ")
-
-print("Acesso liberado! ✔")</pre></div></div></details>
+iniciar_banco()   # da Etapa 1
+app.run(debug=True)</pre></div></div></details>
     </div>
   </article>
 </section>
 
-<section class="parte" id="p2">
-  <div class="parte-head"><span class="num">02</span><h2>O laço for e o range()</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>O <code>for</code> repete um número conhecido de vezes, sem precisar criar e atualizar contador na mão. Ele anda pelos valores gerados por <code>range()</code>:</p><table><tr><th>Forma</th><th>Gera</th></tr><tr><td><code>range(5)</code></td><td>0, 1, 2, 3, 4</td></tr><tr><td><code>range(1, 6)</code></td><td>1, 2, 3, 4, 5</td></tr><tr><td><code>range(0, 11, 2)</code></td><td>0, 2, 4, 6, 8, 10</td></tr><tr><td><code>range(10, 0, -1)</code></td><td>10, 9, 8, ... 1</td></tr></table><p>⚠️ <strong>O número final NUNCA entra!</strong> <code>range(1, 6)</code> para no 5. É a pegadinha número 1 do for.</p></div>
+<section class="parte" id="p3">
+  <div class="parte-head"><span class="num">03</span><h2>Loja Tua Caneca Web — Etapas 3 e 4</h2></div>
+
+  <article class="ex" id="ex5">
+    <div class="ex-head">
+      <span class="ex-num">EX 05</span>
+      <h3>Etapa 3: CRUD de produtos</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex5"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Cadastrar e excluir produtos pela web.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Adicione um formulário de cadastro na página / (nome, preco, estoque)</li><li>Rota /salvar (POST): valida, INSERT com placeholders, commit, redirect</li><li>Link "excluir" em cada linha + rota /excluir/&lt;int:id&gt; (DELETE)</li><li>Tudo com as boas práticas das Semanas 21-23: ?, validação, POST-redirect-GET</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(cadastra e exclui produtos direto no catálogo)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">etapa3.py</span></div><pre class="code">from flask import Flask, request, redirect
+import sqlite3
+
+# ... dentro do app, somadas à rota / (com formulário) e às novas rotas:
+
+@app.route("/salvar", methods=["POST"])
+def salvar():
+    nome = request.form.get("nome", "").strip()
+    if not nome:
+        return redirect("/")
+    try:
+        preco = float(request.form.get("preco"))
+        estoque = int(request.form.get("estoque"))
+    except (ValueError, TypeError):
+        return redirect("/")
+    conexao = sqlite3.connect("loja.db")
+    conexao.execute(
+        "INSERT INTO produtos (nome, preco, estoque) VALUES (?, ?, ?)",
+        (nome, preco, estoque))
+    conexao.commit()
+    conexao.close()
+    return redirect("/")
+
+@app.route("/excluir/&lt;int:id&gt;")
+def excluir(id):
+    conexao = sqlite3.connect("loja.db")
+    conexao.execute("DELETE FROM produtos WHERE id = ?", (id,))
+    conexao.commit()
+    conexao.close()
+    return redirect("/")</pre></div></div></details>
+    </div>
+  </article>
+
   <article class="ex" id="ex6">
     <div class="ex-head">
       <span class="ex-num">EX 06</span>
-      <h3>Prevendo o range</h3>
-      <span class="stars">⭐ básico</span>
+      <h3>Etapa 4: registrar vendas 💰</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex6"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Dominar o comportamento do range().</p><span class="tag passos">🧭 Passo a passo</span><ol><li>PREVEJA a saída de cada bloco, depois execute tudo</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex06_range.py</span></div><pre class="code">print("--- Bloco 1 ---")
-for i in range(5):
-    print(i)
+<span class="tag obj">🎯 Objetivo</span><p>A venda completa: valida o estoque, dá baixa e registra — o coração do sistema.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Rota /vender (GET mostra form com nome + qtd; POST processa)</li><li>No POST: SELECT o estoque; se insuficiente, avisa; se ok, UPDATE (baixa) + INSERT na tabela vendas</li><li>Calcule o total (qtd × preço) ao registrar a venda</li><li>Combina toda a lógica da Semana 22 com o formulário da Semana 23</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(form de venda → baixa no estoque + venda registrada na tabela)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">etapa4.py</span></div><pre class="code">from flask import Flask, request
+import sqlite3
 
-print("--- Bloco 2 ---")
-for i in range(1, 6):
-    print(i)
+@app.route("/vender", methods=["GET", "POST"])
+def vender():
+    if request.method == "POST":
+        nome = request.form.get("nome")
+        qtd = int(request.form.get("qtd"))
 
-print("--- Bloco 3 ---")
-for i in range(0, 11, 2):
-    print(i)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">--- Bloco 1 ---
-0
-1
-2
-3
-4
---- Bloco 2 ---
-1
-2
-3
-4
-5
---- Bloco 3 ---
-0
-2
-4
-6
-8
-10</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner">Com um só número, o range começa do 0. Com dois, é (início, fim). Com três, o último é o "passo" — de quanto em quanto ele anda.</div></details>
+        conexao = sqlite3.connect("loja.db")
+        cursor = conexao.cursor()
+        cursor.execute("SELECT preco, estoque FROM produtos WHERE nome = ?", (nome,))
+        r = cursor.fetchone()
+
+        if r is None:
+            msg = "Produto não encontrado!"
+        elif r[1] &lt; qtd:
+            msg = f"Estoque insuficiente! Disponível: {r[1]}"
+        else:
+            preco, estoque = r
+            total = qtd * preco
+            cursor.execute(
+                "UPDATE produtos SET estoque = estoque - ? WHERE nome = ?",
+                (qtd, nome))
+            cursor.execute(
+                "INSERT INTO vendas (produto, qtd, total) VALUES (?, ?, ?)",
+                (nome, qtd, total))
+            conexao.commit()
+            msg = f"Venda registrada! Total: R$ {total:.2f}"
+        conexao.close()
+        return f"&lt;h1&gt;{msg}&lt;/h1&gt;&lt;a href='/vender'&gt;← Nova venda&lt;/a&gt; | &lt;a href='/'&gt;Catálogo&lt;/a&gt;"
+
+    return """
+    &lt;h1&gt;Registrar venda&lt;/h1&gt;
+    &lt;form method="post" action="/vender"&gt;
+        &lt;input name="nome" placeholder="Produto"&gt;
+        &lt;input name="qtd" placeholder="Quantidade"&gt;
+        &lt;button&gt;Vender&lt;/button&gt;
+    &lt;/form&gt;&lt;a href="/"&gt;← Catálogo&lt;/a&gt;
+    """</pre></div></div></details>
     </div>
   </article>
+</section>
+
+<section class="parte" id="p4">
+  <div class="parte-head"><span class="num">04</span><h2>Loja Tua Caneca Web — Etapas 5 e 6</h2></div>
 
   <article class="ex" id="ex7">
     <div class="ex-head">
       <span class="ex-num">EX 07</span>
-      <h3>Os pares e a regressiva</h3>
-      <span class="stars">⭐⭐ médio</span>
+      <h3>Etapa 5: relatório SQL + API JSON 📊</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex7"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Praticar range() com passo personalizado.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Complete os dois ranges abaixo</li><li>Lembre: o fim não entra! Para chegar ATÉ o 20, o fim precisa ser 21</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex07_passo.py</span></div><pre class="code"># Números pares de 0 a 20:
-for i in range(0, ____, 2):
-    print(i)
+<span class="tag obj">🎯 Objetivo</span><p>Uma página de relatório com GROUP BY e uma rota de API.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Rota /relatorio: agregações (SUM total, COUNT vendas) + ranking por produto com GROUP BY (Semana 22)</li><li>Monte uma página HTML com os números e o ranking</li><li>Rota /api/produtos: <code>jsonify</code> do catálogo (Semanas 19) — seu sistema também é uma API!</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(/relatorio → faturamento + ranking; /api/produtos → JSON do catálogo)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">etapa5.py</span></div><pre class="code">from flask import Flask, jsonify
+import sqlite3
 
-# Contagem regressiva de 10 até 1:
-for i in range(10, ____, ____):
-    print(i)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex07.py</span></div><pre class="code"># Números pares de 0 a 20:
-for i in range(0, 21, 2):
-    print(i)
+@app.route("/relatorio")
+def relatorio():
+    conexao = sqlite3.connect("loja.db")
+    cursor = conexao.cursor()
 
-# Contagem regressiva de 10 até 1:
-for i in range(10, 0, -1):
-    print(i)</pre></div><p>Na regressiva, o fim é 0 (que não entra — para no 1) e o passo é -1.</p></div></details>
+    cursor.execute("SELECT SUM(total), COUNT(*) FROM vendas")
+    faturamento, qtd = cursor.fetchone()
+    faturamento = faturamento or 0
+
+    cursor.execute("""
+        SELECT produto, SUM(qtd) FROM vendas
+        GROUP BY produto ORDER BY SUM(qtd) DESC
+    """)
+    ranking = cursor.fetchall()
+    conexao.close()
+
+    html = f"&lt;h1&gt;📊 Relatório&lt;/h1&gt;&lt;p&gt;Faturamento: R$ {faturamento:.2f} em {qtd} vendas&lt;/p&gt;"
+    html += "&lt;h2&gt;Ranking&lt;/h2&gt;&lt;ul&gt;"
+    for produto, unidades in ranking:
+        html += f"&lt;li&gt;{produto}: {unidades} un.&lt;/li&gt;"
+    html += "&lt;/ul&gt;&lt;a href='/'&gt;← Catálogo&lt;/a&gt;"
+    return html
+
+@app.route("/api/produtos")
+def api_produtos():
+    conexao = sqlite3.connect("loja.db")
+    cursor = conexao.cursor()
+    cursor.execute("SELECT nome, preco, estoque FROM produtos")
+    produtos = [{"nome": n, "preco": p, "estoque": e}
+                for n, p, e in cursor.fetchall()]
+    conexao.close()
+    return jsonify(produtos)</pre></div><p>Repare na list comprehension (Semana 17) montando a lista de dicionários para o jsonify — código enxuto de gente grande!</p></div></details>
     </div>
   </article>
 
   <article class="ex" id="ex8">
     <div class="ex-head">
       <span class="ex-num">EX 08</span>
-      <h3>Tabuada 🧮</h3>
-      <span class="stars">⭐⭐ médio</span>
+      <h3>Etapa 6: a obra-prima integrada 🏁</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex8"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Gerar uma tabuada inteira com 3 linhas de código.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Peça um número</li><li>Use <code>for i in range(1, 11)</code></li><li>Dentro do loop: <code>print(f"{n} x {i} = {n * i}")</code></li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Tabuada de qual número? 7
-7 x 1 = 7
-7 x 2 = 14
-7 x 3 = 21
-7 x 4 = 28
-7 x 5 = 35
-7 x 6 = 42
-7 x 7 = 49
-7 x 8 = 56
-7 x 9 = 63
-7 x 10 = 70</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex08.py</span></div><pre class="code">n = int(input("Tabuada de qual número? "))
+<span class="tag obj">🎯 Objetivo</span><p>Montar o app.py final e dar o play na formatura da trilha.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Junte tudo no app.py: iniciar_banco + catálogo com form + salvar + excluir + vender + relatorio + api</li><li>Um menu de navegação no topo ligando as páginas</li><li>Roteiro de teste: cadastrar → vender → relatório → API → tudo conectado?</li><li>Confira com a versão integrada e tire um print: é o seu diploma da trilha profissional 🏆</li></ol><span class="tag saida">✅ A formatura</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output"> * Running on http://127.0.0.1:5000
+(catálogo, cadastro, vendas, relatório e API — um sistema web completo!)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">app.py</span></div><pre class="code">from flask import Flask, request, redirect, jsonify
+import sqlite3
 
-for i in range(1, 11):
-    print(f"{n} x {i} = {n * i}")</pre></div></div></details>
-    </div>
-  </article>
+app = Flask(__name__)
 
-  <article class="ex" id="ex9">
-    <div class="ex-head">
-      <span class="ex-num">EX 09</span>
-      <h3>Fatorial</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex9"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Usar um acumulador MULTIPLICATIVO.</p><p><strong>Conceito:</strong> o fatorial de 5 (escrito 5!) é 5 × 4 × 3 × 2 × 1 = 120.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Peça um número n</li><li>Crie <code>resultado = 1</code> (por que 1 e não 0? Pense!)</li><li>Multiplique resultado por cada i de 1 até n</li><li>Exiba o fatorial</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Calcular o fatorial de: 5
-5! = 120</pre></div><details class="dica"><summary>💡 Por que começar com 1?</summary><div class="inner">Se o acumulador de multiplicação começasse em 0, tudo multiplicado por 0 daria... 0! Para somar, começamos do 0; para multiplicar, do 1 (os "elementos neutros" de cada operação).</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex09.py</span></div><pre class="code">n = int(input("Calcular o fatorial de: "))
+def iniciar_banco():
+    conexao = sqlite3.connect("loja.db")
+    cursor = conexao.cursor()
+    cursor.execute("""CREATE TABLE IF NOT EXISTS produtos (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nome TEXT, preco REAL, estoque INTEGER)""")
+    cursor.execute("""CREATE TABLE IF NOT EXISTS vendas (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        produto TEXT, qtd INTEGER, total REAL)""")
+    cursor.execute("SELECT COUNT(*) FROM produtos")
+    if cursor.fetchone()[0] == 0:
+        cursor.executemany(
+            "INSERT INTO produtos (nome, preco, estoque) VALUES (?, ?, ?)",
+            [("caneca branca", 25.0, 10), ("caneca preta", 27.5, 8),
+             ("azulejo", 40.0, 5)])
+    conexao.commit()
+    conexao.close()
 
-resultado = 1
-for i in range(1, n + 1):
-    resultado = resultado * i
+def menu():
+    return ("&lt;nav&gt;&lt;a href='/'&gt;Catálogo&lt;/a&gt; | &lt;a href='/vender'&gt;Vender&lt;/a&gt; | "
+            "&lt;a href='/relatorio'&gt;Relatório&lt;/a&gt; | &lt;a href='/api/produtos'&gt;API&lt;/a&gt;&lt;/nav&gt;&lt;hr&gt;")
 
-print(f"{n}! = {resultado}")</pre></div></div></details>
-    </div>
-  </article>
-</section>
+@app.route("/")
+def catalogo():
+    conexao = sqlite3.connect("loja.db")
+    cursor = conexao.cursor()
+    cursor.execute("SELECT id, nome, preco, estoque FROM produtos ORDER BY nome")
+    linhas = cursor.fetchall()
+    conexao.close()
+    tabela = "&lt;table border='1' cellpadding='6'&gt;&lt;tr&gt;&lt;th&gt;Nome&lt;/th&gt;&lt;th&gt;Preço&lt;/th&gt;&lt;th&gt;Estoque&lt;/th&gt;&lt;th&gt;Ação&lt;/th&gt;&lt;/tr&gt;"
+    for id, nome, preco, estoque in linhas:
+        tabela += (f"&lt;tr&gt;&lt;td&gt;{nome}&lt;/td&gt;&lt;td&gt;R$ {preco:.2f}&lt;/td&gt;&lt;td&gt;{estoque}&lt;/td&gt;"
+                   f"&lt;td&gt;&lt;a href='/excluir/{id}'&gt;excluir&lt;/a&gt;&lt;/td&gt;&lt;/tr&gt;")
+    tabela += "&lt;/table&gt;"
+    return f"""
+    &lt;html&gt;&lt;head&gt;&lt;title&gt;Loja Tua Caneca&lt;/title&gt;
+    &lt;style&gt;body{{font-family:Arial;background:#F5F8FC;margin:40px}}
+    h1{{color:#3776AB}} input{{padding:6px;margin:3px}} table{{background:#fff}}&lt;/style&gt;
+    &lt;/head&gt;&lt;body&gt;{menu()}&lt;h1&gt;☕ Loja Tua Caneca&lt;/h1&gt;
+    &lt;form method="post" action="/salvar"&gt;
+        &lt;input name="nome" placeholder="Nome"&gt;
+        &lt;input name="preco" placeholder="Preço"&gt;
+        &lt;input name="estoque" placeholder="Estoque"&gt;
+        &lt;button&gt;Cadastrar&lt;/button&gt;
+    &lt;/form&gt;&lt;br&gt;{tabela}&lt;/body&gt;&lt;/html&gt;
+    """
 
-<section class="parte" id="p3">
-  <div class="parte-head"><span class="num">03</span><h2>Acumuladores e contadores</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Dois padrões que resolvem 80% dos problemas com loops: o <strong>acumulador</strong> (vai somando valores: <code>soma += valor</code>) e o <strong>contador</strong> (vai contando ocorrências: <code>pares += 1</code>). Ambos nascem ZERADOS antes do loop.</p></div>
-  <article class="ex" id="ex10">
-    <div class="ex-head">
-      <span class="ex-num">EX 10</span>
-      <h3>Média da turma</h3>
-      <span class="stars">⭐⭐ médio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex10"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Combinar for + input + acumulador.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie <code>soma = 0</code> antes do loop</li><li>Peça 5 notas dentro de um <code>for i in range(1, 6)</code> (use o i no texto: "Nota 1:", "Nota 2:"...)</li><li>Acumule cada nota na soma</li><li>Depois do loop, calcule e exiba a média</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Nota 1: 8
-Nota 2: 7.5
-Nota 3: 9
-Nota 4: 6
-Nota 5: 7
-Média da turma: 7.5</pre></div><details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Pergunte primeiro QUANTAS notas serão digitadas e use esse valor no range e na divisão.</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex10.py</span></div><pre class="code">soma = 0
+@app.route("/salvar", methods=["POST"])
+def salvar():
+    nome = request.form.get("nome", "").strip()
+    if not nome:
+        return redirect("/")
+    try:
+        preco = float(request.form.get("preco"))
+        estoque = int(request.form.get("estoque"))
+    except (ValueError, TypeError):
+        return redirect("/")
+    conexao = sqlite3.connect("loja.db")
+    conexao.execute("INSERT INTO produtos (nome, preco, estoque) VALUES (?, ?, ?)",
+                    (nome, preco, estoque))
+    conexao.commit()
+    conexao.close()
+    return redirect("/")
 
-for i in range(1, 6):
-    nota = float(input(f"Nota {i}: "))
-    soma = soma + nota
+@app.route("/excluir/&lt;int:id&gt;")
+def excluir(id):
+    conexao = sqlite3.connect("loja.db")
+    conexao.execute("DELETE FROM produtos WHERE id = ?", (id,))
+    conexao.commit()
+    conexao.close()
+    return redirect("/")
 
-media = soma / 5
-print(f"Média da turma: {media:.1f}")</pre></div></div></details>
-    </div>
-  </article>
+@app.route("/vender", methods=["GET", "POST"])
+def vender():
+    if request.method == "POST":
+        nome = request.form.get("nome")
+        qtd = int(request.form.get("qtd"))
+        conexao = sqlite3.connect("loja.db")
+        cursor = conexao.cursor()
+        cursor.execute("SELECT preco, estoque FROM produtos WHERE nome = ?", (nome,))
+        r = cursor.fetchone()
+        if r is None:
+            msg = "Produto não encontrado!"
+        elif r[1] &lt; qtd:
+            msg = f"Estoque insuficiente! Disponível: {r[1]}"
+        else:
+            total = qtd * r[0]
+            cursor.execute("UPDATE produtos SET estoque = estoque - ? WHERE nome = ?",
+                           (qtd, nome))
+            cursor.execute("INSERT INTO vendas (produto, qtd, total) VALUES (?, ?, ?)",
+                           (nome, qtd, total))
+            conexao.commit()
+            msg = f"Venda registrada! Total: R$ {total:.2f}"
+        conexao.close()
+        return f"{menu()}&lt;h1&gt;{msg}&lt;/h1&gt;"
+    return f"""{menu()}&lt;h1&gt;Registrar venda&lt;/h1&gt;
+    &lt;form method="post" action="/vender"&gt;
+        &lt;input name="nome" placeholder="Produto"&gt;
+        &lt;input name="qtd" placeholder="Quantidade"&gt;
+        &lt;button&gt;Vender&lt;/button&gt;&lt;/form&gt;"""
 
-  <article class="ex" id="ex11">
-    <div class="ex-head">
-      <span class="ex-num">EX 11</span>
-      <h3>Contador de pares e ímpares</h3>
-      <span class="stars">⭐⭐ médio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex11"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Usar dois contadores com um if dentro do for.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie <code>pares = 0</code> e <code>impares = 0</code></li><li>Leia 6 números num for</li><li>Para cada um: se <code>numero % 2 == 0</code>, some 1 em pares; senão, em ímpares</li><li>Exiba os dois totais</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Número 1: 4
-Número 2: 7
-Número 3: 10
-Número 4: 3
-Número 5: 8
-Número 6: 1
-Pares: 3 | Ímpares: 3</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex11.py</span></div><pre class="code">pares = 0
-impares = 0
+@app.route("/relatorio")
+def relatorio():
+    conexao = sqlite3.connect("loja.db")
+    cursor = conexao.cursor()
+    cursor.execute("SELECT SUM(total), COUNT(*) FROM vendas")
+    faturamento, qtd = cursor.fetchone()
+    faturamento = faturamento or 0
+    cursor.execute("""SELECT produto, SUM(qtd) FROM vendas
+                      GROUP BY produto ORDER BY SUM(qtd) DESC""")
+    ranking = cursor.fetchall()
+    conexao.close()
+    itens = "".join(f"&lt;li&gt;{p}: {u} un.&lt;/li&gt;" for p, u in ranking)
+    return f"{menu()}&lt;h1&gt;📊 Relatório&lt;/h1&gt;&lt;p&gt;Faturamento: R$ {faturamento:.2f} em {qtd} vendas&lt;/p&gt;&lt;ul&gt;{itens}&lt;/ul&gt;"
 
-for i in range(1, 7):
-    numero = int(input(f"Número {i}: "))
-    if numero % 2 == 0:
-        pares = pares + 1
-    else:
-        impares = impares + 1
+@app.route("/api/produtos")
+def api_produtos():
+    conexao = sqlite3.connect("loja.db")
+    cursor = conexao.cursor()
+    cursor.execute("SELECT nome, preco, estoque FROM produtos")
+    produtos = [{"nome": n, "preco": p, "estoque": e}
+                for n, p, e in cursor.fetchall()]
+    conexao.close()
+    return jsonify(produtos)
 
-print(f"Pares: {pares} | Ímpares: {impares}")</pre></div></div></details>
-    </div>
-  </article>
-
-  <article class="ex" id="ex12">
-    <div class="ex-head">
-      <span class="ex-num">EX 12</span>
-      <h3>Maior e menor</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex12"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Encontrar extremos com atualização condicional (sem usar max/min).</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Leia o PRIMEIRO número fora do loop e use-o para inicializar <code>maior</code> e <code>menor</code></li><li>Leia os outros 4 números num for</li><li>Para cada um: se for maior que o maior atual, atualize; se for menor que o menor, atualize</li><li>Exiba os dois no final</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Digite 5 números:
-Número 1: 7
-Número 2: 3
-Número 3: 12
-Número 4: 5
-Número 5: 9
-Maior: 12.0
-Menor: 3.0</pre></div><details class="dica"><summary>💡 Por que inicializar com o primeiro número?</summary><div class="inner">Se você começar com <code>maior = 0</code> e o usuário só digitar números negativos, o resultado sai errado! Inicializar com o primeiro valor real é a forma segura.</div></details><details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Confira seu resultado usando as funções prontas <code>max()</code> e <code>min()</code> (você vai precisar de listas — spoiler da Semana 4!).</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex12.py</span></div><pre class="code">print("Digite 5 números:")
-
-maior = float(input("Número 1: "))
-menor = maior
-
-for i in range(2, 6):
-    numero = float(input(f"Número {i}: "))
-    if numero &gt; maior:
-        maior = numero
-    if numero &lt; menor:
-        menor = numero
-
-print(f"Maior: {maior}")
-print(f"Menor: {menor}")</pre></div></div></details>
-    </div>
-  </article>
-</section>
-
-<section class="parte" id="p4">
-  <div class="parte-head"><span class="num">04</span><h2>break e continue</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Dois comandos para controlar o loop por dentro: <code>break</code> <strong>encerra</strong> o loop na hora; <code>continue</code> <strong>pula</strong> para a próxima volta, ignorando o resto do bloco.</p></div>
-  <article class="ex" id="ex13">
-    <div class="ex-head">
-      <span class="ex-num">EX 13</span>
-      <h3>Pare quando digitar 0</h3>
-      <span class="stars">⭐⭐ médio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex13"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Usar while True + break (o padrão "sentinela").</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie <code>soma = 0</code> e um loop <code>while True:</code> (proposital — quem vai parar é o break!)</li><li>Peça um valor; se for 0, <code>break</code></li><li>Senão, acumule na soma</li><li>Exiba a soma total ao final</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Digite valores (0 para encerrar)
-Valor: 10
-Valor: 25.5
-Valor: 8
-Valor: 0
-Soma total: R$ 43.50</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner">Esse padrão é usado quando NÃO sabemos quantas repetições haverá — quem decide é o usuário, com o valor "sentinela" (aqui, o 0).</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex13.py</span></div><pre class="code">print("Digite valores (0 para encerrar)")
-soma = 0
-
-while True:
-    valor = float(input("Valor: "))
-    if valor == 0:
-        break
-    soma = soma + valor
-
-print(f"Soma total: R$ {soma:.2f}")</pre></div></div></details>
-    </div>
-  </article>
-
-  <article class="ex" id="ex14">
-    <div class="ex-head">
-      <span class="ex-num">EX 14</span>
-      <h3>Pulando múltiplos de 3</h3>
-      <span class="stars">⭐⭐ médio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex14"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Entender o continue.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Percorra de 1 a 15 com for</li><li>Se <code>i % 3 == 0</code>: <code>continue</code> (pula a impressão)</li><li>Senão, imprima o número</li><li>PREVEJA quais números vão aparecer antes de rodar</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">1
-2
-4
-5
-7
-8
-10
-11
-13
-14</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex14.py</span></div><pre class="code">for i in range(1, 16):
-    if i % 3 == 0:
-        continue
-    print(i)</pre></div><p>O <code>continue</code> faz o loop "dar meia-volta": o print daquela rodada nunca acontece, mas o loop segue normalmente.</p></div></details>
-    </div>
-  </article>
-
-  <article class="ex" id="ex15">
-    <div class="ex-head">
-      <span class="ex-num">EX 15</span>
-      <h3>Validando a entrada</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex15"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Repetir a pergunta enquanto a resposta for inválida — padrão essencial em qualquer sistema!</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Peça uma nota de 0 a 10</li><li>Enquanto a nota for menor que 0 OU maior que 10: avise e peça de novo</li><li>Quando sair do loop, a nota é garantidamente válida</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Digite a nota (0 a 10): 15
-Nota inválida!
-Digite a nota (0 a 10): -2
-Nota inválida!
-Digite a nota (0 a 10): 8.5
-Nota registrada: 8.5</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex15.py</span></div><pre class="code">nota = float(input("Digite a nota (0 a 10): "))
-
-while nota &lt; 0 or nota &gt; 10:
-    print("Nota inválida!")
-    nota = float(input("Digite a nota (0 a 10): "))
-
-print(f"Nota registrada: {nota}")</pre></div></div></details>
+iniciar_banco()
+app.run(debug=True)</pre></div><p><strong>~130 linhas. Flask + SQLite + CRUD + vendas + relatório SQL + API.</strong> Compare com o seu primeiro <code>print("Olá, mundo!")</code> da Semana 1. Você construiu uma aplicação web de verdade, com banco de dados — o tipo de sistema que sustenta negócios reais. 👏🏆</p></div></details>
     </div>
   </article>
 </section>
 
 <section class="parte" id="p5">
-  <div class="parte-head"><span class="num">05</span><h2>Loops com textos e desenhos</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>O <code>for</code> também percorre as letras de um texto, uma por uma: <code>for letra in palavra</code>. E lembra que <code>"*" * 3</code> repete o texto? Combinado com loops, dá para desenhar!</p></div>
-  <article class="ex" id="ex16">
+  <div class="parte-head"><span class="num">05</span><h2>Formatura da trilha profissional</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Os dois últimos desafios — sem solução, porque a partir daqui o desenvolvedor é você. 🏆</p></div>
+  <article class="ex" id="ex9">
     <div class="ex-head">
-      <span class="ex-num">EX 16</span>
-      <h3>Soletrando</h3>
-      <span class="stars">⭐ básico</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex16"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Percorrer um texto letra por letra.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Digite, preveja e execute:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex16_soletrar.py</span></div><pre class="code">for letra in "python":
-    print(f"Letra: {letra}")</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Letra: p
-Letra: y
-Letra: t
-Letra: h
-Letra: o
-Letra: n</pre></div><details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Peça o nome do usuário com input e soletre-o.</div></details>
-    </div>
-  </article>
-
-  <article class="ex" id="ex17">
-    <div class="ex-head">
-      <span class="ex-num">EX 17</span>
-      <h3>Contando vogais</h3>
-      <span class="stars">⭐⭐ médio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex17"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Combinar for + in + contador.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Peça uma palavra (use <code>.lower()</code> para aceitar maiúsculas)</li><li>Percorra letra por letra</li><li>Se a letra estiver em <code>"aeiou"</code>, some 1 no contador</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Digite uma palavra: Programacao
-A palavra tem 5 vogais</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex17.py</span></div><pre class="code">palavra = input("Digite uma palavra: ").lower()
-vogais = 0
-
-for letra in palavra:
-    if letra in "aeiou":
-        vogais = vogais + 1
-
-print(f"A palavra tem {vogais} vogais")</pre></div></div></details>
-    </div>
-  </article>
-
-  <article class="ex" id="ex18">
-    <div class="ex-head">
-      <span class="ex-num">EX 18</span>
-      <h3>Pirâmide de asteriscos</h3>
+      <span class="ex-num">EX 09</span>
+      <h3>Desafio: a loja turbinada com IA 🤖</h3>
       <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex18"> Concluído</label>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex9"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Desenhar com loop + repetição de texto.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Use <code>for i in range(1, 6)</code></li><li>A cada volta, imprima <code>"*" * i</code></li><li>Observe: na volta 1 imprime 1 asterisco, na volta 2 imprime 2...</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">*
-**
-***
-****
-*****</pre></div><details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Faça a pirâmide INVERTIDA (de 5 asteriscos até 1). E a centralizada da Semana 1? Dica: <code>" " * (5 - i) + "*" * (2 * i - 1)</code> 🤯</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex18.py</span></div><pre class="code">for i in range(1, 6):
-    print("*" * i)
-
-# Desafio — invertida:
-for i in range(5, 0, -1):
-    print("*" * i)
-
-# Desafio — centralizada:
-for i in range(1, 6):
-    print(" " * (5 - i) + "*" * (2 * i - 1))</pre></div></div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Integrar tudo que você aprendeu, incluindo a Semana 24.</p><span class="tag passos">🧭 Roteiro</span><ol><li>No cadastro de produto, gere a descrição automaticamente com <code>perguntar_ia()</code> (Semana 24) e salve numa coluna nova</li><li>Adicione uma página de edição completa (GET mostra form preenchido, POST faz UPDATE)</li><li>Crie uma rota de busca: <code>/buscar?termo=...</code> usando <code>request.args.get</code> e LIKE no banco</li><li>Escolha pelo menos um e implemente — cada um integra uma semana diferente</li></ol><details class="dica"><summary>💡 Você tem todas as peças</summary><div class="inner">IA (S24), edição (S23), busca com LIKE (S22), formulários (S23)... cada desafio é só combinar peças que você JÁ domina. Programar avançado é, na maior parte, reconhecer quais peças encaixam. E você tem um baú cheio delas. 🧰</div></details><details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Quer ir além? Pesquise "Flask deploy gratuito" e coloque sua loja NO AR, acessível por qualquer pessoa na internet. Ver seu sistema rodando num endereço de verdade é uma sensação inesquecível. 🌐</div></details>
     </div>
   </article>
 
-  <article class="ex" id="ex19">
+  <article class="ex" id="ex10">
     <div class="ex-head">
-      <span class="ex-num">EX 19</span>
-      <h3>FizzBuzz — o clássico das entrevistas! 🏆</h3>
+      <span class="ex-num">EX 10</span>
+      <h3>O desafio que encerra a jornada 🏆</h3>
       <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex19"> Concluído</label>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex10"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Resolver o exercício mais famoso de lógica de programação (cai em entrevista de emprego de verdade!).</p><p><strong>Regras:</strong> para os números de 1 a 30 — múltiplo de 3: imprima "Fizz" · múltiplo de 5: "Buzz" · múltiplo dos DOIS: "FizzBuzz" · senão: o próprio número.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Percorra de 1 a 30</li><li>ATENÇÃO à ordem dos testes: qual condição precisa vir primeiro?</li><li>Teste especialmente os números 15 e 30</li></ol><span class="tag saida">✅ Saída esperada (início)</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">1
-2
-Fizz
-4
-Buzz
-Fizz
-7
-8
-Fizz
-Buzz
-11
-Fizz
-13
-14
-FizzBuzz
-(...)</pre></div><details class="dica"><summary>💡 A pegadinha</summary><div class="inner">Se você testar "múltiplo de 3" primeiro, o 15 vai cair nesse caso e imprimir só "Fizz". A condição MAIS ESPECÍFICA (múltiplo de 3 E de 5) precisa vir primeiro!</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex19.py</span></div><pre class="code">for i in range(1, 31):
-    if i % 3 == 0 and i % 5 == 0:
-        print("FizzBuzz")
-    elif i % 3 == 0:
-        print("Fizz")
-    elif i % 5 == 0:
-        print("Buzz")
-    else:
-        print(i)</pre></div></div></details>
-    </div>
-  </article>
-</section>
-
-<section class="parte" id="p6">
-  <div class="parte-head"><span class="num">06</span><h2>Projetos da semana: juntando tudo!</h2></div>
-
-  <article class="ex" id="ex20">
-    <div class="ex-head">
-      <span class="ex-num">EX 20</span>
-      <h3>Projeto: Jogo de adivinhação 🎲</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex20"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Construir um jogo de verdade com while, if/elif e números aleatórios.</p><p><strong>Novidade:</strong> a linha <code>import random</code> (no topo do arquivo) traz funções de sorteio. <code>random.randint(1, 50)</code> sorteia um inteiro entre 1 e 50.</p><span class="tag passos">🧭 Requisitos</span><ol><li>Sorteie o número secreto</li><li>Enquanto o palpite for diferente do segredo: peça um palpite, conte a tentativa e dê a dica "Muito alto!" ou "Muito baixo!"</li><li>Ao acertar, parabenize mostrando o número de tentativas</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Adivinhe o número entre 1 e 50!
-Seu palpite: 25
-Muito baixo! ⬆
-Seu palpite: 38
-Muito alto! ⬇
-Seu palpite: 31
-🎉 Acertou em 3 tentativas!</pre></div><details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Limite a 7 tentativas: se estourar, encerre com break e revele o número. (Será que 7 sempre basta para 1-50? Pesquise "busca binária" 😉)</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex20.py</span></div><pre class="code">import random
-
-segredo = random.randint(1, 50)
-tentativas = 0
-palpite = 0
-
-print("Adivinhe o número entre 1 e 50!")
-
-while palpite != segredo:
-    palpite = int(input("Seu palpite: "))
-    tentativas = tentativas + 1
-    if palpite &gt; segredo:
-        print("Muito alto! ⬇")
-    elif palpite &lt; segredo:
-        print("Muito baixo! ⬆")
-
-print(f"🎉 Acertou em {tentativas} tentativas!")</pre></div></div></details>
-    </div>
-  </article>
-
-  <article class="ex" id="ex21">
-    <div class="ex-head">
-      <span class="ex-num">EX 21</span>
-      <h3>Projeto: Caixa registradora Tua Caneca 💰</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex21"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Somar uma venda inteira com loop sentinela, acumulador e contador.</p><span class="tag passos">🧭 Requisitos</span><ol><li>Leia o valor de cada item vendido até o usuário digitar 0</li><li>Acumule o total e conte os itens</li><li>No fechamento, exiba: quantidade de itens, total e valor médio por item</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">=== CAIXA TUA CANECA ===
-Digite o valor de cada item (0 para fechar a conta)
-Valor do item: R$ 25
-Valor do item: R$ 25
-Valor do item: R$ 40
-Valor do item: R$ 0
-Itens vendidos: 3
-TOTAL: R$ 90.00
-Valor médio: R$ 30.00</pre></div><details class="dica"><summary>💡 Cuidado com a divisão!</summary><div class="inner">Se o usuário digitar 0 logo de cara, <code>total / itens</code> seria uma divisão por zero. Proteja com <code>if itens &gt; 0</code>.</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex21.py</span></div><pre class="code">print("=== CAIXA TUA CANECA ===")
-print("Digite o valor de cada item (0 para fechar a conta)")
-
-total = 0
-itens = 0
-
-while True:
-    valor = float(input("Valor do item: R$ "))
-    if valor == 0:
-        break
-    total = total + valor
-    itens = itens + 1
-
-print(f"Itens vendidos: {itens}")
-print(f"TOTAL: R$ {total:.2f}")
-
-if itens &gt; 0:
-    media = total / itens
-    print(f"Valor médio: R$ {media:.2f}")</pre></div></div></details>
-    </div>
-  </article>
-
-  <article class="ex" id="ex22">
-    <div class="ex-head">
-      <span class="ex-num">EX 22</span>
-      <h3>Projeto bônus: todas as tabuadas (loop aninhado)</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex22"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Descobrir sozinho o loop dentro de loop (sem código pronto!).</p><span class="tag passos">🧭 Roteiro</span><ol><li>Você já fez a tabuada de UM número (Exercício 8)</li><li>Agora coloque aquele for DENTRO de outro for que percorre os números de 1 a 10</li><li>Imprima um título antes de cada tabuada e uma linha em branco depois</li></ol><span class="tag saida">✅ Saída esperada (início)</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">--- Tabuada do 1 ---
-1 x 1 = 1
-1 x 2 = 2
-(...)
---- Tabuada do 2 ---
-2 x 1 = 2
-2 x 2 = 4
-(...)</pre></div><details class="dica"><summary>💡 Como pensar</summary><div class="inner">O loop de fora escolhe QUAL tabuada (n = 1, 2, 3...). Para cada n, o loop de dentro roda as 10 multiplicações. Total: 100 prints com 4 linhas de código!</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex22.py</span></div><pre class="code">for n in range(1, 11):
-    print(f"--- Tabuada do {n} ---")
-    for i in range(1, 11):
-        print(f"{n} x {i} = {n * i}")
-    print()</pre></div></div></details>
+<span class="tag obj">🎯 Objetivo</span><p>O projeto-assinatura: um sistema web completo para um problema 100% seu.</p><span class="tag passos">🧭 Roteiro</span><ol><li>Escolha um domínio real da SUA vida: controle de uma locadora, sistema de uma clínica, gestão de turmas, finanças pessoais, estoque do seu negócio...</li><li>Modele as tabelas, construa o CRUD web, adicione relatórios com SQL e — se fizer sentido — um toque de IA</li><li>Estruture como projeto profissional: código organizado, README explicando, banco inicializado por código</li><li>Suba no GitHub, coloque o link no LinkedIn e no currículo</li><li>E o mais importante: APRESENTE para alguém, explicando suas decisões. Ensinar é a forma definitiva de dominar — você percorreu 25 semanas, sabe disso melhor que ninguém. 🎓</li></ol><details class="dica"><summary>💡 A última palavra da trilha</summary><div class="inner">25 semanas. ~290 exercícios. 5 sistemas completos. Do <code>print()</code> a aplicações web com banco de dados e IA. Você não aprendeu apenas Python — você aprendeu a transformar QUALQUER problema em software. A pergunta nunca mais será "será que eu consigo?". Será "qual problema eu resolvo agora?". Obrigado pela jornada, parabéns pela formatura, e bons códigos para a vida toda! 🏆🐍✨</div></details>
     </div>
   </article>
 </section>
@@ -855,29 +732,29 @@ if itens &gt; 0:
 <div class="checklist" id="checklist">
   <h2>✅ Checklist de fim de semana</h2>
   <p>Antes de seguir para a próxima semana, confirme que você consegue:</p>
-<label class="check-item"><input type="checkbox"><span>Escrever um while com contador (e saber por que ele para)</span></label>
-<label class="check-item"><input type="checkbox"><span>Explicar o que causa um loop infinito e como evitá-lo</span></label>
-<label class="check-item"><input type="checkbox"><span>Usar range() com início, fim e passo (e lembrar que o fim NÃO entra)</span></label>
-<label class="check-item"><input type="checkbox"><span>Somar valores com o padrão acumulador (soma += valor)</span></label>
-<label class="check-item"><input type="checkbox"><span>Contar ocorrências com o padrão contador</span></label>
-<label class="check-item"><input type="checkbox"><span>Encontrar o maior e o menor valor de uma sequência</span></label>
-<label class="check-item"><input type="checkbox"><span>Sair de um loop com break e pular uma volta com continue</span></label>
-<label class="check-item"><input type="checkbox"><span>Validar a entrada do usuário repetindo a pergunta</span></label>
-<label class="check-item"><input type="checkbox"><span>Percorrer as letras de uma palavra com for</span></label>
-<label class="check-item"><input type="checkbox"><span>Resolver o FizzBuzz sem olhar a solução 😄</span></label>
+<label class="check-item"><input type="checkbox"><span>Prever saídas misturando SQL, Flask e os clássicos</span></label>
+<label class="check-item"><input type="checkbox"><span>Caçar bugs típicos de banco/web (WHERE faltando, commit, methods, ?)</span></label>
+<label class="check-item"><input type="checkbox"><span>Estruturar um app web com banco: app.py e inicialização por código</span></label>
+<label class="check-item"><input type="checkbox"><span>Modelar e inicializar as tabelas (CREATE IF NOT EXISTS + dados iniciais)</span></label>
+<label class="check-item"><input type="checkbox"><span>Implementar o CRUD de produtos via web</span></label>
+<label class="check-item"><input type="checkbox"><span>Registrar vendas com baixa de estoque (SELECT + UPDATE + INSERT)</span></label>
+<label class="check-item"><input type="checkbox"><span>Gerar um relatório com agregações SQL (GROUP BY) numa página</span></label>
+<label class="check-item"><input type="checkbox"><span>Expor uma API JSON do catálogo</span></label>
+<label class="check-item"><input type="checkbox"><span>Integrar (opcional) uma descrição gerada por IA</span></label>
+<label class="check-item"><input type="checkbox"><span>Apresentar o sistema completo rodando — sua obra-prima</span></label>
 </div>
 
 <div class="win-banner" id="winBanner">
-  <h2>🏆 SEMANA 3 COMPLETA!</h2>
-  <p>Você concluiu todos os exercícios. Agora o computador repete as tarefas chatas por você!</p>
+  <h2>🏆 SEMANA 25 COMPLETA!</h2>
+  <p>MÓDULO DADOS &amp; SQL COMPLETO! 25 semanas, ~290 exercícios, 5 projetos finais — do print() a apps web com banco e IA. E o módulo profissional (MariaDB, API REST, JWT e arquitetura desacoplada) começa na Semana 26! 🏆🎓🐍</p>
 </div>
 
 <div class="preview-s2">
-<h2>📅 Prévia da Semana 4</h2><p>Na próxima semana: <strong>listas e strings</strong> — guardar vários valores numa única variável, <code>append()</code>, índices, fatiamento <code>[inicio:fim]</code> e métodos de texto. Seus programas vão começar a lidar com <strong>coleções de dados</strong>!</p></div>
+<h2>📅 Prévia da Semana 26 — começa o módulo PROFISSIONAL</h2><p>Você construiu um sistema completo... mas ele é um <strong>monolito</strong>: um único app Flask que faz tudo (banco, lógica e telas) e usa SQLite. A partir da Semana 26, a virada para o mundo real: migração para <strong>MariaDB</strong> (com DBeaver para gerência), uma <strong>API REST</strong> de verdade (backend desacoplado), <strong>autenticação com JWT</strong> e um <strong>frontend separado</strong> consumindo a API. O mesmo negócio, agora com arquitetura profissional. 🏛️🔐🚀</p></div>
 
 </main>
 
-<footer>python_para_iniciantes // semana_03 // exercícios guiados</footer>
+<footer>python_para_iniciantes // semana_25 // exercícios guiados</footer>
 
 <script>
 // ===== Syntax highlight leve para Python =====
@@ -889,7 +766,7 @@ if itens &gt; 0:
     src = src.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     // uma passada só, com alternação (comentário | string | builtin | bool | número)
     src = src.replace(
-      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|insert|int|float|str|len|range|type|abs|round|max|min|sum|sorted|sort|reverse|append|remove|split|strip|upper|lower|replace|title|randint|random)\b|\b(True|False|None|if|elif|else|while|for|in|and|or|not|break|continue|import|from|def|return)\b|(\b\d+(?:\.\d+)?\b)/g,
+      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|insert|int|float|str|len|range|type|abs|round|max|min|sum|sorted|sort|reverse|append|remove|split|strip|upper|lower|replace|title|randint|random|get|keys|values|items|open|readlines|read|write|close|count|index|pop|update|list|dict|tuple|enumerate|sqrt|floor|ceil|choice|shuffle|sample|sleep|now|today|strftime|dumps|dump|loads|load|isinstance|datetime|date|DictReader|DictWriter|writerows|writerow|writeheader|writer|reader|csv|Workbook|load_workbook|save|iter_rows|Font|listdir|makedirs|getcwd|rename|exists|getsize|splitext|join|endswith|startswith|copytree|copy|move|requests|status_code|json|DataFrame|read_csv|read_excel|to_excel|to_csv|head|describe|groupby|sort_values|value_counts|mean|idxmax|bar|barh|pie|plot|savefig|show|title|xlabel|ylabel|figure|legend|axhline|tight_layout|close|Flask|route|run|render_template|jsonify|redirect|request|connect|cursor|execute|executemany|fetchall|fetchone|commit|environ|getenv|post)\b|\b(True|False|None|if|elif|else|while|for|in|and|or|not|break|continue|import|from|def|return|try|except|finally|with|as|del|global|pass|class|self|super|lambda)\b|(\b\d+(?:\.\d+)?\b)/g,
       function(m, com, str, fn, bool, num){
         if(com)  return '<span class="tk-com">'+com+'</span>';
         if(str)  return '<span class="tk-str">'+str+'</span>';
@@ -908,7 +785,7 @@ if itens &gt; 0:
 // no navegador. Se o localStorage estiver indisponível (modo restrito,
 // pré-visualização, etc.), o progresso funciona só em memória, sem quebrar.
 const storage = (function(){
-  const KEY = 'python_semana03_progresso';
+  const KEY = 'python_semana25_progresso';
   let memoria = {};
   let disponivel = false;
   try{
@@ -955,10 +832,10 @@ const storage = (function(){
   const MSGS = [
     [0,  'Marque os exercícios concluídos ✔'],
     [1,  'Boa! Continue assim 💪'],
-    [7,  'Pegando o ritmo! 🔥'],
-    [11, 'Metade do caminho! 🚀'],
-    [16, 'Quase lá... força! ⚡'],
-    [22, 'SEMANA COMPLETA! 🏆']
+    [3,  'Pegando o ritmo! 🔥'],
+    [5, 'Metade do caminho! 🚀'],
+    [8, 'Quase lá... força! ⚡'],
+    [10, 'SEMANA COMPLETA! 🏆']
   ];
 
   function estadoAtual(){

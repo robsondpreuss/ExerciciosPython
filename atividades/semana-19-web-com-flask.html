@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Semana 10 — Classes e Objetos</title>
+<title>Semana 19 — Web com Flask</title>
 <style>
   :root{
     --ink:#16243A;
@@ -57,7 +57,7 @@
     color:#fff;padding:56px 20px 48px;text-align:center;position:relative;overflow:hidden;
   }
   header.hero::before{
-    content:"class  __init__  self  objeto.metodo()  atributos";
+    content:"from flask import Flask  @app.route(  app.run(  localhost";
     position:absolute;inset:auto 0 8px 0;font-family:var(--mono);font-size:.78rem;
     color:rgba(255,255,255,.14);letter-spacing:.4em;white-space:nowrap;overflow:hidden;
   }
@@ -234,316 +234,211 @@
 <div class="progress-wrap" role="region" aria-label="Progresso da semana">
   <span class="label">XP DA SEMANA</span>
   <div class="progress-bar"><div class="progress-fill" id="pfill"></div></div>
-  <span class="progress-count" id="pcount">0 / 14</span>
+  <span class="progress-count" id="pcount">0 / 10</span>
   <span class="progress-msg" id="pmsg">Marque os exercícios concluídos ✔</span>
   <button class="reset-btn" id="resetBtn" title="Apagar todo o progresso salvo">↺ Resetar</button>
 </div>
 
 <header class="hero">
   <div class="kicker">Python para Iniciantes · Exercícios Guiados</div>
-  <h1>SEMANA 10 — Classes e Objetos:<br>a virada de chave da POO<span class="cursor" aria-hidden="true"></span></h1>
-  <p class="sub">Programação Orientada a Objetos: class, o famoso self, __init__, atributos, métodos, __str__ e listas de objetos. Spoiler: você já usa objetos desde a Semana 1!</p>
+  <h1>SEMANA 19 — Flask:<br>seu Python vira um site<span class="cursor" aria-hidden="true"></span></h1>
+  <p class="sub">O microframework web mais querido do Python: rotas, páginas HTML geradas por código, rotas dinâmicas e o momento de glória — criar a sua PRÓPRIA API.</p>
   <div class="howto">
     <strong>Como usar:</strong> digite o código você mesmo (não copie e cole!), compare com a saída esperada e marque <strong>✔ Concluído</strong> em cada exercício para encher sua barra de XP. As <strong>dicas</strong> e <strong>soluções</strong> ficam escondidas — só abra depois de tentar! Seu progresso fica salvo no navegador.
   </div>
 </header>
 
-<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · class</a><a href="#p2">2 · __init__</a><a href="#p3">3 · Métodos</a><a href="#p4">4 · __str__</a><a href="#p5">5 · Listas de objetos</a><a href="#p6">6 · Projetos</a><a href="#checklist">✅ Checklist</a></nav>
+<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · Primeiro site</a><a href="#p2">2 · Rotas dinâmicas</a><a href="#p3">3 · Dados na página</a><a href="#p4">4 · Sua API!</a><a href="#p5">5 · Estilo</a><a href="#p6">6 · Projetos</a><a href="#checklist">✅ Checklist</a></nav>
 
 <main>
 
 <section class="parte" id="p1">
-  <div class="parte-head"><span class="num">01</span><h2>class: o molde e os bolos</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Uma <strong>classe</strong> é um molde; um <strong>objeto</strong> é o que sai do molde. O molde "Cachorro" define que todo cachorro tem nome; Rex e Bidu são objetos — cada um com SEU nome.</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">estrutura.py</span></div><pre class="code">class Cachorro:                  # o molde (nome com Maiúscula!)
-    def __init__(self, nome):    # executa ao criar o objeto
-        self.nome = nome         # guarda o atributo NO objeto
-
-rex = Cachorro("Rex")            # cria um objeto a partir do molde
-print(rex.nome)                  # acessa o atributo</pre></div><p><strong>E aqui o segredo:</strong> você já usa objetos desde sempre! <code>"abc".upper()</code>, <code>lista.append(...)</code>, <code>datetime.now().year</code> — strings, listas e datas SÃO objetos, com métodos e atributos. Agora você vai criar os seus.</p></div>
+  <div class="parte-head"><span class="num">01</span><h2>O primeiro site da sua vida</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Instale com <code>pip install flask</code>. O Flask transforma funções Python em páginas web: o decorador <code>@app.route("/")</code> diz "quando alguém visitar este endereço, execute esta função e mostre o que ela retornar". O <code>app.run()</code> liga o servidor — acesse <code>http://localhost:5000</code> no navegador, e pare com Ctrl+C no terminal.</p></div>
   <article class="ex" id="ex1">
     <div class="ex-head">
       <span class="ex-num">EX 01</span>
-      <h3>Primeira classe 🐶</h3>
-      <span class="stars">⭐ básico</span>
+      <h3>Olá, web! 🌐</h3>
+      <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex1"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Criar um molde e o primeiro objeto dele.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Digite e execute:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex01_classe.py</span></div><pre class="code">class Cachorro:
-    def __init__(self, nome):
-        self.nome = nome
+<span class="tag obj">🎯 Objetivo</span><p>Colocar um servidor no ar em 7 linhas.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie e execute <code>site.py</code>:</li><li>O terminal mostra "Running on http://127.0.0.1:5000" — abra esse endereço no navegador!</li><li>Deixe o terminal rodando; para encerrar, Ctrl+C</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">site.py</span></div><pre class="code">from flask import Flask
 
-rex = Cachorro("Rex")
+app = Flask(__name__)
 
-print(rex.nome)
-print(type(rex))</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Rex
-&lt;class '__main__.Cachorro'&gt;</pre></div><details class="dica"><summary>💡 Olha que bonito</summary><div class="inner">O <code>type()</code> da Semana 1 revela: rex é do tipo... Cachorro! Você acabou de criar um TIPO NOVO no Python, do mesmo nível de int, str e list. 🤯</div></details>
+@app.route("/")
+def inicio():
+    return "&lt;h1&gt;Olá, web! Meu primeiro site em Python 🐍&lt;/h1&gt;"
+
+app.run(debug=True)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output"> * Running on http://127.0.0.1:5000
+(e o título gigante no navegador!)</pre></div><details class="dica"><summary>💡 O que é debug=True?</summary><div class="inner">O modo desenvolvedor: o servidor REINICIA sozinho a cada alteração salva no código (sem ele, você teria que parar e rodar de novo toda hora). E "localhost" / "127.0.0.1" significam "esta máquina" — seu site é só seu, por enquanto. 😉</div></details>
     </div>
   </article>
 
   <article class="ex" id="ex2">
     <div class="ex-head">
       <span class="ex-num">EX 02</span>
-      <h3>Vários objetos, um molde</h3>
+      <h3>Mais rotas, mais páginas</h3>
       <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex2"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Comprovar que cada objeto é independente.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Continue do exercício anterior e PREVEJA:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex02_objetos.py</span></div><pre class="code">rex = Cachorro("Rex")
-bidu = Cachorro("Bidu")
-
-print(rex.nome, "|", bidu.nome)
-
-bidu.nome = "Bidu Jr."
-print(rex.nome, "|", bidu.nome)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Rex | Bidu
-Rex | Bidu Jr.</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner">Mudar o Bidu não afeta o Rex: cada objeto tem suas PRÓPRIAS gavetas de atributos. O molde é compartilhado; os dados, não.</div></details>
-    </div>
-  </article>
-
-  <article class="ex" id="ex3">
-    <div class="ex-head">
-      <span class="ex-num">EX 03</span>
-      <h3>O mistério do self</h3>
-      <span class="stars">⭐⭐ médio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex3"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Entender o self provocando o erro clássico de quem esquece ele.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Execute este código <strong>com erro proposital</strong>:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex03_self.py</span></div><pre class="code">class Cachorro:
-    def latir():            # faltou o self!
-        print("Au au!")
-
-rex = Cachorro()
-rex.latir()</pre></div><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output" style="color:#FF9B94">TypeError: Cachorro.latir() takes 0 positional arguments but 1 was given</pre></div><span class="tag passos">🧭 Continue</span><ol><li>Leia o erro: "recebeu 1 argumento"... mas você não passou nenhum! Quem passou?</li><li>Corrija: <code>def latir(self):</code></li></ol><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><p>Quando você chama <code>rex.latir()</code>, o Python passa o PRÓPRIO rex como primeiro argumento, escondido. O <code>self</code> é o parâmetro que recebe ele — é como o método sabe EM QUAL objeto está trabalhando. Regra: <strong>todo método começa com self</strong>, e dentro dele os atributos são <code>self.alguma_coisa</code>.</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex03.py</span></div><pre class="code">class Cachorro:
-    def latir(self):
-        print("Au au!")
-
-rex = Cachorro()
-rex.latir()</pre></div></div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Cada rota é uma página do site.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Adicione uma rota /sobre ao site.py (o servidor reinicia sozinho!):</li><li>Visite localhost:5000/sobre — e repare nos links navegando entre as páginas</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex02_rotas.py</span></div><pre class="code">@app.route("/sobre")
+def sobre():
+    return """
+    &lt;h1&gt;Sobre a Tua Caneca&lt;/h1&gt;
+    &lt;p&gt;Canecas e azulejos personalizados com sublimação.&lt;/p&gt;
+    &lt;a href="/"&gt;← Voltar&lt;/a&gt;
+    """</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(duas páginas, um site!)</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner">O retorno é HTML puro — tudo que você sabe de HTML das suas aulas vale aqui. E a string com aspas triplas (Semana 1!) deixa o HTML multilinha legível.</div></details>
     </div>
   </article>
 </section>
 
 <section class="parte" id="p2">
-  <div class="parte-head"><span class="num">02</span><h2>__init__ e os atributos</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>O <code>__init__</code> (dois underlines de cada lado!) é o método de inicialização: roda automaticamente quando o objeto nasce. É nele que os atributos são criados — vindos de parâmetros ou com valores fixos de fábrica.</p></div>
-  <article class="ex" id="ex4">
+  <div class="parte-head"><span class="num">02</span><h2>Rotas dinâmicas: a URL vira variável</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>O pulo do gato: <code>@app.route("/ola/&lt;nome&gt;")</code> captura o pedaço da URL e entrega como PARÂMETRO da função. Uma rota, infinitas páginas.</p></div>
+  <article class="ex" id="ex3">
     <div class="ex-head">
-      <span class="ex-num">EX 04</span>
-      <h3>Ficha completa</h3>
-      <span class="stars">⭐⭐ médio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex4"> Concluído</label>
+      <span class="ex-num">EX 03</span>
+      <h3>Página personalizada</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex3"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Criar um __init__ com vários parâmetros e um atributo de fábrica.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie a classe com nome, raça e idade vindos de parâmetros</li><li>Adicione <code>self.energia = 100</code> — TODO cachorro nasce com 100, sem parâmetro</li><li>Crie um objeto e imprima os 4 atributos</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex04_init.py</span></div><pre class="code">class Cachorro:
-    def __init__(self, nome, raca, idade):
-        self.nome = nome
-        self.raca = raca
-        self.idade = idade
-        self.energia = 100    # valor de fábrica
-
-rex = Cachorro("Rex", "vira-lata", 3)
-print(rex.nome, "|", rex.raca, "|", rex.idade, "|", rex.energia)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Rex | vira-lata | 3 | 100</pre></div>
+<span class="tag obj">🎯 Objetivo</span><p>Capturar um valor da URL.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Adicione a rota e visite /ola/Ana, /ola/Robson, /ola/qualquer-coisa:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex03_dinamica.py</span></div><pre class="code">@app.route("/ola/&lt;nome&gt;")
+def ola(nome):
+    return f"&lt;h1&gt;Olá, {nome.title()}! 👋&lt;/h1&gt;"</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(/ola/robson → "Olá, Robson! 👋")</pre></div><details class="dica"><summary>💡 Olha a Semana 4 aí</summary><div class="inner">O <code>.title()</code> capitalizando o nome direto da URL — todo o seu arsenal de strings funciona, porque a variável da rota é... uma string comum!</div></details>
     </div>
   </article>
 
-  <article class="ex" id="ex5">
+  <article class="ex" id="ex4">
     <div class="ex-head">
-      <span class="ex-num">EX 05</span>
-      <h3>Atributos mudam</h3>
-      <span class="stars">⭐⭐ médio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex5"> Concluído</label>
+      <span class="ex-num">EX 04</span>
+      <h3>A tabuada vira página 🤯</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex4"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Alterar o estado de um objeto.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Faça o Rex fazer aniversário: <code>rex.idade = rex.idade + 1</code></li><li>Faça-o gastar energia: <code>rex.energia -= 30</code></li><li>Imprima antes e depois</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Antes: 3 anos, energia 100
-Depois: 4 anos, energia 70</pre></div><details class="dica"><summary>💡 Reflexão</summary><div class="inner">Funciona, mas mexer nos atributos "por fora" espalha a lógica pelo programa. O jeito ORGANIZADO de mudar um objeto é com métodos — próxima parte! 👇</div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Um loop da Semana 3 gerando HTML — e o conversor <code>&lt;int:n&gt;</code>.</p><span class="tag passos">🧭 Passo a passo</span><ol><li><code>&lt;int:n&gt;</code> já entrega o valor CONVERTIDO para inteiro</li><li>Monte o HTML num acumulador de string dentro do for (Semana 3 + 4!):</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex04_tabuada.py</span></div><pre class="code">@app.route("/tabuada/&lt;int:n&gt;")
+def tabuada(n):
+    linhas = ""
+    for i in range(1, 11):
+        linhas = linhas + f"&lt;li&gt;{n} x {i} = {n * i}&lt;/li&gt;"
+    return f"&lt;h1&gt;Tabuada do {n}&lt;/h1&gt;&lt;ul&gt;{linhas}&lt;/ul&gt;"</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(/tabuada/7 → a tabuada inteira em lista HTML!)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><p>Visite /tabuada/7, /tabuada/9... A função roda A CADA visita, gerando a página na hora — é por isso que se chama página <strong>dinâmica</strong>. E se você visitar /tabuada/banana? O <code>&lt;int:n&gt;</code> rejeita e devolve 404 — validação de graça!</p></div></details>
     </div>
   </article>
 </section>
 
 <section class="parte" id="p3">
-  <div class="parte-head"><span class="num">03</span><h2>Métodos: o que o objeto sabe fazer</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Atributos = o que o objeto TEM. Métodos = o que o objeto FAZ. Um método é uma função dentro da classe, sempre com <code>self</code> — e por isso enxerga os atributos do próprio objeto.</p></div>
+  <div class="parte-head"><span class="num">03</span><h2>Dados na página</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>O padrão central da web: <strong>dados + loop + HTML</strong>. Seu catalogo.json (Semana 11) está prestes a virar uma página de verdade.</p></div>
+  <article class="ex" id="ex5">
+    <div class="ex-head">
+      <span class="ex-num">EX 05</span>
+      <h3>O catálogo no navegador 🛍️</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex5"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Ler o JSON e montar a página de produtos.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Garanta um catalogo.json com 3 produtos (nome, preco, estoque)</li><li>Na rota /catalogo: carregue o JSON, monte um item HTML por produto no loop</li><li>Capriche: mostre "ESGOTADO" quando o estoque for 0 (Semana 2 na web!)</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(/catalogo → a lista de produtos com preços!)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex05.py</span></div><pre class="code">import json
+from flask import Flask
+
+app = Flask(__name__)
+
+@app.route("/catalogo")
+def catalogo():
+    with open("catalogo.json", "r", encoding="utf-8") as arquivo:
+        produtos = json.load(arquivo)
+
+    itens = ""
+    for p in produtos:
+        if p["estoque"] &gt; 0:
+            situacao = f"{p['estoque']} em estoque"
+        else:
+            situacao = "ESGOTADO"
+        itens = itens + f"&lt;li&gt;&lt;b&gt;{p['nome']}&lt;/b&gt; — R$ {p['preco']:.2f} ({situacao})&lt;/li&gt;"
+
+    return f"&lt;h1&gt;☕ Catálogo Tua Caneca&lt;/h1&gt;&lt;ul&gt;{itens}&lt;/ul&gt;"
+
+app.run(debug=True)</pre></div></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p4">
+  <div class="parte-head"><span class="num">04</span><h2>Sua própria API! 👨‍🍳</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>O momento de glória: depois de 4 semanas PEDINDO ao garçom (ViaCEP, AwesomeAPI)... agora o garçom é você. O <code>jsonify</code> transforma dicionários e listas em respostas JSON oficiais — e qualquer programa do mundo pode consumir o seu sistema.</p></div>
   <article class="ex" id="ex6">
     <div class="ex-head">
       <span class="ex-num">EX 06</span>
-      <h3>Latir e brincar</h3>
-      <span class="stars">⭐⭐ médio</span>
+      <h3>A API da Tua Caneca</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex6"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Criar métodos que usam e alteram atributos.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Adicione os métodos <code>latir</code> e <code>brincar(horas)</code> (cada hora gasta 10 de energia)</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex06_metodos.py</span></div><pre class="code">class Cachorro:
-    def __init__(self, nome):
-        self.nome = nome
-        self.energia = 100
+<span class="tag obj">🎯 Objetivo</span><p>Servir o catálogo como JSON.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Importe o jsonify: <code>from flask import Flask, jsonify</code></li><li>Crie a rota /api/produtos retornando <code>jsonify(produtos)</code></li><li>Visite no navegador: JSON puro, formatado, oficial!</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex06_api.py</span></div><pre class="code">from flask import Flask, jsonify
+import json
 
-    def latir(self):
-        print(f"{self.nome}: Au au!")
+app = Flask(__name__)
 
-    def brincar(self, horas):
-        self.energia = self.energia - horas * 10
-        print(f"{self.nome} brincou {horas}h! Energia: {self.energia}")
+@app.route("/api/produtos")
+def api_produtos():
+    with open("catalogo.json", "r", encoding="utf-8") as arquivo:
+        produtos = json.load(arquivo)
+    return jsonify(produtos)
 
-rex = Cachorro("Rex")
-rex.latir()
-rex.brincar(3)
-rex.brincar(2)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Rex: Au au!
-Rex brincou 3h! Energia: 70
-Rex brincou 2h! Energia: 50</pre></div><details class="dica"><summary>💡 Repare</summary><div class="inner">Você chama <code>rex.brincar(3)</code> com UM argumento, mas o método tem dois parâmetros (self, horas). O rex preenche o self sozinho!</div></details>
+app.run(debug=True)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(/api/produtos → seu catálogo em JSON, como uma API de verdade!)</pre></div><details class="dica"><summary>💡 Por que /api/ no nome?</summary><div class="inner">Convenção: rotas de páginas servem HTML para HUMANOS; rotas /api/ servem JSON para PROGRAMAS. O mesmo dado, dois públicos.</div></details>
     </div>
   </article>
 
   <article class="ex" id="ex7">
     <div class="ex-head">
       <span class="ex-num">EX 07</span>
-      <h3>Métodos que respondem</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
+      <h3>Consumindo a si mesmo 🔄</h3>
+      <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex7"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Métodos com return — incluindo o padrão True/False da Semana 6.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Adicione <code>esta_cansado(self)</code> que retorna <code>self.energia &lt; 30</code></li><li>Adicione <code>dormir(self)</code> que restaura a energia para 100</li><li>Use num if: se cansado → dormir</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Rex brincou 8h! Energia: 20
-Rex está cansado? True
-Rex dormiu! Energia: 100</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex07.py</span></div><pre class="code">class Cachorro:
-    def __init__(self, nome):
-        self.nome = nome
-        self.energia = 100
+<span class="tag obj">🎯 Objetivo</span><p>Fechar o ciclo: o requests da Semana 15 consultando a SUA API.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Com o servidor rodando num terminal, abra OUTRO terminal e rode:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex07_cliente.py</span></div><pre class="code">import requests
 
-    def brincar(self, horas):
-        self.energia = self.energia - horas * 10
-        print(f"{self.nome} brincou {horas}h! Energia: {self.energia}")
+resposta = requests.get("http://localhost:5000/api/produtos", timeout=5)
+produtos = resposta.json()
 
-    def esta_cansado(self):
-        return self.energia &lt; 30
-
-    def dormir(self):
-        self.energia = 100
-        print(f"{self.nome} dormiu! Energia: {self.energia}")
-
-rex = Cachorro("Rex")
-rex.brincar(8)
-print(f"Rex está cansado? {rex.esta_cansado()}")
-
-if rex.esta_cansado():
-    rex.dormir()</pre></div></div></details>
-    </div>
-  </article>
-
-  <article class="ex" id="ex8">
-    <div class="ex-head">
-      <span class="ex-num">EX 08</span>
-      <h3>Conta bancária 🏦</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex8"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>O exercício clássico de POO: estado protegido por métodos com regras.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Classe <code>ContaBancaria</code>: titular e saldo (padrão 0 — parâmetro padrão da Semana 6!)</li><li><code>depositar(valor)</code>: soma e confirma</li><li><code>sacar(valor)</code>: só permite se houver saldo (senão avisa)</li><li><code>extrato()</code>: mostra titular e saldo formatado</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Depósito de R$ 100.00 ✔
-Saque de R$ 30.00 ✔
-Saldo insuficiente!
-Ana: R$ 70.00</pre></div><details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Adicione <code>self.historico = []</code> e registre cada operação. O <code>extrato()</code> lista tudo!</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex08.py</span></div><pre class="code">class ContaBancaria:
-    def __init__(self, titular, saldo=0):
-        self.titular = titular
-        self.saldo = saldo
-
-    def depositar(self, valor):
-        self.saldo = self.saldo + valor
-        print(f"Depósito de R$ {valor:.2f} ✔")
-
-    def sacar(self, valor):
-        if valor &gt; self.saldo:
-            print("Saldo insuficiente!")
-        else:
-            self.saldo = self.saldo - valor
-            print(f"Saque de R$ {valor:.2f} ✔")
-
-    def extrato(self):
-        print(f"{self.titular}: R$ {self.saldo:.2f}")
-
-conta = ContaBancaria("Ana")
-conta.depositar(100)
-conta.sacar(30)
-conta.sacar(500)
-conta.extrato()</pre></div><p>Sente a elegância: NINGUÉM mexe no saldo diretamente — toda mudança passa pelos métodos, que aplicam as regras. Isso é <strong>encapsulamento</strong>, um dos pilares da POO.</p></div></details>
-    </div>
-  </article>
-</section>
-
-<section class="parte" id="p4">
-  <div class="parte-head"><span class="num">04</span><h2>__str__: o print bonito</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>O que acontece se você der <code>print(rex)</code>? Algo feio: <code>&lt;__main__.Cachorro object at 0x000001E...&gt;</code>. O método especial <code>__str__</code> resolve: ele define COMO o objeto vira texto.</p></div>
-  <article class="ex" id="ex9">
-    <div class="ex-head">
-      <span class="ex-num">EX 09</span>
-      <h3>De feio para bonito</h3>
-      <span class="stars">⭐⭐ médio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex9"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Implementar o __str__.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Primeiro dê <code>print(rex)</code> SEM __str__ e veja o endereço feio</li><li>Adicione o método e imprima de novo:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex09_str.py</span></div><pre class="code">class Cachorro:
-    def __init__(self, nome, idade):
-        self.nome = nome
-        self.idade = idade
-
-    def __str__(self):
-        return f"🐶 {self.nome} ({self.idade} anos)"
-
-rex = Cachorro("Rex", 3)
-print(rex)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">🐶 Rex (3 anos)</pre></div><details class="dica"><summary>💡 Regra do __str__</summary><div class="inner">Ele deve RETORNAR uma string (não usar print dentro!). Sempre que o objeto precisar virar texto — print, f-string — o Python chama seu __str__ automaticamente.</div></details>
+for p in produtos:
+    print(f"{p['nome']} — R$ {p['preco']:.2f}")</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">caneca branca — R$ 25.00
+caneca preta — R$ 27.50
+azulejo — R$ 40.00</pre></div><details class="dica"><summary>💡 Sinta o momento</summary><div class="inner">Cliente (requests) e servidor (Flask), os dois escritos por você, conversando em JSON. Esse diálogo é a ESPINHA DORSAL da internet moderna — e agora você domina os dois lados. 🏆</div></details>
     </div>
   </article>
 </section>
 
 <section class="parte" id="p5">
-  <div class="parte-head"><span class="num">05</span><h2>Listas de objetos</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>O combo final: objetos dentro de listas. Tudo que você sabe de listas (Semana 4) funciona — só que agora cada item é um objeto completo, com atributos e métodos.</p></div>
-  <article class="ex" id="ex10">
+  <div class="parte-head"><span class="num">05</span><h2>Páginas com estilo</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>HTML pelado funciona, mas dói nos olhos. Um bloco de CSS dentro de <code>&lt;style&gt;</code> já transforma tudo — e um detalhe técnico importante: <strong>em f-strings, as chaves do CSS precisam ser DUPLAS</strong> (<code>{{</code> e <code>}}</code>), senão o Python acha que são variáveis!</p></div>
+  <article class="ex" id="ex8">
     <div class="ex-head">
-      <span class="ex-num">EX 10</span>
-      <h3>O canil 🏠</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex10"> Concluído</label>
+      <span class="ex-num">EX 08</span>
+      <h3>A repaginada ✨</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex8"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Percorrer uma lista de objetos chamando métodos.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie 3 cachorros numa lista</li><li>Percorra com for: imprima cada um (graças ao __str__!) e mande latir</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">🐶 Rex (3 anos)
-Rex: Au au!
-🐶 Bidu (5 anos)
-Bidu: Au au!
-🐶 Mel (1 anos)
-Mel: Au au!</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex10.py</span></div><pre class="code">class Cachorro:
-    def __init__(self, nome, idade):
-        self.nome = nome
-        self.idade = idade
+<span class="tag obj">🎯 Objetivo</span><p>Montar uma "base" de página com CSS reutilizável.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie uma função <code>pagina(titulo, conteudo)</code> que devolve o HTML completo com estilo</li><li>Todas as rotas passam a usá-la — DRY na web (Semana 6!)</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(o site de cara nova, com fundo claro e cartões)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex08.py</span></div><pre class="code">def pagina(titulo, conteudo):
+    return f"""
+    &lt;html&gt;&lt;head&gt;&lt;title&gt;{titulo}&lt;/title&gt;
+    &lt;style&gt;
+      body {{ font-family: Arial; background: #F5F8FC; margin: 40px; }}
+      h1 {{ color: #3776AB; }}
+      .cartao {{ background: white; padding: 20px; border-radius: 12px;
+                 box-shadow: 0 2px 8px #0002; max-width: 600px; }}
+    &lt;/style&gt;&lt;/head&gt;
+    &lt;body&gt;&lt;div class="cartao"&gt;&lt;h1&gt;{titulo}&lt;/h1&gt;{conteudo}&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;
+    """
 
-    def latir(self):
-        print(f"{self.nome}: Au au!")
-
-    def __str__(self):
-        return f"🐶 {self.nome} ({self.idade} anos)"
-
-canil = [Cachorro("Rex", 3), Cachorro("Bidu", 5), Cachorro("Mel", 1)]
-
-for cachorro in canil:
-    print(cachorro)
-    cachorro.latir()</pre></div></div></details>
-    </div>
-  </article>
-
-  <article class="ex" id="ex11">
-    <div class="ex-head">
-      <span class="ex-num">EX 11</span>
-      <h3>Busca no canil</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex11"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Encontrar um objeto pelo atributo (o padrão de busca da Semana 5, agora com objetos).</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Peça um nome</li><li>Percorra o canil comparando <code>cachorro.nome == busca</code></li><li>Use a flag <code>encontrado</code> para o caso de não achar</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Buscar: Bidu
-Encontrado: 🐶 Bidu (5 anos)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex11.py</span></div><pre class="code">busca = input("Buscar: ")
-encontrado = False
-
-for cachorro in canil:
-    if cachorro.nome == busca:
-        print(f"Encontrado: {cachorro}")
-        encontrado = True
-
-if not encontrado:
-    print("Não está no canil!")</pre></div><p>Compare com a Semana 5: lá era <code>aluno['nome']</code> (dicionário), aqui é <code>cachorro.nome</code> (objeto). Mesmo padrão, sintaxe mais limpa — e o objeto ainda traz os métodos junto!</p></div></details>
+@app.route("/")
+def inicio():
+    return pagina("Tua Caneca", "&lt;p&gt;Bem-vindo à loja! &lt;a href='/catalogo'&gt;Ver catálogo →&lt;/a&gt;&lt;/p&gt;")</pre></div><p>Repare nas chaves duplas <code>{{ }}</code> no CSS e simples <code>{ }</code> nas variáveis — a f-string precisa saber quem é quem!</p></div></details>
     </div>
   </article>
 </section>
@@ -551,125 +446,75 @@ if not encontrado:
 <section class="parte" id="p6">
   <div class="parte-head"><span class="num">06</span><h2>Projetos da semana: juntando tudo!</h2></div>
 
-  <article class="ex" id="ex12">
+  <article class="ex" id="ex9">
     <div class="ex-head">
-      <span class="ex-num">EX 12</span>
-      <h3>Projeto: classe Produto ☕</h3>
+      <span class="ex-num">EX 09</span>
+      <h3>Projeto: O site da Tua Caneca ☕🌐</h3>
       <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex12"> Concluído</label>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex9"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>O Produto da Tua Caneca vira uma classe de verdade — peça-chave do projeto final!</p><span class="tag passos">🧭 Requisitos</span><ol><li>Atributos: nome, preco, estoque</li><li><code>vender(qtd)</code>: valida o estoque; se ok, dá baixa e retorna True; senão avisa e retorna False</li><li><code>repor(qtd)</code>: aumenta o estoque</li><li><code>__str__</code>: "caneca branca — R$ 25.00 (10 un.)"</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">caneca branca — R$ 25.00 (10 un.)
-Vendido: 3x caneca branca
-caneca branca — R$ 25.00 (7 un.)
-Estoque insuficiente!</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex12.py</span></div><pre class="code">class Produto:
-    def __init__(self, nome, preco, estoque):
-        self.nome = nome
-        self.preco = preco
-        self.estoque = estoque
+<span class="tag obj">🎯 Objetivo</span><p>Site completo: home, catálogo em tabela e API.</p><span class="tag passos">🧭 Requisitos</span><ol><li>Home (/): boas-vindas + navegação</li><li>/catalogo: TABELA HTML dos produtos (<code>&lt;table&gt;</code> com cabeçalho), dados do catalogo.json</li><li>/api/produtos: o JSON para os programas</li><li>Tudo com a função pagina() do exercício anterior</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(três rotas, um site de verdade!)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex09.py</span></div><pre class="code">import json
+from flask import Flask, jsonify
 
-    def vender(self, qtd):
-        if qtd &lt;= 0 or qtd &gt; self.estoque:
-            print("Estoque insuficiente!")
-            return False
-        self.estoque = self.estoque - qtd
-        print(f"Vendido: {qtd}x {self.nome}")
-        return True
+app = Flask(__name__)
 
-    def repor(self, qtd):
-        self.estoque = self.estoque + qtd
-        print(f"Reposição: +{qtd} {self.nome}")
+def carregar():
+    with open("catalogo.json", "r", encoding="utf-8") as arquivo:
+        return json.load(arquivo)
 
-    def __str__(self):
-        return f"{self.nome} — R$ {self.preco:.2f} ({self.estoque} un.)"
+def pagina(titulo, conteudo):
+    return f"""
+    &lt;html&gt;&lt;head&gt;&lt;title&gt;{titulo}&lt;/title&gt;
+    &lt;style&gt;
+      body {{ font-family: Arial; background: #F5F8FC; margin: 40px; }}
+      h1 {{ color: #3776AB; }}
+      table {{ border-collapse: collapse; background: white; }}
+      td, th {{ border: 1px solid #ccc; padding: 8px 14px; }}
+    &lt;/style&gt;&lt;/head&gt;
+    &lt;body&gt;&lt;h1&gt;{titulo}&lt;/h1&gt;{conteudo}&lt;/body&gt;&lt;/html&gt;
+    """
 
-caneca = Produto("caneca branca", 25.0, 10)
-print(caneca)
-caneca.vender(3)
-print(caneca)
-caneca.vender(50)</pre></div></div></details>
+@app.route("/")
+def inicio():
+    return pagina("☕ Tua Caneca",
+                  "&lt;p&gt;Personalizados com sublimação.&lt;/p&gt;"
+                  "&lt;a href='/catalogo'&gt;Catálogo&lt;/a&gt; · &lt;a href='/api/produtos'&gt;API&lt;/a&gt;")
+
+@app.route("/catalogo")
+def catalogo():
+    linhas = ""
+    for p in carregar():
+        linhas = linhas + (f"&lt;tr&gt;&lt;td&gt;{p['nome']}&lt;/td&gt;"
+                           f"&lt;td&gt;R$ {p['preco']:.2f}&lt;/td&gt;"
+                           f"&lt;td&gt;{p['estoque']}&lt;/td&gt;&lt;/tr&gt;")
+    tabela = ("&lt;table&gt;&lt;tr&gt;&lt;th&gt;Produto&lt;/th&gt;&lt;th&gt;Preço&lt;/th&gt;&lt;th&gt;Estoque&lt;/th&gt;&lt;/tr&gt;"
+              + linhas + "&lt;/table&gt;")
+    return pagina("Catálogo", tabela)
+
+@app.route("/api/produtos")
+def api_produtos():
+    return jsonify(carregar())
+
+app.run(debug=True)</pre></div></div></details>
     </div>
   </article>
 
-  <article class="ex" id="ex13">
+  <article class="ex" id="ex10">
     <div class="ex-head">
-      <span class="ex-num">EX 13</span>
-      <h3>Projeto: classe Aluno 🎓</h3>
+      <span class="ex-num">EX 10</span>
+      <h3>Projeto bônus: O gráfico na página 📊</h3>
       <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex13"> Concluído</label>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex10"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Um Aluno que guarda as próprias notas e sabe se avaliar.</p><span class="tag passos">🧭 Requisitos</span><ol><li>Atributos: nome e <code>self.notas = []</code> (nasce vazia!)</li><li><code>adicionar_nota(nota)</code>: append na lista interna</li><li><code>media()</code>: retorna a média (cuidado com lista vazia → retorne 0)</li><li><code>situacao()</code>: "Aprovado" se média ≥ 7, senão "Recuperação"</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Ana: média 8.0 — Aprovado
-Bruno: média 5.5 — Recuperação</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex13.py</span></div><pre class="code">class Aluno:
-    def __init__(self, nome):
-        self.nome = nome
-        self.notas = []
-
-    def adicionar_nota(self, nota):
-        self.notas.append(nota)
-
-    def media(self):
-        if len(self.notas) == 0:
-            return 0
-        return sum(self.notas) / len(self.notas)
-
-    def situacao(self):
-        if self.media() &gt;= 7:
-            return "Aprovado"
-        return "Recuperação"
-
-ana = Aluno("Ana")
-ana.adicionar_nota(8)
-ana.adicionar_nota(8)
-
-bruno = Aluno("Bruno")
-bruno.adicionar_nota(6)
-bruno.adicionar_nota(5)
-
-for aluno in [ana, bruno]:
-    print(f"{aluno.nome}: média {aluno.media():.1f} — {aluno.situacao()}")</pre></div><p>Repare: <code>situacao()</code> chama <code>self.media()</code> — métodos podem usar outros métodos do próprio objeto!</p></div></details>
-    </div>
-  </article>
-
-  <article class="ex" id="ex14">
-    <div class="ex-head">
-      <span class="ex-num">EX 14</span>
-      <h3>Projeto bônus: A batalha ⚔️</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex14"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Um mini-RPG: dois objetos da mesma classe duelando (sem código pronto!).</p><span class="tag passos">🧭 Roteiro</span><ol><li>Classe <code>Personagem</code>: nome, vida (padrão 100), força (padrão 15)</li><li><code>atacar(alvo)</code>: dano aleatório de 5 até a força, descontado da vida DO ALVO (um objeto mexendo em outro!)</li><li><code>esta_vivo()</code>: retorna <code>self.vida &gt; 0</code></li><li>Loop de batalha: herói e dragão se atacam alternadamente até alguém cair</li></ol><span class="tag saida">✅ Exemplo (varia!)</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Herói causou 12 em Dragão (vida: 108)
-Dragão causou 18 em Herói (vida: 82)
-(...)
-🏆 O herói venceu!</pre></div><details class="dica"><summary>💡 O pulo do gato</summary><div class="inner">No <code>atacar(self, alvo)</code>, o <code>self</code> é quem bate e o <code>alvo</code> é outro OBJETO que apanha: <code>alvo.vida -= dano</code>. Objetos interagindo entre si — é assim que sistemas grandes funcionam!</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex14.py</span></div><pre class="code">import random
-
-class Personagem:
-    def __init__(self, nome, vida=100, forca=15):
-        self.nome = nome
-        self.vida = vida
-        self.forca = forca
-
-    def atacar(self, alvo):
-        dano = random.randint(5, self.forca)
-        alvo.vida = alvo.vida - dano
-        print(f"{self.nome} causou {dano} em {alvo.nome} (vida: {alvo.vida})")
-
-    def esta_vivo(self):
-        return self.vida &gt; 0
-
-heroi = Personagem("Herói")
-dragao = Personagem("Dragão", vida=120, forca=20)
-
-while heroi.esta_vivo() and dragao.esta_vivo():
-    heroi.atacar(dragao)
-    if dragao.esta_vivo():
-        dragao.atacar(heroi)
-
-if heroi.esta_vivo():
-    print("🏆 O herói venceu!")
-else:
-    print("💀 O dragão venceu!")</pre></div></div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Servir o PNG da Semana 18 dentro do site (sem código pronto!).</p><span class="tag passos">🧭 Roteiro</span><ol><li>Crie a pasta <code>static</code> ao lado do site.py — o Flask serve tudo dela automaticamente!</li><li>Copie (ou gere por código) o por_produto.png da Semana 18 para dentro dela</li><li>Na rota /relatorio: <code>&lt;img src="/static/por_produto.png" width="500"&gt;</code></li><li>Reflita: matplotlib gera, Flask serve, navegador exibe — o seu dashboard está nascendo...</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(/relatorio → o gráfico dentro da página!)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex10.py</span></div><pre class="code">@app.route("/relatorio")
+def relatorio():
+    conteudo = """
+    &lt;p&gt;Faturamento por produto:&lt;/p&gt;
+    &lt;img src="/static/por_produto.png" width="500"&gt;
+    """
+    return pagina("📊 Relatório", conteudo)</pre></div><p>A pasta <code>static</code> é mágica por convenção: qualquer arquivo nela fica acessível em /static/nome. É o ensaio geral para o projeto final!</p></div></details>
     </div>
   </article>
 </section>
@@ -677,29 +522,29 @@ else:
 <div class="checklist" id="checklist">
   <h2>✅ Checklist de fim de semana</h2>
   <p>Antes de seguir para a próxima semana, confirme que você consegue:</p>
-<label class="check-item"><input type="checkbox"><span>Explicar a diferença entre classe (molde) e objeto (produto do molde)</span></label>
-<label class="check-item"><input type="checkbox"><span>Criar uma classe com class e um objeto chamando Classe(...)</span></label>
-<label class="check-item"><input type="checkbox"><span>Escrever um __init__ que recebe parâmetros e cria atributos</span></label>
-<label class="check-item"><input type="checkbox"><span>Explicar o que é o self (e por que todo método precisa dele)</span></label>
-<label class="check-item"><input type="checkbox"><span>Criar atributos com valor inicial fixo (ex.: energia = 100)</span></label>
-<label class="check-item"><input type="checkbox"><span>Escrever métodos que alteram os atributos do próprio objeto</span></label>
-<label class="check-item"><input type="checkbox"><span>Escrever métodos que retornam valores (inclusive True/False)</span></label>
-<label class="check-item"><input type="checkbox"><span>Implementar __str__ para o print(objeto) ficar bonito</span></label>
-<label class="check-item"><input type="checkbox"><span>Guardar vários objetos numa lista e percorrê-los</span></label>
-<label class="check-item"><input type="checkbox"><span>Buscar um objeto na lista por um atributo</span></label>
+<label class="check-item"><input type="checkbox"><span>Criar um app Flask e rodar o servidor local</span></label>
+<label class="check-item"><input type="checkbox"><span>Acessar o site no navegador via localhost:5000</span></label>
+<label class="check-item"><input type="checkbox"><span>Criar várias rotas com @app.route</span></label>
+<label class="check-item"><input type="checkbox"><span>Retornar HTML gerado por f-strings</span></label>
+<label class="check-item"><input type="checkbox"><span>Criar rotas dinâmicas com variáveis na URL (&lt;nome&gt;, &lt;int:n&gt;)</span></label>
+<label class="check-item"><input type="checkbox"><span>Montar páginas a partir de dados (JSON, listas, loops)</span></label>
+<label class="check-item"><input type="checkbox"><span>Criar uma API própria com jsonify</span></label>
+<label class="check-item"><input type="checkbox"><span>Consumir a própria API com requests (o ciclo completo!)</span></label>
+<label class="check-item"><input type="checkbox"><span>Servir imagens da pasta static</span></label>
+<label class="check-item"><input type="checkbox"><span>Explicar o caminho navegador → rota → função → resposta</span></label>
 </div>
 
 <div class="win-banner" id="winBanner">
-  <h2>🏆 SEMANA 10 COMPLETA!</h2>
-  <p>Você concluiu todos os exercícios. Bem-vindo ao clube da POO — o jeito como o software profissional se organiza!</p>
+  <h2>🏆 SEMANA 19 COMPLETA!</h2>
+  <p>Você concluiu todos os exercícios. Tem um servidor web rodando na sua máquina — e foi você que escreveu!</p>
 </div>
 
 <div class="preview-s2">
-<h2>📅 Prévia da Semana 11</h2><p>Na próxima semana, POO parte 2: <strong>herança</strong> (classes que herdam de classes — escreva uma vez, especialize depois), <strong>composição</strong> (objetos dentro de objetos) e <strong>JSON</strong> — o formato universal para salvar seus objetos em arquivo e conversar com o mundo.</p></div>
+<h2>📅 Prévia da Semana 20</h2><p>A GRANDE final: o <strong>PROJETO FINAL 4 — Dashboard Web Tua Caneca</strong>. pandas analisa, matplotlib desenha, Flask serve: um painel de verdade, no navegador, com números, gráficos e API própria. A última obra da jornada! 🏆📊🌐</p></div>
 
 </main>
 
-<footer>python_para_iniciantes // semana_10 // exercícios guiados</footer>
+<footer>python_para_iniciantes // semana_19 // exercícios guiados</footer>
 
 <script>
 // ===== Syntax highlight leve para Python =====
@@ -711,7 +556,7 @@ else:
     src = src.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     // uma passada só, com alternação (comentário | string | builtin | bool | número)
     src = src.replace(
-      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|insert|int|float|str|len|range|type|abs|round|max|min|sum|sorted|sort|reverse|append|remove|split|strip|upper|lower|replace|title|randint|random|get|keys|values|items|open|readlines|read|write|close|count|index|pop|update|list|dict|tuple|enumerate|sqrt|floor|ceil|choice|shuffle|sample|sleep|now|today|strftime|dumps|dump|loads|load|isinstance|datetime|date)\b|\b(True|False|None|if|elif|else|while|for|in|and|or|not|break|continue|import|from|def|return|try|except|finally|with|as|del|global|pass|class|self|super|lambda)\b|(\b\d+(?:\.\d+)?\b)/g,
+      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|insert|int|float|str|len|range|type|abs|round|max|min|sum|sorted|sort|reverse|append|remove|split|strip|upper|lower|replace|title|randint|random|get|keys|values|items|open|readlines|read|write|close|count|index|pop|update|list|dict|tuple|enumerate|sqrt|floor|ceil|choice|shuffle|sample|sleep|now|today|strftime|dumps|dump|loads|load|isinstance|datetime|date|DictReader|DictWriter|writerows|writerow|writeheader|writer|reader|csv|Workbook|load_workbook|save|iter_rows|Font|listdir|makedirs|getcwd|rename|exists|getsize|splitext|join|endswith|startswith|copytree|copy|move|requests|status_code|json|DataFrame|read_csv|read_excel|to_excel|to_csv|head|describe|groupby|sort_values|value_counts|mean|idxmax|bar|barh|pie|plot|savefig|show|title|xlabel|ylabel|figure|legend|axhline|tight_layout|close|Flask|route|run|render_template|jsonify|redirect|request)\b|\b(True|False|None|if|elif|else|while|for|in|and|or|not|break|continue|import|from|def|return|try|except|finally|with|as|del|global|pass|class|self|super|lambda)\b|(\b\d+(?:\.\d+)?\b)/g,
       function(m, com, str, fn, bool, num){
         if(com)  return '<span class="tk-com">'+com+'</span>';
         if(str)  return '<span class="tk-str">'+str+'</span>';
@@ -730,7 +575,7 @@ else:
 // no navegador. Se o localStorage estiver indisponível (modo restrito,
 // pré-visualização, etc.), o progresso funciona só em memória, sem quebrar.
 const storage = (function(){
-  const KEY = 'python_semana10_progresso';
+  const KEY = 'python_semana19_progresso';
   let memoria = {};
   let disponivel = false;
   try{
@@ -777,10 +622,10 @@ const storage = (function(){
   const MSGS = [
     [0,  'Marque os exercícios concluídos ✔'],
     [1,  'Boa! Continue assim 💪'],
-    [4,  'Pegando o ritmo! 🔥'],
-    [7, 'Metade do caminho! 🚀'],
-    [10, 'Quase lá... força! ⚡'],
-    [14, 'SEMANA COMPLETA! 🏆']
+    [3,  'Pegando o ritmo! 🔥'],
+    [5, 'Metade do caminho! 🚀'],
+    [8, 'Quase lá... força! ⚡'],
+    [10, 'SEMANA COMPLETA! 🏆']
   ];
 
   function estadoAtual(){

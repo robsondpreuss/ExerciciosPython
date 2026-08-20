@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Semana 34 — Produção e Deploy</title>
+<title>Semana 15 — APIs e Internet</title>
 <style>
   :root{
     --ink:#16243A;
@@ -57,7 +57,7 @@
     color:#fff;padding:56px 20px 48px;text-align:center;position:relative;overflow:hidden;
   }
   header.hero::before{
-    content:"requirements.txt  venv  .env  debug=False  Docker";
+    content:"import requests  get(  status_code  .json()  API";
     position:absolute;inset:auto 0 8px 0;font-family:var(--mono);font-size:.78rem;
     color:rgba(255,255,255,.14);letter-spacing:.4em;white-space:nowrap;overflow:hidden;
   }
@@ -241,192 +241,248 @@
 
 <header class="hero">
   <div class="kicker">Python para Iniciantes · Exercícios Guiados</div>
-  <h1>SEMANA 34 — Produção:<br>preparando o sistema para o mundo<span class="cursor" aria-hidden="true"></span></h1>
-  <p class="sub">A última milha: requirements.txt e venv para o projeto rodar em qualquer máquina, .env para as configurações, debug desligado (você vai ver o perigo!), o papel do WSGI e do Docker — e o caminho para colocar tudo no ar.</p>
+  <h1>SEMANA 15 — APIs:<br>seu Python conectado ao mundo<span class="cursor" aria-hidden="true"></span></h1>
+  <p class="sub">A biblioteca requests e o universo das APIs: consultar CEP no ViaCEP, cotação do dólar ao vivo, salvar respostas em cache e construir sistemas que conversam com a internet.</p>
   <div class="howto">
     <strong>Como usar:</strong> digite o código você mesmo (não copie e cole!), compare com a saída esperada e marque <strong>✔ Concluído</strong> em cada exercício para encher sua barra de XP. As <strong>dicas</strong> e <strong>soluções</strong> ficam escondidas — só abra depois de tentar! Seu progresso fica salvo no navegador.
   </div>
 </header>
 
-<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · Dependências</a><a href="#p2">2 · venv</a><a href="#p3">3 · .env</a><a href="#p4">4 · Debug & WSGI</a><a href="#p5">5 · Docker & deploy</a><a href="#p6">6 · Projetos</a><a href="#checklist">✅ Checklist</a></nav>
+<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · O que é API</a><a href="#p2">2 · Consultas dinâmicas</a><a href="#p3">3 · Cotações</a><a href="#p4">4 · API + seu arsenal</a><a href="#p5">5 · Boas práticas</a><a href="#p6">6 · Projetos</a><a href="#checklist">✅ Checklist</a></nav>
 
 <main>
 
 <section class="parte" id="p1">
-  <div class="parte-head"><span class="num">01</span><h2>requirements.txt: a lista de ingredientes</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Seu projeto usa Flask, PyMySQL, PyJWT, flask-cors, pytest... Se alguém clonar seu repositório (Semana 33), como saberá o que instalar? O <code>requirements.txt</code> é a lista de ingredientes: o <code>pip</code> a gera e a consome automaticamente.</p></div>
+  <div class="parte-head"><span class="num">01</span><h2>O que é uma API?</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Uma <strong>API</strong> é o "garçom" de um sistema: você faz um pedido (requisição), ele leva para a cozinha (o servidor) e volta com o prato (a resposta — quase sempre em JSON, que você JÁ domina!). A biblioteca para fazer pedidos é a <code>requests</code>: instale com <code>pip install requests</code>.</p><p>Nosso primeiro garçom será o <strong>ViaCEP</strong> — uma API pública brasileira e gratuita que responde endereços a partir do CEP.</p></div>
   <article class="ex" id="ex1">
     <div class="ex-head">
       <span class="ex-num">EX 01</span>
-      <h3>Congelando as dependências 🧊</h3>
+      <h3>Primeiro GET 🌐</h3>
       <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex1"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Gerar o requirements.txt do seu projeto.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Na pasta do projeto: <code>pip freeze &gt; requirements.txt</code></li><li>Abra o arquivo: cada linha é <code>pacote==versão</code></li><li>Commite-o (Semana 33) — ele faz parte do projeto!</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">requirements.txt</span></div><pre class="output">Flask==3.0.3
-flask-cors==4.0.1
-PyJWT==2.9.0
-PyMySQL==1.1.1
-pytest==8.3.3</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(o arquivo gerado, com as versões exatas do seu ambiente)</pre></div><details class="dica"><summary>💡 Por que a versão exata?</summary><div class="inner">O <code>==</code> congela a versão TESTADA. Sem isso, quem instalar amanhã pode receber uma versão nova com mudanças que quebram seu código ("funciona na minha máquina" nasce aí). Versões pinadas = comportamento reproduzível em qualquer lugar.</div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Fazer sua primeira requisição e inspecionar a resposta.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Com o requests instalado e internet ligada, execute:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex01_get.py</span></div><pre class="code">import requests
+
+resposta = requests.get("https://viacep.com.br/ws/90010-000/json/")
+
+print(resposta.status_code)
+print(resposta.json())</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">200
+{'cep': '90010-000', 'logradouro': 'Rua dos Andradas', 'bairro': 'Centro Histórico', 'localidade': 'Porto Alegre', 'uf': 'RS', ...}</pre></div><details class="dica"><summary>💡 Decifrando</summary><div class="inner"><code>status_code</code> 200 = "deu certo" (o famoso 404 = "não existe"). E <code>.json()</code> converte a resposta direto para... um dicionário Python! Toda a Semana 5 acabou de virar superpoder de internet.</div></details>
     </div>
   </article>
 
   <article class="ex" id="ex2">
     <div class="ex-head">
       <span class="ex-num">EX 02</span>
-      <h3>Instalando do zero com -r</h3>
+      <h3>Explorando a resposta</h3>
       <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex2"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Viver a experiência de quem clona o seu projeto.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>O comando do outro lado: <code>pip install -r requirements.txt</code></li><li>O pip lê a lista e instala tudo, nas versões exatas</li><li>Junte as peças: <code>git clone</code> + <code>pip install -r</code> = projeto rodando em qualquer máquina em 2 comandos</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">$ pip install -r requirements.txt
-Collecting Flask==3.0.3 ...
-Successfully installed Flask-3.0.3 PyJWT-2.9.0 PyMySQL-1.1.1 ...</pre></div><details class="dica"><summary>💡 O README agradece</summary><div class="inner">Lembra do "como rodar" do README (Semana 33)? Agora ele fica limpo: clone, instale com -r, configure o .env (Parte 3), rode. Quatro linhas que funcionam para QUALQUER pessoa — inclusive o recrutador testando seu projeto.</div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Navegar no dicionário que a API devolveu.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Guarde <code>dados = resposta.json()</code></li><li>Imprima campos específicos: logradouro, bairro, localidade e uf</li><li>Formate como um endereço de verdade</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Rua dos Andradas, Centro Histórico
+Porto Alegre - RS</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex02.py</span></div><pre class="code">import requests
+
+resposta = requests.get("https://viacep.com.br/ws/90010-000/json/")
+dados = resposta.json()
+
+print(f"{dados['logradouro']}, {dados['bairro']}")
+print(f"{dados['localidade']} - {dados['uf']}")</pre></div></div></details>
     </div>
   </article>
 </section>
 
 <section class="parte" id="p2">
-  <div class="parte-head"><span class="num">02</span><h2>venv: uma caixa de ferramentas por projeto</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Problema clássico: o projeto A precisa do Flask 2, o projeto B do Flask 3 — e o pip instala tudo no mesmo lugar! O <strong>ambiente virtual</strong> (<code>venv</code>) resolve: cada projeto ganha sua própria "caixa" de pacotes, isolada das outras.</p></div>
+  <div class="parte-head"><span class="num">02</span><h2>Consultas dinâmicas</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>API de verdade se usa com dados do usuário: o CEP digitado entra na URL via f-string. E como a internet é traiçoeira (sem conexão, CEP inexistente...), as defesas das Semanas 2 e 7 entram em campo.</p></div>
   <article class="ex" id="ex3">
     <div class="ex-head">
       <span class="ex-num">EX 03</span>
-      <h3>Criando e ativando o venv 📦</h3>
-      <span class="stars">⭐⭐ médio</span>
+      <h3>Buscador de CEP 🔎</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex3"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Isolar as dependências do projeto num ambiente próprio.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Na pasta do projeto: <code>python -m venv venv</code> (cria a pasta venv/)</li><li>Ative: Windows <code>venv\Scripts\activate</code> · Linux/Mac <code>source venv/bin/activate</code></li><li>O prompt ganha o prefixo <code>(venv)</code> — os pip install agora vão para a caixa do projeto</li><li>E lembre: <code>venv/</code> já está no seu .gitignore (Semana 33)!</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">$ python -m venv venv
-$ source venv/bin/activate      # (ou venv\Scripts\activate no Windows)
-(venv) $ pip install -r requirements.txt
-(venv) $ python api.py</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(o projeto rodando com SUA caixa de pacotes, isolada do resto)</pre></div><details class="dica"><summary>💡 O ritual profissional</summary><div class="inner">A sequência clone → venv → activate → install -r → rodar é o "bom dia" de todo dev ao pegar um projeto novo. O venv não sobe para o Git (é pesado e recriável); o requirements.txt é a receita para reconstruí-lo em segundos. Caixa descartável, receita eterna.</div></details>
+<span class="tag obj">🎯 Objetivo</span><p>O consultor completo: input + URL dinâmica + validações.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Peça o CEP (só números, 8 dígitos)</li><li>Monte a URL: <code>f"https://viacep.com.br/ws/{cep}/json/"</code></li><li>Defesa 1: <code>status_code != 200</code> → CEP em formato inválido</li><li>Defesa 2: o ViaCEP devolve <code>{"erro": true}</code> para CEP inexistente — teste <code>if "erro" in dados</code></li><li>Defesa 3: try/except em volta de tudo (sem internet não pode derrubar o programa!)</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Digite o CEP (só números): 90010000
+Rua dos Andradas, Centro Histórico
+Porto Alegre - RS</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex03.py</span></div><pre class="code">import requests
+
+cep = input("Digite o CEP (só números): ")
+
+try:
+    resposta = requests.get(f"https://viacep.com.br/ws/{cep}/json/", timeout=5)
+
+    if resposta.status_code != 200:
+        print("CEP em formato inválido!")
+    else:
+        dados = resposta.json()
+        if "erro" in dados:
+            print("CEP não encontrado!")
+        else:
+            print(f"{dados['logradouro']}, {dados['bairro']}")
+            print(f"{dados['localidade']} - {dados['uf']}")
+except Exception:
+    print("Falha de conexão — verifique sua internet.")</pre></div><p>Três camadas de defesa = programa profissional. O <code>timeout=5</code> impede o programa de congelar para sempre se a API não responder.</p></div></details>
     </div>
   </article>
 </section>
 
 <section class="parte" id="p3">
-  <div class="parte-head"><span class="num">03</span><h2>.env: a configuração fora do código</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Suas credenciais já vivem em variáveis de ambiente (Semanas 24, 26, 28) — mas configurá-las na mão toda vez cansa. O arquivo <code>.env</code> + a biblioteca <code>python-dotenv</code> automatizam: as variáveis ficam num arquivo local (FORA do Git!) e são carregadas no início do programa.</p></div>
+  <div class="parte-head"><span class="num">03</span><h2>Cotações ao vivo 💵</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Segundo garçom: a <strong>AwesomeAPI</strong>, que responde cotações de moedas em tempo real. A URL <code>https://economia.awesomeapi.com.br/json/last/USD-BRL</code> devolve o dólar; troque por EUR-BRL ou BTC-BRL para euro e bitcoin.</p></div>
   <article class="ex" id="ex4">
     <div class="ex-head">
       <span class="ex-num">EX 04</span>
-      <h3>python-dotenv: carregando o .env 🔑</h3>
+      <h3>Quanto está o dólar?</h3>
       <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex4"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Centralizar a configuração do projeto num arquivo.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Instale: <code>pip install python-dotenv</code> (e atualize o requirements.txt!)</li><li>Crie o <code>.env</code> com as variáveis do sistema</li><li>No topo do código: <code>load_dotenv()</code> — e o <code>os.environ.get</code> passa a enxergá-las</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">.env</span></div><pre class="code">DB_HOST=localhost
-DB_USER=root
-DB_PASS=minha-senha-secreta
-JWT_SECRET=um-segredo-bem-grande-e-aleatorio</pre></div><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">db.py</span></div><pre class="code">import os
-import pymysql
-from dotenv import load_dotenv
+<span class="tag obj">🎯 Objetivo</span><p>Consultar a cotação em tempo real.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Execute e explore a resposta — o valor de compra está no campo <code>"bid"</code>:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex04_dolar.py</span></div><pre class="code">import requests
 
-load_dotenv()   # le o arquivo .env desta pasta
+url = "https://economia.awesomeapi.com.br/json/last/USD-BRL"
+resposta = requests.get(url, timeout=5)
+dados = resposta.json()
 
-def conectar():
-    return pymysql.connect(
-        host=os.environ.get("DB_HOST", "localhost"),
-        user=os.environ.get("DB_USER", "root"),
-        password=os.environ.get("DB_PASS", ""),
-        database="tua_caneca")</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(o mesmo código de sempre — mas a configuração agora vive num arquivo só)</pre></div><details class="dica"><summary>💡 Um .env por ambiente</summary><div class="inner">A mágica: o MESMO código roda em qualquer lugar, mudando só o .env — na sua máquina aponta para o MariaDB local; no servidor de produção, para o banco na nuvem. Código é único, configuração é por ambiente. E o .env NUNCA vai para o Git (Semana 33) — no repositório, publica-se um <code>.env.example</code> com as chaves e valores falsos, como documentação.</div></details>
+cotacao = float(dados["USDBRL"]["bid"])
+print(f"Dólar agora: R$ {cotacao:.2f}")</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Dólar agora: R$ 5.43 (valor varia — é AO VIVO!)</pre></div><details class="dica"><summary>💡 Dicionário dentro de dicionário</summary><div class="inner">A resposta tem dois níveis: <code>dados["USDBRL"]</code> pega o bloco da moeda, e <code>["bid"]</code> pega o valor lá dentro. E vem como TEXTO — por isso o float()!</div></details>
     </div>
   </article>
 
   <article class="ex" id="ex5">
     <div class="ex-head">
       <span class="ex-num">EX 05</span>
-      <h3>O .env.example: documentando sem vazar</h3>
-      <span class="stars">⭐⭐ médio</span>
+      <h3>Conversor ao vivo 💱</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex5"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Criar o modelo público do seu .env.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie <code>.env.example</code> com as MESMAS chaves e valores de mentira</li><li>Este sim vai para o Git — quem clona copia para .env e preenche</li><li>Adicione a instrução no README (Semana 33)</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">.env.example</span></div><pre class="code">DB_HOST=localhost
-DB_USER=seu-usuario
-DB_PASS=sua-senha
-JWT_SECRET=gere-um-segredo-aleatorio-grande</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(documentação de configuração sem expor nenhum segredo)</pre></div><details class="dica"><summary>💡 O padrão de todo repositório sério</summary><div class="inner">Abra qualquer projeto open-source de backend: lá está o .env.example (ou similar). Ele responde "o que preciso configurar?" sem responder "quais são os valores?". Segurança e usabilidade juntas — o par que você vem cultivando desde a Semana 21.</div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Reais ↔ dólares com a cotação do momento.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Busque a cotação (função <code>cotacao_dolar()</code> que RETORNA o valor — Semana 6!)</li><li>Menu: 1-Reais para dólares · 2-Dólares para reais</li><li>Peça o valor e converta</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Cotação atual: R$ 5.43
+1-R$ → US$  2-US$ → R$
+Opção: 1
+Valor em reais: 500
+US$ 92.08</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex05.py</span></div><pre class="code">import requests
+
+def cotacao_dolar():
+    url = "https://economia.awesomeapi.com.br/json/last/USD-BRL"
+    resposta = requests.get(url, timeout=5)
+    return float(resposta.json()["USDBRL"]["bid"])
+
+dolar = cotacao_dolar()
+print(f"Cotação atual: R$ {dolar:.2f}")
+
+print("1-R$ → US$  2-US$ → R$")
+opcao = input("Opção: ")
+valor = float(input("Valor: "))
+
+if opcao == "1":
+    print(f"US$ {valor / dolar:.2f}")
+elif opcao == "2":
+    print(f"R$ {valor * dolar:.2f}")</pre></div></div></details>
     </div>
   </article>
 </section>
 
 <section class="parte" id="p4">
-  <div class="parte-head"><span class="num">04</span><h2>debug=False e o servidor WSGI</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Duas mudanças obrigatórias para ir ao ar: <strong>desligar o debug</strong> e trocar o servidor de desenvolvimento do Flask por um <strong>servidor WSGI</strong> de verdade.</p></div>
+  <div class="parte-head"><span class="num">04</span><h2>API + todo o seu arsenal</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>A mágica de 15 semanas de bagagem: a resposta da API é um dicionário — então TUDO funciona em cima dela: salvar em JSON (cache!), gravar relatórios em CSV, carimbar com datetime, processar em loop...</p></div>
   <article class="ex" id="ex6">
     <div class="ex-head">
       <span class="ex-num">EX 06</span>
-      <h3>O perigo do debug em produção 🚨</h3>
-      <span class="stars">⭐⭐ médio</span>
+      <h3>Cache: salvando a consulta 📦</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex6"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Ver com os próprios olhos o que o debug=True expõe.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Com <code>debug=True</code>, provoque um erro na API (ex.: divida por zero numa rota)</li><li>Abra a rota no navegador: o Flask mostra o TRACEBACK completo — seu código-fonte, caminhos de arquivos, variáveis!</li><li>Agora imagine essa tela aberta para a internet inteira...</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output" style="color:#FF9B94">ZeroDivisionError: division by zero
-File "/home/robson/tua_caneca/api.py", line 42, in relatorio
-    media = total / qtd
-(... o codigo-fonte da sua aplicacao, exposto na tela ...)</pre></div><span class="tag passos">🧭 Continue</span><ol><li>Em produção, SEMPRE <code>debug=False</code> (ou melhor: controle pelo .env!)</li><li>Erros em produção devem virar um JSON genérico de erro 500 — nunca um raio-X do sistema</li></ol><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">api.py (trecho)</span></div><pre class="code">import os
-from dotenv import load_dotenv
+<span class="tag obj">🎯 Objetivo</span><p>Guardar a resposta da API em JSON local com carimbo de data.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Consulte o dólar e monte um dicionário: cotação + <code>datetime.now().strftime(...)</code></li><li>Salve em <code>cache_dolar.json</code></li><li>Por que isso importa? Sem internet, seu programa pode usar a última cotação salva em vez de quebrar!</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Cotação salva: R$ 5.43 em 12/06/2026 16:10 ✔</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex06.py</span></div><pre class="code">import json
+import requests
+from datetime import datetime
 
-load_dotenv()
+url = "https://economia.awesomeapi.com.br/json/last/USD-BRL"
+cotacao = float(requests.get(url, timeout=5).json()["USDBRL"]["bid"])
 
-# no fim do arquivo:
-if __name__ == "__main__":
-    modo_debug = os.environ.get("FLASK_DEBUG", "0") == "1"
-    app.run(debug=modo_debug)
+cache = {
+    "cotacao": cotacao,
+    "consultado_em": datetime.now().strftime("%d/%m/%Y %H:%M")
+}
 
-# no .env de desenvolvimento:  FLASK_DEBUG=1
-# no .env de producao:         FLASK_DEBUG=0  (ou simplesmente ausente)</pre></div><p>O debug é uma ferramenta MARAVILHOSA em desenvolvimento (recarrega sozinho, mostra erros ricos) e uma porta escancarada em produção. Controlá-lo pelo .env fecha a questão: o mesmo código, seguro em cada ambiente.</p></div></details>
+with open("cache_dolar.json", "w", encoding="utf-8") as arquivo:
+    json.dump(cache, arquivo, indent=2, ensure_ascii=False)
+
+print(f"Cotação salva: R$ {cache['cotacao']:.2f} em {cache['consultado_em']} ✔")</pre></div></div></details>
     </div>
   </article>
 
   <article class="ex" id="ex7">
     <div class="ex-head">
       <span class="ex-num">EX 07</span>
-      <h3>WSGI: o motor de produção 🏭</h3>
-      <span class="stars">⭐⭐ médio</span>
+      <h3>Lote de CEPs → CSV 📋</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex7"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Entender por que app.run() não vai para produção — e o que vai no lugar.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>O servidor do <code>app.run()</code> avisa na inicialização: "This is a development server" — ele atende UMA requisição por vez!</li><li>Produção usa um servidor <strong>WSGI</strong>: <code>gunicorn</code> (Linux) ou <code>waitress</code> (qualquer sistema)</li><li>Experimente: <code>pip install waitress</code> e rode a API com ele</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">$ pip install waitress
-$ waitress-serve --port=5000 api:app
-INFO:waitress:Serving on http://0.0.0.0:5000</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(a mesma API, servida por um servidor de produção multi-requisições)</pre></div><details class="dica"><summary>💡 api:app — o endereço do app</summary><div class="inner">O <code>api:app</code> significa "no arquivo api.py, o objeto app". O WSGI é o padrão que conecta servidores de produção a apps Python — o gunicorn com vários "workers" atende dezenas de requisições simultâneas. É a diferença entre uma bicicleta e um caminhão: o mesmo destino, capacidades muito diferentes.</div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Várias consultas em loop, resultado em planilha.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie uma lista com 3 CEPs</li><li>Para cada um: consulte, extraia cidade e UF, guarde num dicionário</li><li>EDUCAÇÃO COM A API: <code>time.sleep(1)</code> entre as chamadas (Semana 9!)</li><li>Grave tudo em <code>enderecos.csv</code> com DictWriter (Semana 13!)</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">90010-000 → Porto Alegre/RS
+01310-100 → São Paulo/SP
+20040-010 → Rio de Janeiro/RJ
+enderecos.csv gerado ✔</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex07.py</span></div><pre class="code">import csv
+import time
+import requests
+
+ceps = ["90010000", "01310100", "20040010"]
+resultados = []
+
+for cep in ceps:
+    resposta = requests.get(f"https://viacep.com.br/ws/{cep}/json/", timeout=5)
+    dados = resposta.json()
+    resultados.append({
+        "cep": dados["cep"],
+        "cidade": dados["localidade"],
+        "uf": dados["uf"]
+    })
+    print(f"{dados['cep']} → {dados['localidade']}/{dados['uf']}")
+    time.sleep(1)   # pausa educada entre as chamadas
+
+with open("enderecos.csv", "w", newline="", encoding="utf-8") as arquivo:
+    escritor = csv.DictWriter(arquivo, fieldnames=["cep", "cidade", "uf"])
+    escritor.writeheader()
+    for linha in resultados:
+        escritor.writerow(linha)
+
+print("enderecos.csv gerado ✔")</pre></div></div></details>
     </div>
   </article>
 </section>
 
 <section class="parte" id="p5">
-  <div class="parte-head"><span class="num">05</span><h2>Docker e o mapa do deploy</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Última peça conceitual: o <strong>Docker</strong> empacota app + dependências + configuração num "contêiner" que roda IGUAL em qualquer máquina — o fim definitivo do "funciona na minha máquina". Você não precisa dominá-lo hoje, mas precisa LER um Dockerfile e entender o que ele resolve.</p></div>
+  <div class="parte-head"><span class="num">05</span><h2>Boas práticas de quem consome APIs</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>O kit do consumidor responsável: <strong>timeout</strong> sempre (a API pode demorar), <strong>conferir o status</strong> antes de confiar, <strong>pausas</strong> entre chamadas em lote (martelar API gratuita é deselegante — e pode te bloquear!) e <strong>plano B offline</strong> (cache ou valor padrão).</p></div>
   <article class="ex" id="ex8">
     <div class="ex-head">
       <span class="ex-num">EX 08</span>
-      <h3>Lendo um Dockerfile 🐳</h3>
+      <h3>O plano B offline 🔌</h3>
       <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex8"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Decifrar a receita de um contêiner, linha por linha.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Leia o Dockerfile abaixo e traduza cada linha ANTES de ver a solução:</li><li>Repare como ele reúne TUDO o que você aprendeu esta semana</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">Dockerfile</span></div><pre class="code">FROM python:3.12-slim
+<span class="tag obj">🎯 Objetivo</span><p>Uma função de cotação que NUNCA quebra: API → cache → padrão.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Tente a API; se falhar, tente ler o cache_dolar.json; se nem ele existir, retorne 5.00 com aviso</li><li>Teste os 3 caminhos (desligue o Wi-Fi para testar o segundo! 😄)</li></ol><span class="tag saida">✅ Exemplo do plano B</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(sem internet) Usando cache: R$ 5.43 de 12/06/2026 16:10</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex08.py</span></div><pre class="code">import json
+import requests
 
-WORKDIR /app
+def cotacao_segura():
+    try:
+        url = "https://economia.awesomeapi.com.br/json/last/USD-BRL"
+        return float(requests.get(url, timeout=5).json()["USDBRL"]["bid"])
+    except Exception:
+        try:
+            with open("cache_dolar.json", "r", encoding="utf-8") as arquivo:
+                cache = json.load(arquivo)
+            print(f"(sem internet) Usando cache: R$ {cache['cotacao']:.2f} de {cache['consultado_em']}")
+            return cache["cotacao"]
+        except FileNotFoundError:
+            print("(sem internet e sem cache) Usando cotação padrão R$ 5.00")
+            return 5.00
 
-COPY requirements.txt .
-RUN pip install -r requirements.txt
-
-COPY . .
-
-CMD ["waitress-serve", "--port=5000", "api:app"]</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><p>Tradução: <strong>FROM</strong> — parte de uma imagem com o Python 3.12 já instalado; <strong>WORKDIR</strong> — trabalha na pasta /app; <strong>COPY requirements + RUN pip install</strong> — instala as dependências (a sua lista de ingredientes!); <strong>COPY . .</strong> — copia o código do projeto; <strong>CMD</strong> — o comando que roda quando o contêiner liga (o waitress do exercício anterior!). <strong>Um Dockerfile é o seu ritual de instalação, escrito como receita executável.</strong> Quem tem o contêiner não precisa instalar nada — nem Python. Ele roda igual no seu PC, no servidor, na nuvem. Por isso o Docker dominou o mundo do deploy.</p></div></details>
-    </div>
-  </article>
-
-  <article class="ex" id="ex9">
-    <div class="ex-head">
-      <span class="ex-num">EX 09</span>
-      <h3>O mapa do deploy 🗺️</h3>
-      <span class="stars">⭐⭐ médio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex9"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Saber onde cada camada do sistema vai morar no ar.</p><p>O sistema desacoplado (Semana 30) tem três camadas — e cada uma tem seu tipo de hospedagem:</p><table><tr><th>Camada</th><th>O que é</th><th>Onde hospedar</th></tr><tr><td>Frontend</td><td>arquivos estáticos (HTML/JS)</td><td>GitHub Pages, Netlify, Vercel (grátis!)</td></tr><tr><td>API</td><td>app Python rodando</td><td>serviços de deploy de apps (há planos gratuitos)</td></tr><tr><td>MariaDB</td><td>banco persistente</td><td>banco gerenciado na nuvem (vários provedores)</td></tr></table><span class="tag passos">🧭 Passo a passo</span><ol><li>Pesquise (termos: "deploy Flask gratuito", "MariaDB nuvem gratuito", "GitHub Pages tutorial")</li><li>Anote: quais variáveis do seu .env mudariam no ambiente de produção?</li><li>Perceba: a arquitetura desacoplada permite publicar cada camada no lugar ideal</li></ol><details class="dica"><summary>💡 O CORS de novo!</summary><div class="inner">Ao publicar, o frontend muda de endereço — e o CORS (Semana 27) precisa autorizar o novo domínio. E a URL da API no fetch (Semana 29) também muda. São os dois ajustes clássicos do primeiro deploy desacoplado; sabendo deles de antemão, você economiza horas de "por que não funciona no ar?!". 😉</div></details>
+print(f"Cotação: R$ {cotacao_segura():.2f}")</pre></div><p>Três degraus de fallback — guarde esta função: ela entra direto no projeto final da Semana 16!</p></div></details>
     </div>
   </article>
 </section>
@@ -434,32 +490,133 @@ CMD ["waitress-serve", "--port=5000", "api:app"]</pre></div><details class="solu
 <section class="parte" id="p6">
   <div class="parte-head"><span class="num">06</span><h2>Projetos da semana: juntando tudo!</h2></div>
 
+  <article class="ex" id="ex9">
+    <div class="ex-head">
+      <span class="ex-num">EX 09</span>
+      <h3>Projeto: Cadastro com endereço automático ☕📮</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex9"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>A Tua Caneca agora entrega: o cliente digita o CEP e o sistema preenche o endereço sozinho.</p><span class="tag passos">🧭 Requisitos</span><ol><li>Menu: 1-Cadastrar cliente · 2-Listar · 3-Salvar e sair</li><li>No cadastro: nome + CEP → consulta no ViaCEP → confirma cidade/UF com o usuário</li><li>Guarde cada cliente como dicionário (nome, cep, cidade, uf) e persista em <code>clientes.json</code></li><li>CEP não encontrado ou sem internet? Permita digitar a cidade manualmente (fallback!)</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Nome: Ana
+CEP: 90010000
+Endereço encontrado: Porto Alegre - RS ✔
+Cliente cadastrado!</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex09.py</span></div><pre class="code">import json
+import requests
+
+def consultar_cep(cep):
+    try:
+        resposta = requests.get(f"https://viacep.com.br/ws/{cep}/json/", timeout=5)
+        dados = resposta.json()
+        if resposta.status_code == 200 and "erro" not in dados:
+            return dados["localidade"], dados["uf"]
+    except Exception:
+        pass
+    return None, None
+
+def carregar():
+    try:
+        with open("clientes.json", "r", encoding="utf-8") as arquivo:
+            return json.load(arquivo)
+    except FileNotFoundError:
+        return []
+
+clientes = carregar()
+
+while True:
+    print()
+    print("1-Cadastrar  2-Listar  3-Salvar e sair")
+    opcao = input("Opção: ")
+
+    if opcao == "1":
+        nome = input("Nome: ")
+        cep = input("CEP: ")
+        cidade, uf = consultar_cep(cep)
+        if cidade is None:
+            print("CEP não localizado — preencha manualmente.")
+            cidade = input("Cidade: ")
+            uf = input("UF: ")
+        else:
+            print(f"Endereço encontrado: {cidade} - {uf} ✔")
+        clientes.append({"nome": nome, "cep": cep, "cidade": cidade, "uf": uf})
+        print("Cliente cadastrado!")
+    elif opcao == "2":
+        for c in clientes:
+            print(f"— {c['nome']}: {c['cidade']}/{c['uf']}")
+    elif opcao == "3":
+        with open("clientes.json", "w", encoding="utf-8") as arquivo:
+            json.dump(clientes, arquivo, indent=2, ensure_ascii=False)
+        break</pre></div></div></details>
+    </div>
+  </article>
+
   <article class="ex" id="ex10">
     <div class="ex-head">
       <span class="ex-num">EX 10</span>
-      <h3>Projeto: o pacote de produção da Tua Caneca 📦</h3>
+      <h3>Projeto: Monitor de moedas 📈</h3>
       <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex10"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Aplicar TODA a semana ao seu sistema — deixá-lo pronto para o mundo.</p><span class="tag passos">🧭 Requisitos</span><ol><li>No repositório da API: venv + <code>requirements.txt</code> atualizado + <code>.env</code>/<code>.env.example</code> + debug controlado pelo ambiente + rodando via waitress</li><li>Atualize o README com o novo ritual de instalação (clone → venv → install -r → .env → rodar)</li><li>Rode a suíte de testes (Semana 32) DEPOIS das mudanças — continua verde?</li><li>Commite tudo com mensagens claras (Semana 33)</li></ol><span class="tag saida">✅ O ritual completo</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">$ git clone ... &amp;&amp; cd tua-caneca-api
-$ python -m venv venv &amp;&amp; source venv/bin/activate
-$ pip install -r requirements.txt
-$ cp .env.example .env   # (e preencher)
-$ pytest                 # 9 passed ✅
-$ waitress-serve --port=5000 api:app</pre></div><details class="dica"><summary>💡 A prova dos nove</summary><div class="inner">O teste definitivo: peça a um colega (ou use outra máquina/pasta limpa) para clonar e rodar SÓ seguindo o README. Funcionou de primeira? Seu projeto está profissional. Travou? Cada tropeço é um buraco no README ou no pacote — conserte e agradeça o feedback. É assim que se lapida um projeto de verdade.</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><p>Checklist final do pacote: <strong>(1)</strong> <code>requirements.txt</code> com TODAS as dependências (inclusive python-dotenv e waitress); <strong>(2)</strong> <code>venv/</code> e <code>.env</code> no .gitignore, <code>.env.example</code> no repositório; <strong>(3)</strong> nenhum segredo em NENHUM commit do histórico; <strong>(4)</strong> debug desligável por variável; <strong>(5)</strong> pytest verde; <strong>(6)</strong> README com o ritual completo. Seis itens verdes = pronto para o deploy da Semana 35.</p></div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Painel de cotações com histórico em CSV.</p><span class="tag passos">🧭 Requisitos</span><ol><li>Consulte USD-BRL, EUR-BRL e BTC-BRL (a URL aceita: <code>.../last/USD-BRL,EUR-BRL,BTC-BRL</code> — uma chamada só!)</li><li>Exiba um painel formatado</li><li>Acrescente uma linha por moeda em <code>historico.csv</code> (modo append do CSV: abra com <code>"a"</code>) com data e hora</li><li>Rode em horários diferentes e veja o histórico crescer!</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">=== COTAÇÕES 12/06/2026 16:30 ===
+Dólar:   R$ 5.43
+Euro:    R$ 6.21
+Bitcoin: R$ 580450.00
+historico.csv atualizado ✔</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex10.py</span></div><pre class="code">import csv
+import requests
+from datetime import datetime
+
+url = "https://economia.awesomeapi.com.br/json/last/USD-BRL,EUR-BRL,BTC-BRL"
+dados = requests.get(url, timeout=5).json()
+
+agora = datetime.now().strftime("%d/%m/%Y %H:%M")
+moedas = [
+    ("Dólar", dados["USDBRL"]["bid"]),
+    ("Euro", dados["EURBRL"]["bid"]),
+    ("Bitcoin", dados["BTCBRL"]["bid"])
+]
+
+print(f"=== COTAÇÕES {agora} ===")
+for nome, valor in moedas:
+    print(f"{nome}: R$ {float(valor):.2f}")
+
+with open("historico.csv", "a", newline="", encoding="utf-8") as arquivo:
+    escritor = csv.writer(arquivo)
+    for nome, valor in moedas:
+        escritor.writerow([agora, nome, valor])
+
+print("historico.csv atualizado ✔")</pre></div></div></details>
     </div>
   </article>
 
   <article class="ex" id="ex11">
     <div class="ex-head">
       <span class="ex-num">EX 11</span>
-      <h3>Projeto bônus: rumo ao ar de verdade 🌍</h3>
+      <h3>Projeto bônus: Calculadora de frete 📦</h3>
       <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex11"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Dar os primeiros passos do deploy real (sem código pronto!).</p><span class="tag passos">🧭 Roteiro</span><ol><li>Comece pelo mais fácil: publique o FRONTEND no GitHub Pages (repositório → Settings → Pages → branch main)</li><li>Em minutos, seu frontend estará num endereço público de verdade</li><li>Ele vai reclamar da API (que ainda está no localhost) — é esperado! Anote o que precisaria mudar (URL da API, CORS)</li><li>Se quiser ir até o fim: pesquise um serviço gratuito de deploy Flask e publique a API também</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(seu frontend acessível por qualquer pessoa, em https://seu-usuario.github.io/...)</pre></div><details class="dica"><summary>💡 O primeiro link é inesquecível</summary><div class="inner">Mandar o link do SEU sistema para alguém abrir no celular — não há aula que substitua essa sensação. Mesmo que só o frontend esteja no ar por enquanto, você cruzou a fronteira: deixou de fazer projetos que só você vê. A Semana 35 fecha o ciclo completo. 🚀</div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Frete por região a partir do CEP (sem código pronto!).</p><span class="tag passos">🧭 Roteiro</span><ol><li>Tabela de frete num dicionário por UF (ex.: RS 10 · SC/PR 15 · SP/RJ/MG/ES 20 · resto 30)</li><li>O cliente digita o CEP → ViaCEP devolve a UF → o dicionário devolve o frete</li><li>Mostre o resumo: cidade, UF e valor do frete</li><li>Desafio: frete grátis para a mesma cidade da loja!</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">CEP de entrega: 88010000
+Florianópolis/SC — Frete: R$ 15.00</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex11.py</span></div><pre class="code">import requests
+
+FRETES = {"RS": 10.0, "SC": 15.0, "PR": 15.0,
+          "SP": 20.0, "RJ": 20.0, "MG": 20.0, "ES": 20.0}
+
+cep = input("CEP de entrega: ")
+
+try:
+    dados = requests.get(f"https://viacep.com.br/ws/{cep}/json/", timeout=5).json()
+    if "erro" in dados:
+        print("CEP não encontrado!")
+    else:
+        uf = dados["uf"]
+        frete = FRETES.get(uf, 30.0)   # fora da tabela → 30
+        if dados["localidade"] == "Porto Alegre":
+            frete = 0.0   # frete grátis na cidade da loja!
+        print(f"{dados['localidade']}/{uf} — Frete: R$ {frete:.2f}")
+except Exception:
+    print("Falha na consulta — tente novamente.")</pre></div></div></details>
     </div>
   </article>
 </section>
@@ -467,29 +624,29 @@ $ waitress-serve --port=5000 api:app</pre></div><details class="dica"><summary>�
 <div class="checklist" id="checklist">
   <h2>✅ Checklist de fim de semana</h2>
   <p>Antes de seguir para a próxima semana, confirme que você consegue:</p>
-<label class="check-item"><input type="checkbox"><span>Congelar as dependências num requirements.txt</span></label>
-<label class="check-item"><input type="checkbox"><span>Instalar um projeto do zero com pip install -r</span></label>
-<label class="check-item"><input type="checkbox"><span>Criar e ativar um ambiente virtual (venv)</span></label>
-<label class="check-item"><input type="checkbox"><span>Explicar por que cada projeto merece seu próprio venv</span></label>
-<label class="check-item"><input type="checkbox"><span>Carregar configurações de um arquivo .env (python-dotenv)</span></label>
-<label class="check-item"><input type="checkbox"><span>Separar configuração de código (dev vs produção)</span></label>
-<label class="check-item"><input type="checkbox"><span>Desligar o debug e explicar por que ele é perigoso em produção</span></label>
-<label class="check-item"><input type="checkbox"><span>Explicar o papel de um servidor WSGI (gunicorn/waitress)</span></label>
-<label class="check-item"><input type="checkbox"><span>Ler um Dockerfile e explicar o que o Docker resolve</span></label>
-<label class="check-item"><input type="checkbox"><span>Montar o checklist de produção de um projeto</span></label>
+<label class="check-item"><input type="checkbox"><span>Explicar o que é uma API com a analogia do garçom</span></label>
+<label class="check-item"><input type="checkbox"><span>Fazer um GET com requests.get(url)</span></label>
+<label class="check-item"><input type="checkbox"><span>Conferir o status_code (200 = sucesso)</span></label>
+<label class="check-item"><input type="checkbox"><span>Converter a resposta em dicionário com .json()</span></label>
+<label class="check-item"><input type="checkbox"><span>Montar URLs dinâmicas com f-string e input</span></label>
+<label class="check-item"><input type="checkbox"><span>Tratar o "não encontrado" da API (campo de erro)</span></label>
+<label class="check-item"><input type="checkbox"><span>Proteger as chamadas com try/except e timeout</span></label>
+<label class="check-item"><input type="checkbox"><span>Salvar respostas em JSON local (cache com data)</span></label>
+<label class="check-item"><input type="checkbox"><span>Fazer várias consultas em loop (com pausa educada)</span></label>
+<label class="check-item"><input type="checkbox"><span>Combinar API + CSV + JSON num sistema só</span></label>
 </div>
 
 <div class="win-banner" id="winBanner">
-  <h2>🏆 SEMANA 34 COMPLETA!</h2>
-  <p>Você concluiu todos os exercícios. Seu sistema está pronto para sair do localhost: dependências congeladas, configuração separada, debug domado e o caminho do deploy mapeado!</p>
+  <h2>🏆 SEMANA 15 COMPLETA!</h2>
+  <p>Você concluiu todos os exercícios. Seu Python agora fala com a internet!</p>
 </div>
 
 <div class="preview-s2">
-<h2>📅 Prévia da Semana 35 — a GRANDE final do módulo 🏆</h2><p>Tudo o que o módulo de engenharia ensinou converge no <strong>Projeto Final 7</strong>: o sistema Tua Caneca com banco relacionado por chaves estrangeiras, relatórios com JOIN, <strong>suíte de testes</strong> vigiando, <strong>Git/GitHub</strong> com histórico limpo e o pacote de produção completo. O projeto que fecha a sua formação de engenheiro(a) de software. 🎓</p></div>
+<h2>📅 Prévia da Semana 16</h2><p>A grande final do módulo avançado: o <strong>PROJETO FINAL 3 — Central Tua Caneca</strong>: importa vendas de CSV, analisa, consulta a cotação do dólar na API, gera relatório Excel formatado e faz backup automático. CSV + openpyxl + os/shutil + requests, tudo num sistema só. Rumo à formatura definitiva! 🏆</p></div>
 
 </main>
 
-<footer>python_para_iniciantes // semana_34 // exercícios guiados</footer>
+<footer>python_para_iniciantes // semana_15 // exercícios guiados</footer>
 
 <script>
 // ===== Syntax highlight leve para Python =====
@@ -501,7 +658,7 @@ $ waitress-serve --port=5000 api:app</pre></div><details class="dica"><summary>�
     src = src.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     // uma passada só, com alternação (comentário | string | builtin | bool | número)
     src = src.replace(
-      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|insert|int|float|str|len|range|type|abs|round|max|min|sum|sorted|sort|reverse|append|remove|split|strip|upper|lower|replace|title|randint|random|get|keys|values|items|open|readlines|read|write|close|count|index|pop|update|list|dict|tuple|enumerate|sqrt|floor|ceil|choice|shuffle|sample|sleep|now|today|strftime|dumps|dump|loads|load|isinstance|datetime|date|DictReader|DictWriter|writerows|writerow|writeheader|writer|reader|csv|Workbook|load_workbook|save|iter_rows|Font|listdir|makedirs|getcwd|rename|exists|getsize|splitext|join|endswith|startswith|copytree|copy|move|requests|status_code|json|DataFrame|read_csv|read_excel|to_excel|to_csv|head|describe|groupby|sort_values|value_counts|mean|idxmax|bar|barh|pie|plot|savefig|show|title|xlabel|ylabel|figure|legend|axhline|tight_layout|close|Flask|route|run|render_template|jsonify|redirect|request|connect|cursor|execute|executemany|fetchall|fetchone|commit|environ|getenv|post|encode|decode|abort|make_response|raises|approx|load_dotenv)\b|\b(True|False|None|if|elif|else|while|for|in|and|or|not|break|continue|import|from|def|return|try|except|finally|with|as|del|global|pass|class|self|super|lambda)\b|(\b\d+(?:\.\d+)?\b)/g,
+      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|insert|int|float|str|len|range|type|abs|round|max|min|sum|sorted|sort|reverse|append|remove|split|strip|upper|lower|replace|title|randint|random|get|keys|values|items|open|readlines|read|write|close|count|index|pop|update|list|dict|tuple|enumerate|sqrt|floor|ceil|choice|shuffle|sample|sleep|now|today|strftime|dumps|dump|loads|load|isinstance|datetime|date|DictReader|DictWriter|writerows|writerow|writeheader|writer|reader|csv|Workbook|load_workbook|save|iter_rows|Font|listdir|makedirs|getcwd|rename|exists|getsize|splitext|join|endswith|startswith|copytree|copy|move|requests|status_code|json)\b|\b(True|False|None|if|elif|else|while|for|in|and|or|not|break|continue|import|from|def|return|try|except|finally|with|as|del|global|pass|class|self|super|lambda)\b|(\b\d+(?:\.\d+)?\b)/g,
       function(m, com, str, fn, bool, num){
         if(com)  return '<span class="tk-com">'+com+'</span>';
         if(str)  return '<span class="tk-str">'+str+'</span>';
@@ -520,7 +677,7 @@ $ waitress-serve --port=5000 api:app</pre></div><details class="dica"><summary>�
 // no navegador. Se o localStorage estiver indisponível (modo restrito,
 // pré-visualização, etc.), o progresso funciona só em memória, sem quebrar.
 const storage = (function(){
-  const KEY = 'python_semana34_progresso';
+  const KEY = 'python_semana15_progresso';
   let memoria = {};
   let disponivel = false;
   try{

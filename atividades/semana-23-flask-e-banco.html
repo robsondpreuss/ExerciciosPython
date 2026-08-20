@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Semana 11 — Herança e JSON</title>
+<title>Semana 23 — Flask + Banco de Dados</title>
 <style>
   :root{
     --ink:#16243A;
@@ -57,7 +57,7 @@
     color:#fff;padding:56px 20px 48px;text-align:center;position:relative;overflow:hidden;
   }
   header.hero::before{
-    content:"class Filha(Mae)  super()  json.dump  json.load";
+    content:"request.form  POST  formulario  INSERT  UPDATE  CRUD";
     position:absolute;inset:auto 0 8px 0;font-family:var(--mono);font-size:.78rem;
     color:rgba(255,255,255,.14);letter-spacing:.4em;white-space:nowrap;overflow:hidden;
   }
@@ -234,363 +234,363 @@
 <div class="progress-wrap" role="region" aria-label="Progresso da semana">
   <span class="label">XP DA SEMANA</span>
   <div class="progress-bar"><div class="progress-fill" id="pfill"></div></div>
-  <span class="progress-count" id="pcount">0 / 13</span>
+  <span class="progress-count" id="pcount">0 / 12</span>
   <span class="progress-msg" id="pmsg">Marque os exercícios concluídos ✔</span>
   <button class="reset-btn" id="resetBtn" title="Apagar todo o progresso salvo">↺ Resetar</button>
 </div>
 
 <header class="hero">
   <div class="kicker">Python para Iniciantes · Exercícios Guiados</div>
-  <h1>SEMANA 11 — Herança e JSON:<br>POO parte 2 + dados universais<span class="cursor" aria-hidden="true"></span></h1>
-  <p class="sub">Classes que herdam de classes, objetos dentro de objetos e o JSON — o formato universal que salva seus dicionários (e seus objetos!) em arquivo sem dor.</p>
+  <h1>SEMANA 23 — Flask + Banco:<br>seu primeiro app web com dados<span class="cursor" aria-hidden="true"></span></h1>
+  <p class="sub">Os dois mundos se encontram: formulários HTML com POST, request.form para receber os dados, inserir e editar no banco pela web e um painel administrativo com CRUD completo no navegador.</p>
   <div class="howto">
     <strong>Como usar:</strong> digite o código você mesmo (não copie e cole!), compare com a saída esperada e marque <strong>✔ Concluído</strong> em cada exercício para encher sua barra de XP. As <strong>dicas</strong> e <strong>soluções</strong> ficam escondidas — só abra depois de tentar! Seu progresso fica salvo no navegador.
   </div>
 </header>
 
-<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · Herança</a><a href="#p2">2 · Composição</a><a href="#p3">3 · JSON</a><a href="#p4">4 · Objetos ↔ JSON</a><a href="#p5">5 · Refatorando</a><a href="#p6">6 · Projetos</a><a href="#checklist">✅ Checklist</a></nav>
+<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · Formulários</a><a href="#p2">2 · POST + banco</a><a href="#p3">3 · Listar</a><a href="#p4">4 · Excluir</a><a href="#p5">5 · Editar (CRUD)</a><a href="#p6">6 · Projetos</a><a href="#checklist">✅ Checklist</a></nav>
 
 <main>
 
 <section class="parte" id="p1">
-  <div class="parte-head"><span class="num">01</span><h2>Herança: classes que herdam de classes</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Quando uma classe é "um tipo de" outra, ela pode <strong>herdar</strong>: <code>class Cachorro(Animal):</code> faz Cachorro receber DE GRAÇA tudo que Animal tem — e ainda poder adicionar ou modificar o que quiser.</p></div>
+  <div class="parte-head"><span class="num">01</span><h2>Formulários: a porta de entrada de dados</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p><em>Nota de arquitetura: aqui o mesmo app Flask gera as telas E mexe no banco — é o estilo <strong>monolítico</strong>, ótimo para aprender. Nas Semanas 26-30 veremos a alternativa profissional: separar uma <strong>API REST</strong> (backend) de um <strong>frontend</strong> independente.</em> Na Semana 19 suas páginas só MOSTRAVAM dados. Agora elas vão RECEBER. A ferramenta é o <code>&lt;form&gt;</code> do HTML, com dois métodos possíveis: <strong>GET</strong> (dados vão na URL — para buscas) e <strong>POST</strong> (dados vão "escondidos" no corpo — para cadastros e senhas). No Flask, o <code>request.form</code> lê o que foi enviado.</p><p>Garanta o Flask instalado (<code>pip install flask</code>, Semana 19) e use o <code>loja.db</code> das Semanas 21-22.</p></div>
   <article class="ex" id="ex1">
     <div class="ex-head">
       <span class="ex-num">EX 01</span>
-      <h3>A primeira herança</h3>
+      <h3>Primeiro formulário 📝</h3>
       <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex1"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Herdar atributos e métodos sem reescrever nada.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Digite e execute — repare que Cachorro está VAZIO (pass) e mesmo assim funciona:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex01_heranca.py</span></div><pre class="code">class Animal:
-    def __init__(self, nome):
-        self.nome = nome
+<span class="tag obj">🎯 Objetivo</span><p>Exibir um formulário numa página Flask.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie <code>app.py</code> com uma rota / que retorna um HTML com formulário</li><li>O <code>&lt;form method="post"&gt;</code> e um <code>&lt;input name="nome"&gt;</code> são o básico</li><li>Rode e veja o formulário no navegador (ainda não faz nada ao enviar — é o próximo passo)</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">app.py</span></div><pre class="code">from flask import Flask
 
-    def comer(self):
-        print(f"{self.nome} está comendo")
+app = Flask(__name__)
 
-class Cachorro(Animal):
-    pass    # nada aqui... e mesmo assim herda tudo!
+@app.route("/")
+def inicio():
+    return """
+    &lt;h1&gt;Cadastro&lt;/h1&gt;
+    &lt;form method="post" action="/salvar"&gt;
+        &lt;input name="nome" placeholder="Nome do produto"&gt;
+        &lt;button type="submit"&gt;Salvar&lt;/button&gt;
+    &lt;/form&gt;
+    """
 
-rex = Cachorro("Rex")
-rex.comer()</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Rex está comendo</pre></div><details class="dica"><summary>💡 Vocabulário</summary><div class="inner">Animal é a classe <strong>mãe</strong> (ou "base"); Cachorro é a <strong>filha</strong>. O <code>pass</code> significa "nada a declarar" — a filha já nasce rica. 😄</div></details>
+app.run(debug=True)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(uma caixa de texto e um botão no navegador)</pre></div><details class="dica"><summary>💡 GET vs POST</summary><div class="inner">O <code>action="/salvar"</code> diz PARA ONDE os dados vão; o <code>method="post"</code> diz COMO (escondidos no corpo). Use POST para qualquer coisa que MUDA o banco ou tem dado sensível; GET fica para buscas e links.</div></details>
     </div>
   </article>
 
   <article class="ex" id="ex2">
     <div class="ex-head">
       <span class="ex-num">EX 02</span>
-      <h3>Cada um com seu som</h3>
+      <h3>Recebendo os dados com request.form</h3>
       <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex2"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Sobrescrever: a filha redefine um método da mãe.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Dê um <code>fazer_som</code> genérico para Animal</li><li>Sobrescreva em Cachorro (Au au!) e em Gato (Miau!)</li><li>Percorra uma lista mista chamando o MESMO método</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex02_sons.py</span></div><pre class="code">class Animal:
-    def __init__(self, nome):
-        self.nome = nome
+<span class="tag obj">🎯 Objetivo</span><p>Capturar o que o usuário enviou no formulário.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Importe <code>from flask import Flask, request</code></li><li>Crie a rota /salvar com <code>methods=["POST"]</code></li><li>Leia o campo com <code>request.form.get("nome")</code> e devolva uma confirmação</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex02_receber.py</span></div><pre class="code">from flask import Flask, request
 
-    def fazer_som(self):
-        print(f"{self.nome} fez um som qualquer")
+app = Flask(__name__)
 
-class Cachorro(Animal):
-    def fazer_som(self):
-        print(f"{self.nome}: Au au!")
+@app.route("/")
+def inicio():
+    return """&lt;form method="post" action="/salvar"&gt;
+        &lt;input name="nome"&gt;&lt;button&gt;Enviar&lt;/button&gt;&lt;/form&gt;"""
 
-class Gato(Animal):
-    def fazer_som(self):
-        print(f"{self.nome}: Miau!")
+@app.route("/salvar", methods=["POST"])
+def salvar():
+    nome = request.form.get("nome")
+    return f"&lt;h1&gt;Recebi: {nome}&lt;/h1&gt;&lt;a href='/'&gt;← Voltar&lt;/a&gt;"
 
-animais = [Cachorro("Rex"), Gato("Mimi"), Animal("Bicho")]
-for animal in animais:
-    animal.fazer_som()</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Rex: Au au!
-Mimi: Miau!
-Bicho fez um som qualquer</pre></div><details class="dica"><summary>💡 Isso tem nome chique</summary><div class="inner">O mesmo comando (<code>animal.fazer_som()</code>) se comportando diferente conforme o objeto se chama <strong>polimorfismo</strong>. Solte essa palavra numa entrevista. 😎</div></details>
-    </div>
-  </article>
-
-  <article class="ex" id="ex3">
-    <div class="ex-head">
-      <span class="ex-num">EX 03</span>
-      <h3>super(): herdar E acrescentar</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex3"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>A filha aproveita o __init__ da mãe e adiciona o seu.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Gato vai ter nome (como todo Animal) MAIS cor</li><li>No <code>__init__</code> da filha: primeiro <code>super().__init__(nome)</code> (chama o init da mãe), depois <code>self.cor = cor</code></li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Mimi é um gato cinza
-Mimi: Miau!</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex03.py</span></div><pre class="code">class Animal:
-    def __init__(self, nome):
-        self.nome = nome
-
-class Gato(Animal):
-    def __init__(self, nome, cor):
-        super().__init__(nome)   # a mãe cuida do nome
-        self.cor = cor           # a filha cuida da cor
-
-    def fazer_som(self):
-        print(f"{self.nome}: Miau!")
-
-mimi = Gato("Mimi", "cinza")
-print(f"{mimi.nome} é um gato {mimi.cor}")
-mimi.fazer_som()</pre></div><p>Sem o <code>super().__init__(nome)</code>, o atributo nome nunca seria criado — a filha sobrescreveu o init da mãe e precisa chamá-la de volta explicitamente.</p></div></details>
+app.run(debug=True)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(digite "caneca azul", envie → "Recebi: caneca azul")</pre></div><details class="dica"><summary>💡 O methods=["POST"]</summary><div class="inner">Por padrão, rotas só aceitam GET. Para receber um formulário POST, a rota precisa declarar <code>methods=["POST"]</code>. O <code>request.form.get("nome")</code> busca o campo pelo <code>name</code> do input — é o <code>.get()</code> de dicionário da Semana 5!</div></details>
     </div>
   </article>
 </section>
 
 <section class="parte" id="p2">
-  <div class="parte-head"><span class="num">02</span><h2>Composição: objetos dentro de objetos</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Herança é "Cachorro É UM Animal". Composição é "Pedido TEM Produtos": um objeto guarda OUTROS objetos num atributo (geralmente uma lista). Os dois juntos modelam qualquer sistema do mundo real.</p></div>
+  <div class="parte-head"><span class="num">02</span><h2>Formulário + banco: o cadastro pela web</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Agora o pulo do gato: os dados do formulário vão direto para o banco (Semana 21). E aparece um padrão essencial — o <strong>POST-redirect-GET</strong>: depois de salvar, a gente REDIRECIONA em vez de mostrar HTML, para o usuário não reenviar o cadastro ao apertar F5.</p></div>
+  <article class="ex" id="ex3">
+    <div class="ex-head">
+      <span class="ex-num">EX 03</span>
+      <h3>Cadastro que grava no banco 🗄️</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex3"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Inserir no banco a partir do formulário — web (S19/23) encontra SQL (S21).</p><span class="tag passos">🧭 Passo a passo</span><ol><li>O formulário tem 3 campos: nome, preco, estoque</li><li>Na rota /salvar: conecte, faça o INSERT com placeholders (?) e commit</li><li>Sempre placeholders — segurança da Semana 21 vale na web também!</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex03_cadastro_banco.py</span></div><pre class="code">from flask import Flask, request
+import sqlite3
+
+app = Flask(__name__)
+
+@app.route("/")
+def inicio():
+    return """
+    &lt;h1&gt;Novo produto&lt;/h1&gt;
+    &lt;form method="post" action="/salvar"&gt;
+        &lt;input name="nome" placeholder="Nome"&gt;&lt;br&gt;
+        &lt;input name="preco" placeholder="Preço"&gt;&lt;br&gt;
+        &lt;input name="estoque" placeholder="Estoque"&gt;&lt;br&gt;
+        &lt;button&gt;Salvar&lt;/button&gt;
+    &lt;/form&gt;
+    """
+
+@app.route("/salvar", methods=["POST"])
+def salvar():
+    nome = request.form.get("nome")
+    preco = float(request.form.get("preco"))
+    estoque = int(request.form.get("estoque"))
+
+    conexao = sqlite3.connect("loja.db")
+    cursor = conexao.cursor()
+    cursor.execute(
+        "INSERT INTO produtos (nome, preco, estoque) VALUES (?, ?, ?)",
+        (nome, preco, estoque))
+    conexao.commit()
+    conexao.close()
+
+    return f"&lt;h1&gt;{nome} cadastrado!&lt;/h1&gt;&lt;a href='/'&gt;← Novo&lt;/a&gt;"
+
+app.run(debug=True)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(preencha o form → produto gravado no banco de verdade!)</pre></div><details class="dica"><summary>💡 Tudo se conecta</summary><div class="inner">Formulário HTML (S19) → request.form (S23) → INSERT com placeholder (S21). Três semanas trabalhando juntas. O dado que você digitou no navegador agora está no banco, esperando para ser consultado por qualquer parte do sistema.</div></details>
+    </div>
+  </article>
+
   <article class="ex" id="ex4">
     <div class="ex-head">
       <span class="ex-num">EX 04</span>
-      <h3>O Pedido que contém Produtos 🛒</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
+      <h3>POST-redirect-GET: o padrão essencial</h3>
+      <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex4"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Montar um objeto composto por outros objetos.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Recupere sua classe Produto da Semana 10</li><li>Classe <code>Pedido</code>: cliente e <code>self.itens = []</code></li><li><code>adicionar(produto)</code>: coloca o OBJETO produto na lista</li><li><code>total()</code>: percorre os itens somando <code>item.preco</code></li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Pedido de Ana:
-- caneca branca — R$ 25.00
-- azulejo — R$ 40.00
-TOTAL: R$ 65.00</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex04.py</span></div><pre class="code">class Produto:
-    def __init__(self, nome, preco):
-        self.nome = nome
-        self.preco = preco
+<span class="tag obj">🎯 Objetivo</span><p>Redirecionar após salvar para evitar cadastros duplicados.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Importe também o <code>redirect</code> (Semana 20)</li><li>No fim da rota /salvar, troque o HTML de retorno por <code>return redirect("/produtos")</code></li><li>Teste: cadastre e aperte F5 na página seguinte — sem o redirect, o navegador perguntaria "reenviar formulário?" e cadastraria de novo!</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(após salvar, vai direto para a lista — F5 não duplica)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex04.py</span></div><pre class="code">from flask import Flask, request, redirect
+import sqlite3
 
-    def __str__(self):
-        return f"{self.nome} — R$ {self.preco:.2f}"
+# ... dentro da rota /salvar, no lugar do return com HTML:
+@app.route("/salvar", methods=["POST"])
+def salvar():
+    nome = request.form.get("nome")
+    preco = float(request.form.get("preco"))
+    estoque = int(request.form.get("estoque"))
 
-class Pedido:
-    def __init__(self, cliente):
-        self.cliente = cliente
-        self.itens = []
+    conexao = sqlite3.connect("loja.db")
+    cursor = conexao.cursor()
+    cursor.execute(
+        "INSERT INTO produtos (nome, preco, estoque) VALUES (?, ?, ?)",
+        (nome, preco, estoque))
+    conexao.commit()
+    conexao.close()
 
-    def adicionar(self, produto):
-        self.itens.append(produto)
-
-    def total(self):
-        soma = 0
-        for item in self.itens:
-            soma = soma + item.preco
-        return soma
-
-    def resumo(self):
-        print(f"Pedido de {self.cliente}:")
-        for item in self.itens:
-            print(f"- {item}")
-        print(f"TOTAL: R$ {self.total():.2f}")
-
-pedido = Pedido("Ana")
-pedido.adicionar(Produto("caneca branca", 25.0))
-pedido.adicionar(Produto("azulejo", 40.0))
-pedido.resumo()</pre></div></div></details>
+    return redirect("/produtos")   # POST-redirect-GET!</pre></div><p>Esse padrão é universal: depois de QUALQUER ação que muda o banco (salvar, editar, excluir), redirecione para uma página de visualização. Todo site sério faz isso.</p></div></details>
     </div>
   </article>
 </section>
 
 <section class="parte" id="p3">
-  <div class="parte-head"><span class="num">03</span><h2>JSON: o formato universal</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p><strong>JSON</strong> é basicamente um dicionário do Python escrito como texto — e é a língua franca dos dados: sites, APIs, aplicativos e configurações falam JSON. O módulo <code>json</code> traduz nos dois sentidos: <code>dumps/dump</code> (Python → JSON) e <code>loads/load</code> (JSON → Python).</p></div>
+  <div class="parte-head"><span class="num">03</span><h2>Listando o banco numa página</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>O outro lado: trazer os dados do banco para a tela. É o SELECT da Semana 21 alimentando o loop de HTML da Semana 19 — a combinação que monta toda página de listagem que você já viu na internet.</p></div>
   <article class="ex" id="ex5">
     <div class="ex-head">
       <span class="ex-num">EX 05</span>
-      <h3>Dicionário vira texto</h3>
-      <span class="stars">⭐⭐ médio</span>
+      <h3>A página de produtos 🛍️</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex5"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Conhecer a cara do JSON com dumps.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Digite e execute:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex05_dumps.py</span></div><pre class="code">import json
+<span class="tag obj">🎯 Objetivo</span><p>Mostrar todos os produtos do banco numa tabela HTML.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Rota /produtos: conecte, <code>SELECT * FROM produtos</code>, fetchall</li><li>Monte as linhas da tabela num loop (acumulador de string — Semanas 3 e 19)</li><li>Devolva uma <code>&lt;table&gt;</code> com cabeçalho + as linhas</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex05_listar.py</span></div><pre class="code">from flask import Flask
+import sqlite3
 
-cliente = {"nome": "Ana", "idade": 28, "cursos": ["Python", "Excel"]}
+app = Flask(__name__)
 
-texto = json.dumps(cliente, indent=2, ensure_ascii=False)
-print(texto)
-print(type(texto))</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">{
-  "nome": "Ana",
-  "idade": 28,
-  "cursos": [
-    "Python",
-    "Excel"
-  ]
-}
-&lt;class 'str'&gt;</pre></div><details class="dica"><summary>💡 Os dois ajudantes</summary><div class="inner"><code>indent=2</code> formata bonito (sem ele, sai tudo numa linha). <code>ensure_ascii=False</code> preserva acentos — sem ele, "João" vira "Jo\u00e3o". Use os dois sempre!</div></details>
+@app.route("/produtos")
+def produtos():
+    conexao = sqlite3.connect("loja.db")
+    cursor = conexao.cursor()
+    cursor.execute("SELECT id, nome, preco, estoque FROM produtos")
+    linhas = cursor.fetchall()
+    conexao.close()
+
+    html = "&lt;h1&gt;Produtos&lt;/h1&gt;&lt;table border='1' cellpadding='6'&gt;"
+    html += "&lt;tr&gt;&lt;th&gt;ID&lt;/th&gt;&lt;th&gt;Nome&lt;/th&gt;&lt;th&gt;Preço&lt;/th&gt;&lt;th&gt;Estoque&lt;/th&gt;&lt;/tr&gt;"
+    for id, nome, preco, estoque in linhas:
+        html += f"&lt;tr&gt;&lt;td&gt;{id}&lt;/td&gt;&lt;td&gt;{nome}&lt;/td&gt;&lt;td&gt;R$ {preco:.2f}&lt;/td&gt;&lt;td&gt;{estoque}&lt;/td&gt;&lt;/tr&gt;"
+    html += "&lt;/table&gt;"
+    return html
+
+app.run(debug=True)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(uma tabela com todos os produtos do banco no navegador!)</pre></div><details class="dica"><summary>💡 SELECT + loop = listagem</summary><div class="inner">Toda lista que você vê na web — produtos numa loja, posts numa rede, e-mails na caixa — é isso: um SELECT no banco e um loop montando o HTML. Você acabou de aprender o padrão mais comum da programação web.</div></details>
     </div>
   </article>
 
   <article class="ex" id="ex6">
     <div class="ex-head">
       <span class="ex-num">EX 06</span>
-      <h3>Salvando em .json</h3>
+      <h3>Cadastro e lista na mesma página</h3>
       <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex6"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Gravar um dicionário direto em arquivo.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Igual à Semana 7, mas com <code>json.dump</code> (sem o S) no lugar do write:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex06_dump.py</span></div><pre class="code">import json
-
-cliente = {"nome": "Ana", "idade": 28, "cursos": ["Python", "Excel"]}
-
-with open("cliente.json", "w", encoding="utf-8") as arquivo:
-    json.dump(cliente, arquivo, indent=2, ensure_ascii=False)
-
-print("Salvo! Abra o cliente.json no Bloco de Notas 👀")</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Salvo! Abra o cliente.json no Bloco de Notas 👀</pre></div><details class="dica"><summary>💡 dumps vs dump</summary><div class="inner">Com S = devolve a String. Sem S = grava direto no arquivo. O mesmo vale para loads/load na leitura.</div></details>
-    </div>
-  </article>
-
-  <article class="ex" id="ex7">
-    <div class="ex-head">
-      <span class="ex-num">EX 07</span>
-      <h3>Lendo de volta</h3>
-      <span class="stars">⭐⭐ médio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex7"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Carregar um JSON — protegido, como manda a Semana 7.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Use <code>json.load(arquivo)</code> dentro de um with</li><li>Proteja com <code>FileNotFoundError</code></li><li>O que volta é um DICIONÁRIO pronto: acesse <code>dados["nome"]</code></li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Nome: Ana
-Cursos: ['Python', 'Excel']</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex07.py</span></div><pre class="code">import json
-
-try:
-    with open("cliente.json", "r", encoding="utf-8") as arquivo:
-        dados = json.load(arquivo)
-    print(f"Nome: {dados['nome']}")
-    print(f"Cursos: {dados['cursos']}")
-except FileNotFoundError:
-    print("Arquivo não encontrado — rode o exercício anterior primeiro!")</pre></div></div></details>
-    </div>
-  </article>
-
-  <article class="ex" id="ex8">
-    <div class="ex-head">
-      <span class="ex-num">EX 08</span>
-      <h3>Adeus, CSV caseiro! 👋</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex8"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Salvar uma LISTA de dicionários em JSON — e entender por que é melhor que o split(";").</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Monte a lista de produtos (dicionários) da Semana 5</li><li>Salve TUDO com um único <code>json.dump</code></li><li>Em outro script, carregue e percorra normalmente</li><li>Compare com a Semana 7: cadê o split? Cadê a conversão de float? 😄</li></ol><span class="tag saida">✅ Saída da leitura</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">caneca branca — R$ 25.00
-caneca preta — R$ 27.50
-azulejo — R$ 40.00</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">salvar.py</span></div><pre class="code">import json
-
-produtos = [
-    {"nome": "caneca branca", "preco": 25.0},
-    {"nome": "caneca preta", "preco": 27.5},
-    {"nome": "azulejo", "preco": 40.0}
-]
-
-with open("produtos.json", "w", encoding="utf-8") as arquivo:
-    json.dump(produtos, arquivo, indent=2, ensure_ascii=False)</pre></div><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">carregar.py</span></div><pre class="code">import json
-
-with open("produtos.json", "r", encoding="utf-8") as arquivo:
-    produtos = json.load(arquivo)
-
-for p in produtos:
-    print(f"{p['nome']} — R$ {p['preco']:.2f}")</pre></div><p>No CSV caseiro, você quebrava linhas com split e convertia tipo por tipo. O JSON preserva a ESTRUTURA: listas continuam listas, números continuam números. Por isso ele domina o mundo dos dados.</p></div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Juntar formulário e listagem numa interface só.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Na rota /produtos, coloque o formulário de cadastro ANTES da tabela</li><li>O form aponta para /salvar (que redireciona de volta para /produtos)</li><li>Resultado: cadastra em cima, vê a lista atualizada embaixo — uma mini-aplicação!</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(formulário no topo, lista logo abaixo — cadastrou, apareceu)</pre></div><details class="dica"><summary>💡 Está nascendo um app</summary><div class="inner">Formulário + lista na mesma tela é a cara de qualquer painel administrativo. Você está a um ou dois exercícios de ter um CRUD web completo — o tipo de sistema que empresas pagam para construir.</div></details>
     </div>
   </article>
 </section>
 
 <section class="parte" id="p4">
-  <div class="parte-head"><span class="num">04</span><h2>Objetos ↔ JSON</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>O json não sabe gravar objetos seus diretamente — mas sabe gravar dicionários. A ponte é o padrão <code>to_dict()</code>: objeto → dict → JSON na ida; JSON → dict → objeto na volta.</p></div>
-  <article class="ex" id="ex9">
+  <div class="parte-head"><span class="num">04</span><h2>Excluir pela web</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>O "D" do CRUD na web: um link de exclusão que carrega o <code>id</code> na URL e dispara um DELETE (Semana 22). Rota dinâmica (Semana 19) + DELETE com placeholder (Semana 21) + redirect (Semana 20).</p></div>
+  <article class="ex" id="ex7">
     <div class="ex-head">
-      <span class="ex-num">EX 09</span>
-      <h3>A ponte to_dict 🌉</h3>
+      <span class="ex-num">EX 07</span>
+      <h3>Botão de excluir 🗑️</h3>
       <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex9"> Concluído</label>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex7"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Salvar e reconstruir objetos via JSON — o padrão do projeto final!</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Na classe Produto, crie <code>to_dict(self)</code> que retorna <code>{"nome": self.nome, ...}</code></li><li>Salvar: converta cada objeto da lista com to_dict e grave a lista de dicts</li><li>Carregar: para cada dict lido, crie <code>Produto(d["nome"], d["preco"], d["estoque"])</code></li></ol><span class="tag saida">✅ Saída da carga</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Objetos reconstruídos:
-caneca branca — R$ 25.00 (10 un.)
-azulejo — R$ 40.00 (5 un.)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex09.py</span></div><pre class="code">import json
+<span class="tag obj">🎯 Objetivo</span><p>Remover um produto direto da listagem.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Na tabela, adicione em cada linha um link: <code>&lt;a href="/excluir/{id}"&gt;excluir&lt;/a&gt;</code></li><li>Crie a rota <code>/excluir/&lt;int:id&gt;</code>: DELETE WHERE id=? e <code>redirect("/produtos")</code></li><li>Clique no link de um produto e veja-o sumir da lista</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(cada linha tem "excluir" → clicou, produto removido, lista atualizada)</pre></div><details class="dica"><summary>💡 Conceito importante</summary><div class="inner">Em sistemas REAIS, excluir por um link GET é arriscado (um robô ou um F5 pode disparar). O jeito profissional usa um pequeno formulário POST com confirmação. Para aprender, o link serve — mas guarde: <strong>ações que mudam o banco deveriam ser POST</strong>.</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex07.py</span></div><pre class="code">from flask import Flask, redirect
+import sqlite3
 
-class Produto:
-    def __init__(self, nome, preco, estoque):
-        self.nome = nome
-        self.preco = preco
-        self.estoque = estoque
+app = Flask(__name__)
 
-    def to_dict(self):
-        return {"nome": self.nome, "preco": self.preco, "estoque": self.estoque}
+@app.route("/produtos")
+def produtos():
+    conexao = sqlite3.connect("loja.db")
+    cursor = conexao.cursor()
+    cursor.execute("SELECT id, nome, preco FROM produtos")
+    linhas = cursor.fetchall()
+    conexao.close()
 
-    def __str__(self):
-        return f"{self.nome} — R$ {self.preco:.2f} ({self.estoque} un.)"
+    html = "&lt;h1&gt;Produtos&lt;/h1&gt;&lt;table border='1' cellpadding='6'&gt;"
+    for id, nome, preco in linhas:
+        html += (f"&lt;tr&gt;&lt;td&gt;{nome}&lt;/td&gt;&lt;td&gt;R$ {preco:.2f}&lt;/td&gt;"
+                 f"&lt;td&gt;&lt;a href='/excluir/{id}'&gt;excluir&lt;/a&gt;&lt;/td&gt;&lt;/tr&gt;")
+    html += "&lt;/table&gt;"
+    return html
 
-# --- salvar ---
-produtos = [Produto("caneca branca", 25.0, 10), Produto("azulejo", 40.0, 5)]
+@app.route("/excluir/&lt;int:id&gt;")
+def excluir(id):
+    conexao = sqlite3.connect("loja.db")
+    cursor = conexao.cursor()
+    cursor.execute("DELETE FROM produtos WHERE id = ?", (id,))
+    conexao.commit()
+    conexao.close()
+    return redirect("/produtos")
 
-dados = []
-for p in produtos:
-    dados.append(p.to_dict())
-
-with open("estoque.json", "w", encoding="utf-8") as arquivo:
-    json.dump(dados, arquivo, indent=2, ensure_ascii=False)
-
-# --- carregar ---
-with open("estoque.json", "r", encoding="utf-8") as arquivo:
-    lidos = json.load(arquivo)
-
-recuperados = []
-for d in lidos:
-    recuperados.append(Produto(d["nome"], d["preco"], d["estoque"]))
-
-print("Objetos reconstruídos:")
-for p in recuperados:
-    print(p)</pre></div></div></details>
+app.run(debug=True)</pre></div></div></details>
     </div>
   </article>
 </section>
 
 <section class="parte" id="p5">
-  <div class="parte-head"><span class="num">05</span><h2>Refatorando com JSON</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Hora de dar upgrade num velho conhecido: a agenda de contatos da Semana 7 troca o CSV caseiro pelo JSON.</p></div>
+  <div class="parte-head"><span class="num">05</span><h2>Editar: fechando o CRUD</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>A operação mais elaborada: editar precisa de DUAS rotas com o mesmo endereço. No <code>GET</code>, você BUSCA o produto e mostra um formulário JÁ PREENCHIDO. No <code>POST</code>, você recebe as mudanças e faz o UPDATE. É o <code>request.method</code> que distingue os dois.</p></div>
+  <article class="ex" id="ex8">
+    <div class="ex-head">
+      <span class="ex-num">EX 08</span>
+      <h3>Formulário de edição preenchido ✏️</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex8"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Mostrar um formulário com os dados atuais do produto.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Rota <code>/editar/&lt;int:id&gt;</code> (GET): SELECT o produto pelo id</li><li>Monte um form cujos inputs já tragam os valores: <code>value="{preco}"</code></li><li>O form envia para si mesmo (mesma URL) via POST</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(formulário com nome, preço e estoque ATUAIS já preenchidos)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex08.py</span></div><pre class="code">from flask import Flask
+import sqlite3
+
+app = Flask(__name__)
+
+@app.route("/editar/&lt;int:id&gt;")
+def editar(id):
+    conexao = sqlite3.connect("loja.db")
+    cursor = conexao.cursor()
+    cursor.execute("SELECT nome, preco, estoque FROM produtos WHERE id = ?", (id,))
+    nome, preco, estoque = cursor.fetchone()
+    conexao.close()
+
+    return f"""
+    &lt;h1&gt;Editar produto&lt;/h1&gt;
+    &lt;form method="post" action="/editar/{id}"&gt;
+        &lt;input name="nome" value="{nome}"&gt;&lt;br&gt;
+        &lt;input name="preco" value="{preco}"&gt;&lt;br&gt;
+        &lt;input name="estoque" value="{estoque}"&gt;&lt;br&gt;
+        &lt;button&gt;Atualizar&lt;/button&gt;
+    &lt;/form&gt;
+    """
+
+app.run(debug=True)</pre></div><p>O <code>value="..."</code> é o que faz o campo já vir preenchido — sem isso, o usuário teria que redigitar tudo. Pequeno detalhe, grande diferença de usabilidade.</p></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex9">
+    <div class="ex-head">
+      <span class="ex-num">EX 09</span>
+      <h3>Salvando a edição (UPDATE)</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex9"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Receber o formulário de edição e atualizar o banco.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Adicione <code>methods=["GET", "POST"]</code> à rota <code>/editar/&lt;int:id&gt;</code></li><li>Use <code>if request.method == "POST"</code>: aí faz o UPDATE com os dados do form e redireciona</li><li>Se for GET, mostra o formulário (exercício anterior)</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(edita os campos → Atualizar → volta para a lista já alterada)</pre></div><details class="dica"><summary>💡 Uma rota, dois comportamentos</summary><div class="inner">O <code>request.method</code> permite a MESMA URL servir o formulário (GET) e processar o envio (POST). É o padrão clássico de edição na web — e agora seu CRUD está completo: Create, Read, Update, Delete, todos pela web!</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex09.py</span></div><pre class="code">from flask import Flask, request, redirect
+import sqlite3
+
+app = Flask(__name__)
+
+@app.route("/editar/&lt;int:id&gt;", methods=["GET", "POST"])
+def editar(id):
+    conexao = sqlite3.connect("loja.db")
+    cursor = conexao.cursor()
+
+    if request.method == "POST":
+        nome = request.form.get("nome")
+        preco = float(request.form.get("preco"))
+        estoque = int(request.form.get("estoque"))
+        cursor.execute(
+            "UPDATE produtos SET nome=?, preco=?, estoque=? WHERE id=?",
+            (nome, preco, estoque, id))
+        conexao.commit()
+        conexao.close()
+        return redirect("/produtos")
+
+    cursor.execute("SELECT nome, preco, estoque FROM produtos WHERE id = ?", (id,))
+    nome, preco, estoque = cursor.fetchone()
+    conexao.close()
+    return f"""
+    &lt;form method="post" action="/editar/{id}"&gt;
+        &lt;input name="nome" value="{nome}"&gt;&lt;br&gt;
+        &lt;input name="preco" value="{preco}"&gt;&lt;br&gt;
+        &lt;input name="estoque" value="{estoque}"&gt;&lt;br&gt;
+        &lt;button&gt;Atualizar&lt;/button&gt;
+    &lt;/form&gt;
+    """
+
+app.run(debug=True)</pre></div></div></details>
+    </div>
+  </article>
+
   <article class="ex" id="ex10">
     <div class="ex-head">
       <span class="ex-num">EX 10</span>
-      <h3>Agenda de contatos 2.0 📒</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
+      <h3>Validação no servidor 🛡️</h3>
+      <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex10"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Migrar a agenda da Semana 7 para JSON.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Contatos agora são uma lista de dicionários: <code>{"nome": ..., "telefone": ...}</code></li><li>Funções <code>salvar_contatos(lista)</code> e <code>carregar_contatos()</code> (que retorna <code>[]</code> no FileNotFoundError)</li><li>Menu: adicionar, listar, buscar, sair (salvando ao sair)</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">1-Adicionar  2-Listar  3-Buscar  4-Sair
-Opção: 2
-— Ana: (51) 98888-7777</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex10.py</span></div><pre class="code">import json
+<span class="tag obj">🎯 Objetivo</span><p>Rejeitar cadastros vazios ou inválidos — sem confiar só no navegador.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Antes de inserir, confira: <code>if not nome.strip()</code> → redirecione de volta sem salvar</li><li>Proteja a conversão de número com try/except (Semana 7): preço "abc" não pode quebrar o site</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(enviar nome vazio → volta ao formulário, nada é gravado)</pre></div><details class="dica"><summary>💡 Nunca confie no cliente</summary><div class="inner">O HTML tem o atributo <code>required</code>, mas um usuário mal-intencionado (ou um bug) pode burlá-lo. A validação que VALE é a do SERVIDOR — é a última linha de defesa antes do banco. Regra de ouro da web: "nunca confie nos dados que chegam do navegador".</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex10.py</span></div><pre class="code">@app.route("/salvar", methods=["POST"])
+def salvar():
+    nome = request.form.get("nome", "").strip()
+    if not nome:
+        return redirect("/")   # nome vazio: nem tenta salvar
 
-def salvar_contatos(contatos):
-    with open("contatos.json", "w", encoding="utf-8") as arquivo:
-        json.dump(contatos, arquivo, indent=2, ensure_ascii=False)
-
-def carregar_contatos():
     try:
-        with open("contatos.json", "r", encoding="utf-8") as arquivo:
-            return json.load(arquivo)
-    except FileNotFoundError:
-        return []
+        preco = float(request.form.get("preco"))
+        estoque = int(request.form.get("estoque"))
+    except (ValueError, TypeError):
+        return redirect("/")   # número inválido: volta sem quebrar
 
-contatos = carregar_contatos()
-
-while True:
-    print()
-    print("1-Adicionar  2-Listar  3-Buscar  4-Sair")
-    opcao = int(input("Opção: "))
-
-    if opcao == 1:
-        nome = input("Nome: ")
-        telefone = input("Telefone: ")
-        contatos.append({"nome": nome, "telefone": telefone})
-        print("Contato salvo!")
-    elif opcao == 2:
-        for c in contatos:
-            print(f"— {c['nome']}: {c['telefone']}")
-    elif opcao == 3:
-        busca = input("Buscar: ")
-        encontrado = False
-        for c in contatos:
-            if c["nome"] == busca:
-                print(f"{c['nome']}: {c['telefone']}")
-                encontrado = True
-        if not encontrado:
-            print("Não encontrado!")
-    elif opcao == 4:
-        salvar_contatos(contatos)
-        break</pre></div></div></details>
+    conexao = sqlite3.connect("loja.db")
+    cursor = conexao.cursor()
+    cursor.execute(
+        "INSERT INTO produtos (nome, preco, estoque) VALUES (?, ?, ?)",
+        (nome, preco, estoque))
+    conexao.commit()
+    conexao.close()
+    return redirect("/produtos")</pre></div></div></details>
     </div>
   </article>
 </section>
@@ -601,196 +601,161 @@ while True:
   <article class="ex" id="ex11">
     <div class="ex-head">
       <span class="ex-num">EX 11</span>
-      <h3>Projeto: Catálogo OO com JSON ☕</h3>
+      <h3>Projeto: Painel admin Tua Caneca ☕🖥️</h3>
       <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex11"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Classe Produto + persistência JSON num sistema com menu — o ensaio geral do projeto final.</p><span class="tag passos">🧭 Requisitos</span><ol><li>Use a classe Produto (com to_dict e __str__)</li><li>Menu: 1-Listar · 2-Adicionar produto · 3-Vender · 4-Salvar e sair</li><li>Ao iniciar, carregue do <code>catalogo.json</code> (FileNotFoundError → lista com 2 produtos padrão)</li><li>Vender: busque o produto pelo nome e chame <code>produto.vender(qtd)</code></li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">1-Listar  2-Adicionar  3-Vender  4-Salvar e sair
-Opção: 1
-caneca branca — R$ 25.00 (10 un.)
-azulejo — R$ 40.00 (5 un.)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex11.py</span></div><pre class="code">import json
+<span class="tag obj">🎯 Objetivo</span><p>O CRUD web completo num app coeso — listar, criar, editar e excluir produtos.</p><span class="tag passos">🧭 Requisitos</span><ol><li>Uma rota / com o painel: formulário de cadastro + tabela dos produtos com links "editar" e "excluir"</li><li>Rotas: /salvar (POST, INSERT), /editar/&lt;id&gt; (GET+POST), /excluir/&lt;id&gt; (DELETE)</li><li>Todas com placeholders, validação no servidor e POST-redirect-GET</li><li>Capriche no visual com um bloco <code>&lt;style&gt;</code> (lembre das chaves duplas nas f-strings — Semana 19!)</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(um painel administrativo funcional: cadastra, edita e exclui, tudo no navegador!)</pre></div><details class="dica"><summary>💡 Isso é um produto</summary><div class="inner">O que você acabou de construir — um CRUD web com banco — é literalmente o esqueleto de incontáveis sistemas comerciais: controle de estoque, cadastro de clientes, gestão de pedidos. Coloque no GitHub: é um projeto de portfólio de peso. 🏆</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">app.py</span></div><pre class="code">from flask import Flask, request, redirect
+import sqlite3
 
-class Produto:
-    def __init__(self, nome, preco, estoque):
-        self.nome = nome
-        self.preco = preco
-        self.estoque = estoque
+app = Flask(__name__)
 
-    def vender(self, qtd):
-        if qtd &lt;= 0 or qtd &gt; self.estoque:
-            print("Quantidade inválida!")
-            return False
-        self.estoque = self.estoque - qtd
-        print(f"Vendido: {qtd}x {self.nome}")
-        return True
+def conectar():
+    conexao = sqlite3.connect("loja.db")
+    conexao.execute("""
+        CREATE TABLE IF NOT EXISTS produtos (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nome TEXT, preco REAL, estoque INTEGER
+        )
+    """)
+    return conexao
 
-    def to_dict(self):
-        return {"nome": self.nome, "preco": self.preco, "estoque": self.estoque}
+@app.route("/")
+def painel():
+    conexao = conectar()
+    cursor = conexao.cursor()
+    cursor.execute("SELECT id, nome, preco, estoque FROM produtos ORDER BY nome")
+    linhas = cursor.fetchall()
+    conexao.close()
 
-    def __str__(self):
-        return f"{self.nome} — R$ {self.preco:.2f} ({self.estoque} un.)"
+    tabela = "&lt;table border='1' cellpadding='6'&gt;&lt;tr&gt;&lt;th&gt;Nome&lt;/th&gt;&lt;th&gt;Preço&lt;/th&gt;&lt;th&gt;Estoque&lt;/th&gt;&lt;th&gt;Ações&lt;/th&gt;&lt;/tr&gt;"
+    for id, nome, preco, estoque in linhas:
+        tabela += (f"&lt;tr&gt;&lt;td&gt;{nome}&lt;/td&gt;&lt;td&gt;R$ {preco:.2f}&lt;/td&gt;&lt;td&gt;{estoque}&lt;/td&gt;"
+                   f"&lt;td&gt;&lt;a href='/editar/{id}'&gt;editar&lt;/a&gt; | "
+                   f"&lt;a href='/excluir/{id}'&gt;excluir&lt;/a&gt;&lt;/td&gt;&lt;/tr&gt;")
+    tabela += "&lt;/table&gt;"
 
-def carregar():
+    return f"""
+    &lt;html&gt;&lt;head&gt;&lt;title&gt;Admin Tua Caneca&lt;/title&gt;
+    &lt;style&gt;
+      body {{ font-family: Arial; background: #F5F8FC; margin: 40px; }}
+      h1 {{ color: #3776AB; }}
+      input {{ padding: 6px; margin: 3px; }}
+      table {{ background: white; }}
+    &lt;/style&gt;&lt;/head&gt;&lt;body&gt;
+    &lt;h1&gt;☕ Painel Tua Caneca&lt;/h1&gt;
+    &lt;form method="post" action="/salvar"&gt;
+        &lt;input name="nome" placeholder="Nome"&gt;
+        &lt;input name="preco" placeholder="Preço"&gt;
+        &lt;input name="estoque" placeholder="Estoque"&gt;
+        &lt;button&gt;Cadastrar&lt;/button&gt;
+    &lt;/form&gt;&lt;br&gt;
+    {tabela}
+    &lt;/body&gt;&lt;/html&gt;
+    """
+
+@app.route("/salvar", methods=["POST"])
+def salvar():
+    nome = request.form.get("nome", "").strip()
+    if not nome:
+        return redirect("/")
     try:
-        with open("catalogo.json", "r", encoding="utf-8") as arquivo:
-            dados = json.load(arquivo)
-        produtos = []
-        for d in dados:
-            produtos.append(Produto(d["nome"], d["preco"], d["estoque"]))
-        return produtos
-    except FileNotFoundError:
-        return [Produto("caneca branca", 25.0, 10), Produto("azulejo", 40.0, 5)]
+        preco = float(request.form.get("preco"))
+        estoque = int(request.form.get("estoque"))
+    except (ValueError, TypeError):
+        return redirect("/")
+    conexao = conectar()
+    conexao.execute("INSERT INTO produtos (nome, preco, estoque) VALUES (?, ?, ?)",
+                    (nome, preco, estoque))
+    conexao.commit()
+    conexao.close()
+    return redirect("/")
 
-def salvar(produtos):
-    dados = []
-    for p in produtos:
-        dados.append(p.to_dict())
-    with open("catalogo.json", "w", encoding="utf-8") as arquivo:
-        json.dump(dados, arquivo, indent=2, ensure_ascii=False)
+@app.route("/editar/&lt;int:id&gt;", methods=["GET", "POST"])
+def editar(id):
+    conexao = conectar()
+    cursor = conexao.cursor()
+    if request.method == "POST":
+        nome = request.form.get("nome")
+        preco = float(request.form.get("preco"))
+        estoque = int(request.form.get("estoque"))
+        cursor.execute("UPDATE produtos SET nome=?, preco=?, estoque=? WHERE id=?",
+                       (nome, preco, estoque, id))
+        conexao.commit()
+        conexao.close()
+        return redirect("/")
+    cursor.execute("SELECT nome, preco, estoque FROM produtos WHERE id=?", (id,))
+    nome, preco, estoque = cursor.fetchone()
+    conexao.close()
+    return f"""
+    &lt;form method="post" action="/editar/{id}"&gt;
+        &lt;input name="nome" value="{nome}"&gt;
+        &lt;input name="preco" value="{preco}"&gt;
+        &lt;input name="estoque" value="{estoque}"&gt;
+        &lt;button&gt;Atualizar&lt;/button&gt;
+    &lt;/form&gt; &lt;a href="/"&gt;cancelar&lt;/a&gt;
+    """
 
-produtos = carregar()
+@app.route("/excluir/&lt;int:id&gt;")
+def excluir(id):
+    conexao = conectar()
+    conexao.execute("DELETE FROM produtos WHERE id=?", (id,))
+    conexao.commit()
+    conexao.close()
+    return redirect("/")
 
-while True:
-    print()
-    print("1-Listar  2-Adicionar  3-Vender  4-Salvar e sair")
-    opcao = int(input("Opção: "))
-
-    if opcao == 1:
-        for p in produtos:
-            print(p)
-    elif opcao == 2:
-        nome = input("Nome: ")
-        preco = float(input("Preço: R$ "))
-        estoque = int(input("Estoque: "))
-        produtos.append(Produto(nome, preco, estoque))
-    elif opcao == 3:
-        nome = input("Produto: ")
-        qtd = int(input("Quantidade: "))
-        encontrado = False
-        for p in produtos:
-            if p.nome == nome:
-                p.vender(qtd)
-                encontrado = True
-        if not encontrado:
-            print("Produto não existe!")
-    elif opcao == 4:
-        salvar(produtos)
-        break</pre></div></div></details>
+app.run(debug=True)</pre></div></div></details>
     </div>
   </article>
 
   <article class="ex" id="ex12">
     <div class="ex-head">
       <span class="ex-num">EX 12</span>
-      <h3>Projeto: Turma com classe Aluno 🎓</h3>
+      <h3>Projeto bônus: registrar venda pela web 💰</h3>
       <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex12"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>A classe Aluno da Semana 10 ganha persistência (e o JSON guarda a lista de notas numa boa!).</p><span class="tag passos">🧭 Requisitos</span><ol><li>Use a classe Aluno (nome + lista de notas + media + situacao)</li><li><code>to_dict</code> inclui a lista: <code>{"nome": ..., "notas": self.notas}</code></li><li>Menu: adicionar aluno, lançar nota, boletim (nome, média, situação), salvar e sair</li><li>Repare: o JSON salva a LISTA de notas sem esforço — tente fazer isso com CSV caseiro! 😅</li></ol><span class="tag saida">✅ Boletim</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Ana: média 8.0 — Aprovado
-Bruno: média 5.5 — Recuperação</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex12.py</span></div><pre class="code">import json
+<span class="tag obj">🎯 Objetivo</span><p>Uma tela de vendas que dá baixa no estoque (sem código pronto!).</p><span class="tag passos">🧭 Roteiro</span><ol><li>Página /vender: formulário com nome do produto e quantidade</li><li>No POST: SELECT o estoque; se suficiente, UPDATE (baixa) e mostre sucesso; senão, mostre o aviso</li><li>Combine a lógica de venda da Semana 22 com o recebimento de formulário desta semana</li><li>Bônus: também registre a venda numa tabela <code>vendas</code> (INSERT) para o relatório</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(escolhe produto + qtd → "Venda registrada! Restam 5" ou "Estoque insuficiente!")</pre></div><details class="dica"><summary>💡 Empurrãozinho</summary><div class="inner">A lógica de venda você já escreveu na Semana 22 (SELECT estoque → valida → UPDATE). O novo aqui é só a "embalagem" web: <code>request.form</code> para receber e uma mensagem HTML de retorno. Reaproveitar o que já sabe é a essência de programar bem. 😉</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex12.py</span></div><pre class="code">from flask import Flask, request
+import sqlite3
 
-class Aluno:
-    def __init__(self, nome, notas=None):
-        self.nome = nome
-        if notas is None:
-            self.notas = []
+app = Flask(__name__)
+
+@app.route("/vender", methods=["GET", "POST"])
+def vender():
+    if request.method == "POST":
+        nome = request.form.get("nome")
+        qtd = int(request.form.get("qtd"))
+
+        conexao = sqlite3.connect("loja.db")
+        cursor = conexao.cursor()
+        cursor.execute("SELECT estoque FROM produtos WHERE nome = ?", (nome,))
+        r = cursor.fetchone()
+
+        if r is None:
+            msg = "Produto não encontrado!"
+        elif r[0] &lt; qtd:
+            msg = f"Estoque insuficiente! Disponível: {r[0]}"
         else:
-            self.notas = notas
+            cursor.execute(
+                "UPDATE produtos SET estoque = estoque - ? WHERE nome = ?",
+                (qtd, nome))
+            conexao.commit()
+            msg = f"Venda registrada! Restam {r[0] - qtd}"
+        conexao.close()
+        return f"&lt;h1&gt;{msg}&lt;/h1&gt;&lt;a href='/vender'&gt;← Nova venda&lt;/a&gt;"
 
-    def adicionar_nota(self, nota):
-        self.notas.append(nota)
+    return """
+    &lt;h1&gt;Registrar venda&lt;/h1&gt;
+    &lt;form method="post" action="/vender"&gt;
+        &lt;input name="nome" placeholder="Produto"&gt;
+        &lt;input name="qtd" placeholder="Quantidade"&gt;
+        &lt;button&gt;Vender&lt;/button&gt;
+    &lt;/form&gt;
+    """
 
-    def media(self):
-        if len(self.notas) == 0:
-            return 0
-        return sum(self.notas) / len(self.notas)
-
-    def situacao(self):
-        if self.media() &gt;= 7:
-            return "Aprovado"
-        return "Recuperação"
-
-    def to_dict(self):
-        return {"nome": self.nome, "notas": self.notas}
-
-def carregar():
-    try:
-        with open("turma.json", "r", encoding="utf-8") as arquivo:
-            dados = json.load(arquivo)
-        return [Aluno(d["nome"], d["notas"]) for d in dados]
-    except FileNotFoundError:
-        return []
-
-def salvar(turma):
-    dados = [aluno.to_dict() for aluno in turma]
-    with open("turma.json", "w", encoding="utf-8") as arquivo:
-        json.dump(dados, arquivo, indent=2, ensure_ascii=False)
-
-turma = carregar()
-
-while True:
-    print()
-    print("1-Novo aluno  2-Lançar nota  3-Boletim  4-Salvar e sair")
-    opcao = int(input("Opção: "))
-
-    if opcao == 1:
-        turma.append(Aluno(input("Nome: ")))
-    elif opcao == 2:
-        nome = input("Aluno: ")
-        for aluno in turma:
-            if aluno.nome == nome:
-                aluno.adicionar_nota(float(input("Nota: ")))
-    elif opcao == 3:
-        for aluno in turma:
-            print(f"{aluno.nome}: média {aluno.media():.1f} — {aluno.situacao()}")
-    elif opcao == 4:
-        salvar(turma)
-        break</pre></div><p>Duas novidades de gente grande na solução: o parâmetro <code>notas=None</code> (permite criar aluno novo OU reconstruir do JSON) e a <strong>list comprehension</strong> <code>[aluno.to_dict() for aluno in turma]</code> — o for de uma linha. Pesquise, você está pronto! 😉</p></div></details>
-    </div>
-  </article>
-
-  <article class="ex" id="ex13">
-    <div class="ex-head">
-      <span class="ex-num">EX 13</span>
-      <h3>Projeto bônus: Herança no negócio 💼</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex13"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Especializar o Produto com herança (sem código pronto!).</p><span class="tag passos">🧭 Roteiro</span><ol><li>Crie <code>CanecaPersonalizada(Produto)</code>: no init, chame <code>super().__init__</code> somando R$ 10,00 de taxa de arte ao preço</li><li>Crie <code>AzulejoDecorado(Produto)</code> com taxa de R$ 15,00</li><li>Monte um catálogo misto e liste — o __str__ herdado funciona para todos!</li><li>Desafio extra: sobrescreva o __str__ das filhas para indicar "(personalizada)"</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">caneca dia das mães — R$ 35.00 (20 un.) (personalizada)
-azulejo pet — R$ 55.00 (10 un.) (decorado)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex13.py</span></div><pre class="code">class Produto:
-    def __init__(self, nome, preco, estoque):
-        self.nome = nome
-        self.preco = preco
-        self.estoque = estoque
-
-    def __str__(self):
-        return f"{self.nome} — R$ {self.preco:.2f} ({self.estoque} un.)"
-
-class CanecaPersonalizada(Produto):
-    def __init__(self, nome, preco, estoque):
-        super().__init__(nome, preco + 10.0, estoque)
-
-    def __str__(self):
-        return super().__str__() + " (personalizada)"
-
-class AzulejoDecorado(Produto):
-    def __init__(self, nome, preco, estoque):
-        super().__init__(nome, preco + 15.0, estoque)
-
-    def __str__(self):
-        return super().__str__() + " (decorado)"
-
-catalogo = [
-    CanecaPersonalizada("caneca dia das mães", 25.0, 20),
-    AzulejoDecorado("azulejo pet", 40.0, 10),
-    Produto("caneca lisa", 25.0, 30)
-]
-
-for item in catalogo:
-    print(item)</pre></div></div></details>
+app.run(debug=True)</pre></div></div></details>
     </div>
   </article>
 </section>
@@ -798,29 +763,29 @@ for item in catalogo:
 <div class="checklist" id="checklist">
   <h2>✅ Checklist de fim de semana</h2>
   <p>Antes de seguir para a próxima semana, confirme que você consegue:</p>
-<label class="check-item"><input type="checkbox"><span>Criar uma classe filha que herda atributos e métodos da mãe</span></label>
-<label class="check-item"><input type="checkbox"><span>Sobrescrever um método na classe filha</span></label>
-<label class="check-item"><input type="checkbox"><span>Usar super().__init__() para aproveitar o init da mãe e adicionar atributos</span></label>
-<label class="check-item"><input type="checkbox"><span>Explicar composição: um objeto que contém outros objetos</span></label>
-<label class="check-item"><input type="checkbox"><span>Converter um dicionário em texto JSON com dumps (indent, ensure_ascii)</span></label>
-<label class="check-item"><input type="checkbox"><span>Salvar em arquivo com json.dump e carregar com json.load</span></label>
-<label class="check-item"><input type="checkbox"><span>Explicar por que JSON é melhor que o "CSV caseiro" para dados estruturados</span></label>
-<label class="check-item"><input type="checkbox"><span>Converter um objeto em dicionário com um método to_dict()</span></label>
-<label class="check-item"><input type="checkbox"><span>Reconstruir objetos a partir de um JSON carregado</span></label>
-<label class="check-item"><input type="checkbox"><span>Proteger a carga de JSON com FileNotFoundError</span></label>
+<label class="check-item"><input type="checkbox"><span>Criar um formulário HTML com method="post"</span></label>
+<label class="check-item"><input type="checkbox"><span>Aceitar uma rota em GET e POST com methods=["GET", "POST"]</span></label>
+<label class="check-item"><input type="checkbox"><span>Receber dados do formulário com request.form</span></label>
+<label class="check-item"><input type="checkbox"><span>Inserir no banco a partir do formulário enviado</span></label>
+<label class="check-item"><input type="checkbox"><span>Redirecionar após salvar (o padrão POST-redirect-GET)</span></label>
+<label class="check-item"><input type="checkbox"><span>Listar registros do banco numa página com loop HTML</span></label>
+<label class="check-item"><input type="checkbox"><span>Criar rotas de exclusão usando o id na URL</span></label>
+<label class="check-item"><input type="checkbox"><span>Pré-preencher um formulário para edição</span></label>
+<label class="check-item"><input type="checkbox"><span>Validar campos no servidor (nunca confiar só no navegador)</span></label>
+<label class="check-item"><input type="checkbox"><span>Montar um painel administrativo com CRUD web completo</span></label>
 </div>
 
 <div class="win-banner" id="winBanner">
-  <h2>🏆 SEMANA 11 COMPLETA!</h2>
-  <p>Você concluiu todos os exercícios. Seus objetos agora têm família e vida eterna em JSON!</p>
+  <h2>🏆 SEMANA 23 COMPLETA!</h2>
+  <p>Você concluiu todos os exercícios. Você tem um app web com banco de dados rodando — formulários, persistência e CRUD completo, como num sistema real!</p>
 </div>
 
 <div class="preview-s2">
-<h2>📅 Prévia da Semana 12</h2><p>A grande final: o <strong>PROJETO FINAL 2</strong> — Tua Caneca 2.0, totalmente orientado a objetos, com as classes Produto e Loja, vendas carimbadas com datetime, relatórios e persistência em JSON. Tudo das 11 semanas num sistema só. A formatura está logo ali! 🎓</p></div>
+<h2>📅 Prévia da Semana 24</h2><p>O futuro bate à porta: <strong>Python e IA</strong>! Você vai consumir <strong>APIs de modelos de linguagem</strong> — o mesmo <code>requests</code> da Semana 15, agora conversando com uma inteligência artificial. Gerar descrições de produtos, classificar comentários e transformar texto em dados estruturados. A cereja do bolo! 🤖</p></div>
 
 </main>
 
-<footer>python_para_iniciantes // semana_11 // exercícios guiados</footer>
+<footer>python_para_iniciantes // semana_23 // exercícios guiados</footer>
 
 <script>
 // ===== Syntax highlight leve para Python =====
@@ -832,7 +797,7 @@ for item in catalogo:
     src = src.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     // uma passada só, com alternação (comentário | string | builtin | bool | número)
     src = src.replace(
-      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|insert|int|float|str|len|range|type|abs|round|max|min|sum|sorted|sort|reverse|append|remove|split|strip|upper|lower|replace|title|randint|random|get|keys|values|items|open|readlines|read|write|close|count|index|pop|update|list|dict|tuple|enumerate|sqrt|floor|ceil|choice|shuffle|sample|sleep|now|today|strftime|dumps|dump|loads|load|isinstance|datetime|date)\b|\b(True|False|None|if|elif|else|while|for|in|and|or|not|break|continue|import|from|def|return|try|except|finally|with|as|del|global|pass|class|self|super|lambda)\b|(\b\d+(?:\.\d+)?\b)/g,
+      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|insert|int|float|str|len|range|type|abs|round|max|min|sum|sorted|sort|reverse|append|remove|split|strip|upper|lower|replace|title|randint|random|get|keys|values|items|open|readlines|read|write|close|count|index|pop|update|list|dict|tuple|enumerate|sqrt|floor|ceil|choice|shuffle|sample|sleep|now|today|strftime|dumps|dump|loads|load|isinstance|datetime|date|DictReader|DictWriter|writerows|writerow|writeheader|writer|reader|csv|Workbook|load_workbook|save|iter_rows|Font|listdir|makedirs|getcwd|rename|exists|getsize|splitext|join|endswith|startswith|copytree|copy|move|requests|status_code|json|DataFrame|read_csv|read_excel|to_excel|to_csv|head|describe|groupby|sort_values|value_counts|mean|idxmax|bar|barh|pie|plot|savefig|show|title|xlabel|ylabel|figure|legend|axhline|tight_layout|close|Flask|route|run|render_template|jsonify|redirect|request|connect|cursor|execute|executemany|fetchall|fetchone|commit|environ|getenv|post)\b|\b(True|False|None|if|elif|else|while|for|in|and|or|not|break|continue|import|from|def|return|try|except|finally|with|as|del|global|pass|class|self|super|lambda)\b|(\b\d+(?:\.\d+)?\b)/g,
       function(m, com, str, fn, bool, num){
         if(com)  return '<span class="tk-com">'+com+'</span>';
         if(str)  return '<span class="tk-str">'+str+'</span>';
@@ -851,7 +816,7 @@ for item in catalogo:
 // no navegador. Se o localStorage estiver indisponível (modo restrito,
 // pré-visualização, etc.), o progresso funciona só em memória, sem quebrar.
 const storage = (function(){
-  const KEY = 'python_semana11_progresso';
+  const KEY = 'python_semana23_progresso';
   let memoria = {};
   let disponivel = false;
   try{
@@ -900,8 +865,8 @@ const storage = (function(){
     [1,  'Boa! Continue assim 💪'],
     [4,  'Pegando o ritmo! 🔥'],
     [6, 'Metade do caminho! 🚀'],
-    [10, 'Quase lá... força! ⚡'],
-    [13, 'SEMANA COMPLETA! 🏆']
+    [9, 'Quase lá... força! ⚡'],
+    [12, 'SEMANA COMPLETA! 🏆']
   ];
 
   function estadoAtual(){

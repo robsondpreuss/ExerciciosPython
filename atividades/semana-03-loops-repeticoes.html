@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Semana 26 — MariaDB e DBeaver</title>
+<title>Semana 3 — Loops e Repetições</title>
 <style>
   :root{
     --ink:#16243A;
@@ -57,7 +57,7 @@
     color:#fff;padding:56px 20px 48px;text-align:center;position:relative;overflow:hidden;
   }
   header.hero::before{
-    content:"MariaDB  DBeaver  pymysql  %s  CREATE DATABASE";
+    content:"while  for  in  range(  break  continue  +=  if  else";
     position:absolute;inset:auto 0 8px 0;font-family:var(--mono);font-size:.78rem;
     color:rgba(255,255,255,.14);letter-spacing:.4em;white-space:nowrap;overflow:hidden;
   }
@@ -234,279 +234,521 @@
 <div class="progress-wrap" role="region" aria-label="Progresso da semana">
   <span class="label">XP DA SEMANA</span>
   <div class="progress-bar"><div class="progress-fill" id="pfill"></div></div>
-  <span class="progress-count" id="pcount">0 / 13</span>
+  <span class="progress-count" id="pcount">0 / 22</span>
   <span class="progress-msg" id="pmsg">Marque os exercícios concluídos ✔</span>
   <button class="reset-btn" id="resetBtn" title="Apagar todo o progresso salvo">↺ Resetar</button>
 </div>
 
 <header class="hero">
   <div class="kicker">Python para Iniciantes · Exercícios Guiados</div>
-  <h1>SEMANA 26 — MariaDB:<br>do arquivo ao servidor de banco<span class="cursor" aria-hidden="true"></span></h1>
-  <p class="sub">A virada profissional: sair do SQLite (arquivo) para o MariaDB (servidor), gerenciado visualmente no DBeaver. Conectar com PyMySQL, migrar seus dados e descobrir que todo o seu SQL continua valendo.</p>
+  <h1>SEMANA 3 — Loops:<br>repetindo com while e for<span class="cursor" aria-hidden="true"></span></h1>
+  <p class="sub">Faça o computador trabalhar por você: laços while e for, range(), acumuladores e contadores, break, continue e os clássicos FizzBuzz e jogo de adivinhação.</p>
   <div class="howto">
     <strong>Como usar:</strong> digite o código você mesmo (não copie e cole!), compare com a saída esperada e marque <strong>✔ Concluído</strong> em cada exercício para encher sua barra de XP. As <strong>dicas</strong> e <strong>soluções</strong> ficam escondidas — só abra depois de tentar! Seu progresso fica salvo no navegador.
   </div>
 </header>
 
-<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · SQLite vs MariaDB</a><a href="#p2">2 · DBeaver</a><a href="#p3">3 · PyMySQL</a><a href="#p4">4 · CRUD</a><a href="#p5">5 · Migração</a><a href="#p6">6 · Projetos</a><a href="#checklist">✅ Checklist</a></nav>
+<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · while</a><a href="#p2">2 · for + range</a><a href="#p3">3 · Acumuladores</a><a href="#p4">4 · break / continue</a><a href="#p5">5 · Strings & desenhos</a><a href="#p6">6 · Projetos</a><a href="#checklist">✅ Checklist</a></nav>
 
 <main>
 
 <section class="parte" id="p1">
-  <div class="parte-head"><span class="num">01</span><h2>SQLite vs MariaDB: arquivo vs servidor</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Nas Semanas 21-25 o SQLite foi perfeito para aprender: o banco inteiro num arquivo <code>.db</code>, zero configuração. Mas sistemas reais, com muitos usuários ao mesmo tempo e acesso pela rede, pedem um <strong>servidor de banco de dados</strong>. É aí que entra o <strong>MariaDB</strong> (primo livre do MySQL).</p><table><tr><th></th><th>SQLite</th><th>MariaDB</th></tr><tr><td>O que é</td><td>um arquivo</td><td>um servidor</td></tr><tr><td>Vários usuários</td><td>limitado</td><td>feito para isso</td></tr><tr><td>Pela rede</td><td>não</td><td>sim</td></tr><tr><td>Configuração</td><td>nenhuma</td><td>instalar + configurar</td></tr><tr><td>Ideal para</td><td>apps pequenos, protótipos, aprender</td><td>sistemas em produção</td></tr></table><p><strong>A ótima notícia:</strong> o SQL que você aprendeu (SELECT, WHERE, INSERT, UPDATE, GROUP BY...) é praticamente o MESMO. Muda o "motor" embaixo, não a linguagem em cima.</p></div>
+  <div class="parte-head"><span class="num">01</span><h2>O laço while</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>O <code>while</code> repete um bloco de código <strong>enquanto</strong> a condição for <code>True</code>. A estrutura clássica usa um <strong>contador</strong>:</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">estrutura.py</span></div><pre class="code">contador = 1            # 1. inicializa
+while contador &lt;= 5:    # 2. condição de parada
+    print(contador)
+    contador = contador + 1   # 3. atualiza (ESSENCIAL!)</pre></div><p>⚠️ Se você esquecer o passo 3, a condição nunca vira <code>False</code> e o programa repete <strong>para sempre</strong> — o famoso loop infinito (você vai criar um de propósito no Exercício 3!).</p></div>
   <article class="ex" id="ex1">
     <div class="ex-head">
       <span class="ex-num">EX 01</span>
-      <h3>Quando usar cada um? 🤔</h3>
+      <h3>Contando de 1 a 10</h3>
       <span class="stars">⭐ básico</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex1"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Fixar a decisão de arquitetura entre SQLite e MariaDB.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Para cada cenário, decida SQLite ou MariaDB e justifique mentalmente:</li><li>a) Um app de lista de tarefas que roda só no seu computador</li><li>b) O sistema de vendas da Tua Caneca, acessado por 3 funcionários ao mesmo tempo</li><li>c) Um protótipo rápido para testar uma ideia num fim de semana</li><li>d) Um site com milhares de visitantes consultando o catálogo</li></ol><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><p><strong>a)</strong> SQLite (um usuário, local). <strong>b)</strong> MariaDB (vários usuários simultâneos). <strong>c)</strong> SQLite (zero configuração, rápido de começar). <strong>d)</strong> MariaDB (acesso pela rede, muitos acessos). A regra: <strong>SQLite para começar e para apps locais; MariaDB quando há rede e concorrência</strong>. Não existe "melhor" absoluto — existe o certo para cada caso.</p></div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Executar e entender seu primeiro while.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Digite o código e PREVEJA a saída antes de executar</li><li>Execute e confira</li><li>Mude para contar de 1 a 100. Quantas linhas de código a mais você precisou? (Nenhuma! Esse é o poder do loop)</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex01_contagem.py</span></div><pre class="code">contador = 1
+while contador &lt;= 10:
+    print(contador)
+    contador = contador + 1</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">1
+2
+3
+4
+5
+6
+7
+8
+9
+10</pre></div><details class="dica"><summary>💡 Atalho</summary><div class="inner"><code>contador = contador + 1</code> pode ser escrito como <code>contador += 1</code>. Funciona também com <code>-=</code>, <code>*=</code> e <code>/=</code>.</div></details>
     </div>
   </article>
 
   <article class="ex" id="ex2">
     <div class="ex-head">
       <span class="ex-num">EX 02</span>
-      <h3>Preparando o terreno: o banco</h3>
-      <span class="stars">⭐⭐ médio</span>
+      <h3>Contagem regressiva do foguete 🚀</h3>
+      <span class="stars">⭐ básico</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex2"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Ter o MariaDB rodando e criar o banco da Tua Caneca.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Garanta um servidor MariaDB ativo na sua máquina — via instalador oficial, XAMPP/Laragon, ou Docker (escolha o que preferir; o importante é o servidor no ar na porta padrão 3306)</li><li>Anote suas credenciais: host (<code>localhost</code>), porta (<code>3306</code>), usuário e senha</li><li>O banco em si será criado no próximo passo, pelo DBeaver</li></ol><span class="tag saida">✅ Pré-requisito</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(MariaDB rodando em localhost:3306, com usuário e senha em mãos)</pre></div><details class="dica"><summary>💡 Não tem MariaDB ainda?</summary><div class="inner">Para Windows, o XAMPP ou o Laragon instalam o MariaDB com poucos cliques. Para qualquer sistema, o Docker resolve com um comando. O foco desta semana é USAR o banco — escolha a forma de instalação que for mais simples para você e siga em frente.</div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Fazer um while que conta para trás.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Comece o contador em 10</li><li>Repita enquanto for maior ou igual a 1, DIMINUINDO 1 a cada volta</li><li>Depois do loop, exiba "Decolar! 🚀"</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex02_foguete.py</span></div><pre class="code">contador = ____
+while contador ____ 1:
+    print(contador)
+    contador = contador ____ 1
+
+print("Decolar! 🚀")</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">10
+9
+8
+7
+6
+5
+4
+3
+2
+1
+Decolar! 🚀</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner">O <code>print("Decolar!")</code> fica SEM indentação — ele não pertence ao loop, então só executa quando o while terminar.</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex02.py</span></div><pre class="code">contador = 10
+while contador &gt;= 1:
+    print(contador)
+    contador = contador - 1
+
+print("Decolar! 🚀")</pre></div></div></details>
     </div>
   </article>
-</section>
 
-<section class="parte" id="p2">
-  <div class="parte-head"><span class="num">02</span><h2>DBeaver: gerenciando o banco visualmente</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>O <strong>DBeaver</strong> é uma ferramenta gráfica gratuita para gerenciar bancos de dados — pense nele como um "painel de controle visual" do MariaDB. Com ele você cria bancos, tabelas, roda consultas e VÊ os dados em tabela, sem precisar de código. É o companheiro perfeito do seu Python.</p></div>
   <article class="ex" id="ex3">
     <div class="ex-head">
       <span class="ex-num">EX 03</span>
-      <h3>Conectando no DBeaver 🔌</h3>
+      <h3>O temido loop infinito ♾️</h3>
       <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex3"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Criar a conexão do DBeaver com o seu MariaDB.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Instale e abra o DBeaver (gratuito, em dbeaver.io)</li><li>Nova conexão → escolha <strong>MariaDB</strong></li><li>Preencha: Host <code>localhost</code>, Port <code>3306</code>, Username e Password (os seus)</li><li>Clique em "Test Connection" — se baixar o driver e der "Connected", finalize</li></ol><span class="tag saida">✅ Resultado</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(o DBeaver conectado ao seu MariaDB, pronto para uso)</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner">Na primeira conexão, o DBeaver pode pedir para baixar o "driver" do MariaDB — aceite, é automático. Se o "Test" falhar, confira se o servidor está rodando e se usuário/senha estão certos (os mesmos erros que veremos no Python a seguir!).</div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Criar um loop infinito de propósito — e aprender a escapar dele.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Digite e execute este código <strong>com erro proposital</strong> (prepare o dedo no Ctrl+C!):</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex03_infinito.py</span></div><pre class="code">contador = 1
+while contador &lt;= 5:
+    print("Socorro, não consigo parar!")</pre></div><span class="tag passos">🧭 Continue</span><ol><li>O programa vai imprimir sem parar — pressione <strong>Ctrl + C</strong> no terminal para interrompê-lo</li><li>Analise: por que ele nunca para?</li><li>Corrija adicionando a linha que falta</li></ol><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><p>Faltou atualizar o contador! Como <code>contador</code> fica eternamente em 1, a condição <code>contador &lt;= 5</code> nunca vira False. Correção:</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex03.py</span></div><pre class="code">contador = 1
+while contador &lt;= 5:
+    print("Agora eu paro!")
+    contador += 1</pre></div><p><strong>Regra de ouro do while:</strong> alguma coisa DENTRO do loop precisa mudar a condição.</p></div></details>
     </div>
   </article>
 
   <article class="ex" id="ex4">
     <div class="ex-head">
       <span class="ex-num">EX 04</span>
-      <h3>Criando o banco e a tabela pelo DBeaver</h3>
+      <h3>Soma acumuladora (1 a 100)</h3>
       <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex4"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Usar o editor SQL do DBeaver para montar a estrutura.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>No DBeaver, abra um Editor SQL (SQL Editor → New SQL Script)</li><li>Execute o <code>CREATE DATABASE</code> e depois o <code>CREATE TABLE</code> abaixo</li><li>Repare nos tipos do MariaDB: <code>INT</code></li><li> <code>VARCHAR</code> e <code>DECIMAL</code></li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">criar.sql</span></div><pre class="code">CREATE DATABASE IF NOT EXISTS tua_caneca;
-USE tua_caneca;
+<span class="tag obj">🎯 Objetivo</span><p>Conhecer o padrão mais importante dos loops: o acumulador.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie <code>soma = 0</code> ANTES do loop</li><li>Percorra de 1 a 100 com um contador</li><li>A cada volta, faça <code>soma = soma + contador</code></li><li>Depois do loop, exiba a soma total</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">A soma de 1 até 100 é: 5050</pre></div><details class="dica"><summary>💡 Curiosidade</summary><div class="inner">Conta a lenda que o matemático Gauss, ainda criança, calculou isso em segundos: ele percebeu que 1+100, 2+99, 3+98... são 50 pares que somam 101. 50 × 101 = 5050!</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex04.py</span></div><pre class="code">soma = 0
+contador = 1
 
-CREATE TABLE IF NOT EXISTS produtos (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nome VARCHAR(100),
-    preco DECIMAL(10,2),
-    estoque INT
-);</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(banco tua_caneca e tabela produtos criados — visíveis na árvore à esquerda)</pre></div><details class="dica"><summary>💡 Tipos do MariaDB</summary><div class="inner">No SQLite os tipos eram "soltos" (TEXT, REAL). No MariaDB eles são mais precisos: <code>VARCHAR(100)</code> = texto até 100 caracteres; <code>DECIMAL(10,2)</code> = número com 2 casas decimais (perfeito para dinheiro!); <code>INT</code> = inteiro. E <code>AUTO_INCREMENT</code> substitui o <code>AUTOINCREMENT</code> do SQLite. Pequenas diferenças, mesma ideia.</div></details>
+while contador &lt;= 100:
+    soma = soma + contador
+    contador += 1
+
+print(f"A soma de 1 até 100 é: {soma}")</pre></div></div></details>
     </div>
   </article>
-</section>
 
-<section class="parte" id="p3">
-  <div class="parte-head"><span class="num">03</span><h2>PyMySQL: conectando do Python</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Para conversar com o MariaDB pelo Python, usamos a biblioteca <strong>PyMySQL</strong> (<code>pip install pymysql</code>). A boa notícia: a interface é quase idêntica ao <code>sqlite3</code> — <code>connect</code>, <code>cursor</code>, <code>execute</code>, <code>commit</code>. A diferença principal está na CONEXÃO (precisa de host, usuário e senha) e nos placeholders.</p></div>
   <article class="ex" id="ex5">
     <div class="ex-head">
       <span class="ex-num">EX 05</span>
-      <h3>A primeira conexão (com credenciais seguras) 🔐</h3>
+      <h3>Senha: insista até acertar 🔒</h3>
       <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex5"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Conectar ao MariaDB do Python, sem expor a senha no código.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Instale: <code>pip install pymysql</code></li><li>Guarde as credenciais em variáveis de ambiente (lição da Semana 24!) e leia com <code>os.environ.get</code></li><li>Conecte passando host, user, password e database</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex05_conexao.py</span></div><pre class="code">import os
-import pymysql
+<span class="tag obj">🎯 Objetivo</span><p>Usar o while para repetir uma pergunta até a resposta certa.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Peça a senha UMA vez antes do loop</li><li>Enquanto a senha for diferente de <code>"python123"</code>: avise e peça de novo</li><li>Quando acertar, o loop termina sozinho — exiba "Acesso liberado!"</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Digite a senha: 1234
+Senha incorreta! Tente novamente.
+Digite a senha: python321
+Senha incorreta! Tente novamente.
+Digite a senha: python123
+Acesso liberado! ✔</pre></div><details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Conte as tentativas com um contador e exiba: "Você acertou em X tentativas".</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex05.py</span></div><pre class="code">senha = input("Digite a senha: ")
 
-conexao = pymysql.connect(
-    host=os.environ.get("DB_HOST", "localhost"),
-    user=os.environ.get("DB_USER", "root"),
-    password=os.environ.get("DB_PASS", ""),
-    database="tua_caneca"
-)
+while senha != "python123":
+    print("Senha incorreta! Tente novamente.")
+    senha = input("Digite a senha: ")
 
-print("Conectado ao MariaDB! ✔")
-conexao.close()</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Conectado ao MariaDB! ✔</pre></div><details class="dica"><summary>💡 Credenciais nunca no código</summary><div class="inner">Assim como a chave de IA (Semana 24), a senha do banco JAMAIS deve ficar escrita no código (e muito menos no GitHub!). As variáveis de ambiente <code>DB_HOST</code>, <code>DB_USER</code>, <code>DB_PASS</code> mantêm o segredo fora do código. O segundo valor em <code>os.environ.get("DB_USER", "root")</code> é um padrão, usado se a variável não existir.</div></details>
-    </div>
-  </article>
-
-  <article class="ex" id="ex6">
-    <div class="ex-head">
-      <span class="ex-num">EX 06</span>
-      <h3>O erro de senha errada</h3>
-      <span class="stars">⭐⭐ médio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex6"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Reconhecer (e tratar) a falha de autenticação no banco.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Tente conectar com uma senha propositalmente errada e leia o erro:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output" style="color:#FF9B94">pymysql.err.OperationalError: (1045, "Access denied for user 'root'@'localhost'")</pre></div><span class="tag passos">🧭 Continue</span><ol><li>O erro 1045 = "acesso negado" (usuário ou senha incorretos) — o mesmo que o DBeaver daria</li><li>Proteja a conexão com try/except (Semana 7) para o programa não quebrar feio</li></ol><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex06.py</span></div><pre class="code">import os
-import pymysql
-
-try:
-    conexao = pymysql.connect(
-        host=os.environ.get("DB_HOST", "localhost"),
-        user=os.environ.get("DB_USER", "root"),
-        password=os.environ.get("DB_PASS", ""),
-        database="tua_caneca"
-    )
-    print("Conectado! ✔")
-    conexao.close()
-except pymysql.err.OperationalError as erro:
-    print(f"Falha ao conectar: {erro}")</pre></div><p>Tratar a falha de conexão é essencial: bancos caem, senhas mudam, a rede oscila. Um bom programa avisa o problema em vez de explodir.</p></div></details>
+print("Acesso liberado! ✔")</pre></div></div></details>
     </div>
   </article>
 </section>
 
-<section class="parte" id="p4">
-  <div class="parte-head"><span class="num">04</span><h2>CRUD no MariaDB: a diferença do %s</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>A mudança mais visível ao sair do SQLite: os placeholders deixam de ser <code>?</code> e passam a ser <code>%s</code>. Fora isso, <code>execute</code>, <code>fetchall</code>, <code>commit</code> — tudo igual. O resto do SQL não muda em nada.</p></div>
+<section class="parte" id="p2">
+  <div class="parte-head"><span class="num">02</span><h2>O laço for e o range()</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>O <code>for</code> repete um número conhecido de vezes, sem precisar criar e atualizar contador na mão. Ele anda pelos valores gerados por <code>range()</code>:</p><table><tr><th>Forma</th><th>Gera</th></tr><tr><td><code>range(5)</code></td><td>0, 1, 2, 3, 4</td></tr><tr><td><code>range(1, 6)</code></td><td>1, 2, 3, 4, 5</td></tr><tr><td><code>range(0, 11, 2)</code></td><td>0, 2, 4, 6, 8, 10</td></tr><tr><td><code>range(10, 0, -1)</code></td><td>10, 9, 8, ... 1</td></tr></table><p>⚠️ <strong>O número final NUNCA entra!</strong> <code>range(1, 6)</code> para no 5. É a pegadinha número 1 do for.</p></div>
+  <article class="ex" id="ex6">
+    <div class="ex-head">
+      <span class="ex-num">EX 06</span>
+      <h3>Prevendo o range</h3>
+      <span class="stars">⭐ básico</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex6"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Dominar o comportamento do range().</p><span class="tag passos">🧭 Passo a passo</span><ol><li>PREVEJA a saída de cada bloco, depois execute tudo</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex06_range.py</span></div><pre class="code">print("--- Bloco 1 ---")
+for i in range(5):
+    print(i)
+
+print("--- Bloco 2 ---")
+for i in range(1, 6):
+    print(i)
+
+print("--- Bloco 3 ---")
+for i in range(0, 11, 2):
+    print(i)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">--- Bloco 1 ---
+0
+1
+2
+3
+4
+--- Bloco 2 ---
+1
+2
+3
+4
+5
+--- Bloco 3 ---
+0
+2
+4
+6
+8
+10</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner">Com um só número, o range começa do 0. Com dois, é (início, fim). Com três, o último é o "passo" — de quanto em quanto ele anda.</div></details>
+    </div>
+  </article>
+
   <article class="ex" id="ex7">
     <div class="ex-head">
       <span class="ex-num">EX 07</span>
-      <h3>INSERT com %s</h3>
+      <h3>Os pares e a regressiva</h3>
       <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex7"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Inserir produtos no MariaDB.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Use <code>%s</code> no lugar de cada <code>?</code> (a única mudança no comando!)</li><li>O valor vai numa tupla, exatamente como antes</li><li>Não esqueça o <code>commit()</code></li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex07_insert.py</span></div><pre class="code">import os
-import pymysql
+<span class="tag obj">🎯 Objetivo</span><p>Praticar range() com passo personalizado.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Complete os dois ranges abaixo</li><li>Lembre: o fim não entra! Para chegar ATÉ o 20, o fim precisa ser 21</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex07_passo.py</span></div><pre class="code"># Números pares de 0 a 20:
+for i in range(0, ____, 2):
+    print(i)
 
-conexao = pymysql.connect(host=os.environ.get("DB_HOST", "localhost"),
-    user=os.environ.get("DB_USER", "root"),
-    password=os.environ.get("DB_PASS", ""), database="tua_caneca")
-cursor = conexao.cursor()
+# Contagem regressiva de 10 até 1:
+for i in range(10, ____, ____):
+    print(i)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex07.py</span></div><pre class="code"># Números pares de 0 a 20:
+for i in range(0, 21, 2):
+    print(i)
 
-cursor.execute(
-    "INSERT INTO produtos (nome, preco, estoque) VALUES (%s, %s, %s)",
-    ("caneca branca", 25.00, 10)
-)
-conexao.commit()
-conexao.close()
-print("Produto inserido no MariaDB ✔")</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Produto inserido no MariaDB ✔</pre></div><details class="dica"><summary>💡 ? virou %s</summary><div class="inner">No SQLite: <code>VALUES (?, ?, ?)</code>. No MariaDB com PyMySQL: <code>VALUES (%s, %s, %s)</code>. É a mesma proteção contra SQL injection (Semana 21) — só muda o símbolo. O <code>%s</code> aqui NÃO é formatação de string; é o placeholder do driver. Continue passando os valores na tupla separada!</div></details>
+# Contagem regressiva de 10 até 1:
+for i in range(10, 0, -1):
+    print(i)</pre></div><p>Na regressiva, o fim é 0 (que não entra — para no 1) e o passo é -1.</p></div></details>
     </div>
   </article>
 
   <article class="ex" id="ex8">
     <div class="ex-head">
       <span class="ex-num">EX 08</span>
-      <h3>SELECT: o SQL é idêntico! 🎉</h3>
+      <h3>Tabuada 🧮</h3>
       <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex8"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Consultar o MariaDB e ver que o SELECT não mudou nada.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Faça um <code>SELECT * FROM produtos</code> — exatamente como na Semana 21</li><li>Percorra com fetchall + for, desempacotando a tupla</li><li>Repare: zero diferença na consulta!</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">1. caneca branca — R$ 25.00 (10 un.)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex08.py</span></div><pre class="code">import os
-import pymysql
+<span class="tag obj">🎯 Objetivo</span><p>Gerar uma tabuada inteira com 3 linhas de código.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Peça um número</li><li>Use <code>for i in range(1, 11)</code></li><li>Dentro do loop: <code>print(f"{n} x {i} = {n * i}")</code></li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Tabuada de qual número? 7
+7 x 1 = 7
+7 x 2 = 14
+7 x 3 = 21
+7 x 4 = 28
+7 x 5 = 35
+7 x 6 = 42
+7 x 7 = 49
+7 x 8 = 56
+7 x 9 = 63
+7 x 10 = 70</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex08.py</span></div><pre class="code">n = int(input("Tabuada de qual número? "))
 
-conexao = pymysql.connect(host=os.environ.get("DB_HOST", "localhost"),
-    user=os.environ.get("DB_USER", "root"),
-    password=os.environ.get("DB_PASS", ""), database="tua_caneca")
-cursor = conexao.cursor()
-
-cursor.execute("SELECT * FROM produtos")
-for id, nome, preco, estoque in cursor.fetchall():
-    print(f"{id}. {nome} — R$ {preco:.2f} ({estoque} un.)")
-
-conexao.close()</pre></div><p>Viu? O <code>SELECT</code>, o <code>fetchall</code>, o for desempacotando — tudo igualzinho à Semana 21. Seu conhecimento de SQL é um investimento que rende em qualquer banco.</p></div></details>
+for i in range(1, 11):
+    print(f"{n} x {i} = {n * i}")</pre></div></div></details>
     </div>
   </article>
 
   <article class="ex" id="ex9">
     <div class="ex-head">
       <span class="ex-num">EX 09</span>
-      <h3>UPDATE, DELETE e GROUP BY no MariaDB</h3>
+      <h3>Fatorial</h3>
       <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex9"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Confirmar que todo o seu CRUD e agregações funcionam igual.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Faça um UPDATE de preço (com <code>%s</code> e WHERE) e um DELETE por id</li><li>Rode um <code>GROUP BY</code> (Semana 22) — funciona idêntico!</li><li>A regra geral: troque <code>?</code> por <code>%s</code> e mantenha o resto</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(preço atualizado, produto removido, agrupamento funcionando)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex09.py</span></div><pre class="code">import os
-import pymysql
+<span class="tag obj">🎯 Objetivo</span><p>Usar um acumulador MULTIPLICATIVO.</p><p><strong>Conceito:</strong> o fatorial de 5 (escrito 5!) é 5 × 4 × 3 × 2 × 1 = 120.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Peça um número n</li><li>Crie <code>resultado = 1</code> (por que 1 e não 0? Pense!)</li><li>Multiplique resultado por cada i de 1 até n</li><li>Exiba o fatorial</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Calcular o fatorial de: 5
+5! = 120</pre></div><details class="dica"><summary>💡 Por que começar com 1?</summary><div class="inner">Se o acumulador de multiplicação começasse em 0, tudo multiplicado por 0 daria... 0! Para somar, começamos do 0; para multiplicar, do 1 (os "elementos neutros" de cada operação).</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex09.py</span></div><pre class="code">n = int(input("Calcular o fatorial de: "))
 
-conexao = pymysql.connect(host=os.environ.get("DB_HOST", "localhost"),
-    user=os.environ.get("DB_USER", "root"),
-    password=os.environ.get("DB_PASS", ""), database="tua_caneca")
-cursor = conexao.cursor()
+resultado = 1
+for i in range(1, n + 1):
+    resultado = resultado * i
 
-# UPDATE (só muda ? -&gt; %s)
-cursor.execute("UPDATE produtos SET preco = %s WHERE nome = %s",
-               (29.90, "caneca branca"))
-
-# DELETE
-cursor.execute("DELETE FROM produtos WHERE id = %s", (99,))
-
-# GROUP BY — idêntico à Semana 22
-cursor.execute("""SELECT estoque, COUNT(*) FROM produtos
-                  GROUP BY estoque""")
-print(cursor.fetchall())
-
-conexao.commit()
-conexao.close()</pre></div><p>Confirme no DBeaver depois: abra a tabela produtos e veja as mudanças refletidas. Python alterou, DBeaver mostra — os dois trabalham sobre o mesmo banco.</p></div></details>
+print(f"{n}! = {resultado}")</pre></div></div></details>
     </div>
   </article>
 </section>
 
-<section class="parte" id="p5">
-  <div class="parte-head"><span class="num">05</span><h2>A migração: SQLite → MariaDB</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Você tem dados no <code>loja.db</code> (SQLite, das Semanas 21-25) e quer levá-los para o MariaDB. A estratégia é simples e poderosa: <strong>ler de um banco e gravar no outro</strong>, no mesmo script. Os dois módulos (<code>sqlite3</code> e <code>pymysql</code>) convivem numa boa.</p></div>
+<section class="parte" id="p3">
+  <div class="parte-head"><span class="num">03</span><h2>Acumuladores e contadores</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Dois padrões que resolvem 80% dos problemas com loops: o <strong>acumulador</strong> (vai somando valores: <code>soma += valor</code>) e o <strong>contador</strong> (vai contando ocorrências: <code>pares += 1</code>). Ambos nascem ZERADOS antes do loop.</p></div>
   <article class="ex" id="ex10">
     <div class="ex-head">
       <span class="ex-num">EX 10</span>
-      <h3>O script de migração 📦</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
+      <h3>Média da turma</h3>
+      <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex10"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Transferir todos os produtos do SQLite para o MariaDB.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Abra DUAS conexões: uma com sqlite3 (origem) e uma com pymysql (destino)</li><li>SELECT tudo da tabela do SQLite (fetchall)</li><li>Para cada linha, INSERT no MariaDB com <code>%s</code></li><li>commit no destino e confira a contagem</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">4 produtos migrados do SQLite para o MariaDB ✔</pre></div><details class="dica"><summary>💡 Dois bancos, um script</summary><div class="inner">Lembra de ler CSV e gravar no banco (Semana 21)? Aqui é o mesmo padrão "ler de uma fonte, gravar em outra" — só que a fonte é outro banco. Esse tipo de script (chamado de "ETL" no mercado: Extract, Transform, Load) é tarefa comum e bem valorizada.</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">migrar.py</span></div><pre class="code">import os
-import sqlite3
-import pymysql
+<span class="tag obj">🎯 Objetivo</span><p>Combinar for + input + acumulador.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie <code>soma = 0</code> antes do loop</li><li>Peça 5 notas dentro de um <code>for i in range(1, 6)</code> (use o i no texto: "Nota 1:", "Nota 2:"...)</li><li>Acumule cada nota na soma</li><li>Depois do loop, calcule e exiba a média</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Nota 1: 8
+Nota 2: 7.5
+Nota 3: 9
+Nota 4: 6
+Nota 5: 7
+Média da turma: 7.5</pre></div><details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Pergunte primeiro QUANTAS notas serão digitadas e use esse valor no range e na divisão.</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex10.py</span></div><pre class="code">soma = 0
 
-# ORIGEM: SQLite
-origem = sqlite3.connect("loja.db")
-cur_origem = origem.cursor()
-cur_origem.execute("SELECT nome, preco, estoque FROM produtos")
-produtos = cur_origem.fetchall()
-origem.close()
+for i in range(1, 6):
+    nota = float(input(f"Nota {i}: "))
+    soma = soma + nota
 
-# DESTINO: MariaDB
-destino = pymysql.connect(host=os.environ.get("DB_HOST", "localhost"),
-    user=os.environ.get("DB_USER", "root"),
-    password=os.environ.get("DB_PASS", ""), database="tua_caneca")
-cur_destino = destino.cursor()
-
-for nome, preco, estoque in produtos:
-    cur_destino.execute(
-        "INSERT INTO produtos (nome, preco, estoque) VALUES (%s, %s, %s)",
-        (nome, preco, estoque))
-
-destino.commit()
-
-cur_destino.execute("SELECT COUNT(*) FROM produtos")
-total = cur_destino.fetchone()[0]
-destino.close()
-
-print(f"{len(produtos)} produtos migrados do SQLite para o MariaDB ✔")</pre></div></div></details>
+media = soma / 5
+print(f"Média da turma: {media:.1f}")</pre></div></div></details>
     </div>
   </article>
 
   <article class="ex" id="ex11">
     <div class="ex-head">
       <span class="ex-num">EX 11</span>
-      <h3>Conferindo no DBeaver 🔍</h3>
+      <h3>Contador de pares e ímpares</h3>
       <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex11"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Validar visualmente que a migração funcionou.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>No DBeaver, expanda tua_caneca → Tables → produtos</li><li>Dê duplo-clique na tabela (ou rode <code>SELECT * FROM produtos</code> no editor)</li><li>Veja os dados migrados em formato de planilha — confira se bateram com o SQLite</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(a tabela produtos do MariaDB exibindo os dados que vieram do SQLite)</pre></div><details class="dica"><summary>💡 O olhar do DBeaver</summary><div class="inner">Usar o DBeaver para CONFERIR o que o Python fez é um hábito de ouro: você vê os dados reais, na hora, sem escrever código. Código grava, ferramenta visual confirma — essa dupla acelera muito o desenvolvimento e a depuração.</div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Usar dois contadores com um if dentro do for.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie <code>pares = 0</code> e <code>impares = 0</code></li><li>Leia 6 números num for</li><li>Para cada um: se <code>numero % 2 == 0</code>, some 1 em pares; senão, em ímpares</li><li>Exiba os dois totais</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Número 1: 4
+Número 2: 7
+Número 3: 10
+Número 4: 3
+Número 5: 8
+Número 6: 1
+Pares: 3 | Ímpares: 3</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex11.py</span></div><pre class="code">pares = 0
+impares = 0
+
+for i in range(1, 7):
+    numero = int(input(f"Número {i}: "))
+    if numero % 2 == 0:
+        pares = pares + 1
+    else:
+        impares = impares + 1
+
+print(f"Pares: {pares} | Ímpares: {impares}")</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex12">
+    <div class="ex-head">
+      <span class="ex-num">EX 12</span>
+      <h3>Maior e menor</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex12"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Encontrar extremos com atualização condicional (sem usar max/min).</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Leia o PRIMEIRO número fora do loop e use-o para inicializar <code>maior</code> e <code>menor</code></li><li>Leia os outros 4 números num for</li><li>Para cada um: se for maior que o maior atual, atualize; se for menor que o menor, atualize</li><li>Exiba os dois no final</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Digite 5 números:
+Número 1: 7
+Número 2: 3
+Número 3: 12
+Número 4: 5
+Número 5: 9
+Maior: 12.0
+Menor: 3.0</pre></div><details class="dica"><summary>💡 Por que inicializar com o primeiro número?</summary><div class="inner">Se você começar com <code>maior = 0</code> e o usuário só digitar números negativos, o resultado sai errado! Inicializar com o primeiro valor real é a forma segura.</div></details><details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Confira seu resultado usando as funções prontas <code>max()</code> e <code>min()</code> (você vai precisar de listas — spoiler da Semana 4!).</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex12.py</span></div><pre class="code">print("Digite 5 números:")
+
+maior = float(input("Número 1: "))
+menor = maior
+
+for i in range(2, 6):
+    numero = float(input(f"Número {i}: "))
+    if numero &gt; maior:
+        maior = numero
+    if numero &lt; menor:
+        menor = numero
+
+print(f"Maior: {maior}")
+print(f"Menor: {menor}")</pre></div></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p4">
+  <div class="parte-head"><span class="num">04</span><h2>break e continue</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Dois comandos para controlar o loop por dentro: <code>break</code> <strong>encerra</strong> o loop na hora; <code>continue</code> <strong>pula</strong> para a próxima volta, ignorando o resto do bloco.</p></div>
+  <article class="ex" id="ex13">
+    <div class="ex-head">
+      <span class="ex-num">EX 13</span>
+      <h3>Pare quando digitar 0</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex13"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Usar while True + break (o padrão "sentinela").</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie <code>soma = 0</code> e um loop <code>while True:</code> (proposital — quem vai parar é o break!)</li><li>Peça um valor; se for 0, <code>break</code></li><li>Senão, acumule na soma</li><li>Exiba a soma total ao final</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Digite valores (0 para encerrar)
+Valor: 10
+Valor: 25.5
+Valor: 8
+Valor: 0
+Soma total: R$ 43.50</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner">Esse padrão é usado quando NÃO sabemos quantas repetições haverá — quem decide é o usuário, com o valor "sentinela" (aqui, o 0).</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex13.py</span></div><pre class="code">print("Digite valores (0 para encerrar)")
+soma = 0
+
+while True:
+    valor = float(input("Valor: "))
+    if valor == 0:
+        break
+    soma = soma + valor
+
+print(f"Soma total: R$ {soma:.2f}")</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex14">
+    <div class="ex-head">
+      <span class="ex-num">EX 14</span>
+      <h3>Pulando múltiplos de 3</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex14"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Entender o continue.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Percorra de 1 a 15 com for</li><li>Se <code>i % 3 == 0</code>: <code>continue</code> (pula a impressão)</li><li>Senão, imprima o número</li><li>PREVEJA quais números vão aparecer antes de rodar</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">1
+2
+4
+5
+7
+8
+10
+11
+13
+14</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex14.py</span></div><pre class="code">for i in range(1, 16):
+    if i % 3 == 0:
+        continue
+    print(i)</pre></div><p>O <code>continue</code> faz o loop "dar meia-volta": o print daquela rodada nunca acontece, mas o loop segue normalmente.</p></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex15">
+    <div class="ex-head">
+      <span class="ex-num">EX 15</span>
+      <h3>Validando a entrada</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex15"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Repetir a pergunta enquanto a resposta for inválida — padrão essencial em qualquer sistema!</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Peça uma nota de 0 a 10</li><li>Enquanto a nota for menor que 0 OU maior que 10: avise e peça de novo</li><li>Quando sair do loop, a nota é garantidamente válida</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Digite a nota (0 a 10): 15
+Nota inválida!
+Digite a nota (0 a 10): -2
+Nota inválida!
+Digite a nota (0 a 10): 8.5
+Nota registrada: 8.5</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex15.py</span></div><pre class="code">nota = float(input("Digite a nota (0 a 10): "))
+
+while nota &lt; 0 or nota &gt; 10:
+    print("Nota inválida!")
+    nota = float(input("Digite a nota (0 a 10): "))
+
+print(f"Nota registrada: {nota}")</pre></div></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p5">
+  <div class="parte-head"><span class="num">05</span><h2>Loops com textos e desenhos</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>O <code>for</code> também percorre as letras de um texto, uma por uma: <code>for letra in palavra</code>. E lembra que <code>"*" * 3</code> repete o texto? Combinado com loops, dá para desenhar!</p></div>
+  <article class="ex" id="ex16">
+    <div class="ex-head">
+      <span class="ex-num">EX 16</span>
+      <h3>Soletrando</h3>
+      <span class="stars">⭐ básico</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex16"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Percorrer um texto letra por letra.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Digite, preveja e execute:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex16_soletrar.py</span></div><pre class="code">for letra in "python":
+    print(f"Letra: {letra}")</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Letra: p
+Letra: y
+Letra: t
+Letra: h
+Letra: o
+Letra: n</pre></div><details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Peça o nome do usuário com input e soletre-o.</div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex17">
+    <div class="ex-head">
+      <span class="ex-num">EX 17</span>
+      <h3>Contando vogais</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex17"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Combinar for + in + contador.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Peça uma palavra (use <code>.lower()</code> para aceitar maiúsculas)</li><li>Percorra letra por letra</li><li>Se a letra estiver em <code>"aeiou"</code>, some 1 no contador</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Digite uma palavra: Programacao
+A palavra tem 5 vogais</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex17.py</span></div><pre class="code">palavra = input("Digite uma palavra: ").lower()
+vogais = 0
+
+for letra in palavra:
+    if letra in "aeiou":
+        vogais = vogais + 1
+
+print(f"A palavra tem {vogais} vogais")</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex18">
+    <div class="ex-head">
+      <span class="ex-num">EX 18</span>
+      <h3>Pirâmide de asteriscos</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex18"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Desenhar com loop + repetição de texto.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Use <code>for i in range(1, 6)</code></li><li>A cada volta, imprima <code>"*" * i</code></li><li>Observe: na volta 1 imprime 1 asterisco, na volta 2 imprime 2...</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">*
+**
+***
+****
+*****</pre></div><details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Faça a pirâmide INVERTIDA (de 5 asteriscos até 1). E a centralizada da Semana 1? Dica: <code>" " * (5 - i) + "*" * (2 * i - 1)</code> 🤯</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex18.py</span></div><pre class="code">for i in range(1, 6):
+    print("*" * i)
+
+# Desafio — invertida:
+for i in range(5, 0, -1):
+    print("*" * i)
+
+# Desafio — centralizada:
+for i in range(1, 6):
+    print(" " * (5 - i) + "*" * (2 * i - 1))</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex19">
+    <div class="ex-head">
+      <span class="ex-num">EX 19</span>
+      <h3>FizzBuzz — o clássico das entrevistas! 🏆</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex19"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Resolver o exercício mais famoso de lógica de programação (cai em entrevista de emprego de verdade!).</p><p><strong>Regras:</strong> para os números de 1 a 30 — múltiplo de 3: imprima "Fizz" · múltiplo de 5: "Buzz" · múltiplo dos DOIS: "FizzBuzz" · senão: o próprio número.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Percorra de 1 a 30</li><li>ATENÇÃO à ordem dos testes: qual condição precisa vir primeiro?</li><li>Teste especialmente os números 15 e 30</li></ol><span class="tag saida">✅ Saída esperada (início)</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">1
+2
+Fizz
+4
+Buzz
+Fizz
+7
+8
+Fizz
+Buzz
+11
+Fizz
+13
+14
+FizzBuzz
+(...)</pre></div><details class="dica"><summary>💡 A pegadinha</summary><div class="inner">Se você testar "múltiplo de 3" primeiro, o 15 vai cair nesse caso e imprimir só "Fizz". A condição MAIS ESPECÍFICA (múltiplo de 3 E de 5) precisa vir primeiro!</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex19.py</span></div><pre class="code">for i in range(1, 31):
+    if i % 3 == 0 and i % 5 == 0:
+        print("FizzBuzz")
+    elif i % 3 == 0:
+        print("Fizz")
+    elif i % 5 == 0:
+        print("Buzz")
+    else:
+        print(i)</pre></div></div></details>
     </div>
   </article>
 </section>
@@ -514,86 +756,98 @@ print(f"{len(produtos)} produtos migrados do SQLite para o MariaDB ✔")</pre></
 <section class="parte" id="p6">
   <div class="parte-head"><span class="num">06</span><h2>Projetos da semana: juntando tudo!</h2></div>
 
-  <article class="ex" id="ex12">
+  <article class="ex" id="ex20">
     <div class="ex-head">
-      <span class="ex-num">EX 12</span>
-      <h3>Projeto: BancoProdutos no MariaDB 🗄️</h3>
+      <span class="ex-num">EX 20</span>
+      <h3>Projeto: Jogo de adivinhação 🎲</h3>
       <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex12"> Concluído</label>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex20"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Adaptar a classe da Semana 22 para o MariaDB — mesma interface, novo motor.</p><span class="tag passos">🧭 Requisitos</span><ol><li>Pegue a classe <code>BancoProdutos</code> da Semana 22 (CRUD encapsulado)</li><li>Troque a conexão sqlite3 por pymysql (com credenciais de ambiente)</li><li>Troque todos os <code>?</code> por <code>%s</code></li><li>Os MÉTODOS (inserir, listar, vender, buscar) continuam com a mesma assinatura — quem usa a classe nem percebe a troca!</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Produto inserido ✔
-caneca natal — R$ 30.00 (15 un.)
-Venda ok! Novo estoque: 12</pre></div><details class="dica"><summary>💡 A beleza do encapsulamento</summary><div class="inner">Como o CRUD está "escondido" dentro da classe (Semana 22), trocar SQLite por MariaDB mexe SÓ no interior dela. O resto do programa, que só chama <code>banco.inserir(...)</code>, continua intacto. Isso é o poder da abstração: trocar o motor sem trocar o painel. 🏎️</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">banco_mariadb.py</span></div><pre class="code">import os
-import pymysql
+<span class="tag obj">🎯 Objetivo</span><p>Construir um jogo de verdade com while, if/elif e números aleatórios.</p><p><strong>Novidade:</strong> a linha <code>import random</code> (no topo do arquivo) traz funções de sorteio. <code>random.randint(1, 50)</code> sorteia um inteiro entre 1 e 50.</p><span class="tag passos">🧭 Requisitos</span><ol><li>Sorteie o número secreto</li><li>Enquanto o palpite for diferente do segredo: peça um palpite, conte a tentativa e dê a dica "Muito alto!" ou "Muito baixo!"</li><li>Ao acertar, parabenize mostrando o número de tentativas</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Adivinhe o número entre 1 e 50!
+Seu palpite: 25
+Muito baixo! ⬆
+Seu palpite: 38
+Muito alto! ⬇
+Seu palpite: 31
+🎉 Acertou em 3 tentativas!</pre></div><details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Limite a 7 tentativas: se estourar, encerre com break e revele o número. (Será que 7 sempre basta para 1-50? Pesquise "busca binária" 😉)</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex20.py</span></div><pre class="code">import random
 
-class BancoProdutos:
-    def __init__(self):
-        self.conexao = pymysql.connect(
-            host=os.environ.get("DB_HOST", "localhost"),
-            user=os.environ.get("DB_USER", "root"),
-            password=os.environ.get("DB_PASS", ""),
-            database="tua_caneca")
-        self.cursor = self.conexao.cursor()
+segredo = random.randint(1, 50)
+tentativas = 0
+palpite = 0
 
-    def inserir(self, nome, preco, estoque):
-        self.cursor.execute(
-            "INSERT INTO produtos (nome, preco, estoque) VALUES (%s, %s, %s)",
-            (nome, preco, estoque))
-        self.conexao.commit()
-        print("Produto inserido ✔")
+print("Adivinhe o número entre 1 e 50!")
 
-    def listar(self):
-        self.cursor.execute("SELECT * FROM produtos ORDER BY nome")
-        for id, nome, preco, estoque in self.cursor.fetchall():
-            print(f"{nome} — R$ {preco:.2f} ({estoque} un.)")
+while palpite != segredo:
+    palpite = int(input("Seu palpite: "))
+    tentativas = tentativas + 1
+    if palpite &gt; segredo:
+        print("Muito alto! ⬇")
+    elif palpite &lt; segredo:
+        print("Muito baixo! ⬆")
 
-    def vender(self, nome, qtd):
-        self.cursor.execute("SELECT estoque FROM produtos WHERE nome = %s", (nome,))
-        r = self.cursor.fetchone()
-        if r is None or r[0] &lt; qtd:
-            print("Venda não realizada.")
-            return
-        self.cursor.execute(
-            "UPDATE produtos SET estoque = estoque - %s WHERE nome = %s", (qtd, nome))
-        self.conexao.commit()
-        print(f"Venda ok! Novo estoque: {r[0] - qtd}")
-
-    def fechar(self):
-        self.conexao.close()
-
-# --- teste ---
-banco = BancoProdutos()
-banco.inserir("caneca natal", 30.0, 15)
-banco.listar()
-banco.vender("caneca natal", 3)
-banco.fechar()</pre></div><p>Compare com a versão SQLite da Semana 22: 95% idêntica. Você não reaprendeu nada — só adaptou. É assim que o conhecimento bem construído se paga.</p></div></details>
+print(f"🎉 Acertou em {tentativas} tentativas!")</pre></div></div></details>
     </div>
   </article>
 
-  <article class="ex" id="ex13">
+  <article class="ex" id="ex21">
     <div class="ex-head">
-      <span class="ex-num">EX 13</span>
-      <h3>Projeto bônus: função conectar() + migrar vendas 🔧</h3>
+      <span class="ex-num">EX 21</span>
+      <h3>Projeto: Caixa registradora Tua Caneca 💰</h3>
       <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex13"> Concluído</label>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex21"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Criar um módulo de conexão reutilizável e migrar a tabela vendas (sem código pronto!).</p><span class="tag passos">🧭 Roteiro</span><ol><li>Crie um módulo <code>db.py</code> com uma função <code>conectar()</code> que devolve uma conexão pymysql pronta (credenciais de ambiente)</li><li>Em qualquer script, <code>from db import conectar</code> e pronto — DRY (Semana 6)!</li><li>Crie a tabela <code>vendas</code> no MariaDB (pelo DBeaver ou por código) e migre os dados do SQLite, reusando o padrão do exercício de migração</li><li>Confira no DBeaver</li></ol><span class="tag saida">✅ Resultado</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(módulo db.py reutilizável + tabela vendas migrada)</pre></div><details class="dica"><summary>💡 Empurrãozinho</summary><div class="inner">A função <code>conectar()</code> centraliza a conexão num lugar só: se a senha mudar, você ajusta UM arquivo, não dez. E a migração da tabela vendas é idêntica à de produtos — mesmo padrão, outra tabela. Reconhecer a repetição e abstraí-la é o que separa o iniciante do programador eficiente. 😉</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">db.py</span></div><pre class="code">import os
-import pymysql
+<span class="tag obj">🎯 Objetivo</span><p>Somar uma venda inteira com loop sentinela, acumulador e contador.</p><span class="tag passos">🧭 Requisitos</span><ol><li>Leia o valor de cada item vendido até o usuário digitar 0</li><li>Acumule o total e conte os itens</li><li>No fechamento, exiba: quantidade de itens, total e valor médio por item</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">=== CAIXA TUA CANECA ===
+Digite o valor de cada item (0 para fechar a conta)
+Valor do item: R$ 25
+Valor do item: R$ 25
+Valor do item: R$ 40
+Valor do item: R$ 0
+Itens vendidos: 3
+TOTAL: R$ 90.00
+Valor médio: R$ 30.00</pre></div><details class="dica"><summary>💡 Cuidado com a divisão!</summary><div class="inner">Se o usuário digitar 0 logo de cara, <code>total / itens</code> seria uma divisão por zero. Proteja com <code>if itens &gt; 0</code>.</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex21.py</span></div><pre class="code">print("=== CAIXA TUA CANECA ===")
+print("Digite o valor de cada item (0 para fechar a conta)")
 
-def conectar():
-    return pymysql.connect(
-        host=os.environ.get("DB_HOST", "localhost"),
-        user=os.environ.get("DB_USER", "root"),
-        password=os.environ.get("DB_PASS", ""),
-        database="tua_caneca")
+total = 0
+itens = 0
 
-# uso em qualquer arquivo:
-# from db import conectar
-# conexao = conectar()
-# cursor = conexao.cursor()
-# ...</pre></div></div></details>
+while True:
+    valor = float(input("Valor do item: R$ "))
+    if valor == 0:
+        break
+    total = total + valor
+    itens = itens + 1
+
+print(f"Itens vendidos: {itens}")
+print(f"TOTAL: R$ {total:.2f}")
+
+if itens &gt; 0:
+    media = total / itens
+    print(f"Valor médio: R$ {media:.2f}")</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex22">
+    <div class="ex-head">
+      <span class="ex-num">EX 22</span>
+      <h3>Projeto bônus: todas as tabuadas (loop aninhado)</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex22"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Descobrir sozinho o loop dentro de loop (sem código pronto!).</p><span class="tag passos">🧭 Roteiro</span><ol><li>Você já fez a tabuada de UM número (Exercício 8)</li><li>Agora coloque aquele for DENTRO de outro for que percorre os números de 1 a 10</li><li>Imprima um título antes de cada tabuada e uma linha em branco depois</li></ol><span class="tag saida">✅ Saída esperada (início)</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">--- Tabuada do 1 ---
+1 x 1 = 1
+1 x 2 = 2
+(...)
+--- Tabuada do 2 ---
+2 x 1 = 2
+2 x 2 = 4
+(...)</pre></div><details class="dica"><summary>💡 Como pensar</summary><div class="inner">O loop de fora escolhe QUAL tabuada (n = 1, 2, 3...). Para cada n, o loop de dentro roda as 10 multiplicações. Total: 100 prints com 4 linhas de código!</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex22.py</span></div><pre class="code">for n in range(1, 11):
+    print(f"--- Tabuada do {n} ---")
+    for i in range(1, 11):
+        print(f"{n} x {i} = {n * i}")
+    print()</pre></div></div></details>
     </div>
   </article>
 </section>
@@ -601,29 +855,29 @@ def conectar():
 <div class="checklist" id="checklist">
   <h2>✅ Checklist de fim de semana</h2>
   <p>Antes de seguir para a próxima semana, confirme que você consegue:</p>
-<label class="check-item"><input type="checkbox"><span>Explicar a diferença entre SQLite (arquivo) e MariaDB (servidor)</span></label>
-<label class="check-item"><input type="checkbox"><span>Ter o MariaDB rodando e criar um banco com CREATE DATABASE</span></label>
-<label class="check-item"><input type="checkbox"><span>Conectar ao MariaDB pelo DBeaver e usar o editor SQL</span></label>
-<label class="check-item"><input type="checkbox"><span>Conectar do Python com pymysql (host, user, password, database)</span></label>
-<label class="check-item"><input type="checkbox"><span>Guardar as credenciais do banco em variáveis de ambiente</span></label>
-<label class="check-item"><input type="checkbox"><span>Adaptar os comandos: placeholders mudam de ? para %s</span></label>
-<label class="check-item"><input type="checkbox"><span>Criar a tabela produtos com os tipos do MariaDB (INT, VARCHAR, DECIMAL)</span></label>
-<label class="check-item"><input type="checkbox"><span>Fazer o CRUD completo (INSERT, SELECT, UPDATE, DELETE) no MariaDB</span></label>
-<label class="check-item"><input type="checkbox"><span>Migrar a estrutura e os dados do SQLite para o MariaDB</span></label>
-<label class="check-item"><input type="checkbox"><span>Conferir os dados visualmente no DBeaver</span></label>
+<label class="check-item"><input type="checkbox"><span>Escrever um while com contador (e saber por que ele para)</span></label>
+<label class="check-item"><input type="checkbox"><span>Explicar o que causa um loop infinito e como evitá-lo</span></label>
+<label class="check-item"><input type="checkbox"><span>Usar range() com início, fim e passo (e lembrar que o fim NÃO entra)</span></label>
+<label class="check-item"><input type="checkbox"><span>Somar valores com o padrão acumulador (soma += valor)</span></label>
+<label class="check-item"><input type="checkbox"><span>Contar ocorrências com o padrão contador</span></label>
+<label class="check-item"><input type="checkbox"><span>Encontrar o maior e o menor valor de uma sequência</span></label>
+<label class="check-item"><input type="checkbox"><span>Sair de um loop com break e pular uma volta com continue</span></label>
+<label class="check-item"><input type="checkbox"><span>Validar a entrada do usuário repetindo a pergunta</span></label>
+<label class="check-item"><input type="checkbox"><span>Percorrer as letras de uma palavra com for</span></label>
+<label class="check-item"><input type="checkbox"><span>Resolver o FizzBuzz sem olhar a solução 😄</span></label>
 </div>
 
 <div class="win-banner" id="winBanner">
-  <h2>🏆 SEMANA 26 COMPLETA!</h2>
-  <p>Você concluiu todos os exercícios. Seus dados saíram de um arquivo e foram para um servidor de banco de dados profissional — o mesmo tipo que roda em empresas de verdade!</p>
+  <h2>🏆 SEMANA 3 COMPLETA!</h2>
+  <p>Você concluiu todos os exercícios. Agora o computador repete as tarefas chatas por você!</p>
 </div>
 
 <div class="preview-s2">
-<h2>📅 Prévia da Semana 27</h2><p>Com o MariaDB no comando, hora de quebrar o monolito: na próxima semana você constrói uma <strong>API REST</strong> de verdade. Verbos HTTP (GET, POST, PUT, DELETE), respostas em JSON, códigos de status corretos e o conceito que muda tudo — separar o <strong>backend</strong> do <strong>frontend</strong>. Sua loja vira um serviço! 🌐</p></div>
+<h2>📅 Prévia da Semana 4</h2><p>Na próxima semana: <strong>listas e strings</strong> — guardar vários valores numa única variável, <code>append()</code>, índices, fatiamento <code>[inicio:fim]</code> e métodos de texto. Seus programas vão começar a lidar com <strong>coleções de dados</strong>!</p></div>
 
 </main>
 
-<footer>python_para_iniciantes // semana_26 // exercícios guiados</footer>
+<footer>python_para_iniciantes // semana_03 // exercícios guiados</footer>
 
 <script>
 // ===== Syntax highlight leve para Python =====
@@ -635,7 +889,7 @@ def conectar():
     src = src.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     // uma passada só, com alternação (comentário | string | builtin | bool | número)
     src = src.replace(
-      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|insert|int|float|str|len|range|type|abs|round|max|min|sum|sorted|sort|reverse|append|remove|split|strip|upper|lower|replace|title|randint|random|get|keys|values|items|open|readlines|read|write|close|count|index|pop|update|list|dict|tuple|enumerate|sqrt|floor|ceil|choice|shuffle|sample|sleep|now|today|strftime|dumps|dump|loads|load|isinstance|datetime|date|DictReader|DictWriter|writerows|writerow|writeheader|writer|reader|csv|Workbook|load_workbook|save|iter_rows|Font|listdir|makedirs|getcwd|rename|exists|getsize|splitext|join|endswith|startswith|copytree|copy|move|requests|status_code|json|DataFrame|read_csv|read_excel|to_excel|to_csv|head|describe|groupby|sort_values|value_counts|mean|idxmax|bar|barh|pie|plot|savefig|show|title|xlabel|ylabel|figure|legend|axhline|tight_layout|close|Flask|route|run|render_template|jsonify|redirect|request|connect|cursor|execute|executemany|fetchall|fetchone|commit|environ|getenv|post|encode|decode|abort|make_response)\b|\b(True|False|None|if|elif|else|while|for|in|and|or|not|break|continue|import|from|def|return|try|except|finally|with|as|del|global|pass|class|self|super|lambda)\b|(\b\d+(?:\.\d+)?\b)/g,
+      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|insert|int|float|str|len|range|type|abs|round|max|min|sum|sorted|sort|reverse|append|remove|split|strip|upper|lower|replace|title|randint|random)\b|\b(True|False|None|if|elif|else|while|for|in|and|or|not|break|continue|import|from|def|return)\b|(\b\d+(?:\.\d+)?\b)/g,
       function(m, com, str, fn, bool, num){
         if(com)  return '<span class="tk-com">'+com+'</span>';
         if(str)  return '<span class="tk-str">'+str+'</span>';
@@ -654,7 +908,7 @@ def conectar():
 // no navegador. Se o localStorage estiver indisponível (modo restrito,
 // pré-visualização, etc.), o progresso funciona só em memória, sem quebrar.
 const storage = (function(){
-  const KEY = 'python_semana26_progresso';
+  const KEY = 'python_semana03_progresso';
   let memoria = {};
   let disponivel = false;
   try{
@@ -701,10 +955,10 @@ const storage = (function(){
   const MSGS = [
     [0,  'Marque os exercícios concluídos ✔'],
     [1,  'Boa! Continue assim 💪'],
-    [4,  'Pegando o ritmo! 🔥'],
-    [6, 'Metade do caminho! 🚀'],
-    [10, 'Quase lá... força! ⚡'],
-    [13, 'SEMANA COMPLETA! 🏆']
+    [7,  'Pegando o ritmo! 🔥'],
+    [11, 'Metade do caminho! 🚀'],
+    [16, 'Quase lá... força! ⚡'],
+    [22, 'SEMANA COMPLETA! 🏆']
   ];
 
   function estadoAtual(){

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Semana 2 — Condicionais</title>
+<title>Semana 16 — Projeto Final 3</title>
 <style>
   :root{
     --ink:#16243A;
@@ -57,7 +57,7 @@
     color:#fff;padding:56px 20px 48px;text-align:center;position:relative;overflow:hidden;
   }
   header.hero::before{
-    content:"if  elif  else  ==  !=  &gt;=  &lt;=  and  or  not  in";
+    content:"csv  openpyxl  requests  os  shutil  🏆";
     position:absolute;inset:auto 0 8px 0;font-family:var(--mono);font-size:.78rem;
     color:rgba(255,255,255,.14);letter-spacing:.4em;white-space:nowrap;overflow:hidden;
   }
@@ -234,548 +234,458 @@
 <div class="progress-wrap" role="region" aria-label="Progresso da semana">
   <span class="label">XP DA SEMANA</span>
   <div class="progress-bar"><div class="progress-fill" id="pfill"></div></div>
-  <span class="progress-count" id="pcount">0 / 21</span>
+  <span class="progress-count" id="pcount">0 / 10</span>
   <span class="progress-msg" id="pmsg">Marque os exercícios concluídos ✔</span>
   <button class="reset-btn" id="resetBtn" title="Apagar todo o progresso salvo">↺ Resetar</button>
 </div>
 
 <header class="hero">
   <div class="kicker">Python para Iniciantes · Exercícios Guiados</div>
-  <h1>SEMANA 2 — Condicionais:<br>o programa toma decisões<span class="cursor" aria-hidden="true"></span></h1>
-  <p class="sub">Aprenda a fazer seu programa escolher caminhos: operadores de comparação, if/else, elif, operadores lógicos (and, or, not) e condições aninhadas.</p>
+  <h1>SEMANA 16 — Projeto Final 3:<br>a Central Tua Caneca 🏆<span class="cursor" aria-hidden="true"></span></h1>
+  <p class="sub">A obra-prima do módulo avançado: vendas importadas de CSV, análise com funções, cotação do dólar via API, relatório Excel formatado e backup automático — tudo num sistema só.</p>
   <div class="howto">
     <strong>Como usar:</strong> digite o código você mesmo (não copie e cole!), compare com a saída esperada e marque <strong>✔ Concluído</strong> em cada exercício para encher sua barra de XP. As <strong>dicas</strong> e <strong>soluções</strong> ficam escondidas — só abra depois de tentar! Seu progresso fica salvo no navegador.
   </div>
 </header>
 
-<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · Comparações</a><a href="#p2">2 · if / else</a><a href="#p3">3 · elif</a><a href="#p4">4 · and / or / not</a><a href="#p5">5 · Aninhadas & in</a><a href="#p6">6 · Projetos</a><a href="#checklist">✅ Checklist</a></nav>
+<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · Revisão</a><a href="#p2">2 · Etapas 1-2</a><a href="#p3">3 · Etapas 3-4</a><a href="#p4">4 · Etapas 5-6</a><a href="#p5">5 · Formatura definitiva</a><a href="#checklist">✅ Checklist</a></nav>
 
 <main>
 
 <section class="parte" id="p1">
-  <div class="parte-head"><span class="num">01</span><h2>Operadores de comparação</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Comparações fazem perguntas cuja resposta é sempre <code>True</code> (verdadeiro) ou <code>False</code> (falso) — o tipo <code>bool</code> que você conheceu na Semana 1.</p><table><tr><th>Operador</th><th>Pergunta</th><th>Exemplo</th><th>Resultado</th></tr><tr><td><code>==</code></td><td>é igual a?</td><td><code>5 == 5</code></td><td><code>True</code></td></tr><tr><td><code>!=</code></td><td>é diferente de?</td><td><code>5 != 3</code></td><td><code>True</code></td></tr><tr><td><code>&gt;</code></td><td>é maior que?</td><td><code>5 &gt; 8</code></td><td><code>False</code></td></tr><tr><td><code>&lt;</code></td><td>é menor que?</td><td><code>5 &lt; 8</code></td><td><code>True</code></td></tr><tr><td><code>&gt;=</code></td><td>é maior ou igual?</td><td><code>5 &gt;= 5</code></td><td><code>True</code></td></tr><tr><td><code>&lt;=</code></td><td>é menor ou igual?</td><td><code>4 &lt;= 3</code></td><td><code>False</code></td></tr></table><p>⚠️ Cuidado: <code>==</code> (com dois sinais) <strong>compara</strong>. <code>=</code> (com um sinal) <strong>guarda</strong> um valor na variável. Confundir os dois é o erro mais comum da semana!</p></div>
+  <div class="parte-head"><span class="num">01</span><h2>Revisão relâmpago</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>O último aquecimento antes da obra-prima. Tudo do módulo avançado no caldeirão!</p></div>
   <article class="ex" id="ex1">
     <div class="ex-head">
       <span class="ex-num">EX 01</span>
-      <h3>Verdadeiro ou falso?</h3>
-      <span class="stars">⭐ básico</span>
+      <h3>Quiz: preveja as 8 saídas 🧠</h3>
+      <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex1"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Prever o resultado de comparações antes de executar.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie o arquivo <code>ex01_bool.py</code></li><li>PREVEJA o resultado de cada linha (anote num papel!)</li><li>Execute e compare com suas previsões</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex01_bool.py</span></div><pre class="code">print(10 &gt; 5)
-print(10 == 10)
-print(7 != 7)
-print(3 &gt;= 4)
-print("ana" == "Ana")</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">True
+<span class="tag obj">🎯 Objetivo</span><p>Testar csv, os, json e os clássicos das 16 semanas.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Anote suas previsões antes de rodar — última chance de gabaritar! 😄</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex01_quiz.py</span></div><pre class="code">import os
+import json
+
+print("foto.jpg".endswith(".jpg"))
+print("relatorio.final.pdf".split(".")[-1])
+print(os.path.join("dados", "vendas.csv"))
+
+dados = json.loads('{"qtd": "12"}')
+print(type(dados["qtd"]).__name__)
+print(int(dados["qtd"]) * 2)
+
+linha = {"produto": "caneca", "total": "75.0"}
+print(float(linha["total"]) &gt;= 50)
+
+print(round(1536 / 1024, 1))
+
+pares = [("a", 1), ("b", 2)]
+for letra, numero in pares:
+    pass
+print(letra, numero)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">True
+pdf
+dados\vendas.csv (ou dados/vendas.csv no Linux!)
+str
+24
 True
-False
-False
-False</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner">A última linha surpreendeu? Comparação de textos diferencia maiúsculas de minúsculas: <code>"ana"</code> e <code>"Ana"</code> são textos DIFERENTES para o Python.</div></details>
+1.5
+b 2</pre></div><details class="dica"><summary>💡 Gabarito comentado</summary><div class="inner">endswith (S14) · split do último ponto (S4+14) · join portátil — a barra muda por sistema! (S14) · JSON traz "12" como string (S15) · conversão antes da conta · float de campo CSV (S13) · bytes→KB (S14) · o for deixa as variáveis com os ÚLTIMOS valores (S3+5). 6+? Pronto para a Central!</div></details>
     </div>
   </article>
 
   <article class="ex" id="ex2">
     <div class="ex-head">
       <span class="ex-num">EX 02</span>
-      <h3>Comparando textos</h3>
-      <span class="stars">⭐ básico</span>
+      <h3>Caça aos bugs de automação 🐛🔍</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex2"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Descobrir como o Python compara palavras.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>PREVEJA o resultado de cada linha, depois execute</li><li>Reflita: o que significa um texto ser "menor" que outro?</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex02_textos.py</span></div><pre class="code">print("abacaxi" &lt; "banana")
-print("Zebra" &lt; "abelha")
-print(len("python") == 6)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">True
-True
-True</pre></div><details class="dica"><summary>💡 Explicação</summary><div class="inner">Textos são comparados em ordem "alfabética" (na verdade, pela tabela de códigos dos caracteres — por isso TODAS as maiúsculas vêm antes das minúsculas, e <code>"Zebra" &lt; "abelha"</code> é <code>True</code>!). E <code>len()</code> conta os caracteres de um texto.</div></details>
-    </div>
-  </article>
+<span class="tag obj">🎯 Objetivo</span><p>Os 5 bugs que mais derrubam scripts de automação no mundo real.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>O código deveria gravar um CSV e movê-lo para a pasta saida — mas tem 5 bugs</li><li>Ache todos antes de executar!</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex02_bugs.py</span></div><pre class="code">import csv
 
-  <article class="ex" id="ex3">
-    <div class="ex-head">
-      <span class="ex-num">EX 03</span>
-      <h3>== ou =? O erro clássico</h3>
-      <span class="stars">⭐⭐ médio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex3"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Aprender na prática a diferença entre atribuição e comparação.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Digite e execute este código <strong>com erro proposital</strong>:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex03_erro.py</span></div><pre class="code">idade = 18
-if idade = 18:
-    print("Tem 18 anos")</pre></div><p>Você verá um erro parecido com:</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output" style="color:#FF9B94">SyntaxError: invalid syntax. Maybe you meant '==' instead of '='?</pre></div><span class="tag passos">🧭 Continue</span><ol><li>Leia o erro: o próprio Python sugere a correção!</li><li>Troque <code>=</code> por <code>==</code> e execute de novo</li></ol><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><p><strong>Regra de ouro:</strong> <code>=</code> GUARDA um valor (<code>idade = 18</code> coloca 18 na caixinha). <code>==</code> PERGUNTA se é igual (<code>idade == 18</code> responde True ou False). Dentro de um <code>if</code>, sempre use <code>==</code>.</p></div></details>
+with open("relatorio.csv", "w") as arquivo:
+    escritor = csv.writer(arquivo)
+    escritor.writerow("nome", "total")
+    escritor.writerow(["Ana", 75.0])
+
+os.makedirs("saida")
+shutil.move("relatorio.csv", "saida\relatorio.csv")</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><p><strong>Os 5 bugs:</strong> (1) faltou <code>newline=""</code> (e o <code>encoding="utf-8"</code>) no open — linhas em branco no Windows. (2) <code>writerow("nome", "total")</code> passa DOIS argumentos: o writerow recebe UMA LISTA — <code>writerow(["nome", "total"])</code>. (3) <code>os</code> e <code>shutil</code> usados sem import! (4) <code>os.makedirs("saida")</code> sem <code>exist_ok=True</code> quebra na 2ª execução. (5) Caminho com <code>"\\"</code> na mão em vez de <code>os.path.join</code> — funciona só no Windows e é frágil.</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex02.py</span></div><pre class="code">import os
+import csv
+import shutil
+
+with open("relatorio.csv", "w", newline="", encoding="utf-8") as arquivo:
+    escritor = csv.writer(arquivo)
+    escritor.writerow(["nome", "total"])
+    escritor.writerow(["Ana", 75.0])
+
+os.makedirs("saida", exist_ok=True)
+shutil.move("relatorio.csv", os.path.join("saida", "relatorio.csv"))</pre></div></div></details>
     </div>
   </article>
 </section>
 
 <section class="parte" id="p2">
-  <div class="parte-head"><span class="num">02</span><h2>if / else: o primeiro desvio</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>A estrutura <code>if</code> executa um bloco de código somente se a condição for <code>True</code>. O <code>else</code> define o que fazer caso contrário:</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">estrutura.py</span></div><pre class="code">if condicao:
-    # executa se a condição for True
-    print("Sim!")
-else:
-    # executa se a condição for False
-    print("Não!")</pre></div><p><strong>Duas regras visuais essenciais:</strong> (1) os <strong>dois pontos</strong> <code>:</code> no final da linha do <code>if</code> e do <code>else</code>; (2) a <strong>indentação</strong> — o código "de dentro" precisa estar deslocado <strong>4 espaços</strong> para a direita. É assim que o Python sabe o que pertence ao if!</p></div>
+  <div class="parte-head"><span class="num">02</span><h2>Central Tua Caneca — Etapas 1 e 2</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p><strong>A obra-prima:</strong> a Central importa as vendas de um CSV, analisa, busca o dólar na API, gera relatório Excel e faz backup — o fluxo de dados completo de um pequeno negócio. A arquitetura:</p><table><tr><th>Etapa</th><th>Entrega</th><th>Semanas</th></tr><tr><td>1</td><td>Estrutura de pastas + CSV de exemplo</td><td>13, 14</td></tr><tr><td>2</td><td>Importação das vendas (CSV → lista de dicts)</td><td>5, 13</td></tr><tr><td>3</td><td>Análise (faturamento, campeão, ticket médio)</td><td>3, 5, 6</td></tr><tr><td>4</td><td>Cotação do dólar com fallback</td><td>15</td></tr><tr><td>5</td><td>Relatório .xlsx com data no nome</td><td>9, 13</td></tr><tr><td>6</td><td>Backup + menu integrado</td><td>14, e TODAS</td></tr></table><p>Crie o arquivo <code>central.py</code> — a obra cresce etapa por etapa.</p></div>
+  <article class="ex" id="ex3">
+    <div class="ex-head">
+      <span class="ex-num">EX 03</span>
+      <h3>Etapa 1: o canteiro de obras</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex3"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Estrutura de pastas e dados de exemplo gerados por código.</p><span class="tag passos">🧭 Passo a passo</span><ol><li><code>preparar_pastas()</code>: cria dados/, relatorios/ e backup/ (makedirs + exist_ok)</li><li><code>gerar_exemplo()</code>: se <code>dados/vendas.csv</code> NÃO existir, grava 4 vendas de exemplo com DictWriter</li><li>Rode duas vezes: a segunda não pode reclamar nem sobrescrever!</li></ol><span class="tag saida">✅ Primeira execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Pastas prontas ✔
+vendas.csv de exemplo gerado ✔</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">etapa1.py</span></div><pre class="code">import os
+import csv
+
+PASTAS = ["dados", "relatorios", "backup"]
+
+def preparar_pastas():
+    for pasta in PASTAS:
+        os.makedirs(pasta, exist_ok=True)
+    print("Pastas prontas ✔")
+
+def gerar_exemplo():
+    caminho = os.path.join("dados", "vendas.csv")
+    if os.path.exists(caminho):
+        return
+    campos = ["data", "produto", "qtd", "total"]
+    exemplos = [
+        {"data": "10/06/2026", "produto": "caneca branca", "qtd": 3, "total": 75.0},
+        {"data": "10/06/2026", "produto": "caneca preta", "qtd": 12, "total": 270.0},
+        {"data": "11/06/2026", "produto": "azulejo", "qtd": 2, "total": 80.0},
+        {"data": "12/06/2026", "produto": "caneca preta", "qtd": 5, "total": 137.5},
+    ]
+    with open(caminho, "w", newline="", encoding="utf-8") as arquivo:
+        escritor = csv.DictWriter(arquivo, fieldnames=campos)
+        escritor.writeheader()
+        for linha in exemplos:
+            escritor.writerow(linha)
+    print("vendas.csv de exemplo gerado ✔")
+
+preparar_pastas()
+gerar_exemplo()</pre></div></div></details>
+    </div>
+  </article>
+
   <article class="ex" id="ex4">
     <div class="ex-head">
       <span class="ex-num">EX 04</span>
-      <h3>Maior de idade 🚗</h3>
-      <span class="stars">⭐ básico</span>
+      <h3>Etapa 2: importando as vendas</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex4"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Escrever seu primeiro if/else completo.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie o arquivo <code>ex04_idade.py</code></li><li>Peça a idade com <code>int(input(...))</code></li><li>Se a idade for maior ou igual a 18, diga que a pessoa pode tirar a CNH</li><li>Caso contrário, diga quantos anos ainda faltam</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex04_idade.py</span></div><pre class="code">idade = int(input("Qual sua idade? "))
+<span class="tag obj">🎯 Objetivo</span><p>CSV → lista de dicionários, com tipos convertidos.</p><span class="tag passos">🧭 Passo a passo</span><ol><li><code>importar_vendas()</code>: lê com DictReader e RETORNA a lista</li><li>Converta na entrada: <code>linha["qtd"] = int(...)</code> e <code>linha["total"] = float(...)</code> — quem converte na porta nunca mais se preocupa</li><li>Teste: importe e imprima quantas vendas chegaram</li></ol><span class="tag saida">✅ Teste da etapa</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">4 vendas importadas ✔</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">etapa2.py</span></div><pre class="code">def importar_vendas():
+    vendas = []
+    caminho = os.path.join("dados", "vendas.csv")
+    with open(caminho, "r", encoding="utf-8") as arquivo:
+        leitor = csv.DictReader(arquivo)
+        for linha in leitor:
+            linha["qtd"] = int(linha["qtd"])
+            linha["total"] = float(linha["total"])
+            vendas.append(linha)
+    return vendas
 
-if idade ____ 18:
-    print("Você já pode tirar a CNH! 🚗")
-else:
-    falta = ____ - idade
-    print(f"Ainda faltam {falta} anos para a CNH.")</pre></div><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Qual sua idade? 15
-Ainda faltam 3 anos para a CNH.</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex04.py</span></div><pre class="code">idade = int(input("Qual sua idade? "))
-
-if idade &gt;= 18:
-    print("Você já pode tirar a CNH! 🚗")
-else:
-    falta = 18 - idade
-    print(f"Ainda faltam {falta} anos para a CNH.")</pre></div></div></details>
+vendas = importar_vendas()
+print(f"{len(vendas)} vendas importadas ✔")</pre></div></div></details>
     </div>
   </article>
+</section>
+
+<section class="parte" id="p3">
+  <div class="parte-head"><span class="num">03</span><h2>Central Tua Caneca — Etapas 3 e 4</h2></div>
 
   <article class="ex" id="ex5">
     <div class="ex-head">
       <span class="ex-num">EX 05</span>
-      <h3>Par ou ímpar</h3>
-      <span class="stars">⭐⭐ médio</span>
+      <h3>Etapa 3: a análise 📊</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex5"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Reaproveitar o operador % (resto) da Semana 1 dentro de um if.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Peça um número inteiro</li><li>Lembre: se <code>numero % 2</code> for 0, o número é PAR</li><li>Use if/else para exibir "PAR" ou "ÍMPAR"</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Digite um número: 17
-17 é ÍMPAR</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner">A condição completa é <code>numero % 2 == 0</code> — primeiro o Python calcula o resto, depois compara com zero.</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex05.py</span></div><pre class="code">numero = int(input("Digite um número: "))
+<span class="tag obj">🎯 Objetivo</span><p>Uma função que devolve TODO o resumo num dicionário.</p><span class="tag passos">🧭 Passo a passo</span><ol><li><code>analisar(vendas)</code> percorre a lista acumulando: faturamento, unidades, dict contador por produto</li><li>Calcule o campeão (padrão maior) e o ticket médio (faturamento ÷ nº de vendas)</li><li>RETORNE tudo num dicionário: <code>{"faturamento": ..., "unidades": ..., "campeao": ..., "ticket": ...}</code></li><li>Quem chama decide como exibir — separação de responsabilidades (Semana 6)!</li></ol><span class="tag saida">✅ Teste da etapa</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Faturamento: R$ 562.50
+Unidades: 22
+Campeão: caneca preta
+Ticket médio: R$ 140.62</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">etapa3.py</span></div><pre class="code">def analisar(vendas):
+    faturamento = 0
+    unidades = 0
+    por_produto = {}
+    for venda in vendas:
+        faturamento = faturamento + venda["total"]
+        unidades = unidades + venda["qtd"]
+        nome = venda["produto"]
+        por_produto[nome] = por_produto.get(nome, 0) + venda["qtd"]
 
-if numero % 2 == 0:
-    print(f"{numero} é PAR")
-else:
-    print(f"{numero} é ÍMPAR")</pre></div></div></details>
+    campeao = ""
+    maior = 0
+    for nome, qtd in por_produto.items():
+        if qtd &gt; maior:
+            maior = qtd
+            campeao = nome
+
+    return {
+        "faturamento": faturamento,
+        "unidades": unidades,
+        "campeao": campeao,
+        "ticket": faturamento / len(vendas)
+    }</pre></div></div></details>
     </div>
   </article>
 
   <article class="ex" id="ex6">
     <div class="ex-head">
       <span class="ex-num">EX 06</span>
-      <h3>Senha secreta 🔒</h3>
-      <span class="stars">⭐ básico</span>
+      <h3>Etapa 4: o dólar com 3 vidas 💵</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex6"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Comparar textos num if/else.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Defina a constante <code>SENHA_CORRETA = "python123"</code></li><li>Peça a senha ao usuário</li><li>Compare com <code>==</code> e exiba "Acesso liberado" ou "Senha incorreta"</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Digite a senha: python123
-Acesso liberado! ✔</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner">A comparação de texto é EXATA: maiúsculas, espaços e acentos contam. <code>"Python123"</code> não passa!</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex06.py</span></div><pre class="code">SENHA_CORRETA = "python123"
+<span class="tag obj">🎯 Objetivo</span><p>Integrar a cotacao_segura da Semana 15: API → cache → padrão.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Traga (ou importe do seu módulo!) a função com fallback em camadas</li><li>Toque final: quando a API responder, ATUALIZE o cache — assim o plano B fica sempre fresco</li><li>Use-a para calcular o faturamento em dólares</li></ol><span class="tag saida">✅ Teste da etapa</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Dólar: R$ 5.43
+Faturamento em US$ 103.59</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">etapa4.py</span></div><pre class="code">import json
+from datetime import datetime
 
-senha = input("Digite a senha: ")
-
-if senha == SENHA_CORRETA:
-    print("Acesso liberado! ✔")
-else:
-    print("Senha incorreta! ✖")</pre></div></div></details>
-    </div>
-  </article>
-
-  <article class="ex" id="ex7">
-    <div class="ex-head">
-      <span class="ex-num">EX 07</span>
-      <h3>O erro de indentação</h3>
-      <span class="stars">⭐⭐ médio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex7"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Conhecer (e aprender a corrigir) o IndentationError.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Digite e execute este código <strong>com erro proposital</strong>:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex07_erro.py</span></div><pre class="code">idade = 20
-if idade &gt;= 18:
-print("Maior de idade")</pre></div><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output" style="color:#FF9B94">IndentationError: expected an indented block after 'if' statement</pre></div><span class="tag passos">🧭 Continue</span><ol><li>Leia o erro: o Python esperava um bloco indentado depois do if</li><li>Corrija adicionando 4 espaços antes do <code>print</code></li><li>Teste também o contrário: indente uma linha que NÃO deveria estar indentada e veja o que acontece</li></ol><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><p>Em Python, a indentação não é estética — é <strong>parte da linguagem</strong>. Tudo que pertence ao if precisa estar deslocado 4 espaços. A versão correta:</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex07.py</span></div><pre class="code">idade = 20
-if idade &gt;= 18:
-    print("Maior de idade")</pre></div></div></details>
+def cotacao_segura():
+    try:
+        import requests
+        url = "https://economia.awesomeapi.com.br/json/last/USD-BRL"
+        cotacao = float(requests.get(url, timeout=5).json()["USDBRL"]["bid"])
+        cache = {"cotacao": cotacao,
+                 "consultado_em": datetime.now().strftime("%d/%m/%Y %H:%M")}
+        with open("cache_dolar.json", "w", encoding="utf-8") as arquivo:
+            json.dump(cache, arquivo, indent=2, ensure_ascii=False)
+        return cotacao
+    except Exception:
+        try:
+            with open("cache_dolar.json", "r", encoding="utf-8") as arquivo:
+                cache = json.load(arquivo)
+            print(f"(offline) Usando cache de {cache['consultado_em']}")
+            return cache["cotacao"]
+        except FileNotFoundError:
+            print("(offline, sem cache) Cotação padrão R$ 5.00")
+            return 5.00</pre></div></div></details>
     </div>
   </article>
 </section>
 
-<section class="parte" id="p3">
-  <div class="parte-head"><span class="num">03</span><h2>elif: vários caminhos</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Quando há mais de duas possibilidades, usamos <code>elif</code> (abreviação de "else if"). O Python testa as condições <strong>de cima para baixo</strong> e executa apenas o PRIMEIRO bloco verdadeiro:</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">estrutura.py</span></div><pre class="code">if condicao1:
-    # caminho 1
-elif condicao2:
-    # caminho 2
-elif condicao3:
-    # caminho 3
-else:
-    # se nenhuma for True</pre></div><p>⚠️ A <strong>ordem das condições importa</strong> — você vai comprovar isso no Exercício 9!</p></div>
-  <article class="ex" id="ex8">
+<section class="parte" id="p4">
+  <div class="parte-head"><span class="num">04</span><h2>Central Tua Caneca — Etapas 5 e 6</h2></div>
+
+  <article class="ex" id="ex7">
     <div class="ex-head">
-      <span class="ex-num">EX 08</span>
-      <h3>Positivo, negativo ou zero</h3>
-      <span class="stars">⭐ básico</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex8"> Concluído</label>
+      <span class="ex-num">EX 07</span>
+      <h3>Etapa 5: o relatório executivo 📑</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex7"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Escrever sua primeira cadeia if/elif/else.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Peça um número (<code>float</code></li><li>Se for maior que 0 → "Positivo"; menor que 0 → "Negativo"; senão → "Zero"</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Digite um número: -4
-Negativo</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex08.py</span></div><pre class="code">numero = float(input("Digite um número: "))
+<span class="tag obj">🎯 Objetivo</span><p>Excel formatado, com fórmula, resumo e data no nome do arquivo.</p><span class="tag passos">🧭 Passo a passo</span><ol><li><code>gerar_relatorio(vendas, resumo, dolar)</code>: cabeçalho em negrito + dados + linha TOTAL com =SUM</li><li>Bloco de resumo embaixo: campeão, ticket médio e faturamento em US$</li><li>Nome com carimbo: <code>strftime("relatorio_%Y-%m-%d_%H-%M.xlsx")</code>, salvo em relatorios/</li><li>Gere dois relatórios em horários diferentes: eles convivem, auto-organizados!</li></ol><span class="tag saida">✅ Teste da etapa</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Relatório salvo: relatorios/relatorio_2026-06-12_17-00.xlsx ✔</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">etapa5.py</span></div><pre class="code">from openpyxl import Workbook
+from openpyxl.styles import Font
 
-if numero &gt; 0:
-    print("Positivo")
-elif numero &lt; 0:
-    print("Negativo")
-else:
-    print("Zero")</pre></div></div></details>
+def gerar_relatorio(vendas, resumo, dolar):
+    planilha = Workbook()
+    aba = planilha.active
+    aba.title = "Vendas"
+
+    aba.append(["Data", "Produto", "Qtd", "Total (R$)"])
+    for celula in aba[1]:
+        celula.font = Font(bold=True)
+
+    for venda in vendas:
+        aba.append([venda["data"], venda["produto"],
+                    venda["qtd"], venda["total"]])
+
+    linha_total = len(vendas) + 2
+    aba[f"C{linha_total}"] = "TOTAL:"
+    aba[f"D{linha_total}"] = f"=SUM(D2:D{len(vendas) + 1})"
+
+    aba.append([])
+    aba.append(["Campeão", resumo["campeao"]])
+    aba.append(["Ticket médio (R$)", round(resumo["ticket"], 2)])
+    aba.append(["Faturamento (US$)", round(resumo["faturamento"] / dolar, 2)])
+
+    nome = datetime.now().strftime("relatorio_%Y-%m-%d_%H-%M.xlsx")
+    caminho = os.path.join("relatorios", nome)
+    planilha.save(caminho)
+    print(f"Relatório salvo: {caminho} ✔")</pre></div></div></details>
     </div>
   </article>
 
+  <article class="ex" id="ex8">
+    <div class="ex-head">
+      <span class="ex-num">EX 08</span>
+      <h3>Etapa 6: backup e o menu da Central 🏁</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex8"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>A última peça: backup com copytree e o menu que rege a orquestra.</p><span class="tag passos">🧭 Passo a passo</span><ol><li><code>fazer_backup()</code>: copytree de dados/ para backup/backup_DATA</li><li>Menu: 1-Análise · 2-Relatório Excel · 3-Backup · 4-Sair</li><li>Teste de estresse final: rode sem internet, rode duas vezes seguidas, apague o vendas.csv e rode</li><li>Confira com a versão integrada — e respire fundo: é a sua formatura 🏆</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">=== CENTRAL TUA CANECA ===
+1-Análise  2-Relatório Excel  3-Backup  4-Sair
+Opção: 2
+Dólar: R$ 5.43
+Relatório salvo: relatorios/relatorio_2026-06-12_17-05.xlsx ✔</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">central.py</span></div><pre class="code">import os
+import csv
+import json
+import shutil
+from datetime import datetime
+from openpyxl import Workbook
+from openpyxl.styles import Font
+
+PASTAS = ["dados", "relatorios", "backup"]
+
+def preparar_pastas():
+    for pasta in PASTAS:
+        os.makedirs(pasta, exist_ok=True)
+
+def gerar_exemplo():
+    caminho = os.path.join("dados", "vendas.csv")
+    if os.path.exists(caminho):
+        return
+    campos = ["data", "produto", "qtd", "total"]
+    exemplos = [
+        {"data": "10/06/2026", "produto": "caneca branca", "qtd": 3, "total": 75.0},
+        {"data": "10/06/2026", "produto": "caneca preta", "qtd": 12, "total": 270.0},
+        {"data": "11/06/2026", "produto": "azulejo", "qtd": 2, "total": 80.0},
+        {"data": "12/06/2026", "produto": "caneca preta", "qtd": 5, "total": 137.5},
+    ]
+    with open(caminho, "w", newline="", encoding="utf-8") as arquivo:
+        escritor = csv.DictWriter(arquivo, fieldnames=campos)
+        escritor.writeheader()
+        for linha in exemplos:
+            escritor.writerow(linha)
+
+def importar_vendas():
+    vendas = []
+    with open(os.path.join("dados", "vendas.csv"), "r", encoding="utf-8") as arquivo:
+        leitor = csv.DictReader(arquivo)
+        for linha in leitor:
+            linha["qtd"] = int(linha["qtd"])
+            linha["total"] = float(linha["total"])
+            vendas.append(linha)
+    return vendas
+
+def analisar(vendas):
+    faturamento = 0
+    unidades = 0
+    por_produto = {}
+    for venda in vendas:
+        faturamento = faturamento + venda["total"]
+        unidades = unidades + venda["qtd"]
+        por_produto[venda["produto"]] = por_produto.get(venda["produto"], 0) + venda["qtd"]
+    campeao = ""
+    maior = 0
+    for nome, qtd in por_produto.items():
+        if qtd &gt; maior:
+            maior = qtd
+            campeao = nome
+    return {"faturamento": faturamento, "unidades": unidades,
+            "campeao": campeao, "ticket": faturamento / len(vendas)}
+
+def cotacao_segura():
+    try:
+        import requests
+        url = "https://economia.awesomeapi.com.br/json/last/USD-BRL"
+        cotacao = float(requests.get(url, timeout=5).json()["USDBRL"]["bid"])
+        cache = {"cotacao": cotacao,
+                 "consultado_em": datetime.now().strftime("%d/%m/%Y %H:%M")}
+        with open("cache_dolar.json", "w", encoding="utf-8") as arquivo:
+            json.dump(cache, arquivo, indent=2, ensure_ascii=False)
+        return cotacao
+    except Exception:
+        try:
+            with open("cache_dolar.json", "r", encoding="utf-8") as arquivo:
+                cache = json.load(arquivo)
+            print(f"(offline) Usando cache de {cache['consultado_em']}")
+            return cache["cotacao"]
+        except FileNotFoundError:
+            print("(offline, sem cache) Cotação padrão R$ 5.00")
+            return 5.00
+
+def gerar_relatorio(vendas, resumo, dolar):
+    planilha = Workbook()
+    aba = planilha.active
+    aba.title = "Vendas"
+    aba.append(["Data", "Produto", "Qtd", "Total (R$)"])
+    for celula in aba[1]:
+        celula.font = Font(bold=True)
+    for venda in vendas:
+        aba.append([venda["data"], venda["produto"], venda["qtd"], venda["total"]])
+    linha_total = len(vendas) + 2
+    aba[f"C{linha_total}"] = "TOTAL:"
+    aba[f"D{linha_total}"] = f"=SUM(D2:D{len(vendas) + 1})"
+    aba.append([])
+    aba.append(["Campeão", resumo["campeao"]])
+    aba.append(["Ticket médio (R$)", round(resumo["ticket"], 2)])
+    aba.append(["Faturamento (US$)", round(resumo["faturamento"] / dolar, 2)])
+    nome = datetime.now().strftime("relatorio_%Y-%m-%d_%H-%M.xlsx")
+    caminho = os.path.join("relatorios", nome)
+    planilha.save(caminho)
+    print(f"Relatório salvo: {caminho} ✔")
+
+def fazer_backup():
+    nome = datetime.now().strftime("backup_%Y-%m-%d_%H-%M-%S")
+    destino = os.path.join("backup", nome)
+    shutil.copytree("dados", destino)
+    print(f"Backup criado: {destino} ✔")
+
+# ===== PROGRAMA PRINCIPAL =====
+preparar_pastas()
+gerar_exemplo()
+
+while True:
+    print()
+    print("=== CENTRAL TUA CANECA ===")
+    print("1-Análise  2-Relatório Excel  3-Backup  4-Sair")
+    opcao = input("Opção: ")
+
+    if opcao == "1":
+        resumo = analisar(importar_vendas())
+        print(f"Faturamento: R$ {resumo['faturamento']:.2f}")
+        print(f"Unidades: {resumo['unidades']}")
+        print(f"Campeão: {resumo['campeao']}")
+        print(f"Ticket médio: R$ {resumo['ticket']:.2f}")
+    elif opcao == "2":
+        vendas = importar_vendas()
+        resumo = analisar(vendas)
+        dolar = cotacao_segura()
+        print(f"Dólar: R$ {dolar:.2f}")
+        gerar_relatorio(vendas, resumo, dolar)
+    elif opcao == "3":
+        fazer_backup()
+    elif opcao == "4":
+        print("Central encerrada. Parabéns pela jornada! 🏆")
+        break
+    else:
+        print("Opção inválida!")</pre></div><p><strong>~130 linhas, 16 semanas, 4 formatos de dados, 1 API e 0 medo de erro.</strong> Compare com seu primeiro print: a distância percorrida é a prova de que você aprendeu a aprender. 👏🏆</p></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p5">
+  <div class="parte-head"><span class="num">05</span><h2>Formatura definitiva</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Os dois últimos desafios da jornada — e nenhum tem solução, porque agora o autor é você. 🏆</p></div>
   <article class="ex" id="ex9">
     <div class="ex-head">
       <span class="ex-num">EX 09</span>
-      <h3>Conceito da nota 📝</h3>
-      <span class="stars">⭐⭐ médio</span>
+      <h3>Desafio: a Central no piloto automático 🤖</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex9"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Entender por que a ordem das condições importa.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Peça a nota (0 a 10)</li><li>Regras: 9 ou mais → A · 7 ou mais → B · 5 ou mais → C · abaixo de 5 → D</li><li>Complete o código testando <strong>da maior nota para a menor</strong></li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex09_conceito.py</span></div><pre class="code">nota = float(input("Digite a nota (0 a 10): "))
-
-if nota &gt;= 9:
-    print("Conceito A — Excelente!")
-elif nota &gt;= ____:
-    print("Conceito B — Muito bom!")
-elif nota &gt;= ____:
-    print("Conceito C — Recuperação")
-else:
-    print("Conceito D — Reprovado")</pre></div><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Digite a nota (0 a 10): 7.5
-Conceito B — Muito bom!</pre></div><details class="dica"><summary>💡 Por que a ordem importa?</summary><div class="inner">Experimente inverter: teste <code>nota &gt;= 5</code> PRIMEIRO e digite uma nota 9.5. O programa dirá "Conceito C"! Como o elif para no primeiro True, a condição mais "exigente" precisa vir primeiro.</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex09.py</span></div><pre class="code">nota = float(input("Digite a nota (0 a 10): "))
-
-if nota &gt;= 9:
-    print("Conceito A — Excelente!")
-elif nota &gt;= 7:
-    print("Conceito B — Muito bom!")
-elif nota &gt;= 5:
-    print("Conceito C — Recuperação")
-else:
-    print("Conceito D — Reprovado")</pre></div></div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Fazer a Central rodar sozinha, sem ninguém apertar botão.</p><span class="tag passos">🧭 Roteiro</span><ol><li>Crie um <code>modo_automatico.py</code>: sem menu — importa, analisa, gera relatório e faz backup numa tacada</li><li>Caminho 1 (Python puro): um loop com <code>time.sleep(3600)</code> gera relatório de hora em hora</li><li>Caminho 2 (profissional): pesquise "Agendador de Tarefas do Windows executar script Python" — o sistema operacional roda seu script no horário marcado, todo dia</li><li>Toque final: a Central escreve um <code>log.txt</code> (modo "a"!) registrando cada execução com data</li></ol><details class="dica"><summary>💡 Você acabou de descrever um "job"</summary><div class="inner">Scripts agendados que processam dados e geram relatórios são chamados de jobs — e empresas pagam bem por quem sabe construí-los. Você sabe. 😉</div></details>
     </div>
   </article>
 
   <article class="ex" id="ex10">
     <div class="ex-head">
       <span class="ex-num">EX 10</span>
-      <h3>Classificador de idade</h3>
-      <span class="stars">⭐⭐ médio</span>
+      <h3>Desafio final: a obra é sua 🚀</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex10"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Praticar elif com faixas de valores.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Peça a idade</li><li>Classifique: menor que 12 → Criança · menor que 18 → Adolescente · menor que 60 → Adulto · senão → Idoso</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Digite a idade: 15
-Adolescente</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner">Repare que não precisa escrever <code>idade &gt;= 12 and idade &lt; 18</code>: se o programa chegou no segundo elif, é porque a idade JÁ não é menor que 12. O elif "herda" o que já foi descartado.</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex10.py</span></div><pre class="code">idade = int(input("Digite a idade: "))
-
-if idade &lt; 12:
-    print("Criança")
-elif idade &lt; 18:
-    print("Adolescente")
-elif idade &lt; 60:
-    print("Adulto")
-else:
-    print("Idoso")</pre></div></div></details>
-    </div>
-  </article>
-
-  <article class="ex" id="ex11">
-    <div class="ex-head">
-      <span class="ex-num">EX 11</span>
-      <h3>Calculadora com menu 🧮</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex11"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Montar um programa com múltiplos caminhos e tratamento de opção inválida.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Peça o primeiro número, a operação (<code>+</code>, <code>-</code>, <code>*</code> ou <code>/</code>) e o segundo número</li><li>Use if/elif para cada operação</li><li>Se a operação não existir, avise "Operação inválida!"</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Primeiro número: 8
-Operação (+, -, *, /): *
-Segundo número: 7
-Resultado: 56.0</pre></div><details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">E se o usuário tentar dividir por zero? Teste! Depois proteja a divisão: antes de dividir, verifique <code>if n2 == 0</code> e exiba um aviso em vez de deixar o programa quebrar.</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex11.py</span></div><pre class="code">n1 = float(input("Primeiro número: "))
-operacao = input("Operação (+, -, *, /): ")
-n2 = float(input("Segundo número: "))
-
-if operacao == "+":
-    print(f"Resultado: {n1 + n2}")
-elif operacao == "-":
-    print(f"Resultado: {n1 - n2}")
-elif operacao == "*":
-    print(f"Resultado: {n1 * n2}")
-elif operacao == "/":
-    if n2 == 0:
-        print("Não dá para dividir por zero!")
-    else:
-        print(f"Resultado: {n1 / n2}")
-else:
-    print("Operação inválida!")</pre></div></div></details>
-    </div>
-  </article>
-</section>
-
-<section class="parte" id="p4">
-  <div class="parte-head"><span class="num">04</span><h2>Operadores lógicos: and, or e not</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Para combinar mais de uma condição no mesmo if:</p><table><tr><th>Operador</th><th>Resultado é True quando...</th><th>Exemplo</th></tr><tr><td><code>and</code></td><td>as DUAS condições são True</td><td><code>idade &gt;= 18 and tem_cnh</code></td></tr><tr><td><code>or</code></td><td>PELO MENOS UMA é True</td><td><code>dia == "sab" or dia == "dom"</code></td></tr><tr><td><code>not</code></td><td>inverte: True vira False</td><td><code>not chovendo</code></td></tr></table></div>
-  <article class="ex" id="ex12">
-    <div class="ex-head">
-      <span class="ex-num">EX 12</span>
-      <h3>Prevendo and, or e not</h3>
-      <span class="stars">⭐ básico</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex12"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Fixar a tabela-verdade na prática.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>PREVEJA cada linha, depois execute e compare</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex12_logicos.py</span></div><pre class="code">print(True and True)
-print(True and False)
-print(True or False)
-print(False or False)
-print(not True)
-print(10 &gt; 5 and 3 &lt; 1)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">True
-False
-True
-False
-False
-False</pre></div><details class="dica"><summary>💡 Macete</summary><div class="inner"><code>and</code> é exigente: precisa dos dois. <code>or</code> é flexível: basta um. <code>not</code> é do contra: inverte tudo. 😄</div></details>
-    </div>
-  </article>
-
-  <article class="ex" id="ex13">
-    <div class="ex-head">
-      <span class="ex-num">EX 13</span>
-      <h3>Entrada no evento 🎟️</h3>
-      <span class="stars">⭐⭐ médio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex13"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Usar and para exigir duas condições ao mesmo tempo.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Pergunte a idade e se a pessoa tem convite (<code>sim</code> ou <code>não</code></li><li>Só libere a entrada se a idade for 18+ E a resposta for "sim"</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Sua idade: 22
-Tem convite? (sim/não): sim
-Entrada liberada! 🎉</pre></div><details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Versão com <code>or</code>: libere também quem está na "lista VIP" (pergunte e aceite se a resposta for sim), mesmo sem convite.</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex13.py</span></div><pre class="code">idade = int(input("Sua idade: "))
-convite = input("Tem convite? (sim/não): ")
-
-if idade &gt;= 18 and convite == "sim":
-    print("Entrada liberada! 🎉")
-else:
-    print("Entrada não permitida.")</pre></div></div></details>
-    </div>
-  </article>
-
-  <article class="ex" id="ex14">
-    <div class="ex-head">
-      <span class="ex-num">EX 14</span>
-      <h3>Número na faixa</h3>
-      <span class="stars">⭐⭐ médio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex14"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Verificar se um valor está dentro de um intervalo.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Peça um número</li><li>Verifique se ele está entre 1 e 100 (inclusive) usando <code>and</code></li><li>Depois teste o atalho "pythônico": <code>1 &lt;= numero &lt;= 100</code></li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Digite um número: 150
-Fora da faixa ✖</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex14.py</span></div><pre class="code">numero = int(input("Digite um número: "))
-
-if numero &gt;= 1 and numero &lt;= 100:
-    print("Dentro da faixa ✔")
-else:
-    print("Fora da faixa ✖")
-
-# Atalho do Python (encadeamento de comparações):
-if 1 &lt;= numero &lt;= 100:
-    print("Dentro da faixa (atalho) ✔")</pre></div></div></details>
-    </div>
-  </article>
-
-  <article class="ex" id="ex15">
-    <div class="ex-head">
-      <span class="ex-num">EX 15</span>
-      <h3>Ano bissexto 📆</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex15"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Combinar and e or numa regra do mundo real.</p><p><strong>A regra oficial:</strong> um ano é bissexto se for divisível por 4 E não for divisível por 100... OU se for divisível por 400. (2024 ✔ · 1900 ✖ · 2000 ✔)</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Traduza cada pedaço: "divisível por 4" é <code>ano % 4 == 0</code></li><li>Monte a expressão completa com <code>and</code>, <code>or</code> e parênteses</li><li>Teste com 2024 (sim), 1900 (não!) e 2000 (sim)</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Digite um ano: 1900
-1900 não é bissexto.</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner">Use parênteses para agrupar: a parte do <code>and</code> precisa ser avaliada junta, antes do <code>or</code>.</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex15.py</span></div><pre class="code">ano = int(input("Digite um ano: "))
-
-if (ano % 4 == 0 and ano % 100 != 0) or ano % 400 == 0:
-    print(f"{ano} é bissexto!")
-else:
-    print(f"{ano} não é bissexto.")</pre></div></div></details>
-    </div>
-  </article>
-</section>
-
-<section class="parte" id="p5">
-  <div class="parte-head"><span class="num">05</span><h2>Condicionais aninhadas e o operador in</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Um <code>if</code> pode viver <strong>dentro</strong> de outro <code>if</code> — basta indentar mais 4 espaços. E o operador <code>in</code> verifica se algo está contido num texto: <code>"a" in "banana"</code> → <code>True</code>.</p></div>
-  <article class="ex" id="ex16">
-    <div class="ex-head">
-      <span class="ex-num">EX 16</span>
-      <h3>Login em duas etapas</h3>
-      <span class="stars">⭐⭐ médio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex16"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Usar um if dentro de outro if.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Defina <code>USUARIO = "robson"</code> e <code>SENHA = "1234"</code></li><li>Peça o usuário. SÓ SE estiver correto, peça a senha</li><li>Dentro do primeiro if, verifique a senha com outro if</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Usuário: robson
-Senha: 9999
-Senha incorreta!</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex16.py</span></div><pre class="code">USUARIO = "robson"
-SENHA = "1234"
-
-usuario = input("Usuário: ")
-
-if usuario == USUARIO:
-    senha = input("Senha: ")
-    if senha == SENHA:
-        print("Login realizado! ✔")
-    else:
-        print("Senha incorreta!")
-else:
-    print("Usuário não encontrado.")</pre></div></div></details>
-    </div>
-  </article>
-
-  <article class="ex" id="ex17">
-    <div class="ex-head">
-      <span class="ex-num">EX 17</span>
-      <h3>Tem essa letra?</h3>
-      <span class="stars">⭐ básico</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex17"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Conhecer o operador in.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Peça uma palavra e uma letra</li><li>Use <code>letra in palavra</code> dentro de um if</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Digite uma palavra: banana
-Qual letra procurar? a
-A letra 'a' está em 'banana' ✔</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex17.py</span></div><pre class="code">palavra = input("Digite uma palavra: ")
-letra = input("Qual letra procurar? ")
-
-if letra in palavra:
-    print(f"A letra '{letra}' está em '{palavra}' ✔")
-else:
-    print(f"A letra '{letra}' NÃO está em '{palavra}' ✖")</pre></div></div></details>
-    </div>
-  </article>
-
-  <article class="ex" id="ex18">
-    <div class="ex-head">
-      <span class="ex-num">EX 18</span>
-      <h3>Triângulo: existe e qual é? 📐</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex18"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Combinar and com condicionais aninhadas num problema clássico.</p><p><strong>Regras:</strong> três lados formam um triângulo se a soma de QUAISQUER dois for maior que o terceiro. Se existir: 3 lados iguais → equilátero · 2 iguais → isósceles · todos diferentes → escaleno.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Peça os lados a, b e c</li><li>Primeiro if: verifica a existência com 3 condições ligadas por <code>and</code></li><li>DENTRO dele, classifique com if/elif/else</li><li>Teste com (3, 4, 5) → escaleno e com (1, 1, 10) → não existe</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Lado a: 5
-Lado b: 5
-Lado c: 8
-Triângulo ISÓSCELES (2 lados iguais)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex18.py</span></div><pre class="code">a = float(input("Lado a: "))
-b = float(input("Lado b: "))
-c = float(input("Lado c: "))
-
-if a + b &gt; c and a + c &gt; b and b + c &gt; a:
-    if a == b and b == c:
-        print("Triângulo EQUILÁTERO (3 lados iguais)")
-    elif a == b or a == c or b == c:
-        print("Triângulo ISÓSCELES (2 lados iguais)")
-    else:
-        print("Triângulo ESCALENO (3 lados diferentes)")
-else:
-    print("Esses lados não formam um triângulo!")</pre></div></div></details>
-    </div>
-  </article>
-</section>
-
-<section class="parte" id="p6">
-  <div class="parte-head"><span class="num">06</span><h2>Projetos da semana: juntando tudo!</h2></div>
-
-  <article class="ex" id="ex19">
-    <div class="ex-head">
-      <span class="ex-num">EX 19</span>
-      <h3>Projeto: Menu da lanchonete 🍔</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex19"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Montar um programa completo com menu, validação e cálculo de troco.</p><span class="tag passos">🧭 Requisitos</span><ol><li>Exiba o cardápio: 1 - X-Salada (R$ 12) · 2 - X-Bacon (R$ 15) · 3 - Suco (R$ 7)</li><li>Peça a opção e quanto dinheiro a pessoa tem</li><li>Defina o preço com if/elif (opção inválida → avise)</li><li>Se o dinheiro der: confirme e mostre o troco; senão, mostre quanto falta</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">=== LANCHONETE DO PYTHON ===
-1 - X-Salada ........ R$ 12.00
-2 - X-Bacon ......... R$ 15.00
-3 - Suco natural .... R$  7.00
-Escolha seu item (1-3): 2
-Quanto você tem? R$ 20
-Pedido confirmado! Troco: R$ 5.00</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex19.py</span></div><pre class="code">print("=== LANCHONETE DO PYTHON ===")
-print("1 - X-Salada ........ R$ 12.00")
-print("2 - X-Bacon ......... R$ 15.00")
-print("3 - Suco natural .... R$  7.00")
-
-opcao = int(input("Escolha seu item (1-3): "))
-dinheiro = float(input("Quanto você tem? R$ "))
-
-if opcao == 1:
-    preco = 12.00
-elif opcao == 2:
-    preco = 15.00
-elif opcao == 3:
-    preco = 7.00
-else:
-    preco = 0
-    print("Opção inválida!")
-
-if preco &gt; 0:
-    if dinheiro &gt;= preco:
-        troco = dinheiro - preco
-        print(f"Pedido confirmado! Troco: R$ {troco:.2f}")
-    else:
-        falta = preco - dinheiro
-        print(f"Dinheiro insuficiente. Faltam R$ {falta:.2f}")</pre></div></div></details>
-    </div>
-  </article>
-
-  <article class="ex" id="ex20">
-    <div class="ex-head">
-      <span class="ex-num">EX 20</span>
-      <h3>Projeto: Tua Caneca v2 — desconto progressivo ☕</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex20"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Evoluir o projeto da Semana 1 com regras de negócio condicionais.</p><p><strong>Contexto:</strong> a loja de canecas agora dá desconto por volume: 20 canecas ou mais → 15% · 10 ou mais → 10% · abaixo disso → sem desconto. Cada caneca custa R$ 25,00.</p><span class="tag passos">🧭 Requisitos</span><ol><li>Peça a quantidade e calcule o subtotal</li><li>Defina o desconto com if/elif/else (atenção à ordem: teste o 20 primeiro!)</li><li>Calcule o total: <code>subtotal * (1 - desconto)</code></li><li>Exiba subtotal, percentual de desconto e total</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">=== TUA CANECA - ORÇAMENTO v2 ===
-Quantidade de canecas: 12
-Subtotal: R$ 300.00
-Desconto: 10%
-TOTAL: R$ 270.00</pre></div><details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Adicione frete grátis para pedidos acima de R$ 250 (senão, frete de R$ 15).</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex20.py</span></div><pre class="code">print("=== TUA CANECA - ORÇAMENTO v2 ===")
-PRECO = 25.00
-
-quantidade = int(input("Quantidade de canecas: "))
-subtotal = quantidade * PRECO
-
-if quantidade &gt;= 20:
-    desconto = 0.15
-elif quantidade &gt;= 10:
-    desconto = 0.10
-else:
-    desconto = 0
-
-total = subtotal * (1 - desconto)
-
-print(f"Subtotal: R$ {subtotal:.2f}")
-print(f"Desconto: {desconto * 100:.0f}%")
-print(f"TOTAL: R$ {total:.2f}")</pre></div></div></details>
-    </div>
-  </article>
-
-  <article class="ex" id="ex21">
-    <div class="ex-head">
-      <span class="ex-num">EX 21</span>
-      <h3>Projeto bônus: Estacionamento rotativo 🅿️</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex21"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Resolver um problema completo sozinho (sem código pronto!).</p><p><strong>Regras:</strong> a primeira hora custa R$ 8,00. Cada hora extra custa R$ 5,00.</p><span class="tag passos">🧭 Roteiro</span><ol><li>Pergunte quantas horas o carro ficou</li><li>Se ficou 1 hora ou menos: valor fixo de R$ 8,00</li><li>Senão: R$ 8,00 + (horas extras × R$ 5,00)</li><li>Exiba o tempo e o valor com 2 casas decimais</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">=== ESTACIONAMENTO ROTATIVO ===
-Quantas horas o carro ficou? 4
-Tempo: 4h
-Valor a pagar: R$ 23.00</pre></div><details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Crie uma "diária máxima": se o valor passar de R$ 40,00, cobre apenas R$ 40,00.</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex21.py</span></div><pre class="code">print("=== ESTACIONAMENTO ROTATIVO ===")
-
-horas = int(input("Quantas horas o carro ficou? "))
-
-if horas &lt;= 1:
-    valor = 8.00
-else:
-    valor = 8.00 + (horas - 1) * 5.00
-
-# Desafio extra — diária máxima:
-if valor &gt; 40:
-    valor = 40.00
-
-print(f"Tempo: {horas}h")
-print(f"Valor a pagar: R$ {valor:.2f}")</pre></div></div></details>
+<span class="tag obj">🎯 Objetivo</span><p>O projeto de portfólio que fecha a formação.</p><span class="tag passos">🧭 Roteiro</span><ol><li>Escolha um fluxo REAL da sua vida: notas de alunos, finanças pessoais, estoque do negócio, relatórios do trabalho...</li><li>Monte a SUA central: importação (CSV/Excel/JSON) → análise → relatório → backup — e, se fizer sentido, uma API no meio</li><li>Estruture como projeto: pastas organizadas, funções com nomes claros, README explicando</li><li>Suba no GitHub, coloque o link no currículo e no LinkedIn</li><li>E ensine alguém: explicar é a forma definitiva de aprender — você, melhor que ninguém, sabe disso. 🎓</li></ol><details class="dica"><summary>💡 A última dica de todas</summary><div class="inner">Em 16 semanas você encarou ~230 exercícios e 3 sistemas completos. A pergunta nunca mais será "será que eu consigo?" — será "qual problema eu resolvo agora?". Obrigado pela jornada, e bons códigos! 🏆🐍</div></details>
     </div>
   </article>
 </section>
@@ -783,29 +693,29 @@ print(f"Valor a pagar: R$ {valor:.2f}")</pre></div></div></details>
 <div class="checklist" id="checklist">
   <h2>✅ Checklist de fim de semana</h2>
   <p>Antes de seguir para a próxima semana, confirme que você consegue:</p>
-<label class="check-item"><input type="checkbox"><span>Usar os 6 operadores de comparação (==, !=, &gt;, &lt;, &gt;=, &lt;=)</span></label>
-<label class="check-item"><input type="checkbox"><span>Explicar a diferença entre = (atribuição) e == (comparação)</span></label>
-<label class="check-item"><input type="checkbox"><span>Escrever um if/else com indentação correta (4 espaços)</span></label>
-<label class="check-item"><input type="checkbox"><span>Encadear várias condições com elif na ordem certa</span></label>
-<label class="check-item"><input type="checkbox"><span>Combinar condições com and, or e not</span></label>
-<label class="check-item"><input type="checkbox"><span>Verificar se um texto contém algo com o operador in</span></label>
-<label class="check-item"><input type="checkbox"><span>Escrever um if dentro de outro if (aninhado)</span></label>
-<label class="check-item"><input type="checkbox"><span>Ler um IndentationError sem entrar em pânico</span></label>
-<label class="check-item"><input type="checkbox"><span>Montar um menu de opções com elif</span></label>
-<label class="check-item"><input type="checkbox"><span>Aplicar desconto progressivo com condições</span></label>
+<label class="check-item"><input type="checkbox"><span>Prever saídas misturando csv, os, json e os clássicos</span></label>
+<label class="check-item"><input type="checkbox"><span>Caçar bugs típicos de automação (newline, join, encoding, except)</span></label>
+<label class="check-item"><input type="checkbox"><span>Estruturar as pastas de um projeto via código (makedirs)</span></label>
+<label class="check-item"><input type="checkbox"><span>Importar e converter dados de um CSV com DictReader</span></label>
+<label class="check-item"><input type="checkbox"><span>Analisar dados com funções que retornam dicionários</span></label>
+<label class="check-item"><input type="checkbox"><span>Consumir uma API com fallback offline em camadas</span></label>
+<label class="check-item"><input type="checkbox"><span>Gerar um relatório .xlsx formatado e com fórmula</span></label>
+<label class="check-item"><input type="checkbox"><span>Nomear arquivos com data via strftime (organização automática)</span></label>
+<label class="check-item"><input type="checkbox"><span>Fazer backup de pastas com copytree</span></label>
+<label class="check-item"><input type="checkbox"><span>Integrar 16 semanas de conteúdo num menu coeso</span></label>
 </div>
 
 <div class="win-banner" id="winBanner">
-  <h2>🏆 SEMANA 2 COMPLETA!</h2>
-  <p>Você concluiu todos os exercícios. Seu programa já sabe tomar decisões!</p>
+  <h2>🏆 SEMANA 16 COMPLETA!</h2>
+  <p>MÓDULO AVANÇADO COMPLETO! Do zero absoluto a sistemas conectados ao mundo real em 16 semanas. E a trilha Dados & Web começa na Semana 17! 🏆🎓🐍</p>
 </div>
 
 <div class="preview-s2">
-<h2>📅 Prévia da Semana 3</h2><p>Na próxima semana: <strong>loops</strong> (<code>while</code> e <code>for</code>), <code>range()</code>, acumuladores, <code>break</code> e <code>continue</code> — seu programa vai <strong>repetir tarefas</strong> sem você copiar e colar código!</p></div>
+<h2>📅 Prévia da Semana 17</h2><p>Bem-vindo à <strong>trilha Dados &amp; Web</strong>! Na próxima semana: <strong>pandas</strong> — a biblioteca número 1 de análise de dados do planeta. O relatório que levava 30 linhas de loop vira UMA linha de <code>groupby</code>. Depois vêm gráficos com matplotlib, seu primeiro site com Flask e o dashboard web final. 📊🚀</p></div>
 
 </main>
 
-<footer>python_para_iniciantes // semana_02 // exercícios guiados</footer>
+<footer>python_para_iniciantes // semana_16 // exercícios guiados</footer>
 
 <script>
 // ===== Syntax highlight leve para Python =====
@@ -817,7 +727,7 @@ print(f"Valor a pagar: R$ {valor:.2f}")</pre></div></div></details>
     src = src.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     // uma passada só, com alternação (comentário | string | builtin | bool | número)
     src = src.replace(
-      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|insert|int|float|str|len|range|type|abs|round|max|min|sum|sorted|sort|reverse|append|remove|split|strip|upper|lower|replace|title|randint|random)\b|\b(True|False|None|if|elif|else|while|for|in|and|or|not|break|continue|import|from|def|return)\b|(\b\d+(?:\.\d+)?\b)/g,
+      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|insert|int|float|str|len|range|type|abs|round|max|min|sum|sorted|sort|reverse|append|remove|split|strip|upper|lower|replace|title|randint|random|get|keys|values|items|open|readlines|read|write|close|count|index|pop|update|list|dict|tuple|enumerate|sqrt|floor|ceil|choice|shuffle|sample|sleep|now|today|strftime|dumps|dump|loads|load|isinstance|datetime|date|DictReader|DictWriter|writerows|writerow|writeheader|writer|reader|csv|Workbook|load_workbook|save|iter_rows|Font|listdir|makedirs|getcwd|rename|exists|getsize|splitext|join|endswith|startswith|copytree|copy|move|requests|status_code|json|DataFrame|read_csv|read_excel|to_excel|to_csv|head|describe|groupby|sort_values|value_counts|mean|idxmax|bar|barh|pie|plot|savefig|show|title|xlabel|ylabel|figure|legend|axhline|tight_layout|close|Flask|route|run|render_template|jsonify|redirect|request)\b|\b(True|False|None|if|elif|else|while|for|in|and|or|not|break|continue|import|from|def|return|try|except|finally|with|as|del|global|pass|class|self|super|lambda)\b|(\b\d+(?:\.\d+)?\b)/g,
       function(m, com, str, fn, bool, num){
         if(com)  return '<span class="tk-com">'+com+'</span>';
         if(str)  return '<span class="tk-str">'+str+'</span>';
@@ -836,7 +746,7 @@ print(f"Valor a pagar: R$ {valor:.2f}")</pre></div></div></details>
 // no navegador. Se o localStorage estiver indisponível (modo restrito,
 // pré-visualização, etc.), o progresso funciona só em memória, sem quebrar.
 const storage = (function(){
-  const KEY = 'python_semana02_progresso';
+  const KEY = 'python_semana16_progresso';
   let memoria = {};
   let disponivel = false;
   try{
@@ -883,10 +793,10 @@ const storage = (function(){
   const MSGS = [
     [0,  'Marque os exercícios concluídos ✔'],
     [1,  'Boa! Continue assim 💪'],
-    [6,  'Pegando o ritmo! 🔥'],
-    [10, 'Metade do caminho! 🚀'],
-    [16, 'Quase lá... força! ⚡'],
-    [21, 'SEMANA COMPLETA! 🏆']
+    [3,  'Pegando o ritmo! 🔥'],
+    [5, 'Metade do caminho! 🚀'],
+    [8, 'Quase lá... força! ⚡'],
+    [10, 'SEMANA COMPLETA! 🏆']
   ];
 
   function estadoAtual(){

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Semana 16 — Projeto Final 3</title>
+<title>Semana 6 — Funções</title>
 <style>
   :root{
     --ink:#16243A;
@@ -57,7 +57,7 @@
     color:#fff;padding:56px 20px 48px;text-align:center;position:relative;overflow:hidden;
   }
   header.hero::before{
-    content:"csv  openpyxl  requests  os  shutil  🏆";
+    content:"def  return  (parametros)  chamada()  escopo";
     position:absolute;inset:auto 0 8px 0;font-family:var(--mono);font-size:.78rem;
     color:rgba(255,255,255,.14);letter-spacing:.4em;white-space:nowrap;overflow:hidden;
   }
@@ -234,458 +234,468 @@
 <div class="progress-wrap" role="region" aria-label="Progresso da semana">
   <span class="label">XP DA SEMANA</span>
   <div class="progress-bar"><div class="progress-fill" id="pfill"></div></div>
-  <span class="progress-count" id="pcount">0 / 10</span>
+  <span class="progress-count" id="pcount">0 / 17</span>
   <span class="progress-msg" id="pmsg">Marque os exercícios concluídos ✔</span>
   <button class="reset-btn" id="resetBtn" title="Apagar todo o progresso salvo">↺ Resetar</button>
 </div>
 
 <header class="hero">
   <div class="kicker">Python para Iniciantes · Exercícios Guiados</div>
-  <h1>SEMANA 16 — Projeto Final 3:<br>a Central Tua Caneca 🏆<span class="cursor" aria-hidden="true"></span></h1>
-  <p class="sub">A obra-prima do módulo avançado: vendas importadas de CSV, análise com funções, cotação do dólar via API, relatório Excel formatado e backup automático — tudo num sistema só.</p>
+  <h1>SEMANA 6 — Funções:<br>montando programas como LEGO<span class="cursor" aria-hidden="true"></span></h1>
+  <p class="sub">Pare de repetir código: def, parâmetros, return, valores padrão, escopo de variáveis e a arte de refatorar seus projetos antigos em peças reutilizáveis.</p>
   <div class="howto">
     <strong>Como usar:</strong> digite o código você mesmo (não copie e cole!), compare com a saída esperada e marque <strong>✔ Concluído</strong> em cada exercício para encher sua barra de XP. As <strong>dicas</strong> e <strong>soluções</strong> ficam escondidas — só abra depois de tentar! Seu progresso fica salvo no navegador.
   </div>
 </header>
 
-<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · Revisão</a><a href="#p2">2 · Etapas 1-2</a><a href="#p3">3 · Etapas 3-4</a><a href="#p4">4 · Etapas 5-6</a><a href="#p5">5 · Formatura definitiva</a><a href="#checklist">✅ Checklist</a></nav>
+<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · def</a><a href="#p2">2 · return</a><a href="#p3">3 · Parâmetros</a><a href="#p4">4 · Escopo</a><a href="#p5">5 · Refatorando</a><a href="#p6">6 · Projetos</a><a href="#checklist">✅ Checklist</a></nav>
 
 <main>
 
 <section class="parte" id="p1">
-  <div class="parte-head"><span class="num">01</span><h2>Revisão relâmpago</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>O último aquecimento antes da obra-prima. Tudo do módulo avançado no caldeirão!</p></div>
+  <div class="parte-head"><span class="num">01</span><h2>def: criando suas próprias funções</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Você já USA funções desde a Semana 1: <code>print()</code>, <code>input()</code>, <code>len()</code>... Agora vai CRIAR as suas. A receita:</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">estrutura.py</span></div><pre class="code">def nome_da_funcao():      # 1. DEFINE (ensina a receita)
+    print("Fazendo algo...")
+
+nome_da_funcao()           # 2. CHAMA (executa a receita)</pre></div><p><strong>Atenção:</strong> definir NÃO executa! A função só roda quando é chamada — e pode ser chamada quantas vezes você quiser. Essa é a mágica: escreve uma vez, usa mil vezes.</p></div>
   <article class="ex" id="ex1">
     <div class="ex-head">
       <span class="ex-num">EX 01</span>
-      <h3>Quiz: preveja as 8 saídas 🧠</h3>
-      <span class="stars">⭐⭐ médio</span>
+      <h3>Primeira função</h3>
+      <span class="stars">⭐ básico</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex1"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Testar csv, os, json e os clássicos das 16 semanas.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Anote suas previsões antes de rodar — última chance de gabaritar! 😄</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex01_quiz.py</span></div><pre class="code">import os
-import json
+<span class="tag obj">🎯 Objetivo</span><p>Definir e chamar uma função — e comprovar que definir não executa.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Digite, PREVEJA quantas vezes a mensagem aparece, e execute:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex01_funcao.py</span></div><pre class="code">def saudacao():
+    print("Olá! Bem-vindo ao curso de Python!")
 
-print("foto.jpg".endswith(".jpg"))
-print("relatorio.final.pdf".split(".")[-1])
-print(os.path.join("dados", "vendas.csv"))
-
-dados = json.loads('{"qtd": "12"}')
-print(type(dados["qtd"]).__name__)
-print(int(dados["qtd"]) * 2)
-
-linha = {"produto": "caneca", "total": "75.0"}
-print(float(linha["total"]) &gt;= 50)
-
-print(round(1536 / 1024, 1))
-
-pares = [("a", 1), ("b", 2)]
-for letra, numero in pares:
-    pass
-print(letra, numero)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">True
-pdf
-dados\vendas.csv (ou dados/vendas.csv no Linux!)
-str
-24
-True
-1.5
-b 2</pre></div><details class="dica"><summary>💡 Gabarito comentado</summary><div class="inner">endswith (S14) · split do último ponto (S4+14) · join portátil — a barra muda por sistema! (S14) · JSON traz "12" como string (S15) · conversão antes da conta · float de campo CSV (S13) · bytes→KB (S14) · o for deixa as variáveis com os ÚLTIMOS valores (S3+5). 6+? Pronto para a Central!</div></details>
+saudacao()
+saudacao()</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Olá! Bem-vindo ao curso de Python!
+Olá! Bem-vindo ao curso de Python!</pre></div><details class="dica"><summary>💡 Experimento</summary><div class="inner">Apague as duas chamadas e rode de novo. Nada acontece! O def sozinho só ENSINA a receita — ninguém cozinhou ainda.</div></details>
     </div>
   </article>
 
   <article class="ex" id="ex2">
     <div class="ex-head">
       <span class="ex-num">EX 02</span>
-      <h3>Caça aos bugs de automação 🐛🔍</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
+      <h3>Função com parâmetro</h3>
+      <span class="stars">⭐ básico</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex2"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Os 5 bugs que mais derrubam scripts de automação no mundo real.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>O código deveria gravar um CSV e movê-lo para a pasta saida — mas tem 5 bugs</li><li>Ache todos antes de executar!</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex02_bugs.py</span></div><pre class="code">import csv
+<span class="tag obj">🎯 Objetivo</span><p>Passar informação para dentro da função.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>O parâmetro é uma variável que nasce no parêntese da definição:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex02_parametro.py</span></div><pre class="code">def saudacao(nome):
+    print(f"Olá, {nome}!")
 
-with open("relatorio.csv", "w") as arquivo:
-    escritor = csv.writer(arquivo)
-    escritor.writerow("nome", "total")
-    escritor.writerow(["Ana", 75.0])
+saudacao("Ana")
+saudacao("Robson")
+saudacao(input("Seu nome: "))</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Olá, Ana!
+Olá, Robson!
+Seu nome: Carla
+Olá, Carla!</pre></div><details class="dica"><summary>💡 Vocabulário</summary><div class="inner">Na DEFINIÇÃO, <code>nome</code> é o <strong>parâmetro</strong>. Na CHAMADA, <code>"Ana"</code> é o <strong>argumento</strong> — o valor real que preenche o parâmetro naquela execução.</div></details>
+    </div>
+  </article>
 
-os.makedirs("saida")
-shutil.move("relatorio.csv", "saida\relatorio.csv")</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><p><strong>Os 5 bugs:</strong> (1) faltou <code>newline=""</code> (e o <code>encoding="utf-8"</code>) no open — linhas em branco no Windows. (2) <code>writerow("nome", "total")</code> passa DOIS argumentos: o writerow recebe UMA LISTA — <code>writerow(["nome", "total"])</code>. (3) <code>os</code> e <code>shutil</code> usados sem import! (4) <code>os.makedirs("saida")</code> sem <code>exist_ok=True</code> quebra na 2ª execução. (5) Caminho com <code>"\\"</code> na mão em vez de <code>os.path.join</code> — funciona só no Windows e é frágil.</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex02.py</span></div><pre class="code">import os
-import csv
-import shutil
+  <article class="ex" id="ex3">
+    <div class="ex-head">
+      <span class="ex-num">EX 03</span>
+      <h3>Dois parâmetros (a ordem importa!)</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex3"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Trabalhar com múltiplos parâmetros.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie <code>def matricula(nome, curso):</code> que imprime "[nome] foi matriculado em [curso]"</li><li>Chame com <code>matricula("Ana", "Python")</code></li><li>Agora INVERTA os argumentos e veja o estrago 😄</li></ol><span class="tag saida">✅ Saída (com a inversão)</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Ana foi matriculado em Python
+Python foi matriculado em Ana</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex03.py</span></div><pre class="code">def matricula(nome, curso):
+    print(f"{nome} foi matriculado em {curso}")
 
-with open("relatorio.csv", "w", newline="", encoding="utf-8") as arquivo:
-    escritor = csv.writer(arquivo)
-    escritor.writerow(["nome", "total"])
-    escritor.writerow(["Ana", 75.0])
-
-os.makedirs("saida", exist_ok=True)
-shutil.move("relatorio.csv", os.path.join("saida", "relatorio.csv"))</pre></div></div></details>
+matricula("Ana", "Python")
+matricula("Python", "Ana")   # a ordem dos argumentos importa!</pre></div><p>O Python preenche os parâmetros NA ORDEM. Existe um jeito de nomear os argumentos (<code>matricula(curso="Python", nome="Ana")</code>) — teste!</p></div></details>
     </div>
   </article>
 </section>
 
 <section class="parte" id="p2">
-  <div class="parte-head"><span class="num">02</span><h2>Central Tua Caneca — Etapas 1 e 2</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p><strong>A obra-prima:</strong> a Central importa as vendas de um CSV, analisa, busca o dólar na API, gera relatório Excel e faz backup — o fluxo de dados completo de um pequeno negócio. A arquitetura:</p><table><tr><th>Etapa</th><th>Entrega</th><th>Semanas</th></tr><tr><td>1</td><td>Estrutura de pastas + CSV de exemplo</td><td>13, 14</td></tr><tr><td>2</td><td>Importação das vendas (CSV → lista de dicts)</td><td>5, 13</td></tr><tr><td>3</td><td>Análise (faturamento, campeão, ticket médio)</td><td>3, 5, 6</td></tr><tr><td>4</td><td>Cotação do dólar com fallback</td><td>15</td></tr><tr><td>5</td><td>Relatório .xlsx com data no nome</td><td>9, 13</td></tr><tr><td>6</td><td>Backup + menu integrado</td><td>14, e TODAS</td></tr></table><p>Crie o arquivo <code>central.py</code> — a obra cresce etapa por etapa.</p></div>
-  <article class="ex" id="ex3">
-    <div class="ex-head">
-      <span class="ex-num">EX 03</span>
-      <h3>Etapa 1: o canteiro de obras</h3>
-      <span class="stars">⭐⭐ médio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex3"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Estrutura de pastas e dados de exemplo gerados por código.</p><span class="tag passos">🧭 Passo a passo</span><ol><li><code>preparar_pastas()</code>: cria dados/, relatorios/ e backup/ (makedirs + exist_ok)</li><li><code>gerar_exemplo()</code>: se <code>dados/vendas.csv</code> NÃO existir, grava 4 vendas de exemplo com DictWriter</li><li>Rode duas vezes: a segunda não pode reclamar nem sobrescrever!</li></ol><span class="tag saida">✅ Primeira execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Pastas prontas ✔
-vendas.csv de exemplo gerado ✔</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">etapa1.py</span></div><pre class="code">import os
-import csv
-
-PASTAS = ["dados", "relatorios", "backup"]
-
-def preparar_pastas():
-    for pasta in PASTAS:
-        os.makedirs(pasta, exist_ok=True)
-    print("Pastas prontas ✔")
-
-def gerar_exemplo():
-    caminho = os.path.join("dados", "vendas.csv")
-    if os.path.exists(caminho):
-        return
-    campos = ["data", "produto", "qtd", "total"]
-    exemplos = [
-        {"data": "10/06/2026", "produto": "caneca branca", "qtd": 3, "total": 75.0},
-        {"data": "10/06/2026", "produto": "caneca preta", "qtd": 12, "total": 270.0},
-        {"data": "11/06/2026", "produto": "azulejo", "qtd": 2, "total": 80.0},
-        {"data": "12/06/2026", "produto": "caneca preta", "qtd": 5, "total": 137.5},
-    ]
-    with open(caminho, "w", newline="", encoding="utf-8") as arquivo:
-        escritor = csv.DictWriter(arquivo, fieldnames=campos)
-        escritor.writeheader()
-        for linha in exemplos:
-            escritor.writerow(linha)
-    print("vendas.csv de exemplo gerado ✔")
-
-preparar_pastas()
-gerar_exemplo()</pre></div></div></details>
-    </div>
-  </article>
-
+  <div class="parte-head"><span class="num">02</span><h2>return: a função que devolve</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>A diferença mais importante da semana: <code>print</code> <strong>MOSTRA</strong> um valor na tela e pronto. <code>return</code> <strong>ENTREGA</strong> o valor para quem chamou — e aí você pode guardar numa variável, usar numa conta, passar para outra função...</p></div>
   <article class="ex" id="ex4">
     <div class="ex-head">
       <span class="ex-num">EX 04</span>
-      <h3>Etapa 2: importando as vendas</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
+      <h3>print vs return: o duelo</h3>
+      <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex4"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>CSV → lista de dicionários, com tipos convertidos.</p><span class="tag passos">🧭 Passo a passo</span><ol><li><code>importar_vendas()</code>: lê com DictReader e RETORNA a lista</li><li>Converta na entrada: <code>linha["qtd"] = int(...)</code> e <code>linha["total"] = float(...)</code> — quem converte na porta nunca mais se preocupa</li><li>Teste: importe e imprima quantas vendas chegaram</li></ol><span class="tag saida">✅ Teste da etapa</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">4 vendas importadas ✔</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">etapa2.py</span></div><pre class="code">def importar_vendas():
-    vendas = []
-    caminho = os.path.join("dados", "vendas.csv")
-    with open(caminho, "r", encoding="utf-8") as arquivo:
-        leitor = csv.DictReader(arquivo)
-        for linha in leitor:
-            linha["qtd"] = int(linha["qtd"])
-            linha["total"] = float(linha["total"])
-            vendas.append(linha)
-    return vendas
+<span class="tag obj">🎯 Objetivo</span><p>Entender de uma vez por todas a diferença.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>PREVEJA cada linha da saída (uma delas vai te surpreender!):</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex04_duelo.py</span></div><pre class="code">def soma_print(a, b):
+    print(a + b)
 
-vendas = importar_vendas()
-print(f"{len(vendas)} vendas importadas ✔")</pre></div></div></details>
+def soma_return(a, b):
+    return a + b
+
+resultado = soma_print(2, 3)
+print(resultado)
+
+resultado = soma_return(2, 3)
+print(resultado)
+print(resultado * 10)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">5
+None
+5
+50</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><p>A surpresa é o <code>None</code>: <code>soma_print</code> mostra o 5 na tela, mas não DEVOLVE nada — e função sem return devolve <code>None</code>. Já <code>soma_return</code> entrega o valor, que pode ser guardado e reutilizado (<code>resultado * 10</code>). Regra prática: <strong>funções que calculam devem retornar</strong>; quem decide mostrar é quem chamou.</p></div></details>
     </div>
   </article>
-</section>
-
-<section class="parte" id="p3">
-  <div class="parte-head"><span class="num">03</span><h2>Central Tua Caneca — Etapas 3 e 4</h2></div>
 
   <article class="ex" id="ex5">
     <div class="ex-head">
       <span class="ex-num">EX 05</span>
-      <h3>Etapa 3: a análise 📊</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
+      <h3>Compondo funções</h3>
+      <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex5"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Uma função que devolve TODO o resumo num dicionário.</p><span class="tag passos">🧭 Passo a passo</span><ol><li><code>analisar(vendas)</code> percorre a lista acumulando: faturamento, unidades, dict contador por produto</li><li>Calcule o campeão (padrão maior) e o ticket médio (faturamento ÷ nº de vendas)</li><li>RETORNE tudo num dicionário: <code>{"faturamento": ..., "unidades": ..., "campeao": ..., "ticket": ...}</code></li><li>Quem chama decide como exibir — separação de responsabilidades (Semana 6)!</li></ol><span class="tag saida">✅ Teste da etapa</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Faturamento: R$ 562.50
-Unidades: 22
-Campeão: caneca preta
-Ticket médio: R$ 140.62</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">etapa3.py</span></div><pre class="code">def analisar(vendas):
-    faturamento = 0
-    unidades = 0
-    por_produto = {}
-    for venda in vendas:
-        faturamento = faturamento + venda["total"]
-        unidades = unidades + venda["qtd"]
-        nome = venda["produto"]
-        por_produto[nome] = por_produto.get(nome, 0) + venda["qtd"]
+<span class="tag obj">🎯 Objetivo</span><p>Usar o retorno de uma função como entrada de outra.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie <code>dobro(n)</code> que retorna <code>n * 2</code> e <code>quadrado(n)</code> que retorna <code>n ** 2</code></li><li>PREVEJA: quanto dá <code>dobro(quadrado(3))</code>? E <code>quadrado(dobro(3))</code>?</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">18
+36</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex05.py</span></div><pre class="code">def dobro(n):
+    return n * 2
 
-    campeao = ""
-    maior = 0
-    for nome, qtd in por_produto.items():
-        if qtd &gt; maior:
-            maior = qtd
-            campeao = nome
+def quadrado(n):
+    return n ** 2
 
-    return {
-        "faturamento": faturamento,
-        "unidades": unidades,
-        "campeao": campeao,
-        "ticket": faturamento / len(vendas)
-    }</pre></div></div></details>
+print(dobro(quadrado(3)))    # quadrado(3)=9 → dobro(9)=18
+print(quadrado(dobro(3)))    # dobro(3)=6 → quadrado(6)=36</pre></div><p>O Python resolve de DENTRO para FORA. Compor funções assim só é possível porque elas RETORNAM — com print, nada disso funcionaria.</p></div></details>
     </div>
   </article>
 
   <article class="ex" id="ex6">
     <div class="ex-head">
       <span class="ex-num">EX 06</span>
-      <h3>Etapa 4: o dólar com 3 vidas 💵</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
+      <h3>Funções que respondem sim ou não</h3>
+      <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex6"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Integrar a cotacao_segura da Semana 15: API → cache → padrão.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Traga (ou importe do seu módulo!) a função com fallback em camadas</li><li>Toque final: quando a API responder, ATUALIZE o cache — assim o plano B fica sempre fresco</li><li>Use-a para calcular o faturamento em dólares</li></ol><span class="tag saida">✅ Teste da etapa</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Dólar: R$ 5.43
-Faturamento em US$ 103.59</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">etapa4.py</span></div><pre class="code">import json
-from datetime import datetime
+<span class="tag obj">🎯 Objetivo</span><p>Retornar True/False para usar direto em condições.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie <code>eh_par(n)</code> que retorna <code>True</code> se n for par</li><li>Use-a num if: <code>if eh_par(numero):</code></li><li>Dica de elegância: a comparação JÁ é True/False — retorne ela direto!</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Digite um número: 8
+8 é par!</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex06.py</span></div><pre class="code">def eh_par(n):
+    return n % 2 == 0     # a comparação já devolve True/False!
 
-def cotacao_segura():
-    try:
-        import requests
-        url = "https://economia.awesomeapi.com.br/json/last/USD-BRL"
-        cotacao = float(requests.get(url, timeout=5).json()["USDBRL"]["bid"])
-        cache = {"cotacao": cotacao,
-                 "consultado_em": datetime.now().strftime("%d/%m/%Y %H:%M")}
-        with open("cache_dolar.json", "w", encoding="utf-8") as arquivo:
-            json.dump(cache, arquivo, indent=2, ensure_ascii=False)
-        return cotacao
-    except Exception:
-        try:
-            with open("cache_dolar.json", "r", encoding="utf-8") as arquivo:
-                cache = json.load(arquivo)
-            print(f"(offline) Usando cache de {cache['consultado_em']}")
-            return cache["cotacao"]
-        except FileNotFoundError:
-            print("(offline, sem cache) Cotação padrão R$ 5.00")
-            return 5.00</pre></div></div></details>
+numero = int(input("Digite um número: "))
+
+if eh_par(numero):
+    print(f"{numero} é par!")
+else:
+    print(f"{numero} é ímpar!")</pre></div><p>Nada de <code>if n % 2 == 0: return True else: return False</code> — funciona, mas é dar uma volta enorme no quarteirão. 😄</p></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex7">
+    <div class="ex-head">
+      <span class="ex-num">EX 07</span>
+      <h3>Retornando dois valores</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex7"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Devolver uma tupla e desempacotar (olá, Semana 5!).</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie <code>menor_maior(lista)</code> que retorna <code>min(lista), max(lista)</code></li><li>Receba com duas variáveis: <code>menor, maior = menor_maior(numeros)</code></li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Menor: 1 | Maior: 9</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex07.py</span></div><pre class="code">def menor_maior(lista):
+    return min(lista), max(lista)   # retorna uma tupla!
+
+numeros = [4, 9, 1, 7, 3]
+menor, maior = menor_maior(numeros)
+
+print(f"Menor: {menor} | Maior: {maior}")</pre></div></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p3">
+  <div class="parte-head"><span class="num">03</span><h2>Parâmetros com valor padrão</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Um parâmetro pode ter um valor de reserva, usado quando a chamada não informa o argumento: <code>def saudacao(nome="visitante"):</code>. Assim a função funciona com E sem argumento.</p></div>
+  <article class="ex" id="ex8">
+    <div class="ex-head">
+      <span class="ex-num">EX 08</span>
+      <h3>O valor padrão</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex8"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Criar uma função flexível.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Digite, preveja e execute:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex08_padrao.py</span></div><pre class="code">def saudacao(nome="visitante"):
+    print(f"Olá, {nome}!")
+
+saudacao("Ana")
+saudacao()</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Olá, Ana!
+Olá, visitante!</pre></div><details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Crie <code>orcamento(quantidade, preco=25.0)</code> que retorna o total. Chame com e sem o preço.</div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex9">
+    <div class="ex-head">
+      <span class="ex-num">EX 09</span>
+      <h3>Uma função, várias turmas</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex9"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Sentir o poder do reuso.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie <code>calcular_media(notas)</code> que recebe uma LISTA e retorna a média</li><li>Use a MESMA função para duas turmas diferentes</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Turma A: 7.8
+Turma B: 6.5</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex09.py</span></div><pre class="code">def calcular_media(notas):
+    return sum(notas) / len(notas)
+
+turma_a = [8.5, 7.0, 9.0, 6.5]
+turma_b = [5.0, 7.5, 6.0, 7.5]
+
+print(f"Turma A: {calcular_media(turma_a):.1f}")
+print(f"Turma B: {calcular_media(turma_b):.1f}")</pre></div><p>Sem função, você copiaria a conta duas vezes. Com função, a lógica mora num lugar só — se precisar mudar, muda UMA vez.</p></div></details>
     </div>
   </article>
 </section>
 
 <section class="parte" id="p4">
-  <div class="parte-head"><span class="num">04</span><h2>Central Tua Caneca — Etapas 5 e 6</h2></div>
-
-  <article class="ex" id="ex7">
+  <div class="parte-head"><span class="num">04</span><h2>Escopo: onde as variáveis moram</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Variável criada DENTRO de uma função é <strong>local</strong>: nasce quando a função roda e morre quando ela termina. Do lado de fora, ela simplesmente não existe!</p></div>
+  <article class="ex" id="ex10">
     <div class="ex-head">
-      <span class="ex-num">EX 07</span>
-      <h3>Etapa 5: o relatório executivo 📑</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex7"> Concluído</label>
+      <span class="ex-num">EX 10</span>
+      <h3>A variável que sumiu</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex10"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Excel formatado, com fórmula, resumo e data no nome do arquivo.</p><span class="tag passos">🧭 Passo a passo</span><ol><li><code>gerar_relatorio(vendas, resumo, dolar)</code>: cabeçalho em negrito + dados + linha TOTAL com =SUM</li><li>Bloco de resumo embaixo: campeão, ticket médio e faturamento em US$</li><li>Nome com carimbo: <code>strftime("relatorio_%Y-%m-%d_%H-%M.xlsx")</code>, salvo em relatorios/</li><li>Gere dois relatórios em horários diferentes: eles convivem, auto-organizados!</li></ol><span class="tag saida">✅ Teste da etapa</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Relatório salvo: relatorios/relatorio_2026-06-12_17-00.xlsx ✔</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">etapa5.py</span></div><pre class="code">from openpyxl import Workbook
-from openpyxl.styles import Font
+<span class="tag obj">🎯 Objetivo</span><p>Provocar (e entender) o NameError de escopo.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Execute este código <strong>com erro proposital</strong>:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex10_escopo.py</span></div><pre class="code">def calcular():
+    resultado = 10 * 2
 
-def gerar_relatorio(vendas, resumo, dolar):
-    planilha = Workbook()
-    aba = planilha.active
-    aba.title = "Vendas"
+calcular()
+print(resultado)   # 💥</pre></div><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output" style="color:#FF9B94">NameError: name 'resultado' is not defined</pre></div><span class="tag passos">🧭 Continue</span><ol><li>A função RODOU, mas a variável ficou presa lá dentro</li><li>Corrija usando return (a forma certa de "exportar" um valor)</li></ol><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex10.py</span></div><pre class="code">def calcular():
+    return 10 * 2
 
-    aba.append(["Data", "Produto", "Qtd", "Total (R$)"])
-    for celula in aba[1]:
-        celula.font = Font(bold=True)
-
-    for venda in vendas:
-        aba.append([venda["data"], venda["produto"],
-                    venda["qtd"], venda["total"]])
-
-    linha_total = len(vendas) + 2
-    aba[f"C{linha_total}"] = "TOTAL:"
-    aba[f"D{linha_total}"] = f"=SUM(D2:D{len(vendas) + 1})"
-
-    aba.append([])
-    aba.append(["Campeão", resumo["campeao"]])
-    aba.append(["Ticket médio (R$)", round(resumo["ticket"], 2)])
-    aba.append(["Faturamento (US$)", round(resumo["faturamento"] / dolar, 2)])
-
-    nome = datetime.now().strftime("relatorio_%Y-%m-%d_%H-%M.xlsx")
-    caminho = os.path.join("relatorios", nome)
-    planilha.save(caminho)
-    print(f"Relatório salvo: {caminho} ✔")</pre></div></div></details>
+resultado = calcular()
+print(resultado)</pre></div><p>O return é a porta de saída oficial: a função devolve o valor, e quem chamou guarda na SUA própria variável.</p></div></details>
     </div>
   </article>
 
-  <article class="ex" id="ex8">
+  <article class="ex" id="ex11">
     <div class="ex-head">
-      <span class="ex-num">EX 08</span>
-      <h3>Etapa 6: backup e o menu da Central 🏁</h3>
+      <span class="ex-num">EX 11</span>
+      <h3>Local vence global?</h3>
       <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex8"> Concluído</label>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex11"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>A última peça: backup com copytree e o menu que rege a orquestra.</p><span class="tag passos">🧭 Passo a passo</span><ol><li><code>fazer_backup()</code>: copytree de dados/ para backup/backup_DATA</li><li>Menu: 1-Análise · 2-Relatório Excel · 3-Backup · 4-Sair</li><li>Teste de estresse final: rode sem internet, rode duas vezes seguidas, apague o vendas.csv e rode</li><li>Confira com a versão integrada — e respire fundo: é a sua formatura 🏆</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">=== CENTRAL TUA CANECA ===
-1-Análise  2-Relatório Excel  3-Backup  4-Sair
-Opção: 2
-Dólar: R$ 5.43
-Relatório salvo: relatorios/relatorio_2026-06-12_17-05.xlsx ✔</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">central.py</span></div><pre class="code">import os
-import csv
-import json
-import shutil
-from datetime import datetime
-from openpyxl import Workbook
-from openpyxl.styles import Font
+<span class="tag obj">🎯 Objetivo</span><p>Ver o que acontece quando dentro e fora têm o mesmo nome.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>PREVEJA com cuidado, depois execute:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex11_global.py</span></div><pre class="code">mensagem = "Eu sou a global"
 
-PASTAS = ["dados", "relatorios", "backup"]
+def testar():
+    mensagem = "Eu sou a local"
+    print(mensagem)
 
-def preparar_pastas():
-    for pasta in PASTAS:
-        os.makedirs(pasta, exist_ok=True)
-
-def gerar_exemplo():
-    caminho = os.path.join("dados", "vendas.csv")
-    if os.path.exists(caminho):
-        return
-    campos = ["data", "produto", "qtd", "total"]
-    exemplos = [
-        {"data": "10/06/2026", "produto": "caneca branca", "qtd": 3, "total": 75.0},
-        {"data": "10/06/2026", "produto": "caneca preta", "qtd": 12, "total": 270.0},
-        {"data": "11/06/2026", "produto": "azulejo", "qtd": 2, "total": 80.0},
-        {"data": "12/06/2026", "produto": "caneca preta", "qtd": 5, "total": 137.5},
-    ]
-    with open(caminho, "w", newline="", encoding="utf-8") as arquivo:
-        escritor = csv.DictWriter(arquivo, fieldnames=campos)
-        escritor.writeheader()
-        for linha in exemplos:
-            escritor.writerow(linha)
-
-def importar_vendas():
-    vendas = []
-    with open(os.path.join("dados", "vendas.csv"), "r", encoding="utf-8") as arquivo:
-        leitor = csv.DictReader(arquivo)
-        for linha in leitor:
-            linha["qtd"] = int(linha["qtd"])
-            linha["total"] = float(linha["total"])
-            vendas.append(linha)
-    return vendas
-
-def analisar(vendas):
-    faturamento = 0
-    unidades = 0
-    por_produto = {}
-    for venda in vendas:
-        faturamento = faturamento + venda["total"]
-        unidades = unidades + venda["qtd"]
-        por_produto[venda["produto"]] = por_produto.get(venda["produto"], 0) + venda["qtd"]
-    campeao = ""
-    maior = 0
-    for nome, qtd in por_produto.items():
-        if qtd &gt; maior:
-            maior = qtd
-            campeao = nome
-    return {"faturamento": faturamento, "unidades": unidades,
-            "campeao": campeao, "ticket": faturamento / len(vendas)}
-
-def cotacao_segura():
-    try:
-        import requests
-        url = "https://economia.awesomeapi.com.br/json/last/USD-BRL"
-        cotacao = float(requests.get(url, timeout=5).json()["USDBRL"]["bid"])
-        cache = {"cotacao": cotacao,
-                 "consultado_em": datetime.now().strftime("%d/%m/%Y %H:%M")}
-        with open("cache_dolar.json", "w", encoding="utf-8") as arquivo:
-            json.dump(cache, arquivo, indent=2, ensure_ascii=False)
-        return cotacao
-    except Exception:
-        try:
-            with open("cache_dolar.json", "r", encoding="utf-8") as arquivo:
-                cache = json.load(arquivo)
-            print(f"(offline) Usando cache de {cache['consultado_em']}")
-            return cache["cotacao"]
-        except FileNotFoundError:
-            print("(offline, sem cache) Cotação padrão R$ 5.00")
-            return 5.00
-
-def gerar_relatorio(vendas, resumo, dolar):
-    planilha = Workbook()
-    aba = planilha.active
-    aba.title = "Vendas"
-    aba.append(["Data", "Produto", "Qtd", "Total (R$)"])
-    for celula in aba[1]:
-        celula.font = Font(bold=True)
-    for venda in vendas:
-        aba.append([venda["data"], venda["produto"], venda["qtd"], venda["total"]])
-    linha_total = len(vendas) + 2
-    aba[f"C{linha_total}"] = "TOTAL:"
-    aba[f"D{linha_total}"] = f"=SUM(D2:D{len(vendas) + 1})"
-    aba.append([])
-    aba.append(["Campeão", resumo["campeao"]])
-    aba.append(["Ticket médio (R$)", round(resumo["ticket"], 2)])
-    aba.append(["Faturamento (US$)", round(resumo["faturamento"] / dolar, 2)])
-    nome = datetime.now().strftime("relatorio_%Y-%m-%d_%H-%M.xlsx")
-    caminho = os.path.join("relatorios", nome)
-    planilha.save(caminho)
-    print(f"Relatório salvo: {caminho} ✔")
-
-def fazer_backup():
-    nome = datetime.now().strftime("backup_%Y-%m-%d_%H-%M-%S")
-    destino = os.path.join("backup", nome)
-    shutil.copytree("dados", destino)
-    print(f"Backup criado: {destino} ✔")
-
-# ===== PROGRAMA PRINCIPAL =====
-preparar_pastas()
-gerar_exemplo()
-
-while True:
-    print()
-    print("=== CENTRAL TUA CANECA ===")
-    print("1-Análise  2-Relatório Excel  3-Backup  4-Sair")
-    opcao = input("Opção: ")
-
-    if opcao == "1":
-        resumo = analisar(importar_vendas())
-        print(f"Faturamento: R$ {resumo['faturamento']:.2f}")
-        print(f"Unidades: {resumo['unidades']}")
-        print(f"Campeão: {resumo['campeao']}")
-        print(f"Ticket médio: R$ {resumo['ticket']:.2f}")
-    elif opcao == "2":
-        vendas = importar_vendas()
-        resumo = analisar(vendas)
-        dolar = cotacao_segura()
-        print(f"Dólar: R$ {dolar:.2f}")
-        gerar_relatorio(vendas, resumo, dolar)
-    elif opcao == "3":
-        fazer_backup()
-    elif opcao == "4":
-        print("Central encerrada. Parabéns pela jornada! 🏆")
-        break
-    else:
-        print("Opção inválida!")</pre></div><p><strong>~130 linhas, 16 semanas, 4 formatos de dados, 1 API e 0 medo de erro.</strong> Compare com seu primeiro print: a distância percorrida é a prova de que você aprendeu a aprender. 👏🏆</p></div></details>
+testar()
+print(mensagem)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Eu sou a local
+Eu sou a global</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><p>São DUAS variáveis diferentes que por coincidência têm o mesmo nome! Dentro da função, a local "ganha". Fora, a global continua intacta — a função nem encostou nela. Por isso funções são seguras: o que acontece na função, fica na função. 😄</p></div></details>
     </div>
   </article>
 </section>
 
 <section class="parte" id="p5">
-  <div class="parte-head"><span class="num">05</span><h2>Formatura definitiva</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Os dois últimos desafios da jornada — e nenhum tem solução, porque agora o autor é você. 🏆</p></div>
-  <article class="ex" id="ex9">
+  <div class="parte-head"><span class="num">05</span><h2>Refatorando: dando upgrade no código antigo</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p><strong>Refatorar</strong> = reorganizar um código que já funciona para ele ficar mais limpo, sem mudar o que ele faz. A ferramenta número 1 da refatoração? Funções! Vamos revisitar seus projetos das semanas passadas.</p></div>
+  <article class="ex" id="ex12">
     <div class="ex-head">
-      <span class="ex-num">EX 09</span>
-      <h3>Desafio: a Central no piloto automático 🤖</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex9"> Concluído</label>
+      <span class="ex-num">EX 12</span>
+      <h3>Tabuada vira função</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex12"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Fazer a Central rodar sozinha, sem ninguém apertar botão.</p><span class="tag passos">🧭 Roteiro</span><ol><li>Crie um <code>modo_automatico.py</code>: sem menu — importa, analisa, gera relatório e faz backup numa tacada</li><li>Caminho 1 (Python puro): um loop com <code>time.sleep(3600)</code> gera relatório de hora em hora</li><li>Caminho 2 (profissional): pesquise "Agendador de Tarefas do Windows executar script Python" — o sistema operacional roda seu script no horário marcado, todo dia</li><li>Toque final: a Central escreve um <code>log.txt</code> (modo "a"!) registrando cada execução com data</li></ol><details class="dica"><summary>💡 Você acabou de descrever um "job"</summary><div class="inner">Scripts agendados que processam dados e geram relatórios são chamados de jobs — e empresas pagam bem por quem sabe construí-los. Você sabe. 😉</div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Transformar o exercício da Semana 3 numa peça reutilizável.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie <code>def tabuada(n):</code> com o for de 1 a 10 dentro</li><li>Chame 3 vezes: <code>tabuada(3)</code>, <code>tabuada(7)</code>, <code>tabuada(int(input(...)))</code></li></ol><span class="tag saida">✅ Saída esperada (início)</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">3 x 1 = 3
+(...)
+7 x 1 = 7
+(...)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex12.py</span></div><pre class="code">def tabuada(n):
+    for i in range(1, 11):
+        print(f"{n} x {i} = {n * i}")
+
+tabuada(3)
+tabuada(7)
+tabuada(int(input("Qual tabuada? ")))</pre></div></div></details>
     </div>
   </article>
 
-  <article class="ex" id="ex10">
+  <article class="ex" id="ex13">
     <div class="ex-head">
-      <span class="ex-num">EX 10</span>
-      <h3>Desafio final: a obra é sua 🚀</h3>
+      <span class="ex-num">EX 13</span>
+      <h3>A validação vira função</h3>
       <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex10"> Concluído</label>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex13"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>O projeto de portfólio que fecha a formação.</p><span class="tag passos">🧭 Roteiro</span><ol><li>Escolha um fluxo REAL da sua vida: notas de alunos, finanças pessoais, estoque do negócio, relatórios do trabalho...</li><li>Monte a SUA central: importação (CSV/Excel/JSON) → análise → relatório → backup — e, se fizer sentido, uma API no meio</li><li>Estruture como projeto: pastas organizadas, funções com nomes claros, README explicando</li><li>Suba no GitHub, coloque o link no currículo e no LinkedIn</li><li>E ensine alguém: explicar é a forma definitiva de aprender — você, melhor que ninguém, sabe disso. 🎓</li></ol><details class="dica"><summary>💡 A última dica de todas</summary><div class="inner">Em 16 semanas você encarou ~230 exercícios e 3 sistemas completos. A pergunta nunca mais será "será que eu consigo?" — será "qual problema eu resolvo agora?". Obrigado pela jornada, e bons códigos! 🏆🐍</div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Empacotar a validação de entrada da Semana 3 para usar em qualquer programa.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie <code>pedir_nota()</code> que pergunta, repete enquanto for inválida e RETORNA a nota válida</li><li>Use-a duas vezes para calcular a média de 2 provas</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Nota (0 a 10): 15
+Inválida!
+Nota (0 a 10): 8
+Nota (0 a 10): 6
+Média: 7.0</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex13.py</span></div><pre class="code">def pedir_nota():
+    nota = float(input("Nota (0 a 10): "))
+    while nota &lt; 0 or nota &gt; 10:
+        print("Inválida!")
+        nota = float(input("Nota (0 a 10): "))
+    return nota
+
+nota1 = pedir_nota()
+nota2 = pedir_nota()
+print(f"Média: {(nota1 + nota2) / 2:.1f}")</pre></div><p>Repare na elegância: quem usa <code>pedir_nota()</code> tem a GARANTIA de receber uma nota válida — toda a chatice da validação ficou escondida dentro da função.</p></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex14">
+    <div class="ex-head">
+      <span class="ex-num">EX 14</span>
+      <h3>A calculadora refatorada</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex14"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Reescrever o projeto da Semana 2 com uma função que calcula e retorna.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie <code>calcular(n1, operacao, n2)</code> que RETORNA o resultado (ou <code>None</code> para operação inválida)</li><li>O programa principal só pede os dados, chama a função e mostra</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Primeiro número: 8
+Operação: *
+Segundo número: 7
+Resultado: 56.0</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex14.py</span></div><pre class="code">def calcular(n1, operacao, n2):
+    if operacao == "+":
+        return n1 + n2
+    elif operacao == "-":
+        return n1 - n2
+    elif operacao == "*":
+        return n1 * n2
+    elif operacao == "/":
+        if n2 == 0:
+            return None
+        return n1 / n2
+    return None
+
+n1 = float(input("Primeiro número: "))
+op = input("Operação: ")
+n2 = float(input("Segundo número: "))
+
+resultado = calcular(n1, op, n2)
+if resultado is None:
+    print("Operação inválida!")
+else:
+    print(f"Resultado: {resultado}")</pre></div></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p6">
+  <div class="parte-head"><span class="num">06</span><h2>Projetos da semana: juntando tudo!</h2></div>
+
+  <article class="ex" id="ex15">
+    <div class="ex-head">
+      <span class="ex-num">EX 15</span>
+      <h3>Projeto: Tua Caneca v4 — agora com funções ☕</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex15"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Refatorar o orçamento das Semanas 2 e 4 em três funções com responsabilidades claras.</p><span class="tag passos">🧭 Requisitos</span><ol><li>Crie <code>calcular_subtotal(quantidade)</code> → retorna quantidade × R$ 25,00</li><li>Crie <code>definir_desconto(quantidade)</code> → retorna 0.15, 0.10 ou 0</li><li>Crie <code>exibir_resumo(quantidade)</code> → usa as duas anteriores e imprime o orçamento</li><li>O programa principal vira DUAS linhas!</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Quantidade de canecas: 12
+Subtotal: R$ 300.00
+Desconto: 10%
+TOTAL: R$ 270.00</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex15.py</span></div><pre class="code">PRECO = 25.00
+
+def calcular_subtotal(quantidade):
+    return quantidade * PRECO
+
+def definir_desconto(quantidade):
+    if quantidade &gt;= 20:
+        return 0.15
+    elif quantidade &gt;= 10:
+        return 0.10
+    return 0
+
+def exibir_resumo(quantidade):
+    subtotal = calcular_subtotal(quantidade)
+    desconto = definir_desconto(quantidade)
+    total = subtotal * (1 - desconto)
+    print(f"Subtotal: R$ {subtotal:.2f}")
+    print(f"Desconto: {desconto * 100:.0f}%")
+    print(f"TOTAL: R$ {total:.2f}")
+
+qtd = int(input("Quantidade de canecas: "))
+exibir_resumo(qtd)</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex16">
+    <div class="ex-head">
+      <span class="ex-num">EX 16</span>
+      <h3>Projeto: Jogo de adivinhação refatorado 🎲</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex16"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Reorganizar o jogo da Semana 3 em funções.</p><span class="tag passos">🧭 Requisitos</span><ol><li>Função <code>sortear()</code> → retorna <code>random.randint(1, 50)</code></li><li>Função <code>dar_dica(palpite, segredo)</code> → imprime "alto"/"baixo"</li><li>Função <code>jogar()</code> → contém o loop e retorna o número de tentativas</li><li>Programa principal: chama jogar() e parabeniza</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Adivinhe o número entre 1 e 50!
+Seu palpite: 25
+Muito baixo! ⬆
+Seu palpite: 38
+🎉 Acertou em 2 tentativas!</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex16.py</span></div><pre class="code">import random
+
+def sortear():
+    return random.randint(1, 50)
+
+def dar_dica(palpite, segredo):
+    if palpite &gt; segredo:
+        print("Muito alto! ⬇")
+    elif palpite &lt; segredo:
+        print("Muito baixo! ⬆")
+
+def jogar():
+    segredo = sortear()
+    tentativas = 0
+    palpite = 0
+    print("Adivinhe o número entre 1 e 50!")
+    while palpite != segredo:
+        palpite = int(input("Seu palpite: "))
+        tentativas += 1
+        dar_dica(palpite, segredo)
+    return tentativas
+
+total = jogar()
+print(f"🎉 Acertou em {total} tentativas!")</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex17">
+    <div class="ex-head">
+      <span class="ex-num">EX 17</span>
+      <h3>Projeto bônus: Caixa de ferramentas 🧰</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex17"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Montar sua biblioteca pessoal de funções (sem código pronto!).</p><span class="tag passos">🧭 Roteiro</span><ol><li>Crie um arquivo <code>ferramentas.py</code> com pelo menos 4 funções suas: <code>eh_par(n)</code>, <code>calcular_media(lista)</code>, <code>pedir_nota()</code>, <code>tabuada(n)</code>...</li><li>Monte um menu em loop que permite testar cada ferramenta</li><li>Capriche nos nomes: uma boa função se explica pelo nome!</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">=== CAIXA DE FERRAMENTAS ===
+1-Par ou ímpar  2-Média  3-Tabuada  4-Sair
+Opção: 1
+Número: 14
+14 é par!</pre></div><details class="dica"><summary>💡 Você percebeu?</summary><div class="inner">Com funções, adicionar uma opção nova ao menu é só escrever a função e mais um elif. Programas organizados assim crescem sem virar espaguete! 🍝</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex17.py</span></div><pre class="code">def eh_par(n):
+    return n % 2 == 0
+
+def calcular_media(notas):
+    return sum(notas) / len(notas)
+
+def tabuada(n):
+    for i in range(1, 11):
+        print(f"{n} x {i} = {n * i}")
+
+while True:
+    print()
+    print("=== CAIXA DE FERRAMENTAS ===")
+    print("1-Par ou ímpar  2-Média  3-Tabuada  4-Sair")
+    opcao = int(input("Opção: "))
+
+    if opcao == 1:
+        n = int(input("Número: "))
+        if eh_par(n):
+            print(f"{n} é par!")
+        else:
+            print(f"{n} é ímpar!")
+    elif opcao == 2:
+        notas = []
+        for i in range(1, 4):
+            notas.append(float(input(f"Nota {i}: ")))
+        print(f"Média: {calcular_media(notas):.1f}")
+    elif opcao == 3:
+        tabuada(int(input("Qual tabuada? ")))
+    elif opcao == 4:
+        break
+    else:
+        print("Opção inválida!")</pre></div></div></details>
     </div>
   </article>
 </section>
@@ -693,29 +703,29 @@ while True:
 <div class="checklist" id="checklist">
   <h2>✅ Checklist de fim de semana</h2>
   <p>Antes de seguir para a próxima semana, confirme que você consegue:</p>
-<label class="check-item"><input type="checkbox"><span>Prever saídas misturando csv, os, json e os clássicos</span></label>
-<label class="check-item"><input type="checkbox"><span>Caçar bugs típicos de automação (newline, join, encoding, except)</span></label>
-<label class="check-item"><input type="checkbox"><span>Estruturar as pastas de um projeto via código (makedirs)</span></label>
-<label class="check-item"><input type="checkbox"><span>Importar e converter dados de um CSV com DictReader</span></label>
-<label class="check-item"><input type="checkbox"><span>Analisar dados com funções que retornam dicionários</span></label>
-<label class="check-item"><input type="checkbox"><span>Consumir uma API com fallback offline em camadas</span></label>
-<label class="check-item"><input type="checkbox"><span>Gerar um relatório .xlsx formatado e com fórmula</span></label>
-<label class="check-item"><input type="checkbox"><span>Nomear arquivos com data via strftime (organização automática)</span></label>
-<label class="check-item"><input type="checkbox"><span>Fazer backup de pastas com copytree</span></label>
-<label class="check-item"><input type="checkbox"><span>Integrar 16 semanas de conteúdo num menu coeso</span></label>
+<label class="check-item"><input type="checkbox"><span>Definir uma função com def e chamá-la (e saber a diferença!)</span></label>
+<label class="check-item"><input type="checkbox"><span>Criar funções com um ou mais parâmetros</span></label>
+<label class="check-item"><input type="checkbox"><span>Explicar a diferença entre print e return</span></label>
+<label class="check-item"><input type="checkbox"><span>Guardar o retorno de uma função numa variável e reutilizá-lo</span></label>
+<label class="check-item"><input type="checkbox"><span>Escrever funções que retornam True/False para usar em ifs</span></label>
+<label class="check-item"><input type="checkbox"><span>Retornar mais de um valor (tupla) e desempacotar</span></label>
+<label class="check-item"><input type="checkbox"><span>Usar parâmetros com valor padrão</span></label>
+<label class="check-item"><input type="checkbox"><span>Explicar por que uma variável local "não existe" fora da função</span></label>
+<label class="check-item"><input type="checkbox"><span>Refatorar um código repetitivo em funções</span></label>
+<label class="check-item"><input type="checkbox"><span>Dividir um programa em funções pequenas com nomes claros</span></label>
 </div>
 
 <div class="win-banner" id="winBanner">
-  <h2>🏆 SEMANA 16 COMPLETA!</h2>
-  <p>MÓDULO AVANÇADO COMPLETO! Do zero absoluto a sistemas conectados ao mundo real em 16 semanas. E a trilha Dados & Web começa na Semana 17! 🏆🎓🐍</p>
+  <h2>🏆 SEMANA 6 COMPLETA!</h2>
+  <p>Você concluiu todos os exercícios. Seu código agora se monta em pecinhas reutilizáveis!</p>
 </div>
 
 <div class="preview-s2">
-<h2>📅 Prévia da Semana 17</h2><p>Bem-vindo à <strong>trilha Dados &amp; Web</strong>! Na próxima semana: <strong>pandas</strong> — a biblioteca número 1 de análise de dados do planeta. O relatório que levava 30 linhas de loop vira UMA linha de <code>groupby</code>. Depois vêm gráficos com matplotlib, seu primeiro site com Flask e o dashboard web final. 📊🚀</p></div>
+<h2>📅 Prévia da Semana 7</h2><p>Na próxima semana: <strong>tratamento de erros</strong> (<code>try/except</code> — programas que não quebram com entradas erradas) e <strong>arquivos</strong> (<code>open()</code>, ler e gravar .txt) — seus dados finalmente vão <strong>sobreviver ao fechamento do programa</strong>!</p></div>
 
 </main>
 
-<footer>python_para_iniciantes // semana_16 // exercícios guiados</footer>
+<footer>python_para_iniciantes // semana_06 // exercícios guiados</footer>
 
 <script>
 // ===== Syntax highlight leve para Python =====
@@ -727,7 +737,7 @@ while True:
     src = src.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     // uma passada só, com alternação (comentário | string | builtin | bool | número)
     src = src.replace(
-      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|insert|int|float|str|len|range|type|abs|round|max|min|sum|sorted|sort|reverse|append|remove|split|strip|upper|lower|replace|title|randint|random|get|keys|values|items|open|readlines|read|write|close|count|index|pop|update|list|dict|tuple|enumerate|sqrt|floor|ceil|choice|shuffle|sample|sleep|now|today|strftime|dumps|dump|loads|load|isinstance|datetime|date|DictReader|DictWriter|writerows|writerow|writeheader|writer|reader|csv|Workbook|load_workbook|save|iter_rows|Font|listdir|makedirs|getcwd|rename|exists|getsize|splitext|join|endswith|startswith|copytree|copy|move|requests|status_code|json|DataFrame|read_csv|read_excel|to_excel|to_csv|head|describe|groupby|sort_values|value_counts|mean|idxmax|bar|barh|pie|plot|savefig|show|title|xlabel|ylabel|figure|legend|axhline|tight_layout|close|Flask|route|run|render_template|jsonify|redirect|request)\b|\b(True|False|None|if|elif|else|while|for|in|and|or|not|break|continue|import|from|def|return|try|except|finally|with|as|del|global|pass|class|self|super|lambda)\b|(\b\d+(?:\.\d+)?\b)/g,
+      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|insert|int|float|str|len|range|type|abs|round|max|min|sum|sorted|sort|reverse|append|remove|split|strip|upper|lower|replace|title|randint|random|get|keys|values|items|open|readlines|read|write|close|count|index|pop|update|list|dict|tuple|enumerate)\b|\b(True|False|None|if|elif|else|while|for|in|and|or|not|break|continue|import|from|def|return|try|except|finally|with|as|del|global|pass)\b|(\b\d+(?:\.\d+)?\b)/g,
       function(m, com, str, fn, bool, num){
         if(com)  return '<span class="tk-com">'+com+'</span>';
         if(str)  return '<span class="tk-str">'+str+'</span>';
@@ -746,7 +756,7 @@ while True:
 // no navegador. Se o localStorage estiver indisponível (modo restrito,
 // pré-visualização, etc.), o progresso funciona só em memória, sem quebrar.
 const storage = (function(){
-  const KEY = 'python_semana16_progresso';
+  const KEY = 'python_semana06_progresso';
   let memoria = {};
   let disponivel = false;
   try{
@@ -793,10 +803,10 @@ const storage = (function(){
   const MSGS = [
     [0,  'Marque os exercícios concluídos ✔'],
     [1,  'Boa! Continue assim 💪'],
-    [3,  'Pegando o ritmo! 🔥'],
-    [5, 'Metade do caminho! 🚀'],
-    [8, 'Quase lá... força! ⚡'],
-    [10, 'SEMANA COMPLETA! 🏆']
+    [5,  'Pegando o ritmo! 🔥'],
+    [8, 'Metade do caminho! 🚀'],
+    [13, 'Quase lá... força! ⚡'],
+    [17, 'SEMANA COMPLETA! 🏆']
   ];
 
   function estadoAtual(){

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Semana 4 — Listas e Strings</title>
+<title>Semana 29 — Frontend Desacoplado</title>
 <style>
   :root{
     --ink:#16243A;
@@ -57,7 +57,7 @@
     color:#fff;padding:56px 20px 48px;text-align:center;position:relative;overflow:hidden;
   }
   header.hero::before{
-    content:"[ ]  append(  len(  sort(  split(  [0]  [-1]  [::-1]  in";
+    content:"fetch  async/await  localStorage  Bearer  frontend";
     position:absolute;inset:auto 0 8px 0;font-family:var(--mono);font-size:.78rem;
     color:rgba(255,255,255,.14);letter-spacing:.4em;white-space:nowrap;overflow:hidden;
   }
@@ -234,383 +234,229 @@
 <div class="progress-wrap" role="region" aria-label="Progresso da semana">
   <span class="label">XP DA SEMANA</span>
   <div class="progress-bar"><div class="progress-fill" id="pfill"></div></div>
-  <span class="progress-count" id="pcount">0 / 20</span>
+  <span class="progress-count" id="pcount">0 / 10</span>
   <span class="progress-msg" id="pmsg">Marque os exercícios concluídos ✔</span>
   <button class="reset-btn" id="resetBtn" title="Apagar todo o progresso salvo">↺ Resetar</button>
 </div>
 
 <header class="hero">
   <div class="kicker">Python para Iniciantes · Exercícios Guiados</div>
-  <h1>SEMANA 4 — Listas e Strings:<br>trabalhando com coleções<span class="cursor" aria-hidden="true"></span></h1>
-  <p class="sub">Guarde vários valores numa única variável: criar e modificar listas, percorrer com for, fatiar textos, métodos de string e os projetos urna eletrônica e lista de tarefas.</p>
+  <h1>SEMANA 29 — Frontend:<br>o cliente que consome a API<span class="cursor" aria-hidden="true"></span></h1>
+  <p class="sub">A arquitetura se completa: um frontend separado, em HTML/JS, que conversa com a sua API via fetch. Buscar e mostrar produtos, criar pela tela, fazer login e guardar o token. Os dois lados, enfim, conectados.</p>
   <div class="howto">
     <strong>Como usar:</strong> digite o código você mesmo (não copie e cole!), compare com a saída esperada e marque <strong>✔ Concluído</strong> em cada exercício para encher sua barra de XP. As <strong>dicas</strong> e <strong>soluções</strong> ficam escondidas — só abra depois de tentar! Seu progresso fica salvo no navegador.
   </div>
 </header>
 
-<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · Criando listas</a><a href="#p2">2 · Modificando</a><a href="#p3">3 · Percorrendo</a><a href="#p4">4 · Strings</a><a href="#p5">5 · Listas + if</a><a href="#p6">6 · Projetos</a><a href="#checklist">✅ Checklist</a></nav>
+<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · Desacoplado</a><a href="#p2">2 · fetch GET</a><a href="#p3">3 · POST</a><a href="#p4">4 · Login & token</a><a href="#p5">5 · Proteção & sair</a><a href="#p6">6 · Projetos</a><a href="#checklist">✅ Checklist</a></nav>
 
 <main>
 
 <section class="parte" id="p1">
-  <div class="parte-head"><span class="num">01</span><h2>Criando e acessando listas</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Uma <strong>lista</strong> guarda vários valores numa única variável, entre colchetes:</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">exemplo.py</span></div><pre class="code">frutas = ["maçã", "banana", "uva"]
-notas = [8.5, 7.0, 9.5, 6.0]
-mistura = ["Ana", 25, True, 1.68]</pre></div><p>Cada item tem uma posição chamada <strong>índice</strong> — e a contagem <strong>começa no 0</strong>! Em <code>frutas</code>: <code>frutas[0]</code> é "maçã", <code>frutas[1]</code> é "banana", <code>frutas[2]</code> é "uva". Índices negativos contam de trás para frente: <code>frutas[-1]</code> é o último item. E <code>len(frutas)</code> retorna o tamanho (3).</p></div>
+  <div class="parte-head"><span class="num">01</span><h2>A arquitetura desacoplada na prática</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Até agora você construiu o <strong>backend</strong> (a API REST das Semanas 27-28). Agora vem o <strong>frontend</strong>: uma página separada, em <strong>HTML e JavaScript</strong>, que CONSOME essa API. São dois projetos independentes que conversam por HTTP:</p><table><tr><th>Frontend (esta semana)</th><th>Backend (Semanas 26-28)</th></tr><tr><td>HTML + JavaScript</td><td>Python + Flask + MariaDB</td></tr><tr><td>Roda no navegador</td><td>Roda no servidor</td></tr><tr><td>Pede e mostra dados</td><td>Guarda e entrega dados</td></tr><tr><td>Chama com <code>fetch</code></td><td>Responde com <code>jsonify</code></td></tr></table><p><strong>Atenção:</strong> o frontend é em <strong>JavaScript</strong>, não Python — é uma linguagem diferente, e é justamente isso que torna o desacoplamento real. A boa notícia: a lógica (buscar dados, mostrar na tela, enviar formulário) é parecida com o que você já faz. E o <code>localStorage</code> você já viu — é onde esta página de exercícios salva o seu XP!</p></div>
   <article class="ex" id="ex1">
     <div class="ex-head">
       <span class="ex-num">EX 01</span>
-      <h3>Primeira lista</h3>
+      <h3>A página base do frontend 📄</h3>
       <span class="stars">⭐ básico</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex1"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Criar uma lista e acessar itens pelo índice.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie o arquivo <code>ex01_lista.py</code> com a lista de frutas</li><li>Imprima a lista inteira, depois itens individuais</li><li>PREVEJA cada saída antes de rodar</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex01_lista.py</span></div><pre class="code">frutas = ["maçã", "banana", "uva", "manga"]
+<span class="tag obj">🎯 Objetivo</span><p>Criar o arquivo HTML que será o seu frontend.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie um arquivo <code>index.html</code> (separado da API!) com um título e um espaço para a lista</li><li>Para rodar, NÃO abra o arquivo direto (file://) — sirva-o: <code>python -m http.server 8000</code> na pasta, ou use o "Live Server" do VS Code</li><li>Acesse <code>localhost:8000</code> — a base está no ar</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">index.html</span></div><pre class="code">&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-BR"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;Tua Caneca&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;☕ Tua Caneca&lt;/h1&gt;
+  &lt;div id="lista"&gt;Carregando...&lt;/div&gt;
 
-print(frutas)
-print(frutas[0])
-print(frutas[2])</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">['maçã', 'banana', 'uva', 'manga']
-maçã
-uva</pre></div><details class="dica"><summary>💡 A pegadinha do 0</summary><div class="inner">O TERCEIRO item é <code>frutas[2]</code>, não <code>frutas[3]</code>! Como a contagem começa no 0, o índice é sempre "posição menos 1".</div></details>
+  &lt;script&gt;
+    const API = "http://localhost:5000/api";
+    // o JavaScript dos próximos exercícios vai aqui
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(a página base no navegador, com o título e "Carregando...")</pre></div><details class="dica"><summary>💡 Por que servir, e não abrir?</summary><div class="inner">Abrir o HTML como <code>file://</code> costuma travar o <code>fetch</code> por segurança do navegador. Servindo com <code>python -m http.server</code> (que ironia boa: Python servindo seu frontend!) ou o Live Server, ele roda num endereço <code>http://</code> de verdade. E lembre: a API (Semana 27) precisa estar rodando em paralelo, com o <code>CORS</code> habilitado.</div></details>
     </div>
   </article>
+</section>
 
+<section class="parte" id="p2">
+  <div class="parte-head"><span class="num">02</span><h2>fetch: buscando dados da API</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>O <code>fetch</code> é o <code>requests</code> do JavaScript: faz uma requisição HTTP e devolve a resposta. Como leva um tempinho (vai até o servidor e volta), usamos <code>async</code>/<code>await</code> para esperar — parecido com a ideia de aguardar uma resposta que você já viu com APIs na Semana 15.</p></div>
   <article class="ex" id="ex2">
     <div class="ex-head">
       <span class="ex-num">EX 02</span>
-      <h3>Índices negativos e len()</h3>
-      <span class="stars">⭐ básico</span>
+      <h3>Primeiro fetch: listar produtos</h3>
+      <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex2"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Acessar a lista de trás para frente e medir seu tamanho.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Continue com a lista de frutas</li><li>PREVEJA e execute:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex02_negativos.py</span></div><pre class="code">frutas = ["maçã", "banana", "uva", "manga"]
+<span class="tag obj">🎯 Objetivo</span><p>Buscar os produtos da API e ver no console.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie uma função <code>async</code> que faz <code>fetch(API + "/produtos")</code></li><li>Espere a resposta com <code>await</code> e converta com <code>await resp.json()</code></li><li>Mostre no console (F12 no navegador) e chame a função</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">app.js</span></div><pre class="code">async function carregarProdutos() {
+  const resp = await fetch(API + "/produtos");
+  const produtos = await resp.json();
+  console.log("Produtos da API:", produtos);
+}
 
-print(frutas[-1])
-print(frutas[-2])
-print(len(frutas))
-print(frutas[len(frutas) - 1])</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">manga
-uva
-4
-manga</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner"><code>frutas[-1]</code> e <code>frutas[len(frutas) - 1]</code> chegam no mesmo lugar: o último item. O índice negativo é só um atalho mais elegante.</div></details>
+carregarProdutos();</pre></div><span class="tag saida">✅ No console do navegador (F12)</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Produtos da API: (Array com os produtos vindos do MariaDB)</pre></div><details class="dica"><summary>💡 fetch é o requests do JS</summary><div class="inner">Compare: no Python era <code>requests.get(url).json()</code>; no JavaScript é <code>await fetch(url)</code> e <code>await resp.json()</code>. Mesma ideia — pedir dados a uma API e receber JSON. O <code>await</code> diz "espere a resposta chegar antes de continuar". Os dados que aparecem vieram do seu backend Python, atravessaram a rede e chegaram ao navegador. Mágico, né? 🪄</div></details>
     </div>
   </article>
 
   <article class="ex" id="ex3">
     <div class="ex-head">
       <span class="ex-num">EX 03</span>
-      <h3>IndexError proposital</h3>
+      <h3>Mostrando os produtos na tela 🖼️</h3>
       <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex3"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Conhecer o erro mais comum ao trabalhar com listas.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Com a mesma lista de 4 frutas, tente acessar <code>frutas[4]</code></li><li>Leia o erro com atenção</li><li>Corrija usando um índice válido</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output" style="color:#FF9B94">IndexError: list index out of range</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><p>A lista tem 4 itens, mas como os índices começam no 0, eles vão de 0 a 3. O índice 4 está "fora do alcance" (out of range). O maior índice válido é sempre <code>len(lista) - 1</code>.</p></div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Renderizar a lista no HTML a partir do JSON.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Pegue o elemento da lista: <code>document.getElementById("lista")</code></li><li>Monte o HTML percorrendo os produtos (o <code>.map()</code> do JS é como a list comprehension da Semana 17)</li><li>Coloque na tela com <code>elemento.innerHTML = ...</code></li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">app.js</span></div><pre class="code">async function carregarProdutos() {
+  const resp = await fetch(API + "/produtos");
+  const produtos = await resp.json();
+
+  const html = produtos.map(p =&gt;
+    `&lt;li&gt;${p.nome} — R$ ${p.preco.toFixed(2)} (${p.estoque} un.)&lt;/li&gt;`
+  ).join("");
+
+  document.getElementById("lista").innerHTML = "&lt;ul&gt;" + html + "&lt;/ul&gt;";
+}
+
+carregarProdutos();</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(a lista de produtos aparecendo formatada na página!)</pre></div><details class="dica"><summary>💡 Os ecos do que você já sabe</summary><div class="inner">O <code>.map()</code> transforma cada produto numa linha de HTML — é a list comprehension (Semana 17) do JavaScript. As crases <code>`...`</code> com <code>${...}</code> são as f-strings (Semana 2) do JS! Você não está aprendendo do zero — está reconhecendo velhos amigos numa linguagem nova. 😊</div></details>
     </div>
   </article>
 </section>
 
-<section class="parte" id="p2">
-  <div class="parte-head"><span class="num">02</span><h2>Modificando listas</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Listas são <strong>mutáveis</strong> — dá para adicionar, remover e reorganizar:</p><table><tr><th>Método</th><th>O que faz</th><th>Exemplo</th></tr><tr><td><code>.append(x)</code></td><td>adiciona no FINAL</td><td><code>frutas.append("kiwi")</code></td></tr><tr><td><code>.insert(i, x)</code></td><td>adiciona na posição i</td><td><code>frutas.insert(0, "uva")</code></td></tr><tr><td><code>.remove(x)</code></td><td>remove pelo VALOR</td><td><code>frutas.remove("maçã")</code></td></tr><tr><td><code>.sort()</code></td><td>ordena (crescente/alfabética)</td><td><code>notas.sort()</code></td></tr><tr><td><code>.sort(reverse=True)</code></td><td>ordena decrescente</td><td><code>notas.sort(reverse=True)</code></td></tr></table></div>
+<section class="parte" id="p3">
+  <div class="parte-head"><span class="num">03</span><h2>POST: criando pela tela</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Para CRIAR, o frontend envia um POST com o corpo em JSON — o espelho do <code>request.get_json()</code> que a API lê (Semana 27). Pegamos os valores de um formulário e mandamos via <code>fetch</code> com <code>method: "POST"</code>.</p></div>
   <article class="ex" id="ex4">
     <div class="ex-head">
       <span class="ex-num">EX 04</span>
-      <h3>Mexendo na lista</h3>
-      <span class="stars">⭐⭐ médio</span>
+      <h3>Criar produto via fetch 📤</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex4"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Prever o efeito de append, insert e remove.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>PREVEJA como a lista estará ao final de cada linha (desenhe num papel!)</li><li>Execute e compare</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex04_metodos.py</span></div><pre class="code">frutas = ["maçã", "banana", "uva"]
+<span class="tag obj">🎯 Objetivo</span><p>Enviar um novo produto para a API a partir de campos da página.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Adicione campos (inputs) e um botão no HTML</li><li>No clique, leia os valores e faça <code>fetch</code> com <code>method: "POST"</code>, <code>headers</code> de JSON e <code>body: JSON.stringify({...})</code></li><li>Depois de criar, chame <code>carregarProdutos()</code> de novo para a lista atualizar</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">app.js</span></div><pre class="code">async function criarProduto() {
+  const nome = document.getElementById("nome").value;
+  const preco = parseFloat(document.getElementById("preco").value);
+  const estoque = parseInt(document.getElementById("estoque").value);
 
-frutas.append("manga")        # adiciona no final
-frutas.insert(1, "abacaxi")   # adiciona na posição 1
-frutas.remove("banana")       # remove pelo valor
+  await fetch(API + "/produtos", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ nome, preco, estoque })
+  });
 
-print(frutas)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">['maçã', 'abacaxi', 'uva', 'manga']</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner">O <code>insert(1, ...)</code> EMPURRA os itens seguintes para a direita — ninguém é apagado. Já o <code>remove</code> procura o VALOR (não o índice) e tira a primeira ocorrência.</div></details>
+  carregarProdutos();   // recarrega a lista
+}</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(preenche os campos, clica em criar → produto aparece na lista, vindo do banco)</pre></div><details class="dica"><summary>💡 JSON.stringify = o jsonify ao contrário</summary><div class="inner">A API usa <code>jsonify</code> para virar JSON na SAÍDA; o frontend usa <code>JSON.stringify</code> para virar JSON na ENTRADA. O <code>Content-Type: application/json</code> avisa a API: "estou te mandando JSON". É o handshake que faz frontend e backend se entenderem.</div></details>
     </div>
   </article>
+</section>
 
+<section class="parte" id="p4">
+  <div class="parte-head"><span class="num">04</span><h2>Login no frontend: o token e o localStorage</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Para usar as rotas protegidas (Semana 28), o frontend primeiro faz <strong>login</strong> na API, recebe o <strong>token</strong> e o GUARDA no navegador (<code>localStorage</code>). Depois, anexa esse token em cada requisição protegida.</p></div>
   <article class="ex" id="ex5">
     <div class="ex-head">
       <span class="ex-num">EX 05</span>
-      <h3>Lista de compras interativa 🛒</h3>
+      <h3>Fazendo login e guardando o token 🎫</h3>
       <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex5"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Construir uma lista com dados do usuário.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie uma lista VAZIA: <code>compras = []</code></li><li>Num for de 4 voltas, peça um item e adicione com <code>append</code></li><li>Exiba a lista completa no final</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Item 1: arroz
-Item 2: feijão
-Item 3: café
-Item 4: erva-mate
-🛒 Sua lista de compras:
-['arroz', 'feijão', 'café', 'erva-mate']</pre></div><details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Troque o for por um <code>while True</code> que aceita itens até o usuário digitar "fim" (lembra do break da Semana 3?).</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex05.py</span></div><pre class="code">compras = []
+<span class="tag obj">🎯 Objetivo</span><p>Chamar /api/login e salvar o JWT no navegador.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Um formulário de usuário e senha + botão "Entrar"</li><li>No clique: <code>fetch</code> POST para <code>/api/login</code> com as credenciais</li><li>Pegue o token da resposta e salve: <code>localStorage.setItem("token", dados.token)</code></li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">app.js</span></div><pre class="code">async function login() {
+  const usuario = document.getElementById("usuario").value;
+  const senha = document.getElementById("senha").value;
 
-for i in range(1, 5):
-    item = input(f"Item {i}: ")
-    compras.append(item)
+  const resp = await fetch(API + "/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ usuario, senha })
+  });
 
-print("🛒 Sua lista de compras:")
-print(compras)</pre></div></div></details>
+  if (resp.status === 401) {
+    alert("Usuário ou senha inválidos!");
+    return;
+  }
+
+  const dados = await resp.json();
+  localStorage.setItem("token", dados.token);   // guarda o crachá!
+  alert("Login feito! ✔");
+}</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(login correto → token salvo no navegador; login errado → alerta de inválido)</pre></div><details class="dica"><summary>💡 O localStorage você já conhece</summary><div class="inner">É a mesma "gavetinha" do navegador onde ESTA página de exercícios guarda o seu XP! Aqui ela guarda o token JWT. Ele fica salvo mesmo se você fechar a aba — por isso sites "lembram" que você está logado. O token é o seu crachá: guardou, agora é só apresentar.</div></details>
     </div>
   </article>
 
   <article class="ex" id="ex6">
     <div class="ex-head">
       <span class="ex-num">EX 06</span>
-      <h3>Colocando ordem na casa</h3>
-      <span class="stars">⭐ básico</span>
+      <h3>Chamadas protegidas com Bearer 🔐</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex6"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Ordenar listas de números e de textos.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>PREVEJA e execute:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex06_sort.py</span></div><pre class="code">numeros = [42, 7, 19, 3, 88]
-numeros.sort()
-print(numeros)
+<span class="tag obj">🎯 Objetivo</span><p>Anexar o token nas requisições que exigem autenticação.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Recupere o token: <code>localStorage.getItem("token")</code></li><li>Adicione o cabeçalho <code>"Authorization": "Bearer " + token</code> no fetch</li><li>Agora o POST de criar produto funciona como autenticado (Semana 28)</li></ol><span class="tag saida">✅ Resultado</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(criar produto agora envia o token → API aceita com 201)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">app.js</span></div><pre class="code">async function criarProduto() {
+  const token = localStorage.getItem("token");
+  const nome = document.getElementById("nome").value;
+  const preco = parseFloat(document.getElementById("preco").value);
+  const estoque = parseInt(document.getElementById("estoque").value);
 
-numeros.sort(reverse=True)
-print(numeros)
+  const resp = await fetch(API + "/produtos", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + token   // o crachá vai junto!
+    },
+    body: JSON.stringify({ nome, preco, estoque })
+  });
 
-nomes = ["Carla", "Ana", "Bruno"]
-nomes.sort()
-print(nomes)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">[3, 7, 19, 42, 88]
-[88, 42, 19, 7, 3]
-['Ana', 'Bruno', 'Carla']</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner">O <code>.sort()</code> modifica a própria lista (não retorna nada!). Textos são ordenados alfabeticamente — mas cuidado com a pegadinha das maiúsculas da Semana 2.</div></details>
+  if (resp.status === 401) {
+    alert("Faça login primeiro!");
+    return;
+  }
+  carregarProdutos();
+}</pre></div><p>Esse <code>"Bearer " + token</code> é exatamente o cabeçalho que o <code>@token_required</code> da Semana 28 lê e valida. As duas pontas — frontend que envia, backend que verifica — finalmente se encaixam. 🤝</p></div></details>
     </div>
   </article>
 </section>
 
-<section class="parte" id="p3">
-  <div class="parte-head"><span class="num">03</span><h2>Percorrendo listas</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>O <code>for</code> da Semana 3 percorre listas naturalmente: <code>for item in lista</code> visita cada item, um por vez. E o Python tem atalhos prontos: <code>sum(lista)</code> soma tudo, <code>max()</code> e <code>min()</code> acham os extremos.</p></div>
+<section class="parte" id="p5">
+  <div class="parte-head"><span class="num">05</span><h2>Tratando erros e saindo</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Dois acabamentos importantes: reagir ao <code>401</code> (token expirou ou sumiu → pedir login) e implementar o "sair" (logout), que no JWT é simplesmente DESCARTAR o token (Semana 28).</p></div>
   <article class="ex" id="ex7">
     <div class="ex-head">
       <span class="ex-num">EX 07</span>
-      <h3>Chamada da turma 📋</h3>
-      <span class="stars">⭐ básico</span>
+      <h3>Excluir via fetch DELETE 🗑️</h3>
+      <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex7"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Percorrer uma lista de textos.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie uma lista com 5 nomes</li><li>Use <code>for nome in alunos</code> para imprimir "Presente: [nome]" para cada um</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Presente: Ana
-Presente: Bruno
-Presente: Carla
-Presente: Diego
-Presente: Elisa</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex07.py</span></div><pre class="code">alunos = ["Ana", "Bruno", "Carla", "Diego", "Elisa"]
-
-for nome in alunos:
-    print(f"Presente: {nome}")</pre></div></div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Remover um produto chamando o DELETE da API.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Em cada item da lista, um botão que chama <code>excluir(id)</code></li><li>A função faz <code>fetch</code> com <code>method: "DELETE"</code> e o token (rota protegida!)</li><li>Recarregue a lista depois</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(clica em excluir → produto some da lista e do banco)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">app.js</span></div><pre class="code">async function excluir(id) {
+  const token = localStorage.getItem("token");
+  const resp = await fetch(API + "/produtos/" + id, {
+    method: "DELETE",
+    headers: { "Authorization": "Bearer " + token }
+  });
+  if (resp.status === 401) {
+    alert("Faça login primeiro!");
+    return;
+  }
+  carregarProdutos();
+}</pre></div><p>Repare como cada verbo HTTP da API (GET, POST, DELETE) tem um <code>fetch</code> correspondente no frontend, mudando só o <code>method</code>. O CRUD inteiro, agora pela tela.</p></div></details>
     </div>
   </article>
 
   <article class="ex" id="ex8">
     <div class="ex-head">
       <span class="ex-num">EX 08</span>
-      <h3>Soma e média da lista</h3>
+      <h3>O botão "Sair" 👋</h3>
       <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex8"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Aplicar o padrão acumulador em listas — e conferir com as funções prontas.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie <code>notas = [7.5, 8.0, 6.5, 9.0, 5.5]</code></li><li>Some tudo com um for + acumulador</li><li>Calcule a média dividindo por <code>len(notas)</code></li><li>Confira o resultado usando <code>sum(notas)</code></li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Soma: 36.5
-Média: 7.3
-Média com sum(): 7.3</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex08.py</span></div><pre class="code">notas = [7.5, 8.0, 6.5, 9.0, 5.5]
-
-soma = 0
-for nota in notas:
-    soma = soma + nota
-
-media = soma / len(notas)
-print(f"Soma: {soma}")
-print(f"Média: {media:.1f}")
-
-# Conferindo com as funções prontas:
-print(f"Média com sum(): {sum(notas) / len(notas):.1f}")</pre></div></div></details>
-    </div>
-  </article>
-
-  <article class="ex" id="ex9">
-    <div class="ex-head">
-      <span class="ex-num">EX 09</span>
-      <h3>Procurando no estoque 🔎</h3>
-      <span class="stars">⭐⭐ médio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex9"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Usar o operador in com listas.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie a lista <code>estoque = ["azul", "preta", "branca", "amarela"]</code></li><li>Pergunte que cor o cliente procura</li><li>Responda se tem ou não, usando <code>if cor in estoque</code></li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Qual cor você procura? preta
-Temos caneca preta em estoque! ✔</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex09.py</span></div><pre class="code">estoque = ["azul", "preta", "branca", "amarela"]
-
-cor = input("Qual cor você procura? ")
-
-if cor in estoque:
-    print(f"Temos caneca {cor} em estoque! ✔")
-else:
-    print(f"Não temos {cor} no momento. 😕")</pre></div></div></details>
-    </div>
-  </article>
-
-  <article class="ex" id="ex10">
-    <div class="ex-head">
-      <span class="ex-num">EX 10</span>
-      <h3>A posição de cada um</h3>
-      <span class="stars">⭐⭐ médio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex10"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Percorrer a lista mostrando também a posição de cada item.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie <code>fila = ["Ana", "Bruno", "Carla", "Diego"]</code></li><li>Use <code>for i in range(len(fila))</code> para ter acesso ao índice</li><li>Imprima "1º da fila: Ana" e assim por diante (índice + 1!)</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">1º da fila: Ana
-2º da fila: Bruno
-3º da fila: Carla
-4º da fila: Diego</pre></div><details class="dica"><summary>💡 Spoiler do futuro</summary><div class="inner">Existe um jeito mais elegante: <code>for i, nome in enumerate(fila)</code>. Guarde o nome "enumerate" — você vai reencontrá-lo!</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex10.py</span></div><pre class="code">fila = ["Ana", "Bruno", "Carla", "Diego"]
-
-for i in range(len(fila)):
-    print(f"{i + 1}º da fila: {fila[i]}")</pre></div></div></details>
-    </div>
-  </article>
-</section>
-
-<section class="parte" id="p4">
-  <div class="parte-head"><span class="num">04</span><h2>Strings como sequências</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Surpresa: um texto se comporta como uma "lista de caracteres"! Tem índice (<code>texto[0]</code>), tamanho (<code>len(texto)</code>) e <strong>fatiamento</strong>: <code>texto[inicio:fim]</code> recorta um pedaço (o fim não entra, igual ao range!). E strings têm métodos próprios: <code>.upper()</code>, <code>.lower()</code>, <code>.strip()</code> (tira espaços das pontas), <code>.replace(velho, novo)</code> e <code>.split()</code> (quebra em lista de palavras).</p></div>
-  <article class="ex" id="ex11">
-    <div class="ex-head">
-      <span class="ex-num">EX 11</span>
-      <h3>Fatiando textos 🔪</h3>
-      <span class="stars">⭐⭐ médio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex11"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Dominar índices e fatias em strings.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>PREVEJA cada linha (conte os caracteres com o dedo!), depois execute:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex11_fatias.py</span></div><pre class="code">texto = "Python é demais"
-
-print(texto[0])
-print(texto[0:6])
-print(texto[-6:])
-print(len(texto))</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">P
-Python
-demais
-15</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner">Na fatia <code>[0:6]</code>, o índice 6 NÃO entra — pega do 0 ao 5. E omitir um lado significa "até o fim" (<code>[-6:]</code> = do sexto-de-trás até o final). O espaço também conta como caractere no len!</div></details>
-    </div>
-  </article>
-
-  <article class="ex" id="ex12">
-    <div class="ex-head">
-      <span class="ex-num">EX 12</span>
-      <h3>Faxina no texto 🧹</h3>
-      <span class="stars">⭐⭐ médio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex12"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Usar os métodos de limpeza e transformação de strings.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>PREVEJA e execute (atenção aos espaços!):</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex12_metodos.py</span></div><pre class="code">nome = "   ana SILVA   "
-
-print(nome.strip())
-print(nome.upper())
-print(nome.strip().title())
-print(nome.replace("SILVA", "Souza"))</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">ana SILVA
-   ANA SILVA   
-Ana Silva
-   ana Souza   </pre></div><details class="dica"><summary>💡 Detalhe importante</summary><div class="inner">Os métodos NÃO alteram a variável original — eles devolvem um texto novo. Para guardar o resultado: <code>nome = nome.strip()</code>. E dá para encadear: <code>nome.strip().title()</code> aplica um depois do outro!</div></details>
-    </div>
-  </article>
-
-  <article class="ex" id="ex13">
-    <div class="ex-head">
-      <span class="ex-num">EX 13</span>
-      <h3>Quebrando a frase</h3>
-      <span class="stars">⭐⭐ médio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex13"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Transformar uma frase em lista de palavras com split().</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Peça uma frase</li><li>Use <code>frase.split()</code> para quebrá-la em palavras</li><li>Exiba a lista e a quantidade de palavras</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Digite uma frase: aprender python é muito bom
-Lista de palavras: ['aprender', 'python', 'é', 'muito', 'bom']
-Sua frase tem 5 palavras</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex13.py</span></div><pre class="code">frase = input("Digite uma frase: ")
-palavras = frase.split()
-
-print(f"Lista de palavras: {palavras}")
-print(f"Sua frase tem {len(palavras)} palavras")</pre></div></div></details>
-    </div>
-  </article>
-
-  <article class="ex" id="ex14">
-    <div class="ex-head">
-      <span class="ex-num">EX 14</span>
-      <h3>Palíndromo 🔁</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex14"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Verificar se uma palavra é igual de trás para frente (arara, ovo, radar...).</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Peça uma palavra (com <code>.lower()</code> para ignorar maiúsculas)</li><li>Inverta com a fatia mágica <code>palavra[::-1]</code></li><li>Compare a original com a invertida num if</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Digite uma palavra: arara
-arara é um palíndromo! 🔁</pre></div><details class="dica"><summary>💡 A fatia mágica</summary><div class="inner"><code>[::-1]</code> é uma fatia com passo -1: percorre o texto inteiro de trás para frente. O mesmo truque inverte listas!</div></details><details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Frases como "a base do teto desaba" também são palíndromos — se ignorarmos os espaços. Use <code>.replace(" ", "")</code> antes de comparar.</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex14.py</span></div><pre class="code">palavra = input("Digite uma palavra: ").lower()
-invertida = palavra[::-1]
-
-if palavra == invertida:
-    print(f"{palavra} é um palíndromo! 🔁")
-else:
-    print(f"{palavra} não é um palíndromo. (Invertida: {invertida})")</pre></div></div></details>
-    </div>
-  </article>
-</section>
-
-<section class="parte" id="p5">
-  <div class="parte-head"><span class="num">05</span><h2>Listas + condicionais: filtrando dados</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>O padrão <strong>filtro</strong> é um dos mais usados em programação (e em análise de dados!): percorrer uma lista e copiar para uma NOVA lista só os itens que passam num teste.</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">padrao_filtro.py</span></div><pre class="code">nova_lista = []
-for item in lista_original:
-    if item_passa_no_teste:
-        nova_lista.append(item)</pre></div></div>
-  <article class="ex" id="ex15">
-    <div class="ex-head">
-      <span class="ex-num">EX 15</span>
-      <h3>Filtrando aprovados</h3>
-      <span class="stars">⭐⭐ médio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex15"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Aplicar o padrão filtro.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie <code>notas = [8.5, 4.0, 7.0, 9.5, 5.5, 6.0, 10.0]</code></li><li>Crie a lista vazia <code>aprovadas = []</code></li><li>Percorra as notas: as que forem 7 ou mais entram na nova lista</li><li>Exiba a lista filtrada e quantos aprovados há</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Notas aprovadas: [8.5, 7.0, 9.5, 10.0]
-Total de aprovados: 4</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex15.py</span></div><pre class="code">notas = [8.5, 4.0, 7.0, 9.5, 5.5, 6.0, 10.0]
-aprovadas = []
-
-for nota in notas:
-    if nota &gt;= 7:
-        aprovadas.append(nota)
-
-print(f"Notas aprovadas: {aprovadas}")
-print(f"Total de aprovados: {len(aprovadas)}")</pre></div></div></details>
-    </div>
-  </article>
-
-  <article class="ex" id="ex16">
-    <div class="ex-head">
-      <span class="ex-num">EX 16</span>
-      <h3>Separando pares e ímpares</h3>
-      <span class="stars">⭐⭐ médio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex16"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Filtrar para DUAS listas ao mesmo tempo.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie <code>numeros = [4, 7, 12, 9, 3, 18, 21, 6]</code></li><li>Crie duas listas vazias: pares e ímpares</li><li>Percorra: <code>% 2 == 0</code> → vai para pares; senão → ímpares</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Pares: [4, 12, 18, 6]
-Ímpares: [7, 9, 3, 21]</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex16.py</span></div><pre class="code">numeros = [4, 7, 12, 9, 3, 18, 21, 6]
-pares = []
-impares = []
-
-for n in numeros:
-    if n % 2 == 0:
-        pares.append(n)
-    else:
-        impares.append(n)
-
-print(f"Pares: {pares}")
-print(f"Ímpares: {impares}")</pre></div></div></details>
-    </div>
-  </article>
-
-  <article class="ex" id="ex17">
-    <div class="ex-head">
-      <span class="ex-num">EX 17</span>
-      <h3>Sem repetições</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex17"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Remover duplicatas combinando not in com o padrão filtro.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie <code>convidados = ["Ana", "Bruno", "Ana", "Carla", "Bruno", "Diego"]</code></li><li>Percorra a lista: só adicione o nome na nova lista se ele AINDA NÃO estiver nela</li><li>A condição é <code>if nome not in sem_repeticao</code></li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">['Ana', 'Bruno', 'Carla', 'Diego']</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex17.py</span></div><pre class="code">convidados = ["Ana", "Bruno", "Ana", "Carla", "Bruno", "Diego"]
-sem_repeticao = []
-
-for nome in convidados:
-    if nome not in sem_repeticao:
-        sem_repeticao.append(nome)
-
-print(sem_repeticao)</pre></div></div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Implementar o logout descartando o token.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Um botão "Sair" que chama <code>localStorage.removeItem("token")</code></li><li>Sem token guardado, as chamadas protegidas voltam a dar 401 (precisará logar de novo)</li><li>É o conceito stateless da Semana 28 na prática: o cliente joga o crachá fora</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(clicou em Sair → token apagado → criar/excluir pedem login novamente)</pre></div><details class="dica"><summary>💡 Logout sem servidor</summary><div class="inner">Lembra que o JWT é stateless (Semana 28)? O servidor não guarda sessão nenhuma — então "sair" é o frontend simplesmente APAGAR o token do localStorage. Simples assim. Toda a "memória" de quem está logado vive no navegador, no token. Elegante e escalável.</div></details>
     </div>
   </article>
 </section>
@@ -618,134 +464,119 @@ print(sem_repeticao)</pre></div></div></details>
 <section class="parte" id="p6">
   <div class="parte-head"><span class="num">06</span><h2>Projetos da semana: juntando tudo!</h2></div>
 
-  <article class="ex" id="ex18">
+  <article class="ex" id="ex9">
     <div class="ex-head">
-      <span class="ex-num">EX 18</span>
-      <h3>Projeto: Pedidos Tua Caneca v3 ☕</h3>
+      <span class="ex-num">EX 09</span>
+      <h3>Projeto: o frontend completo da Tua Caneca 🖥️</h3>
       <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex18"> Concluído</label>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex9"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Sistema de pedidos com validação de estoque, carrinho e fechamento.</p><span class="tag passos">🧭 Requisitos</span><ol><li>Defina <code>CORES = ["branca", "preta", "azul", "amarela"]</code> e o preço de R$ 25,00</li><li>Num loop: peça a cor (ou "fim" para fechar)</li><li>Se a cor existir nas CORES: adicione ao carrinho e confirme; senão, avise</li><li>No fechamento: exiba o carrinho, a quantidade e o total</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">=== TUA CANECA - PEDIDOS ===
-Cores disponíveis: ['branca', 'preta', 'azul', 'amarela']
-Cor da caneca (ou 'fim' para fechar): preta
-✔ Caneca preta adicionada!
-Cor da caneca (ou 'fim' para fechar): rosa
-✖ Não temos essa cor.
-Cor da caneca (ou 'fim' para fechar): azul
-✔ Caneca azul adicionada!
-Cor da caneca (ou 'fim' para fechar): fim
-Carrinho: ['preta', 'azul']
-2 canecas — TOTAL: R$ 50.00</pre></div><details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Aplique o desconto progressivo da Semana 2 sobre o total. Os projetos estão se encontrando! 😄</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex18.py</span></div><pre class="code">print("=== TUA CANECA - PEDIDOS ===")
-CORES = ["branca", "preta", "azul", "amarela"]
-PRECO = 25.00
+<span class="tag obj">🎯 Objetivo</span><p>Um mini-app de uma página: login, listar, criar e excluir — tudo via API protegida.</p><span class="tag passos">🧭 Requisitos</span><ol><li>Uma tela com: formulário de login, formulário de novo produto e a lista (com botão excluir em cada item)</li><li>Ao carregar, mostra os produtos (GET público); login guarda o token; criar e excluir usam o token</li><li>Trate o 401 em todas as ações protegidas</li><li>Capriche num <code>&lt;style&gt;</code> simples para ficar apresentável</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(um app web completo: entra, vê produtos, cadastra e remove — frontend separado falando com a API)</pre></div><details class="dica"><summary>💡 Você fechou o ciclo</summary><div class="inner">Frontend (HTML/JS) ↔ API REST (Flask) ↔ banco (MariaDB), com autenticação JWT no meio. Essa é, literalmente, a arquitetura de aplicações web modernas — a mesma estrutura por trás de sistemas que você usa todo dia. Junte o frontend e a API em dois repositórios no GitHub: é um projeto full-stack de portfólio que impressiona qualquer recrutador. 🏆</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">index.html</span></div><pre class="code">&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-BR"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;Tua Caneca&lt;/title&gt;
+  &lt;style&gt;
+    body { font-family: Arial; max-width: 600px; margin: 30px auto; }
+    input { padding: 6px; margin: 3px; }
+    li { margin: 4px 0; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;☕ Tua Caneca&lt;/h1&gt;
 
-print(f"Cores disponíveis: {CORES}")
-carrinho = []
+  &lt;h3&gt;Login&lt;/h3&gt;
+  &lt;input id="usuario" placeholder="usuário"&gt;
+  &lt;input id="senha" type="password" placeholder="senha"&gt;
+  &lt;button onclick="login()"&gt;Entrar&lt;/button&gt;
+  &lt;button onclick="sair()"&gt;Sair&lt;/button&gt;
 
-while True:
-    cor = input("Cor da caneca (ou 'fim' para fechar): ")
-    if cor == "fim":
-        break
-    if cor in CORES:
-        carrinho.append(cor)
-        print(f"✔ Caneca {cor} adicionada!")
-    else:
-        print("✖ Não temos essa cor.")
+  &lt;h3&gt;Novo produto&lt;/h3&gt;
+  &lt;input id="nome" placeholder="nome"&gt;
+  &lt;input id="preco" placeholder="preço"&gt;
+  &lt;input id="estoque" placeholder="estoque"&gt;
+  &lt;button onclick="criarProduto()"&gt;Criar&lt;/button&gt;
 
-total = len(carrinho) * PRECO
-print(f"Carrinho: {carrinho}")
-print(f"{len(carrinho)} canecas — TOTAL: R$ {total:.2f}")</pre></div></div></details>
+  &lt;h3&gt;Produtos&lt;/h3&gt;
+  &lt;div id="lista"&gt;Carregando...&lt;/div&gt;
+
+  &lt;script&gt;
+    const API = "http://localhost:5000/api";
+
+    async function carregarProdutos() {
+      const resp = await fetch(API + "/produtos");
+      const produtos = await resp.json();
+      document.getElementById("lista").innerHTML = "&lt;ul&gt;" + produtos.map(p =&gt;
+        `&lt;li&gt;${p.nome} — R$ ${p.preco.toFixed(2)} (${p.estoque})
+         &lt;button onclick="excluir(${p.id})"&gt;x&lt;/button&gt;&lt;/li&gt;`
+      ).join("") + "&lt;/ul&gt;";
+    }
+
+    async function login() {
+      const resp = await fetch(API + "/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          usuario: document.getElementById("usuario").value,
+          senha: document.getElementById("senha").value
+        })
+      });
+      if (resp.status === 401) { alert("Inválido!"); return; }
+      const dados = await resp.json();
+      localStorage.setItem("token", dados.token);
+      alert("Login ok!");
+    }
+
+    function sair() {
+      localStorage.removeItem("token");
+      alert("Você saiu.");
+    }
+
+    async function criarProduto() {
+      const token = localStorage.getItem("token");
+      const resp = await fetch(API + "/produtos", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + token
+        },
+        body: JSON.stringify({
+          nome: document.getElementById("nome").value,
+          preco: parseFloat(document.getElementById("preco").value),
+          estoque: parseInt(document.getElementById("estoque").value)
+        })
+      });
+      if (resp.status === 401) { alert("Faça login!"); return; }
+      carregarProdutos();
+    }
+
+    async function excluir(id) {
+      const token = localStorage.getItem("token");
+      const resp = await fetch(API + "/produtos/" + id, {
+        method: "DELETE",
+        headers: { "Authorization": "Bearer " + token }
+      });
+      if (resp.status === 401) { alert("Faça login!"); return; }
+      carregarProdutos();
+    }
+
+    carregarProdutos();
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre></div></div></details>
     </div>
   </article>
 
-  <article class="ex" id="ex19">
+  <article class="ex" id="ex10">
     <div class="ex-head">
-      <span class="ex-num">EX 19</span>
-      <h3>Projeto: Urna eletrônica 🗳️</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex19"> Concluído</label>
+      <span class="ex-num">EX 10</span>
+      <h3>Projeto bônus: polindo a experiência ✨</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex10"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Contabilizar votos com loop sentinela, contadores e decisão final.</p><span class="tag passos">🧭 Requisitos</span><ol><li>Candidatos: 1 e 2. O voto 0 encerra a votação</li><li>Num loop: leia o voto, some no contador certo (voto inválido → avise)</li><li>Ao encerrar: exiba os totais e declare o vencedor (atenção ao empate!)</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">=== URNA ELETRÔNICA ===
-1 - Candidato A | 2 - Candidato B | 0 - Encerrar
-Seu voto: 1
-Seu voto: 2
-Seu voto: 1
-Seu voto: 5
-Voto inválido!
-Seu voto: 1
-Seu voto: 0
-Candidato A: 3 votos
-Candidato B: 1 votos
-🏆 Candidato A venceu!</pre></div><details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Adicione o "voto em branco" (opção 3) e mostre também o percentual de cada candidato sobre o total de votos válidos.</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex19.py</span></div><pre class="code">print("=== URNA ELETRÔNICA ===")
-print("1 - Candidato A | 2 - Candidato B | 0 - Encerrar")
-
-votos_a = 0
-votos_b = 0
-
-while True:
-    voto = int(input("Seu voto: "))
-    if voto == 0:
-        break
-    if voto == 1:
-        votos_a = votos_a + 1
-    elif voto == 2:
-        votos_b = votos_b + 1
-    else:
-        print("Voto inválido!")
-
-print(f"Candidato A: {votos_a} votos")
-print(f"Candidato B: {votos_b} votos")
-
-if votos_a &gt; votos_b:
-    print("🏆 Candidato A venceu!")
-elif votos_b &gt; votos_a:
-    print("🏆 Candidato B venceu!")
-else:
-    print("Empate!")</pre></div></div></details>
-    </div>
-  </article>
-
-  <article class="ex" id="ex20">
-    <div class="ex-head">
-      <span class="ex-num">EX 20</span>
-      <h3>Projeto bônus: Lista de tarefas no terminal ✅</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex20"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Construir um mini-aplicativo completo sozinho (sem código pronto!).</p><span class="tag passos">🧭 Roteiro</span><ol><li>Crie a lista vazia <code>tarefas = []</code></li><li>Num <code>while True</code>, exiba o menu: 1-Adicionar · 2-Listar · 3-Remover · 4-Sair</li><li>Implemente cada opção com if/elif (na remoção, verifique antes se a tarefa existe com <code>in</code>)</li><li>A opção 4 encerra com break</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">1-Adicionar  2-Listar  3-Remover  4-Sair
-Opção: 1
-Nova tarefa: estudar python
-1-Adicionar  2-Listar  3-Remover  4-Sair
-Opção: 2
-📋 Tarefas: ['estudar python']
-1-Adicionar  2-Listar  3-Remover  4-Sair
-Opção: 4
-Até logo!</pre></div><details class="dica"><summary>💡 Você percebeu?</summary><div class="inner">Este projeto usa TUDO das 4 semanas: variáveis, input, conversão, condicionais, loop, break, listas, append, remove e in. É o seu primeiro aplicativo de verdade! 🎉</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex20.py</span></div><pre class="code">tarefas = []
-
-while True:
-    print()
-    print("1-Adicionar  2-Listar  3-Remover  4-Sair")
-    opcao = int(input("Opção: "))
-
-    if opcao == 1:
-        tarefa = input("Nova tarefa: ")
-        tarefas.append(tarefa)
-    elif opcao == 2:
-        print(f"📋 Tarefas: {tarefas}")
-    elif opcao == 3:
-        tarefa = input("Qual tarefa remover? ")
-        if tarefa in tarefas:
-            tarefas.remove(tarefa)
-        else:
-            print("Tarefa não encontrada!")
-    elif opcao == 4:
-        print("Até logo!")
-        break
-    else:
-        print("Opção inválida!")</pre></div></div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Pequenas melhorias que fazem grande diferença (sem código pronto!).</p><span class="tag passos">🧭 Roteiro</span><ol><li>Mostre mensagens de sucesso/erro numa área da página (em vez de só <code>alert</code>)</li><li>Esconda o formulário de criar quando não há token (só logado cria)</li><li>Mostre "Olá, [usuário]" quando logado (dica: a rota /api/me do bônus da Semana 28)</li><li>Adicione um campo de busca que filtra a lista (pode ser no próprio JS, ou chamando a API)</li></ol><details class="dica"><summary>💡 Detalhes de produto</summary><div class="inner">Essas melhorias são o que separa um exercício de um PRODUTO. Feedback visual, esconder o que o usuário não pode usar, saudação personalizada — tudo isso transmite cuidado. E cada uma reaproveita algo que você já sabe (manipular o DOM, ler o token, chamar a API). Caprichar nos detalhes é a marca de quem leva o ofício a sério. 😉</div></details>
     </div>
   </article>
 </section>
@@ -753,29 +584,29 @@ while True:
 <div class="checklist" id="checklist">
   <h2>✅ Checklist de fim de semana</h2>
   <p>Antes de seguir para a próxima semana, confirme que você consegue:</p>
-<label class="check-item"><input type="checkbox"><span>Criar uma lista e acessar itens pelo índice (lembrando que começa no 0!)</span></label>
-<label class="check-item"><input type="checkbox"><span>Usar índices negativos e len()</span></label>
-<label class="check-item"><input type="checkbox"><span>Adicionar itens com append() e insert(), remover com remove()</span></label>
-<label class="check-item"><input type="checkbox"><span>Ordenar com sort() e inverter com reverse=True</span></label>
-<label class="check-item"><input type="checkbox"><span>Percorrer uma lista com for item in lista</span></label>
-<label class="check-item"><input type="checkbox"><span>Somar e tirar média com acumulador (e conferir com sum e len)</span></label>
-<label class="check-item"><input type="checkbox"><span>Verificar se um item existe com in e not in</span></label>
-<label class="check-item"><input type="checkbox"><span>Fatiar textos e listas com [inicio:fim]</span></label>
-<label class="check-item"><input type="checkbox"><span>Usar os métodos lower(), upper(), strip(), replace() e split()</span></label>
-<label class="check-item"><input type="checkbox"><span>Filtrar uma lista criando outra lista com append dentro de um if</span></label>
+<label class="check-item"><input type="checkbox"><span>Explicar a arquitetura desacoplada (frontend separado + API REST)</span></label>
+<label class="check-item"><input type="checkbox"><span>Servir uma página estática HTML/JS e apontá-la para a API</span></label>
+<label class="check-item"><input type="checkbox"><span>Buscar dados da API com fetch e async/await</span></label>
+<label class="check-item"><input type="checkbox"><span>Renderizar a lista de produtos no HTML a partir do JSON</span></label>
+<label class="check-item"><input type="checkbox"><span>Enviar dados (POST) pela API a partir de um formulário</span></label>
+<label class="check-item"><input type="checkbox"><span>Fazer login pela API e guardar o JWT no navegador (localStorage)</span></label>
+<label class="check-item"><input type="checkbox"><span>Anexar o token (Authorization: Bearer) nas chamadas protegidas</span></label>
+<label class="check-item"><input type="checkbox"><span>Excluir um recurso chamando o DELETE da API</span></label>
+<label class="check-item"><input type="checkbox"><span>Tratar erros e o status 401 (pedir login de novo)</span></label>
+<label class="check-item"><input type="checkbox"><span>Montar um mini-app frontend completo sobre a API protegida</span></label>
 </div>
 
 <div class="win-banner" id="winBanner">
-  <h2>🏆 SEMANA 4 COMPLETA!</h2>
-  <p>Você concluiu todos os exercícios. Agora você domina coleções de dados!</p>
+  <h2>🏆 SEMANA 29 COMPLETA!</h2>
+  <p>Você concluiu todos os exercícios. Você construiu um frontend que consome uma API REST com autenticação — a arquitetura completa de um app web moderno, com as duas pontas conectadas!</p>
 </div>
 
 <div class="preview-s2">
-<h2>📅 Prévia da Semana 5</h2><p>Na próxima semana: <strong>dicionários</strong> (pares chave-valor, como um cadastro de verdade) e <strong>tuplas</strong> — as últimas estruturas de dados essenciais do Python. E logo depois, na Semana 6, vêm as <strong>funções</strong>!</p></div>
+<h2>📅 Prévia da Semana 30 — a GRANDE final 🏆</h2><p>Tudo se junta no <strong>Projeto Final 6</strong>: o sistema Tua Caneca <strong>desacoplado completo</strong> — banco MariaDB, API REST com JWT e frontend separado, as três peças trabalhando juntas. A formatura definitiva do curso, com o sistema profissional de ponta a ponta na sua mão. Prepare-se para o diploma! 🎓🚀</p></div>
 
 </main>
 
-<footer>python_para_iniciantes // semana_04 // exercícios guiados</footer>
+<footer>python_para_iniciantes // semana_29 // exercícios guiados</footer>
 
 <script>
 // ===== Syntax highlight leve para Python =====
@@ -787,7 +618,7 @@ while True:
     src = src.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     // uma passada só, com alternação (comentário | string | builtin | bool | número)
     src = src.replace(
-      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|insert|int|float|str|len|range|type|abs|round|max|min|sum|sorted|sort|reverse|append|remove|split|strip|upper|lower|replace|title|randint|random|get|keys|values|items|open|readlines|read|write|close|count|index|pop|update|list|dict|tuple|enumerate)\b|\b(True|False|None|if|elif|else|while|for|in|and|or|not|break|continue|import|from|def|return|try|except|finally|with|as|del|global|pass)\b|(\b\d+(?:\.\d+)?\b)/g,
+      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|insert|int|float|str|len|range|type|abs|round|max|min|sum|sorted|sort|reverse|append|remove|split|strip|upper|lower|replace|title|randint|random|get|keys|values|items|open|readlines|read|write|close|count|index|pop|update|list|dict|tuple|enumerate|sqrt|floor|ceil|choice|shuffle|sample|sleep|now|today|strftime|dumps|dump|loads|load|isinstance|datetime|date|DictReader|DictWriter|writerows|writerow|writeheader|writer|reader|csv|Workbook|load_workbook|save|iter_rows|Font|listdir|makedirs|getcwd|rename|exists|getsize|splitext|join|endswith|startswith|copytree|copy|move|requests|status_code|json|DataFrame|read_csv|read_excel|to_excel|to_csv|head|describe|groupby|sort_values|value_counts|mean|idxmax|bar|barh|pie|plot|savefig|show|title|xlabel|ylabel|figure|legend|axhline|tight_layout|close|Flask|route|run|render_template|jsonify|redirect|request|connect|cursor|execute|executemany|fetchall|fetchone|commit|environ|getenv|post|encode|decode|abort|make_response)\b|\b(True|False|None|if|elif|else|while|for|in|and|or|not|break|continue|import|from|def|return|try|except|finally|with|as|del|global|pass|class|self|super|lambda)\b|(\b\d+(?:\.\d+)?\b)/g,
       function(m, com, str, fn, bool, num){
         if(com)  return '<span class="tk-com">'+com+'</span>';
         if(str)  return '<span class="tk-str">'+str+'</span>';
@@ -806,7 +637,7 @@ while True:
 // no navegador. Se o localStorage estiver indisponível (modo restrito,
 // pré-visualização, etc.), o progresso funciona só em memória, sem quebrar.
 const storage = (function(){
-  const KEY = 'python_semana04_progresso';
+  const KEY = 'python_semana29_progresso';
   let memoria = {};
   let disponivel = false;
   try{
@@ -853,10 +684,10 @@ const storage = (function(){
   const MSGS = [
     [0,  'Marque os exercícios concluídos ✔'],
     [1,  'Boa! Continue assim 💪'],
-    [6,  'Pegando o ritmo! 🔥'],
-    [10, 'Metade do caminho! 🚀'],
-    [15, 'Quase lá... força! ⚡'],
-    [20, 'SEMANA COMPLETA! 🏆']
+    [3,  'Pegando o ritmo! 🔥'],
+    [5, 'Metade do caminho! 🚀'],
+    [8, 'Quase lá... força! ⚡'],
+    [10, 'SEMANA COMPLETA! 🏆']
   ];
 
   function estadoAtual(){

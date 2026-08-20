@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Semana 29 — Frontend Desacoplado</title>
+<title>Semana 34 — Produção e Deploy</title>
 <style>
   :root{
     --ink:#16243A;
@@ -57,7 +57,7 @@
     color:#fff;padding:56px 20px 48px;text-align:center;position:relative;overflow:hidden;
   }
   header.hero::before{
-    content:"fetch  async/await  localStorage  Bearer  frontend";
+    content:"requirements.txt  venv  .env  debug=False  Docker";
     position:absolute;inset:auto 0 8px 0;font-family:var(--mono);font-size:.78rem;
     color:rgba(255,255,255,.14);letter-spacing:.4em;white-space:nowrap;overflow:hidden;
   }
@@ -234,229 +234,199 @@
 <div class="progress-wrap" role="region" aria-label="Progresso da semana">
   <span class="label">XP DA SEMANA</span>
   <div class="progress-bar"><div class="progress-fill" id="pfill"></div></div>
-  <span class="progress-count" id="pcount">0 / 10</span>
+  <span class="progress-count" id="pcount">0 / 11</span>
   <span class="progress-msg" id="pmsg">Marque os exercícios concluídos ✔</span>
   <button class="reset-btn" id="resetBtn" title="Apagar todo o progresso salvo">↺ Resetar</button>
 </div>
 
 <header class="hero">
   <div class="kicker">Python para Iniciantes · Exercícios Guiados</div>
-  <h1>SEMANA 29 — Frontend:<br>o cliente que consome a API<span class="cursor" aria-hidden="true"></span></h1>
-  <p class="sub">A arquitetura se completa: um frontend separado, em HTML/JS, que conversa com a sua API via fetch. Buscar e mostrar produtos, criar pela tela, fazer login e guardar o token. Os dois lados, enfim, conectados.</p>
+  <h1>SEMANA 34 — Produção:<br>preparando o sistema para o mundo<span class="cursor" aria-hidden="true"></span></h1>
+  <p class="sub">A última milha: requirements.txt e venv para o projeto rodar em qualquer máquina, .env para as configurações, debug desligado (você vai ver o perigo!), o papel do WSGI e do Docker — e o caminho para colocar tudo no ar.</p>
   <div class="howto">
     <strong>Como usar:</strong> digite o código você mesmo (não copie e cole!), compare com a saída esperada e marque <strong>✔ Concluído</strong> em cada exercício para encher sua barra de XP. As <strong>dicas</strong> e <strong>soluções</strong> ficam escondidas — só abra depois de tentar! Seu progresso fica salvo no navegador.
   </div>
 </header>
 
-<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · Desacoplado</a><a href="#p2">2 · fetch GET</a><a href="#p3">3 · POST</a><a href="#p4">4 · Login & token</a><a href="#p5">5 · Proteção & sair</a><a href="#p6">6 · Projetos</a><a href="#checklist">✅ Checklist</a></nav>
+<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · Dependências</a><a href="#p2">2 · venv</a><a href="#p3">3 · .env</a><a href="#p4">4 · Debug & WSGI</a><a href="#p5">5 · Docker & deploy</a><a href="#p6">6 · Projetos</a><a href="#checklist">✅ Checklist</a></nav>
 
 <main>
 
 <section class="parte" id="p1">
-  <div class="parte-head"><span class="num">01</span><h2>A arquitetura desacoplada na prática</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Até agora você construiu o <strong>backend</strong> (a API REST das Semanas 27-28). Agora vem o <strong>frontend</strong>: uma página separada, em <strong>HTML e JavaScript</strong>, que CONSOME essa API. São dois projetos independentes que conversam por HTTP:</p><table><tr><th>Frontend (esta semana)</th><th>Backend (Semanas 26-28)</th></tr><tr><td>HTML + JavaScript</td><td>Python + Flask + MariaDB</td></tr><tr><td>Roda no navegador</td><td>Roda no servidor</td></tr><tr><td>Pede e mostra dados</td><td>Guarda e entrega dados</td></tr><tr><td>Chama com <code>fetch</code></td><td>Responde com <code>jsonify</code></td></tr></table><p><strong>Atenção:</strong> o frontend é em <strong>JavaScript</strong>, não Python — é uma linguagem diferente, e é justamente isso que torna o desacoplamento real. A boa notícia: a lógica (buscar dados, mostrar na tela, enviar formulário) é parecida com o que você já faz. E o <code>localStorage</code> você já viu — é onde esta página de exercícios salva o seu XP!</p></div>
+  <div class="parte-head"><span class="num">01</span><h2>requirements.txt: a lista de ingredientes</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Seu projeto usa Flask, PyMySQL, PyJWT, flask-cors, pytest... Se alguém clonar seu repositório (Semana 33), como saberá o que instalar? O <code>requirements.txt</code> é a lista de ingredientes: o <code>pip</code> a gera e a consome automaticamente.</p></div>
   <article class="ex" id="ex1">
     <div class="ex-head">
       <span class="ex-num">EX 01</span>
-      <h3>A página base do frontend 📄</h3>
-      <span class="stars">⭐ básico</span>
+      <h3>Congelando as dependências 🧊</h3>
+      <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex1"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Criar o arquivo HTML que será o seu frontend.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie um arquivo <code>index.html</code> (separado da API!) com um título e um espaço para a lista</li><li>Para rodar, NÃO abra o arquivo direto (file://) — sirva-o: <code>python -m http.server 8000</code> na pasta, ou use o "Live Server" do VS Code</li><li>Acesse <code>localhost:8000</code> — a base está no ar</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">index.html</span></div><pre class="code">&lt;!DOCTYPE html&gt;
-&lt;html lang="pt-BR"&gt;
-&lt;head&gt;
-  &lt;meta charset="UTF-8"&gt;
-  &lt;title&gt;Tua Caneca&lt;/title&gt;
-&lt;/head&gt;
-&lt;body&gt;
-  &lt;h1&gt;☕ Tua Caneca&lt;/h1&gt;
-  &lt;div id="lista"&gt;Carregando...&lt;/div&gt;
+<span class="tag obj">🎯 Objetivo</span><p>Gerar o requirements.txt do seu projeto.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Na pasta do projeto: <code>pip freeze &gt; requirements.txt</code></li><li>Abra o arquivo: cada linha é <code>pacote==versão</code></li><li>Commite-o (Semana 33) — ele faz parte do projeto!</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">requirements.txt</span></div><pre class="output">Flask==3.0.3
+flask-cors==4.0.1
+PyJWT==2.9.0
+PyMySQL==1.1.1
+pytest==8.3.3</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(o arquivo gerado, com as versões exatas do seu ambiente)</pre></div><details class="dica"><summary>💡 Por que a versão exata?</summary><div class="inner">O <code>==</code> congela a versão TESTADA. Sem isso, quem instalar amanhã pode receber uma versão nova com mudanças que quebram seu código ("funciona na minha máquina" nasce aí). Versões pinadas = comportamento reproduzível em qualquer lugar.</div></details>
+    </div>
+  </article>
 
-  &lt;script&gt;
-    const API = "http://localhost:5000/api";
-    // o JavaScript dos próximos exercícios vai aqui
-  &lt;/script&gt;
-&lt;/body&gt;
-&lt;/html&gt;</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(a página base no navegador, com o título e "Carregando...")</pre></div><details class="dica"><summary>💡 Por que servir, e não abrir?</summary><div class="inner">Abrir o HTML como <code>file://</code> costuma travar o <code>fetch</code> por segurança do navegador. Servindo com <code>python -m http.server</code> (que ironia boa: Python servindo seu frontend!) ou o Live Server, ele roda num endereço <code>http://</code> de verdade. E lembre: a API (Semana 27) precisa estar rodando em paralelo, com o <code>CORS</code> habilitado.</div></details>
+  <article class="ex" id="ex2">
+    <div class="ex-head">
+      <span class="ex-num">EX 02</span>
+      <h3>Instalando do zero com -r</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex2"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Viver a experiência de quem clona o seu projeto.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>O comando do outro lado: <code>pip install -r requirements.txt</code></li><li>O pip lê a lista e instala tudo, nas versões exatas</li><li>Junte as peças: <code>git clone</code> + <code>pip install -r</code> = projeto rodando em qualquer máquina em 2 comandos</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">$ pip install -r requirements.txt
+Collecting Flask==3.0.3 ...
+Successfully installed Flask-3.0.3 PyJWT-2.9.0 PyMySQL-1.1.1 ...</pre></div><details class="dica"><summary>💡 O README agradece</summary><div class="inner">Lembra do "como rodar" do README (Semana 33)? Agora ele fica limpo: clone, instale com -r, configure o .env (Parte 3), rode. Quatro linhas que funcionam para QUALQUER pessoa — inclusive o recrutador testando seu projeto.</div></details>
     </div>
   </article>
 </section>
 
 <section class="parte" id="p2">
-  <div class="parte-head"><span class="num">02</span><h2>fetch: buscando dados da API</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>O <code>fetch</code> é o <code>requests</code> do JavaScript: faz uma requisição HTTP e devolve a resposta. Como leva um tempinho (vai até o servidor e volta), usamos <code>async</code>/<code>await</code> para esperar — parecido com a ideia de aguardar uma resposta que você já viu com APIs na Semana 15.</p></div>
-  <article class="ex" id="ex2">
-    <div class="ex-head">
-      <span class="ex-num">EX 02</span>
-      <h3>Primeiro fetch: listar produtos</h3>
-      <span class="stars">⭐⭐ médio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex2"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Buscar os produtos da API e ver no console.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie uma função <code>async</code> que faz <code>fetch(API + "/produtos")</code></li><li>Espere a resposta com <code>await</code> e converta com <code>await resp.json()</code></li><li>Mostre no console (F12 no navegador) e chame a função</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">app.js</span></div><pre class="code">async function carregarProdutos() {
-  const resp = await fetch(API + "/produtos");
-  const produtos = await resp.json();
-  console.log("Produtos da API:", produtos);
-}
-
-carregarProdutos();</pre></div><span class="tag saida">✅ No console do navegador (F12)</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Produtos da API: (Array com os produtos vindos do MariaDB)</pre></div><details class="dica"><summary>💡 fetch é o requests do JS</summary><div class="inner">Compare: no Python era <code>requests.get(url).json()</code>; no JavaScript é <code>await fetch(url)</code> e <code>await resp.json()</code>. Mesma ideia — pedir dados a uma API e receber JSON. O <code>await</code> diz "espere a resposta chegar antes de continuar". Os dados que aparecem vieram do seu backend Python, atravessaram a rede e chegaram ao navegador. Mágico, né? 🪄</div></details>
-    </div>
-  </article>
-
+  <div class="parte-head"><span class="num">02</span><h2>venv: uma caixa de ferramentas por projeto</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Problema clássico: o projeto A precisa do Flask 2, o projeto B do Flask 3 — e o pip instala tudo no mesmo lugar! O <strong>ambiente virtual</strong> (<code>venv</code>) resolve: cada projeto ganha sua própria "caixa" de pacotes, isolada das outras.</p></div>
   <article class="ex" id="ex3">
     <div class="ex-head">
       <span class="ex-num">EX 03</span>
-      <h3>Mostrando os produtos na tela 🖼️</h3>
+      <h3>Criando e ativando o venv 📦</h3>
       <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex3"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Renderizar a lista no HTML a partir do JSON.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Pegue o elemento da lista: <code>document.getElementById("lista")</code></li><li>Monte o HTML percorrendo os produtos (o <code>.map()</code> do JS é como a list comprehension da Semana 17)</li><li>Coloque na tela com <code>elemento.innerHTML = ...</code></li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">app.js</span></div><pre class="code">async function carregarProdutos() {
-  const resp = await fetch(API + "/produtos");
-  const produtos = await resp.json();
-
-  const html = produtos.map(p =&gt;
-    `&lt;li&gt;${p.nome} — R$ ${p.preco.toFixed(2)} (${p.estoque} un.)&lt;/li&gt;`
-  ).join("");
-
-  document.getElementById("lista").innerHTML = "&lt;ul&gt;" + html + "&lt;/ul&gt;";
-}
-
-carregarProdutos();</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(a lista de produtos aparecendo formatada na página!)</pre></div><details class="dica"><summary>💡 Os ecos do que você já sabe</summary><div class="inner">O <code>.map()</code> transforma cada produto numa linha de HTML — é a list comprehension (Semana 17) do JavaScript. As crases <code>`...`</code> com <code>${...}</code> são as f-strings (Semana 2) do JS! Você não está aprendendo do zero — está reconhecendo velhos amigos numa linguagem nova. 😊</div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Isolar as dependências do projeto num ambiente próprio.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Na pasta do projeto: <code>python -m venv venv</code> (cria a pasta venv/)</li><li>Ative: Windows <code>venv\Scripts\activate</code> · Linux/Mac <code>source venv/bin/activate</code></li><li>O prompt ganha o prefixo <code>(venv)</code> — os pip install agora vão para a caixa do projeto</li><li>E lembre: <code>venv/</code> já está no seu .gitignore (Semana 33)!</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">$ python -m venv venv
+$ source venv/bin/activate      # (ou venv\Scripts\activate no Windows)
+(venv) $ pip install -r requirements.txt
+(venv) $ python api.py</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(o projeto rodando com SUA caixa de pacotes, isolada do resto)</pre></div><details class="dica"><summary>💡 O ritual profissional</summary><div class="inner">A sequência clone → venv → activate → install -r → rodar é o "bom dia" de todo dev ao pegar um projeto novo. O venv não sobe para o Git (é pesado e recriável); o requirements.txt é a receita para reconstruí-lo em segundos. Caixa descartável, receita eterna.</div></details>
     </div>
   </article>
 </section>
 
 <section class="parte" id="p3">
-  <div class="parte-head"><span class="num">03</span><h2>POST: criando pela tela</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Para CRIAR, o frontend envia um POST com o corpo em JSON — o espelho do <code>request.get_json()</code> que a API lê (Semana 27). Pegamos os valores de um formulário e mandamos via <code>fetch</code> com <code>method: "POST"</code>.</p></div>
+  <div class="parte-head"><span class="num">03</span><h2>.env: a configuração fora do código</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Suas credenciais já vivem em variáveis de ambiente (Semanas 24, 26, 28) — mas configurá-las na mão toda vez cansa. O arquivo <code>.env</code> + a biblioteca <code>python-dotenv</code> automatizam: as variáveis ficam num arquivo local (FORA do Git!) e são carregadas no início do programa.</p></div>
   <article class="ex" id="ex4">
     <div class="ex-head">
       <span class="ex-num">EX 04</span>
-      <h3>Criar produto via fetch 📤</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
+      <h3>python-dotenv: carregando o .env 🔑</h3>
+      <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex4"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Enviar um novo produto para a API a partir de campos da página.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Adicione campos (inputs) e um botão no HTML</li><li>No clique, leia os valores e faça <code>fetch</code> com <code>method: "POST"</code>, <code>headers</code> de JSON e <code>body: JSON.stringify({...})</code></li><li>Depois de criar, chame <code>carregarProdutos()</code> de novo para a lista atualizar</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">app.js</span></div><pre class="code">async function criarProduto() {
-  const nome = document.getElementById("nome").value;
-  const preco = parseFloat(document.getElementById("preco").value);
-  const estoque = parseInt(document.getElementById("estoque").value);
+<span class="tag obj">🎯 Objetivo</span><p>Centralizar a configuração do projeto num arquivo.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Instale: <code>pip install python-dotenv</code> (e atualize o requirements.txt!)</li><li>Crie o <code>.env</code> com as variáveis do sistema</li><li>No topo do código: <code>load_dotenv()</code> — e o <code>os.environ.get</code> passa a enxergá-las</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">.env</span></div><pre class="code">DB_HOST=localhost
+DB_USER=root
+DB_PASS=minha-senha-secreta
+JWT_SECRET=um-segredo-bem-grande-e-aleatorio</pre></div><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">db.py</span></div><pre class="code">import os
+import pymysql
+from dotenv import load_dotenv
 
-  await fetch(API + "/produtos", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ nome, preco, estoque })
-  });
+load_dotenv()   # le o arquivo .env desta pasta
 
-  carregarProdutos();   // recarrega a lista
-}</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(preenche os campos, clica em criar → produto aparece na lista, vindo do banco)</pre></div><details class="dica"><summary>💡 JSON.stringify = o jsonify ao contrário</summary><div class="inner">A API usa <code>jsonify</code> para virar JSON na SAÍDA; o frontend usa <code>JSON.stringify</code> para virar JSON na ENTRADA. O <code>Content-Type: application/json</code> avisa a API: "estou te mandando JSON". É o handshake que faz frontend e backend se entenderem.</div></details>
+def conectar():
+    return pymysql.connect(
+        host=os.environ.get("DB_HOST", "localhost"),
+        user=os.environ.get("DB_USER", "root"),
+        password=os.environ.get("DB_PASS", ""),
+        database="tua_caneca")</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(o mesmo código de sempre — mas a configuração agora vive num arquivo só)</pre></div><details class="dica"><summary>💡 Um .env por ambiente</summary><div class="inner">A mágica: o MESMO código roda em qualquer lugar, mudando só o .env — na sua máquina aponta para o MariaDB local; no servidor de produção, para o banco na nuvem. Código é único, configuração é por ambiente. E o .env NUNCA vai para o Git (Semana 33) — no repositório, publica-se um <code>.env.example</code> com as chaves e valores falsos, como documentação.</div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex5">
+    <div class="ex-head">
+      <span class="ex-num">EX 05</span>
+      <h3>O .env.example: documentando sem vazar</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex5"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Criar o modelo público do seu .env.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie <code>.env.example</code> com as MESMAS chaves e valores de mentira</li><li>Este sim vai para o Git — quem clona copia para .env e preenche</li><li>Adicione a instrução no README (Semana 33)</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">.env.example</span></div><pre class="code">DB_HOST=localhost
+DB_USER=seu-usuario
+DB_PASS=sua-senha
+JWT_SECRET=gere-um-segredo-aleatorio-grande</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(documentação de configuração sem expor nenhum segredo)</pre></div><details class="dica"><summary>💡 O padrão de todo repositório sério</summary><div class="inner">Abra qualquer projeto open-source de backend: lá está o .env.example (ou similar). Ele responde "o que preciso configurar?" sem responder "quais são os valores?". Segurança e usabilidade juntas — o par que você vem cultivando desde a Semana 21.</div></details>
     </div>
   </article>
 </section>
 
 <section class="parte" id="p4">
-  <div class="parte-head"><span class="num">04</span><h2>Login no frontend: o token e o localStorage</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Para usar as rotas protegidas (Semana 28), o frontend primeiro faz <strong>login</strong> na API, recebe o <strong>token</strong> e o GUARDA no navegador (<code>localStorage</code>). Depois, anexa esse token em cada requisição protegida.</p></div>
-  <article class="ex" id="ex5">
-    <div class="ex-head">
-      <span class="ex-num">EX 05</span>
-      <h3>Fazendo login e guardando o token 🎫</h3>
-      <span class="stars">⭐⭐ médio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex5"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Chamar /api/login e salvar o JWT no navegador.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Um formulário de usuário e senha + botão "Entrar"</li><li>No clique: <code>fetch</code> POST para <code>/api/login</code> com as credenciais</li><li>Pegue o token da resposta e salve: <code>localStorage.setItem("token", dados.token)</code></li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">app.js</span></div><pre class="code">async function login() {
-  const usuario = document.getElementById("usuario").value;
-  const senha = document.getElementById("senha").value;
-
-  const resp = await fetch(API + "/login", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ usuario, senha })
-  });
-
-  if (resp.status === 401) {
-    alert("Usuário ou senha inválidos!");
-    return;
-  }
-
-  const dados = await resp.json();
-  localStorage.setItem("token", dados.token);   // guarda o crachá!
-  alert("Login feito! ✔");
-}</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(login correto → token salvo no navegador; login errado → alerta de inválido)</pre></div><details class="dica"><summary>💡 O localStorage você já conhece</summary><div class="inner">É a mesma "gavetinha" do navegador onde ESTA página de exercícios guarda o seu XP! Aqui ela guarda o token JWT. Ele fica salvo mesmo se você fechar a aba — por isso sites "lembram" que você está logado. O token é o seu crachá: guardou, agora é só apresentar.</div></details>
-    </div>
-  </article>
-
+  <div class="parte-head"><span class="num">04</span><h2>debug=False e o servidor WSGI</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Duas mudanças obrigatórias para ir ao ar: <strong>desligar o debug</strong> e trocar o servidor de desenvolvimento do Flask por um <strong>servidor WSGI</strong> de verdade.</p></div>
   <article class="ex" id="ex6">
     <div class="ex-head">
       <span class="ex-num">EX 06</span>
-      <h3>Chamadas protegidas com Bearer 🔐</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
+      <h3>O perigo do debug em produção 🚨</h3>
+      <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex6"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Anexar o token nas requisições que exigem autenticação.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Recupere o token: <code>localStorage.getItem("token")</code></li><li>Adicione o cabeçalho <code>"Authorization": "Bearer " + token</code> no fetch</li><li>Agora o POST de criar produto funciona como autenticado (Semana 28)</li></ol><span class="tag saida">✅ Resultado</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(criar produto agora envia o token → API aceita com 201)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">app.js</span></div><pre class="code">async function criarProduto() {
-  const token = localStorage.getItem("token");
-  const nome = document.getElementById("nome").value;
-  const preco = parseFloat(document.getElementById("preco").value);
-  const estoque = parseInt(document.getElementById("estoque").value);
+<span class="tag obj">🎯 Objetivo</span><p>Ver com os próprios olhos o que o debug=True expõe.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Com <code>debug=True</code>, provoque um erro na API (ex.: divida por zero numa rota)</li><li>Abra a rota no navegador: o Flask mostra o TRACEBACK completo — seu código-fonte, caminhos de arquivos, variáveis!</li><li>Agora imagine essa tela aberta para a internet inteira...</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output" style="color:#FF9B94">ZeroDivisionError: division by zero
+File "/home/robson/tua_caneca/api.py", line 42, in relatorio
+    media = total / qtd
+(... o codigo-fonte da sua aplicacao, exposto na tela ...)</pre></div><span class="tag passos">🧭 Continue</span><ol><li>Em produção, SEMPRE <code>debug=False</code> (ou melhor: controle pelo .env!)</li><li>Erros em produção devem virar um JSON genérico de erro 500 — nunca um raio-X do sistema</li></ol><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">api.py (trecho)</span></div><pre class="code">import os
+from dotenv import load_dotenv
 
-  const resp = await fetch(API + "/produtos", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": "Bearer " + token   // o crachá vai junto!
-    },
-    body: JSON.stringify({ nome, preco, estoque })
-  });
+load_dotenv()
 
-  if (resp.status === 401) {
-    alert("Faça login primeiro!");
-    return;
-  }
-  carregarProdutos();
-}</pre></div><p>Esse <code>"Bearer " + token</code> é exatamente o cabeçalho que o <code>@token_required</code> da Semana 28 lê e valida. As duas pontas — frontend que envia, backend que verifica — finalmente se encaixam. 🤝</p></div></details>
+# no fim do arquivo:
+if __name__ == "__main__":
+    modo_debug = os.environ.get("FLASK_DEBUG", "0") == "1"
+    app.run(debug=modo_debug)
+
+# no .env de desenvolvimento:  FLASK_DEBUG=1
+# no .env de producao:         FLASK_DEBUG=0  (ou simplesmente ausente)</pre></div><p>O debug é uma ferramenta MARAVILHOSA em desenvolvimento (recarrega sozinho, mostra erros ricos) e uma porta escancarada em produção. Controlá-lo pelo .env fecha a questão: o mesmo código, seguro em cada ambiente.</p></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex7">
+    <div class="ex-head">
+      <span class="ex-num">EX 07</span>
+      <h3>WSGI: o motor de produção 🏭</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex7"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Entender por que app.run() não vai para produção — e o que vai no lugar.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>O servidor do <code>app.run()</code> avisa na inicialização: "This is a development server" — ele atende UMA requisição por vez!</li><li>Produção usa um servidor <strong>WSGI</strong>: <code>gunicorn</code> (Linux) ou <code>waitress</code> (qualquer sistema)</li><li>Experimente: <code>pip install waitress</code> e rode a API com ele</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">$ pip install waitress
+$ waitress-serve --port=5000 api:app
+INFO:waitress:Serving on http://0.0.0.0:5000</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(a mesma API, servida por um servidor de produção multi-requisições)</pre></div><details class="dica"><summary>💡 api:app — o endereço do app</summary><div class="inner">O <code>api:app</code> significa "no arquivo api.py, o objeto app". O WSGI é o padrão que conecta servidores de produção a apps Python — o gunicorn com vários "workers" atende dezenas de requisições simultâneas. É a diferença entre uma bicicleta e um caminhão: o mesmo destino, capacidades muito diferentes.</div></details>
     </div>
   </article>
 </section>
 
 <section class="parte" id="p5">
-  <div class="parte-head"><span class="num">05</span><h2>Tratando erros e saindo</h2></div>
-<div class="parte-intro"><h3>Conceito</h3><p>Dois acabamentos importantes: reagir ao <code>401</code> (token expirou ou sumiu → pedir login) e implementar o "sair" (logout), que no JWT é simplesmente DESCARTAR o token (Semana 28).</p></div>
-  <article class="ex" id="ex7">
-    <div class="ex-head">
-      <span class="ex-num">EX 07</span>
-      <h3>Excluir via fetch DELETE 🗑️</h3>
-      <span class="stars">⭐⭐ médio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex7"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Remover um produto chamando o DELETE da API.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Em cada item da lista, um botão que chama <code>excluir(id)</code></li><li>A função faz <code>fetch</code> com <code>method: "DELETE"</code> e o token (rota protegida!)</li><li>Recarregue a lista depois</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(clica em excluir → produto some da lista e do banco)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">app.js</span></div><pre class="code">async function excluir(id) {
-  const token = localStorage.getItem("token");
-  const resp = await fetch(API + "/produtos/" + id, {
-    method: "DELETE",
-    headers: { "Authorization": "Bearer " + token }
-  });
-  if (resp.status === 401) {
-    alert("Faça login primeiro!");
-    return;
-  }
-  carregarProdutos();
-}</pre></div><p>Repare como cada verbo HTTP da API (GET, POST, DELETE) tem um <code>fetch</code> correspondente no frontend, mudando só o <code>method</code>. O CRUD inteiro, agora pela tela.</p></div></details>
-    </div>
-  </article>
-
+  <div class="parte-head"><span class="num">05</span><h2>Docker e o mapa do deploy</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Última peça conceitual: o <strong>Docker</strong> empacota app + dependências + configuração num "contêiner" que roda IGUAL em qualquer máquina — o fim definitivo do "funciona na minha máquina". Você não precisa dominá-lo hoje, mas precisa LER um Dockerfile e entender o que ele resolve.</p></div>
   <article class="ex" id="ex8">
     <div class="ex-head">
       <span class="ex-num">EX 08</span>
-      <h3>O botão "Sair" 👋</h3>
+      <h3>Lendo um Dockerfile 🐳</h3>
       <span class="stars">⭐⭐ médio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex8"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Implementar o logout descartando o token.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Um botão "Sair" que chama <code>localStorage.removeItem("token")</code></li><li>Sem token guardado, as chamadas protegidas voltam a dar 401 (precisará logar de novo)</li><li>É o conceito stateless da Semana 28 na prática: o cliente joga o crachá fora</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(clicou em Sair → token apagado → criar/excluir pedem login novamente)</pre></div><details class="dica"><summary>💡 Logout sem servidor</summary><div class="inner">Lembra que o JWT é stateless (Semana 28)? O servidor não guarda sessão nenhuma — então "sair" é o frontend simplesmente APAGAR o token do localStorage. Simples assim. Toda a "memória" de quem está logado vive no navegador, no token. Elegante e escalável.</div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Decifrar a receita de um contêiner, linha por linha.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Leia o Dockerfile abaixo e traduza cada linha ANTES de ver a solução:</li><li>Repare como ele reúne TUDO o que você aprendeu esta semana</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">Dockerfile</span></div><pre class="code">FROM python:3.12-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+COPY . .
+
+CMD ["waitress-serve", "--port=5000", "api:app"]</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><p>Tradução: <strong>FROM</strong> — parte de uma imagem com o Python 3.12 já instalado; <strong>WORKDIR</strong> — trabalha na pasta /app; <strong>COPY requirements + RUN pip install</strong> — instala as dependências (a sua lista de ingredientes!); <strong>COPY . .</strong> — copia o código do projeto; <strong>CMD</strong> — o comando que roda quando o contêiner liga (o waitress do exercício anterior!). <strong>Um Dockerfile é o seu ritual de instalação, escrito como receita executável.</strong> Quem tem o contêiner não precisa instalar nada — nem Python. Ele roda igual no seu PC, no servidor, na nuvem. Por isso o Docker dominou o mundo do deploy.</p></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex9">
+    <div class="ex-head">
+      <span class="ex-num">EX 09</span>
+      <h3>O mapa do deploy 🗺️</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex9"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Saber onde cada camada do sistema vai morar no ar.</p><p>O sistema desacoplado (Semana 30) tem três camadas — e cada uma tem seu tipo de hospedagem:</p><table><tr><th>Camada</th><th>O que é</th><th>Onde hospedar</th></tr><tr><td>Frontend</td><td>arquivos estáticos (HTML/JS)</td><td>GitHub Pages, Netlify, Vercel (grátis!)</td></tr><tr><td>API</td><td>app Python rodando</td><td>serviços de deploy de apps (há planos gratuitos)</td></tr><tr><td>MariaDB</td><td>banco persistente</td><td>banco gerenciado na nuvem (vários provedores)</td></tr></table><span class="tag passos">🧭 Passo a passo</span><ol><li>Pesquise (termos: "deploy Flask gratuito", "MariaDB nuvem gratuito", "GitHub Pages tutorial")</li><li>Anote: quais variáveis do seu .env mudariam no ambiente de produção?</li><li>Perceba: a arquitetura desacoplada permite publicar cada camada no lugar ideal</li></ol><details class="dica"><summary>💡 O CORS de novo!</summary><div class="inner">Ao publicar, o frontend muda de endereço — e o CORS (Semana 27) precisa autorizar o novo domínio. E a URL da API no fetch (Semana 29) também muda. São os dois ajustes clássicos do primeiro deploy desacoplado; sabendo deles de antemão, você economiza horas de "por que não funciona no ar?!". 😉</div></details>
     </div>
   </article>
 </section>
@@ -464,119 +434,32 @@ carregarProdutos();</pre></div><span class="tag saida">✅ Saída esperada</span
 <section class="parte" id="p6">
   <div class="parte-head"><span class="num">06</span><h2>Projetos da semana: juntando tudo!</h2></div>
 
-  <article class="ex" id="ex9">
-    <div class="ex-head">
-      <span class="ex-num">EX 09</span>
-      <h3>Projeto: o frontend completo da Tua Caneca 🖥️</h3>
-      <span class="stars">⭐⭐⭐ desafio</span>
-      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex9"> Concluído</label>
-    </div>
-    <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Um mini-app de uma página: login, listar, criar e excluir — tudo via API protegida.</p><span class="tag passos">🧭 Requisitos</span><ol><li>Uma tela com: formulário de login, formulário de novo produto e a lista (com botão excluir em cada item)</li><li>Ao carregar, mostra os produtos (GET público); login guarda o token; criar e excluir usam o token</li><li>Trate o 401 em todas as ações protegidas</li><li>Capriche num <code>&lt;style&gt;</code> simples para ficar apresentável</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(um app web completo: entra, vê produtos, cadastra e remove — frontend separado falando com a API)</pre></div><details class="dica"><summary>💡 Você fechou o ciclo</summary><div class="inner">Frontend (HTML/JS) ↔ API REST (Flask) ↔ banco (MariaDB), com autenticação JWT no meio. Essa é, literalmente, a arquitetura de aplicações web modernas — a mesma estrutura por trás de sistemas que você usa todo dia. Junte o frontend e a API em dois repositórios no GitHub: é um projeto full-stack de portfólio que impressiona qualquer recrutador. 🏆</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">index.html</span></div><pre class="code">&lt;!DOCTYPE html&gt;
-&lt;html lang="pt-BR"&gt;
-&lt;head&gt;
-  &lt;meta charset="UTF-8"&gt;
-  &lt;title&gt;Tua Caneca&lt;/title&gt;
-  &lt;style&gt;
-    body { font-family: Arial; max-width: 600px; margin: 30px auto; }
-    input { padding: 6px; margin: 3px; }
-    li { margin: 4px 0; }
-  &lt;/style&gt;
-&lt;/head&gt;
-&lt;body&gt;
-  &lt;h1&gt;☕ Tua Caneca&lt;/h1&gt;
-
-  &lt;h3&gt;Login&lt;/h3&gt;
-  &lt;input id="usuario" placeholder="usuário"&gt;
-  &lt;input id="senha" type="password" placeholder="senha"&gt;
-  &lt;button onclick="login()"&gt;Entrar&lt;/button&gt;
-  &lt;button onclick="sair()"&gt;Sair&lt;/button&gt;
-
-  &lt;h3&gt;Novo produto&lt;/h3&gt;
-  &lt;input id="nome" placeholder="nome"&gt;
-  &lt;input id="preco" placeholder="preço"&gt;
-  &lt;input id="estoque" placeholder="estoque"&gt;
-  &lt;button onclick="criarProduto()"&gt;Criar&lt;/button&gt;
-
-  &lt;h3&gt;Produtos&lt;/h3&gt;
-  &lt;div id="lista"&gt;Carregando...&lt;/div&gt;
-
-  &lt;script&gt;
-    const API = "http://localhost:5000/api";
-
-    async function carregarProdutos() {
-      const resp = await fetch(API + "/produtos");
-      const produtos = await resp.json();
-      document.getElementById("lista").innerHTML = "&lt;ul&gt;" + produtos.map(p =&gt;
-        `&lt;li&gt;${p.nome} — R$ ${p.preco.toFixed(2)} (${p.estoque})
-         &lt;button onclick="excluir(${p.id})"&gt;x&lt;/button&gt;&lt;/li&gt;`
-      ).join("") + "&lt;/ul&gt;";
-    }
-
-    async function login() {
-      const resp = await fetch(API + "/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          usuario: document.getElementById("usuario").value,
-          senha: document.getElementById("senha").value
-        })
-      });
-      if (resp.status === 401) { alert("Inválido!"); return; }
-      const dados = await resp.json();
-      localStorage.setItem("token", dados.token);
-      alert("Login ok!");
-    }
-
-    function sair() {
-      localStorage.removeItem("token");
-      alert("Você saiu.");
-    }
-
-    async function criarProduto() {
-      const token = localStorage.getItem("token");
-      const resp = await fetch(API + "/produtos", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer " + token
-        },
-        body: JSON.stringify({
-          nome: document.getElementById("nome").value,
-          preco: parseFloat(document.getElementById("preco").value),
-          estoque: parseInt(document.getElementById("estoque").value)
-        })
-      });
-      if (resp.status === 401) { alert("Faça login!"); return; }
-      carregarProdutos();
-    }
-
-    async function excluir(id) {
-      const token = localStorage.getItem("token");
-      const resp = await fetch(API + "/produtos/" + id, {
-        method: "DELETE",
-        headers: { "Authorization": "Bearer " + token }
-      });
-      if (resp.status === 401) { alert("Faça login!"); return; }
-      carregarProdutos();
-    }
-
-    carregarProdutos();
-  &lt;/script&gt;
-&lt;/body&gt;
-&lt;/html&gt;</pre></div></div></details>
-    </div>
-  </article>
-
   <article class="ex" id="ex10">
     <div class="ex-head">
       <span class="ex-num">EX 10</span>
-      <h3>Projeto bônus: polindo a experiência ✨</h3>
-      <span class="stars">⭐⭐ médio</span>
+      <h3>Projeto: o pacote de produção da Tua Caneca 📦</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
       <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex10"> Concluído</label>
     </div>
     <div class="ex-body">
-<span class="tag obj">🎯 Objetivo</span><p>Pequenas melhorias que fazem grande diferença (sem código pronto!).</p><span class="tag passos">🧭 Roteiro</span><ol><li>Mostre mensagens de sucesso/erro numa área da página (em vez de só <code>alert</code>)</li><li>Esconda o formulário de criar quando não há token (só logado cria)</li><li>Mostre "Olá, [usuário]" quando logado (dica: a rota /api/me do bônus da Semana 28)</li><li>Adicione um campo de busca que filtra a lista (pode ser no próprio JS, ou chamando a API)</li></ol><details class="dica"><summary>💡 Detalhes de produto</summary><div class="inner">Essas melhorias são o que separa um exercício de um PRODUTO. Feedback visual, esconder o que o usuário não pode usar, saudação personalizada — tudo isso transmite cuidado. E cada uma reaproveita algo que você já sabe (manipular o DOM, ler o token, chamar a API). Caprichar nos detalhes é a marca de quem leva o ofício a sério. 😉</div></details>
+<span class="tag obj">🎯 Objetivo</span><p>Aplicar TODA a semana ao seu sistema — deixá-lo pronto para o mundo.</p><span class="tag passos">🧭 Requisitos</span><ol><li>No repositório da API: venv + <code>requirements.txt</code> atualizado + <code>.env</code>/<code>.env.example</code> + debug controlado pelo ambiente + rodando via waitress</li><li>Atualize o README com o novo ritual de instalação (clone → venv → install -r → .env → rodar)</li><li>Rode a suíte de testes (Semana 32) DEPOIS das mudanças — continua verde?</li><li>Commite tudo com mensagens claras (Semana 33)</li></ol><span class="tag saida">✅ O ritual completo</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">$ git clone ... &amp;&amp; cd tua-caneca-api
+$ python -m venv venv &amp;&amp; source venv/bin/activate
+$ pip install -r requirements.txt
+$ cp .env.example .env   # (e preencher)
+$ pytest                 # 9 passed ✅
+$ waitress-serve --port=5000 api:app</pre></div><details class="dica"><summary>💡 A prova dos nove</summary><div class="inner">O teste definitivo: peça a um colega (ou use outra máquina/pasta limpa) para clonar e rodar SÓ seguindo o README. Funcionou de primeira? Seu projeto está profissional. Travou? Cada tropeço é um buraco no README ou no pacote — conserte e agradeça o feedback. É assim que se lapida um projeto de verdade.</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><p>Checklist final do pacote: <strong>(1)</strong> <code>requirements.txt</code> com TODAS as dependências (inclusive python-dotenv e waitress); <strong>(2)</strong> <code>venv/</code> e <code>.env</code> no .gitignore, <code>.env.example</code> no repositório; <strong>(3)</strong> nenhum segredo em NENHUM commit do histórico; <strong>(4)</strong> debug desligável por variável; <strong>(5)</strong> pytest verde; <strong>(6)</strong> README com o ritual completo. Seis itens verdes = pronto para o deploy da Semana 35.</p></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex11">
+    <div class="ex-head">
+      <span class="ex-num">EX 11</span>
+      <h3>Projeto bônus: rumo ao ar de verdade 🌍</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex11"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Dar os primeiros passos do deploy real (sem código pronto!).</p><span class="tag passos">🧭 Roteiro</span><ol><li>Comece pelo mais fácil: publique o FRONTEND no GitHub Pages (repositório → Settings → Pages → branch main)</li><li>Em minutos, seu frontend estará num endereço público de verdade</li><li>Ele vai reclamar da API (que ainda está no localhost) — é esperado! Anote o que precisaria mudar (URL da API, CORS)</li><li>Se quiser ir até o fim: pesquise um serviço gratuito de deploy Flask e publique a API também</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(seu frontend acessível por qualquer pessoa, em https://seu-usuario.github.io/...)</pre></div><details class="dica"><summary>💡 O primeiro link é inesquecível</summary><div class="inner">Mandar o link do SEU sistema para alguém abrir no celular — não há aula que substitua essa sensação. Mesmo que só o frontend esteja no ar por enquanto, você cruzou a fronteira: deixou de fazer projetos que só você vê. A Semana 35 fecha o ciclo completo. 🚀</div></details>
     </div>
   </article>
 </section>
@@ -584,29 +467,29 @@ carregarProdutos();</pre></div><span class="tag saida">✅ Saída esperada</span
 <div class="checklist" id="checklist">
   <h2>✅ Checklist de fim de semana</h2>
   <p>Antes de seguir para a próxima semana, confirme que você consegue:</p>
-<label class="check-item"><input type="checkbox"><span>Explicar a arquitetura desacoplada (frontend separado + API REST)</span></label>
-<label class="check-item"><input type="checkbox"><span>Servir uma página estática HTML/JS e apontá-la para a API</span></label>
-<label class="check-item"><input type="checkbox"><span>Buscar dados da API com fetch e async/await</span></label>
-<label class="check-item"><input type="checkbox"><span>Renderizar a lista de produtos no HTML a partir do JSON</span></label>
-<label class="check-item"><input type="checkbox"><span>Enviar dados (POST) pela API a partir de um formulário</span></label>
-<label class="check-item"><input type="checkbox"><span>Fazer login pela API e guardar o JWT no navegador (localStorage)</span></label>
-<label class="check-item"><input type="checkbox"><span>Anexar o token (Authorization: Bearer) nas chamadas protegidas</span></label>
-<label class="check-item"><input type="checkbox"><span>Excluir um recurso chamando o DELETE da API</span></label>
-<label class="check-item"><input type="checkbox"><span>Tratar erros e o status 401 (pedir login de novo)</span></label>
-<label class="check-item"><input type="checkbox"><span>Montar um mini-app frontend completo sobre a API protegida</span></label>
+<label class="check-item"><input type="checkbox"><span>Congelar as dependências num requirements.txt</span></label>
+<label class="check-item"><input type="checkbox"><span>Instalar um projeto do zero com pip install -r</span></label>
+<label class="check-item"><input type="checkbox"><span>Criar e ativar um ambiente virtual (venv)</span></label>
+<label class="check-item"><input type="checkbox"><span>Explicar por que cada projeto merece seu próprio venv</span></label>
+<label class="check-item"><input type="checkbox"><span>Carregar configurações de um arquivo .env (python-dotenv)</span></label>
+<label class="check-item"><input type="checkbox"><span>Separar configuração de código (dev vs produção)</span></label>
+<label class="check-item"><input type="checkbox"><span>Desligar o debug e explicar por que ele é perigoso em produção</span></label>
+<label class="check-item"><input type="checkbox"><span>Explicar o papel de um servidor WSGI (gunicorn/waitress)</span></label>
+<label class="check-item"><input type="checkbox"><span>Ler um Dockerfile e explicar o que o Docker resolve</span></label>
+<label class="check-item"><input type="checkbox"><span>Montar o checklist de produção de um projeto</span></label>
 </div>
 
 <div class="win-banner" id="winBanner">
-  <h2>🏆 SEMANA 29 COMPLETA!</h2>
-  <p>Você concluiu todos os exercícios. Você construiu um frontend que consome uma API REST com autenticação — a arquitetura completa de um app web moderno, com as duas pontas conectadas!</p>
+  <h2>🏆 SEMANA 34 COMPLETA!</h2>
+  <p>Você concluiu todos os exercícios. Seu sistema está pronto para sair do localhost: dependências congeladas, configuração separada, debug domado e o caminho do deploy mapeado!</p>
 </div>
 
 <div class="preview-s2">
-<h2>📅 Prévia da Semana 30 — a GRANDE final 🏆</h2><p>Tudo se junta no <strong>Projeto Final 6</strong>: o sistema Tua Caneca <strong>desacoplado completo</strong> — banco MariaDB, API REST com JWT e frontend separado, as três peças trabalhando juntas. A formatura definitiva do curso, com o sistema profissional de ponta a ponta na sua mão. Prepare-se para o diploma! 🎓🚀</p></div>
+<h2>📅 Prévia da Semana 35 — a GRANDE final do módulo 🏆</h2><p>Tudo o que o módulo de engenharia ensinou converge no <strong>Projeto Final 7</strong>: o sistema Tua Caneca com banco relacionado por chaves estrangeiras, relatórios com JOIN, <strong>suíte de testes</strong> vigiando, <strong>Git/GitHub</strong> com histórico limpo e o pacote de produção completo. O projeto que fecha a sua formação de engenheiro(a) de software. 🎓</p></div>
 
 </main>
 
-<footer>python_para_iniciantes // semana_29 // exercícios guiados</footer>
+<footer>python_para_iniciantes // semana_34 // exercícios guiados</footer>
 
 <script>
 // ===== Syntax highlight leve para Python =====
@@ -618,7 +501,7 @@ carregarProdutos();</pre></div><span class="tag saida">✅ Saída esperada</span
     src = src.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     // uma passada só, com alternação (comentário | string | builtin | bool | número)
     src = src.replace(
-      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|insert|int|float|str|len|range|type|abs|round|max|min|sum|sorted|sort|reverse|append|remove|split|strip|upper|lower|replace|title|randint|random|get|keys|values|items|open|readlines|read|write|close|count|index|pop|update|list|dict|tuple|enumerate|sqrt|floor|ceil|choice|shuffle|sample|sleep|now|today|strftime|dumps|dump|loads|load|isinstance|datetime|date|DictReader|DictWriter|writerows|writerow|writeheader|writer|reader|csv|Workbook|load_workbook|save|iter_rows|Font|listdir|makedirs|getcwd|rename|exists|getsize|splitext|join|endswith|startswith|copytree|copy|move|requests|status_code|json|DataFrame|read_csv|read_excel|to_excel|to_csv|head|describe|groupby|sort_values|value_counts|mean|idxmax|bar|barh|pie|plot|savefig|show|title|xlabel|ylabel|figure|legend|axhline|tight_layout|close|Flask|route|run|render_template|jsonify|redirect|request|connect|cursor|execute|executemany|fetchall|fetchone|commit|environ|getenv|post|encode|decode|abort|make_response)\b|\b(True|False|None|if|elif|else|while|for|in|and|or|not|break|continue|import|from|def|return|try|except|finally|with|as|del|global|pass|class|self|super|lambda)\b|(\b\d+(?:\.\d+)?\b)/g,
+      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|insert|int|float|str|len|range|type|abs|round|max|min|sum|sorted|sort|reverse|append|remove|split|strip|upper|lower|replace|title|randint|random|get|keys|values|items|open|readlines|read|write|close|count|index|pop|update|list|dict|tuple|enumerate|sqrt|floor|ceil|choice|shuffle|sample|sleep|now|today|strftime|dumps|dump|loads|load|isinstance|datetime|date|DictReader|DictWriter|writerows|writerow|writeheader|writer|reader|csv|Workbook|load_workbook|save|iter_rows|Font|listdir|makedirs|getcwd|rename|exists|getsize|splitext|join|endswith|startswith|copytree|copy|move|requests|status_code|json|DataFrame|read_csv|read_excel|to_excel|to_csv|head|describe|groupby|sort_values|value_counts|mean|idxmax|bar|barh|pie|plot|savefig|show|title|xlabel|ylabel|figure|legend|axhline|tight_layout|close|Flask|route|run|render_template|jsonify|redirect|request|connect|cursor|execute|executemany|fetchall|fetchone|commit|environ|getenv|post|encode|decode|abort|make_response|raises|approx|load_dotenv)\b|\b(True|False|None|if|elif|else|while|for|in|and|or|not|break|continue|import|from|def|return|try|except|finally|with|as|del|global|pass|class|self|super|lambda)\b|(\b\d+(?:\.\d+)?\b)/g,
       function(m, com, str, fn, bool, num){
         if(com)  return '<span class="tk-com">'+com+'</span>';
         if(str)  return '<span class="tk-str">'+str+'</span>';
@@ -637,7 +520,7 @@ carregarProdutos();</pre></div><span class="tag saida">✅ Saída esperada</span
 // no navegador. Se o localStorage estiver indisponível (modo restrito,
 // pré-visualização, etc.), o progresso funciona só em memória, sem quebrar.
 const storage = (function(){
-  const KEY = 'python_semana29_progresso';
+  const KEY = 'python_semana34_progresso';
   let memoria = {};
   let disponivel = false;
   try{
@@ -685,9 +568,9 @@ const storage = (function(){
     [0,  'Marque os exercícios concluídos ✔'],
     [1,  'Boa! Continue assim 💪'],
     [3,  'Pegando o ritmo! 🔥'],
-    [5, 'Metade do caminho! 🚀'],
+    [6, 'Metade do caminho! 🚀'],
     [8, 'Quase lá... força! ⚡'],
-    [10, 'SEMANA COMPLETA! 🏆']
+    [11, 'SEMANA COMPLETA! 🏆']
   ];
 
   function estadoAtual(){
