@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Semana 3 — Loops e Repetições</title>
+<style>
+  :root{
+    --ink:#16243A;
+    --ink-soft:#4A5A74;
+    --paper:#F5F8FC;
+    --card:#FFFFFF;
+    --py-blue:#3776AB;
+    --py-blue-dark:#27598C;
+    --py-gold:#FFD43B;
+    --py-gold-dark:#C99700;
+    --term:#1B2435;
+    --term-line:#2B3850;
+    --green:#2EA56C;
+    --coral:#E2574C;
+    --radius:14px;
+    --mono:"Cascadia Code","JetBrains Mono",Consolas,"Roboto Mono",monospace;
+    --sans:"Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto}
+    *{transition:none !important;animation:none !important}
+  }
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.65}
+
+  /* ===== Barra de progresso fixa ===== */
+  .progress-wrap{
+    position:sticky;top:0;z-index:50;
+    background:var(--term);color:#fff;
+    padding:10px 18px;
+    display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+    box-shadow:0 2px 12px rgba(22,36,58,.25);
+  }
+  .progress-wrap .label{font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;white-space:nowrap}
+  .progress-bar{flex:1;min-width:140px;height:14px;background:var(--term-line);border-radius:99px;overflow:hidden}
+  .progress-fill{height:100%;width:0%;border-radius:99px;background:linear-gradient(90deg,var(--py-blue),var(--py-gold));transition:width .4s ease}
+  .progress-count{font-family:var(--mono);font-size:.85rem;color:var(--py-gold);white-space:nowrap}
+  .progress-msg{font-size:.78rem;color:#AFC3E0;white-space:nowrap}
+  .reset-btn{
+    font-family:var(--mono);font-size:.72rem;color:#AFC3E0;
+    background:transparent;border:1px solid var(--term-line);border-radius:8px;
+    padding:5px 11px;cursor:pointer;transition:all .15s ease;white-space:nowrap;
+  }
+  .reset-btn:hover,.reset-btn:focus-visible{color:#fff;border-color:#5A6E92;background:rgba(255,255,255,.06)}
+  .reset-btn:focus-visible{outline:2px solid var(--py-gold);outline-offset:2px}
+
+  /* ===== Hero ===== */
+  header.hero{
+    background:linear-gradient(150deg,var(--term) 0%,#22406B 70%,var(--py-blue) 100%);
+    color:#fff;padding:56px 20px 48px;text-align:center;position:relative;overflow:hidden;
+  }
+  header.hero::before{
+    content:"while  for  in  range(  break  continue  +=  if  else";
+    position:absolute;inset:auto 0 8px 0;font-family:var(--mono);font-size:.78rem;
+    color:rgba(255,255,255,.14);letter-spacing:.4em;white-space:nowrap;overflow:hidden;
+  }
+  .hero .kicker{
+    font-family:var(--mono);font-size:.85rem;color:var(--py-gold);
+    letter-spacing:.18em;text-transform:uppercase;margin-bottom:14px;
+  }
+  .hero h1{font-family:var(--mono);font-size:clamp(1.5rem,4.5vw,2.6rem);font-weight:700;line-height:1.25}
+  .hero h1 .cursor{display:inline-block;width:.55em;height:1.05em;background:var(--py-gold);vertical-align:text-bottom;margin-left:4px;animation:blink 1.1s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+  .hero p.sub{max-width:620px;margin:18px auto 0;color:#D7E4F5;font-size:1rem}
+  .hero .howto{
+    max-width:640px;margin:26px auto 0;background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.18);border-radius:var(--radius);
+    padding:14px 18px;font-size:.88rem;color:#E8F0FB;text-align:left;
+  }
+  .hero .howto strong{color:var(--py-gold)}
+
+  /* ===== Navegação por partes ===== */
+  nav.parts{
+    display:flex;gap:8px;flex-wrap:wrap;justify-content:center;
+    padding:18px 16px;max-width:980px;margin:0 auto;
+  }
+  nav.parts a{
+    font-family:var(--mono);font-size:.78rem;text-decoration:none;
+    color:var(--py-blue-dark);background:var(--card);
+    border:1.5px solid #D5E2F2;border-radius:99px;padding:7px 14px;
+    transition:all .15s ease;
+  }
+  nav.parts a:hover,nav.parts a:focus-visible{border-color:var(--py-blue);background:#EAF2FB}
+  nav.parts a:focus-visible{outline:2px solid var(--py-blue);outline-offset:2px}
+
+  main{max-width:880px;margin:0 auto;padding:8px 18px 80px}
+
+  /* ===== Seções (partes) ===== */
+  section.parte{margin-top:46px}
+  .parte-head{display:flex;align-items:baseline;gap:14px;border-bottom:3px solid var(--py-gold);padding-bottom:10px;margin-bottom:6px}
+  .parte-head .num{
+    font-family:var(--mono);font-size:2.4rem;font-weight:700;color:var(--py-blue);line-height:1;
+  }
+  .parte-head h2{font-family:var(--mono);font-size:clamp(1.05rem,2.8vw,1.45rem);color:var(--ink)}
+  .parte-intro{
+    background:var(--card);border:1px solid #E1E9F4;border-radius:var(--radius);
+    padding:18px 22px;margin-top:16px;font-size:.95rem;
+  }
+  .parte-intro h3{font-size:.8rem;font-family:var(--mono);color:var(--py-blue);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px}
+  .parte-intro p{margin-bottom:10px}
+  .parte-intro p:last-child{margin-bottom:0}
+  .parte-intro ol,.parte-intro ul{margin:8px 0 10px 22px}
+  table{border-collapse:collapse;width:100%;margin:10px 0;font-size:.88rem}
+  th,td{border:1px solid #DCE6F2;padding:7px 10px;text-align:left}
+  th{background:#EDF3FA;font-family:var(--mono);font-size:.78rem}
+  td code,p code,li code{
+    font-family:var(--mono);font-size:.85em;background:#EDF2F9;
+    border:1px solid #DCE6F2;border-radius:5px;padding:1px 5px;color:var(--py-blue-dark);
+  }
+
+  /* ===== Cartão de exercício ===== */
+  article.ex{
+    background:var(--card);border:1px solid #E1E9F4;border-radius:var(--radius);
+    margin-top:22px;overflow:hidden;
+    box-shadow:0 1px 4px rgba(22,36,58,.05);
+    transition:box-shadow .2s ease;
+  }
+  article.ex:hover{box-shadow:0 4px 16px rgba(22,36,58,.10)}
+  article.ex.done{border-color:var(--green)}
+  article.ex.done .ex-head{background:#EAF7F0}
+  .ex-head{
+    display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+    padding:14px 18px;background:#F2F6FC;border-bottom:1px solid #E1E9F4;
+  }
+  .ex-num{
+    font-family:var(--mono);font-weight:700;font-size:.85rem;color:#fff;
+    background:var(--py-blue);border-radius:8px;padding:5px 10px;white-space:nowrap;
+  }
+  article.ex.done .ex-num{background:var(--green)}
+  .ex-head h3{font-size:1.02rem;flex:1;min-width:180px}
+  .stars{font-size:.78rem;color:var(--py-gold-dark);background:#FFF6D6;border:1px solid #F2DE96;border-radius:99px;padding:3px 10px;white-space:nowrap}
+  .done-toggle{
+    display:flex;align-items:center;gap:7px;cursor:pointer;user-select:none;
+    font-size:.8rem;font-family:var(--mono);color:var(--ink-soft);
+  }
+  .done-toggle input{width:17px;height:17px;accent-color:var(--green);cursor:pointer}
+  .ex-body{padding:18px 20px 22px}
+  .ex-body p{margin-bottom:10px}
+  .ex-body ol,.ex-body ul{margin:6px 0 12px 22px}
+  .ex-body li{margin-bottom:4px}
+
+  .tag{
+    display:inline-block;font-family:var(--mono);font-size:.72rem;
+    text-transform:uppercase;letter-spacing:.08em;border-radius:6px;
+    padding:3px 9px;margin:4px 0 6px;
+  }
+  .tag.obj{background:#E7F0FB;color:var(--py-blue-dark)}
+  .tag.passos{background:#FFF3CC;color:#8a6d00}
+  .tag.saida{background:#E4F5EC;color:#1c7a4d}
+
+  /* ===== Blocos de código estilo terminal ===== */
+  .term-window{border-radius:12px;overflow:hidden;margin:12px 0;border:1px solid var(--term-line)}
+  .term-bar{
+    display:flex;align-items:center;gap:8px;background:#121A29;padding:8px 14px;
+  }
+  .term-bar .dot{width:11px;height:11px;border-radius:50%}
+  .dot.r{background:#FF5F57}.dot.y{background:#FEBC2E}.dot.g{background:#28C840}
+  .term-bar .fname{font-family:var(--mono);font-size:.75rem;color:#8FA6C8;margin-left:6px}
+  pre.code,pre.output{
+    background:var(--term);color:#E7EDF7;font-family:var(--mono);
+    font-size:.86rem;line-height:1.6;padding:14px 18px;overflow-x:auto;margin:0;
+  }
+  pre.output{color:#9FE8C0}
+  pre.output .prompt-in{color:#E7EDF7}
+  /* syntax highlight */
+  .tk-kw{color:#7EC1FF;font-weight:600}
+  .tk-str{color:#FFD98A}
+  .tk-com{color:#7C8DA8;font-style:italic}
+  .tk-num{color:#9FE8C0}
+  .tk-fn{color:#C7A6FF}
+
+  /* ===== Dicas / desafios / soluções ===== */
+  details{border-radius:10px;margin:12px 0;overflow:hidden;border:1.5px solid transparent}
+  details summary{
+    cursor:pointer;list-style:none;padding:11px 16px;font-weight:600;font-size:.9rem;
+    display:flex;align-items:center;gap:8px;user-select:none;
+  }
+  details summary::-webkit-details-marker{display:none}
+  details summary::after{content:"▾";margin-left:auto;transition:transform .2s ease;font-size:.85em}
+  details[open] summary::after{transform:rotate(180deg)}
+  details .inner{padding:4px 16px 14px}
+  details.dica{background:#FFF9E8;border-color:#F2DE96}
+  details.dica summary{color:#8a6d00}
+  details.desafio{background:#F3EDFB;border-color:#D9C8F2}
+  details.desafio summary{color:#6B3FA0}
+  details.solucao{background:#EAF7F0;border-color:#BFE5D0}
+  details.solucao summary{color:#1c7a4d}
+  details.solucao .aviso{font-size:.8rem;color:#1c7a4d;margin-bottom:8px;font-style:italic}
+
+  /* ===== Checklist final ===== */
+  .checklist{background:var(--card);border:1px solid #E1E9F4;border-radius:var(--radius);padding:22px;margin-top:30px}
+  .checklist h2{font-family:var(--mono);font-size:1.2rem;margin-bottom:6px}
+  .checklist p{font-size:.9rem;color:var(--ink-soft);margin-bottom:14px}
+  .check-item{display:flex;align-items:flex-start;gap:10px;padding:7px 4px;border-radius:8px;cursor:pointer}
+  .check-item:hover{background:#F2F6FC}
+  .check-item input{width:18px;height:18px;margin-top:3px;accent-color:var(--py-blue);cursor:pointer}
+  .check-item span{font-size:.93rem}
+  .check-item input:checked + span{color:var(--green);text-decoration:line-through;text-decoration-color:rgba(46,165,108,.5)}
+
+  /* banner 100% */
+  .win-banner{
+    display:none;margin-top:26px;text-align:center;color:#fff;
+    background:linear-gradient(120deg,var(--green),var(--py-blue));
+    border-radius:var(--radius);padding:26px 20px;
+  }
+  .win-banner.show{display:block;animation:pop .45s ease}
+  @keyframes pop{0%{transform:scale(.94);opacity:0}100%{transform:scale(1);opacity:1}}
+  .win-banner h2{font-family:var(--mono);font-size:1.4rem;margin-bottom:6px}
+
+  .preview-s2{
+    margin-top:36px;border:2px dashed var(--py-blue);border-radius:var(--radius);
+    padding:20px 22px;background:#EFF5FC;
+  }
+  .preview-s2 h2{font-family:var(--mono);font-size:1.05rem;color:var(--py-blue-dark);margin-bottom:8px}
+  footer{
+    text-align:center;font-family:var(--mono);font-size:.75rem;color:var(--ink-soft);
+    padding:26px 16px 40px;
+  }
+  @media(max-width:560px){
+    .progress-msg{display:none}
+    .ex-head h3{font-size:.95rem}
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-wrap" role="region" aria-label="Progresso da semana">
+  <span class="label">XP DA SEMANA</span>
+  <div class="progress-bar"><div class="progress-fill" id="pfill"></div></div>
+  <span class="progress-count" id="pcount">0 / 22</span>
+  <span class="progress-msg" id="pmsg">Marque os exercícios concluídos ✔</span>
+  <button class="reset-btn" id="resetBtn" title="Apagar todo o progresso salvo">↺ Resetar</button>
+</div>
+
+<header class="hero">
+  <div class="kicker">Python para Iniciantes · Exercícios Guiados</div>
+  <h1>SEMANA 3 — Loops:<br>repetindo com while e for<span class="cursor" aria-hidden="true"></span></h1>
+  <p class="sub">Faça o computador trabalhar por você: laços while e for, range(), acumuladores e contadores, break, continue e os clássicos FizzBuzz e jogo de adivinhação.</p>
+  <div class="howto">
+    <strong>Como usar:</strong> digite o código você mesmo (não copie e cole!), compare com a saída esperada e marque <strong>✔ Concluído</strong> em cada exercício para encher sua barra de XP. As <strong>dicas</strong> e <strong>soluções</strong> ficam escondidas — só abra depois de tentar! Seu progresso fica salvo no navegador.
+  </div>
+</header>
+
+<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · while</a><a href="#p2">2 · for + range</a><a href="#p3">3 · Acumuladores</a><a href="#p4">4 · break / continue</a><a href="#p5">5 · Strings & desenhos</a><a href="#p6">6 · Projetos</a><a href="#checklist">✅ Checklist</a></nav>
+
+<main>
+
+<section class="parte" id="p1">
+  <div class="parte-head"><span class="num">01</span><h2>O laço while</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>O <code>while</code> repete um bloco de código <strong>enquanto</strong> a condição for <code>True</code>. A estrutura clássica usa um <strong>contador</strong>:</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">estrutura.py</span></div><pre class="code">contador = 1            # 1. inicializa
+while contador &lt;= 5:    # 2. condição de parada
+    print(contador)
+    contador = contador + 1   # 3. atualiza (ESSENCIAL!)</pre></div><p>⚠️ Se você esquecer o passo 3, a condição nunca vira <code>False</code> e o programa repete <strong>para sempre</strong> — o famoso loop infinito (você vai criar um de propósito no Exercício 3!).</p></div>
+  <article class="ex" id="ex1">
+    <div class="ex-head">
+      <span class="ex-num">EX 01</span>
+      <h3>Contando de 1 a 10</h3>
+      <span class="stars">⭐ básico</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex1"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Executar e entender seu primeiro while.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Digite o código e PREVEJA a saída antes de executar</li><li>Execute e confira</li><li>Mude para contar de 1 a 100. Quantas linhas de código a mais você precisou? (Nenhuma! Esse é o poder do loop)</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex01_contagem.py</span></div><pre class="code">contador = 1
+while contador &lt;= 10:
+    print(contador)
+    contador = contador + 1</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">1
+2
+3
+4
+5
+6
+7
+8
+9
+10</pre></div><details class="dica"><summary>💡 Atalho</summary><div class="inner"><code>contador = contador + 1</code> pode ser escrito como <code>contador += 1</code>. Funciona também com <code>-=</code>, <code>*=</code> e <code>/=</code>.</div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex2">
+    <div class="ex-head">
+      <span class="ex-num">EX 02</span>
+      <h3>Contagem regressiva do foguete 🚀</h3>
+      <span class="stars">⭐ básico</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex2"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Fazer um while que conta para trás.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Comece o contador em 10</li><li>Repita enquanto for maior ou igual a 1, DIMINUINDO 1 a cada volta</li><li>Depois do loop, exiba "Decolar! 🚀"</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex02_foguete.py</span></div><pre class="code">contador = ____
+while contador ____ 1:
+    print(contador)
+    contador = contador ____ 1
+
+print("Decolar! 🚀")</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">10
+9
+8
+7
+6
+5
+4
+3
+2
+1
+Decolar! 🚀</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner">O <code>print("Decolar!")</code> fica SEM indentação — ele não pertence ao loop, então só executa quando o while terminar.</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex02.py</span></div><pre class="code">contador = 10
+while contador &gt;= 1:
+    print(contador)
+    contador = contador - 1
+
+print("Decolar! 🚀")</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex3">
+    <div class="ex-head">
+      <span class="ex-num">EX 03</span>
+      <h3>O temido loop infinito ♾️</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex3"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Criar um loop infinito de propósito — e aprender a escapar dele.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Digite e execute este código <strong>com erro proposital</strong> (prepare o dedo no Ctrl+C!):</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex03_infinito.py</span></div><pre class="code">contador = 1
+while contador &lt;= 5:
+    print("Socorro, não consigo parar!")</pre></div><span class="tag passos">🧭 Continue</span><ol><li>O programa vai imprimir sem parar — pressione <strong>Ctrl + C</strong> no terminal para interrompê-lo</li><li>Analise: por que ele nunca para?</li><li>Corrija adicionando a linha que falta</li></ol><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><p>Faltou atualizar o contador! Como <code>contador</code> fica eternamente em 1, a condição <code>contador &lt;= 5</code> nunca vira False. Correção:</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex03.py</span></div><pre class="code">contador = 1
+while contador &lt;= 5:
+    print("Agora eu paro!")
+    contador += 1</pre></div><p><strong>Regra de ouro do while:</strong> alguma coisa DENTRO do loop precisa mudar a condição.</p></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex4">
+    <div class="ex-head">
+      <span class="ex-num">EX 04</span>
+      <h3>Soma acumuladora (1 a 100)</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex4"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Conhecer o padrão mais importante dos loops: o acumulador.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie <code>soma = 0</code> ANTES do loop</li><li>Percorra de 1 a 100 com um contador</li><li>A cada volta, faça <code>soma = soma + contador</code></li><li>Depois do loop, exiba a soma total</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">A soma de 1 até 100 é: 5050</pre></div><details class="dica"><summary>💡 Curiosidade</summary><div class="inner">Conta a lenda que o matemático Gauss, ainda criança, calculou isso em segundos: ele percebeu que 1+100, 2+99, 3+98... são 50 pares que somam 101. 50 × 101 = 5050!</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex04.py</span></div><pre class="code">soma = 0
+contador = 1
+
+while contador &lt;= 100:
+    soma = soma + contador
+    contador += 1
+
+print(f"A soma de 1 até 100 é: {soma}")</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex5">
+    <div class="ex-head">
+      <span class="ex-num">EX 05</span>
+      <h3>Senha: insista até acertar 🔒</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex5"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Usar o while para repetir uma pergunta até a resposta certa.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Peça a senha UMA vez antes do loop</li><li>Enquanto a senha for diferente de <code>"python123"</code>: avise e peça de novo</li><li>Quando acertar, o loop termina sozinho — exiba "Acesso liberado!"</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Digite a senha: 1234
+Senha incorreta! Tente novamente.
+Digite a senha: python321
+Senha incorreta! Tente novamente.
+Digite a senha: python123
+Acesso liberado! ✔</pre></div><details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Conte as tentativas com um contador e exiba: "Você acertou em X tentativas".</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex05.py</span></div><pre class="code">senha = input("Digite a senha: ")
+
+while senha != "python123":
+    print("Senha incorreta! Tente novamente.")
+    senha = input("Digite a senha: ")
+
+print("Acesso liberado! ✔")</pre></div></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p2">
+  <div class="parte-head"><span class="num">02</span><h2>O laço for e o range()</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>O <code>for</code> repete um número conhecido de vezes, sem precisar criar e atualizar contador na mão. Ele anda pelos valores gerados por <code>range()</code>:</p><table><tr><th>Forma</th><th>Gera</th></tr><tr><td><code>range(5)</code></td><td>0, 1, 2, 3, 4</td></tr><tr><td><code>range(1, 6)</code></td><td>1, 2, 3, 4, 5</td></tr><tr><td><code>range(0, 11, 2)</code></td><td>0, 2, 4, 6, 8, 10</td></tr><tr><td><code>range(10, 0, -1)</code></td><td>10, 9, 8, ... 1</td></tr></table><p>⚠️ <strong>O número final NUNCA entra!</strong> <code>range(1, 6)</code> para no 5. É a pegadinha número 1 do for.</p></div>
+  <article class="ex" id="ex6">
+    <div class="ex-head">
+      <span class="ex-num">EX 06</span>
+      <h3>Prevendo o range</h3>
+      <span class="stars">⭐ básico</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex6"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Dominar o comportamento do range().</p><span class="tag passos">🧭 Passo a passo</span><ol><li>PREVEJA a saída de cada bloco, depois execute tudo</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex06_range.py</span></div><pre class="code">print("--- Bloco 1 ---")
+for i in range(5):
+    print(i)
+
+print("--- Bloco 2 ---")
+for i in range(1, 6):
+    print(i)
+
+print("--- Bloco 3 ---")
+for i in range(0, 11, 2):
+    print(i)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">--- Bloco 1 ---
+0
+1
+2
+3
+4
+--- Bloco 2 ---
+1
+2
+3
+4
+5
+--- Bloco 3 ---
+0
+2
+4
+6
+8
+10</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner">Com um só número, o range começa do 0. Com dois, é (início, fim). Com três, o último é o "passo" — de quanto em quanto ele anda.</div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex7">
+    <div class="ex-head">
+      <span class="ex-num">EX 07</span>
+      <h3>Os pares e a regressiva</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex7"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Praticar range() com passo personalizado.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Complete os dois ranges abaixo</li><li>Lembre: o fim não entra! Para chegar ATÉ o 20, o fim precisa ser 21</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex07_passo.py</span></div><pre class="code"># Números pares de 0 a 20:
+for i in range(0, ____, 2):
+    print(i)
+
+# Contagem regressiva de 10 até 1:
+for i in range(10, ____, ____):
+    print(i)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex07.py</span></div><pre class="code"># Números pares de 0 a 20:
+for i in range(0, 21, 2):
+    print(i)
+
+# Contagem regressiva de 10 até 1:
+for i in range(10, 0, -1):
+    print(i)</pre></div><p>Na regressiva, o fim é 0 (que não entra — para no 1) e o passo é -1.</p></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex8">
+    <div class="ex-head">
+      <span class="ex-num">EX 08</span>
+      <h3>Tabuada 🧮</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex8"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Gerar uma tabuada inteira com 3 linhas de código.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Peça um número</li><li>Use <code>for i in range(1, 11)</code></li><li>Dentro do loop: <code>print(f"{n} x {i} = {n * i}")</code></li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Tabuada de qual número? 7
+7 x 1 = 7
+7 x 2 = 14
+7 x 3 = 21
+7 x 4 = 28
+7 x 5 = 35
+7 x 6 = 42
+7 x 7 = 49
+7 x 8 = 56
+7 x 9 = 63
+7 x 10 = 70</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex08.py</span></div><pre class="code">n = int(input("Tabuada de qual número? "))
+
+for i in range(1, 11):
+    print(f"{n} x {i} = {n * i}")</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex9">
+    <div class="ex-head">
+      <span class="ex-num">EX 09</span>
+      <h3>Fatorial</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex9"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Usar um acumulador MULTIPLICATIVO.</p><p><strong>Conceito:</strong> o fatorial de 5 (escrito 5!) é 5 × 4 × 3 × 2 × 1 = 120.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Peça um número n</li><li>Crie <code>resultado = 1</code> (por que 1 e não 0? Pense!)</li><li>Multiplique resultado por cada i de 1 até n</li><li>Exiba o fatorial</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Calcular o fatorial de: 5
+5! = 120</pre></div><details class="dica"><summary>💡 Por que começar com 1?</summary><div class="inner">Se o acumulador de multiplicação começasse em 0, tudo multiplicado por 0 daria... 0! Para somar, começamos do 0; para multiplicar, do 1 (os "elementos neutros" de cada operação).</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex09.py</span></div><pre class="code">n = int(input("Calcular o fatorial de: "))
+
+resultado = 1
+for i in range(1, n + 1):
+    resultado = resultado * i
+
+print(f"{n}! = {resultado}")</pre></div></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p3">
+  <div class="parte-head"><span class="num">03</span><h2>Acumuladores e contadores</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Dois padrões que resolvem 80% dos problemas com loops: o <strong>acumulador</strong> (vai somando valores: <code>soma += valor</code>) e o <strong>contador</strong> (vai contando ocorrências: <code>pares += 1</code>). Ambos nascem ZERADOS antes do loop.</p></div>
+  <article class="ex" id="ex10">
+    <div class="ex-head">
+      <span class="ex-num">EX 10</span>
+      <h3>Média da turma</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex10"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Combinar for + input + acumulador.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie <code>soma = 0</code> antes do loop</li><li>Peça 5 notas dentro de um <code>for i in range(1, 6)</code> (use o i no texto: "Nota 1:", "Nota 2:"...)</li><li>Acumule cada nota na soma</li><li>Depois do loop, calcule e exiba a média</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Nota 1: 8
+Nota 2: 7.5
+Nota 3: 9
+Nota 4: 6
+Nota 5: 7
+Média da turma: 7.5</pre></div><details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Pergunte primeiro QUANTAS notas serão digitadas e use esse valor no range e na divisão.</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex10.py</span></div><pre class="code">soma = 0
+
+for i in range(1, 6):
+    nota = float(input(f"Nota {i}: "))
+    soma = soma + nota
+
+media = soma / 5
+print(f"Média da turma: {media:.1f}")</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex11">
+    <div class="ex-head">
+      <span class="ex-num">EX 11</span>
+      <h3>Contador de pares e ímpares</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex11"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Usar dois contadores com um if dentro do for.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie <code>pares = 0</code> e <code>impares = 0</code></li><li>Leia 6 números num for</li><li>Para cada um: se <code>numero % 2 == 0</code>, some 1 em pares; senão, em ímpares</li><li>Exiba os dois totais</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Número 1: 4
+Número 2: 7
+Número 3: 10
+Número 4: 3
+Número 5: 8
+Número 6: 1
+Pares: 3 | Ímpares: 3</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex11.py</span></div><pre class="code">pares = 0
+impares = 0
+
+for i in range(1, 7):
+    numero = int(input(f"Número {i}: "))
+    if numero % 2 == 0:
+        pares = pares + 1
+    else:
+        impares = impares + 1
+
+print(f"Pares: {pares} | Ímpares: {impares}")</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex12">
+    <div class="ex-head">
+      <span class="ex-num">EX 12</span>
+      <h3>Maior e menor</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex12"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Encontrar extremos com atualização condicional (sem usar max/min).</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Leia o PRIMEIRO número fora do loop e use-o para inicializar <code>maior</code> e <code>menor</code></li><li>Leia os outros 4 números num for</li><li>Para cada um: se for maior que o maior atual, atualize; se for menor que o menor, atualize</li><li>Exiba os dois no final</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Digite 5 números:
+Número 1: 7
+Número 2: 3
+Número 3: 12
+Número 4: 5
+Número 5: 9
+Maior: 12.0
+Menor: 3.0</pre></div><details class="dica"><summary>💡 Por que inicializar com o primeiro número?</summary><div class="inner">Se você começar com <code>maior = 0</code> e o usuário só digitar números negativos, o resultado sai errado! Inicializar com o primeiro valor real é a forma segura.</div></details><details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Confira seu resultado usando as funções prontas <code>max()</code> e <code>min()</code> (você vai precisar de listas — spoiler da Semana 4!).</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex12.py</span></div><pre class="code">print("Digite 5 números:")
+
+maior = float(input("Número 1: "))
+menor = maior
+
+for i in range(2, 6):
+    numero = float(input(f"Número {i}: "))
+    if numero &gt; maior:
+        maior = numero
+    if numero &lt; menor:
+        menor = numero
+
+print(f"Maior: {maior}")
+print(f"Menor: {menor}")</pre></div></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p4">
+  <div class="parte-head"><span class="num">04</span><h2>break e continue</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Dois comandos para controlar o loop por dentro: <code>break</code> <strong>encerra</strong> o loop na hora; <code>continue</code> <strong>pula</strong> para a próxima volta, ignorando o resto do bloco.</p></div>
+  <article class="ex" id="ex13">
+    <div class="ex-head">
+      <span class="ex-num">EX 13</span>
+      <h3>Pare quando digitar 0</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex13"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Usar while True + break (o padrão "sentinela").</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie <code>soma = 0</code> e um loop <code>while True:</code> (proposital — quem vai parar é o break!)</li><li>Peça um valor; se for 0, <code>break</code></li><li>Senão, acumule na soma</li><li>Exiba a soma total ao final</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Digite valores (0 para encerrar)
+Valor: 10
+Valor: 25.5
+Valor: 8
+Valor: 0
+Soma total: R$ 43.50</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner">Esse padrão é usado quando NÃO sabemos quantas repetições haverá — quem decide é o usuário, com o valor "sentinela" (aqui, o 0).</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex13.py</span></div><pre class="code">print("Digite valores (0 para encerrar)")
+soma = 0
+
+while True:
+    valor = float(input("Valor: "))
+    if valor == 0:
+        break
+    soma = soma + valor
+
+print(f"Soma total: R$ {soma:.2f}")</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex14">
+    <div class="ex-head">
+      <span class="ex-num">EX 14</span>
+      <h3>Pulando múltiplos de 3</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex14"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Entender o continue.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Percorra de 1 a 15 com for</li><li>Se <code>i % 3 == 0</code>: <code>continue</code> (pula a impressão)</li><li>Senão, imprima o número</li><li>PREVEJA quais números vão aparecer antes de rodar</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">1
+2
+4
+5
+7
+8
+10
+11
+13
+14</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex14.py</span></div><pre class="code">for i in range(1, 16):
+    if i % 3 == 0:
+        continue
+    print(i)</pre></div><p>O <code>continue</code> faz o loop "dar meia-volta": o print daquela rodada nunca acontece, mas o loop segue normalmente.</p></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex15">
+    <div class="ex-head">
+      <span class="ex-num">EX 15</span>
+      <h3>Validando a entrada</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex15"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Repetir a pergunta enquanto a resposta for inválida — padrão essencial em qualquer sistema!</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Peça uma nota de 0 a 10</li><li>Enquanto a nota for menor que 0 OU maior que 10: avise e peça de novo</li><li>Quando sair do loop, a nota é garantidamente válida</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Digite a nota (0 a 10): 15
+Nota inválida!
+Digite a nota (0 a 10): -2
+Nota inválida!
+Digite a nota (0 a 10): 8.5
+Nota registrada: 8.5</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex15.py</span></div><pre class="code">nota = float(input("Digite a nota (0 a 10): "))
+
+while nota &lt; 0 or nota &gt; 10:
+    print("Nota inválida!")
+    nota = float(input("Digite a nota (0 a 10): "))
+
+print(f"Nota registrada: {nota}")</pre></div></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p5">
+  <div class="parte-head"><span class="num">05</span><h2>Loops com textos e desenhos</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>O <code>for</code> também percorre as letras de um texto, uma por uma: <code>for letra in palavra</code>. E lembra que <code>"*" * 3</code> repete o texto? Combinado com loops, dá para desenhar!</p></div>
+  <article class="ex" id="ex16">
+    <div class="ex-head">
+      <span class="ex-num">EX 16</span>
+      <h3>Soletrando</h3>
+      <span class="stars">⭐ básico</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex16"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Percorrer um texto letra por letra.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Digite, preveja e execute:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex16_soletrar.py</span></div><pre class="code">for letra in "python":
+    print(f"Letra: {letra}")</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Letra: p
+Letra: y
+Letra: t
+Letra: h
+Letra: o
+Letra: n</pre></div><details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Peça o nome do usuário com input e soletre-o.</div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex17">
+    <div class="ex-head">
+      <span class="ex-num">EX 17</span>
+      <h3>Contando vogais</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex17"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Combinar for + in + contador.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Peça uma palavra (use <code>.lower()</code> para aceitar maiúsculas)</li><li>Percorra letra por letra</li><li>Se a letra estiver em <code>"aeiou"</code>, some 1 no contador</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Digite uma palavra: Programacao
+A palavra tem 5 vogais</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex17.py</span></div><pre class="code">palavra = input("Digite uma palavra: ").lower()
+vogais = 0
+
+for letra in palavra:
+    if letra in "aeiou":
+        vogais = vogais + 1
+
+print(f"A palavra tem {vogais} vogais")</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex18">
+    <div class="ex-head">
+      <span class="ex-num">EX 18</span>
+      <h3>Pirâmide de asteriscos</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex18"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Desenhar com loop + repetição de texto.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Use <code>for i in range(1, 6)</code></li><li>A cada volta, imprima <code>"*" * i</code></li><li>Observe: na volta 1 imprime 1 asterisco, na volta 2 imprime 2...</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">*
+**
+***
+****
+*****</pre></div><details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Faça a pirâmide INVERTIDA (de 5 asteriscos até 1). E a centralizada da Semana 1? Dica: <code>" " * (5 - i) + "*" * (2 * i - 1)</code> 🤯</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex18.py</span></div><pre class="code">for i in range(1, 6):
+    print("*" * i)
+
+# Desafio — invertida:
+for i in range(5, 0, -1):
+    print("*" * i)
+
+# Desafio — centralizada:
+for i in range(1, 6):
+    print(" " * (5 - i) + "*" * (2 * i - 1))</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex19">
+    <div class="ex-head">
+      <span class="ex-num">EX 19</span>
+      <h3>FizzBuzz — o clássico das entrevistas! 🏆</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex19"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Resolver o exercício mais famoso de lógica de programação (cai em entrevista de emprego de verdade!).</p><p><strong>Regras:</strong> para os números de 1 a 30 — múltiplo de 3: imprima "Fizz" · múltiplo de 5: "Buzz" · múltiplo dos DOIS: "FizzBuzz" · senão: o próprio número.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Percorra de 1 a 30</li><li>ATENÇÃO à ordem dos testes: qual condição precisa vir primeiro?</li><li>Teste especialmente os números 15 e 30</li></ol><span class="tag saida">✅ Saída esperada (início)</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">1
+2
+Fizz
+4
+Buzz
+Fizz
+7
+8
+Fizz
+Buzz
+11
+Fizz
+13
+14
+FizzBuzz
+(...)</pre></div><details class="dica"><summary>💡 A pegadinha</summary><div class="inner">Se você testar "múltiplo de 3" primeiro, o 15 vai cair nesse caso e imprimir só "Fizz". A condição MAIS ESPECÍFICA (múltiplo de 3 E de 5) precisa vir primeiro!</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex19.py</span></div><pre class="code">for i in range(1, 31):
+    if i % 3 == 0 and i % 5 == 0:
+        print("FizzBuzz")
+    elif i % 3 == 0:
+        print("Fizz")
+    elif i % 5 == 0:
+        print("Buzz")
+    else:
+        print(i)</pre></div></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p6">
+  <div class="parte-head"><span class="num">06</span><h2>Projetos da semana: juntando tudo!</h2></div>
+
+  <article class="ex" id="ex20">
+    <div class="ex-head">
+      <span class="ex-num">EX 20</span>
+      <h3>Projeto: Jogo de adivinhação 🎲</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex20"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Construir um jogo de verdade com while, if/elif e números aleatórios.</p><p><strong>Novidade:</strong> a linha <code>import random</code> (no topo do arquivo) traz funções de sorteio. <code>random.randint(1, 50)</code> sorteia um inteiro entre 1 e 50.</p><span class="tag passos">🧭 Requisitos</span><ol><li>Sorteie o número secreto</li><li>Enquanto o palpite for diferente do segredo: peça um palpite, conte a tentativa e dê a dica "Muito alto!" ou "Muito baixo!"</li><li>Ao acertar, parabenize mostrando o número de tentativas</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Adivinhe o número entre 1 e 50!
+Seu palpite: 25
+Muito baixo! ⬆
+Seu palpite: 38
+Muito alto! ⬇
+Seu palpite: 31
+🎉 Acertou em 3 tentativas!</pre></div><details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Limite a 7 tentativas: se estourar, encerre com break e revele o número. (Será que 7 sempre basta para 1-50? Pesquise "busca binária" 😉)</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex20.py</span></div><pre class="code">import random
+
+segredo = random.randint(1, 50)
+tentativas = 0
+palpite = 0
+
+print("Adivinhe o número entre 1 e 50!")
+
+while palpite != segredo:
+    palpite = int(input("Seu palpite: "))
+    tentativas = tentativas + 1
+    if palpite &gt; segredo:
+        print("Muito alto! ⬇")
+    elif palpite &lt; segredo:
+        print("Muito baixo! ⬆")
+
+print(f"🎉 Acertou em {tentativas} tentativas!")</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex21">
+    <div class="ex-head">
+      <span class="ex-num">EX 21</span>
+      <h3>Projeto: Caixa registradora Tua Caneca 💰</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex21"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Somar uma venda inteira com loop sentinela, acumulador e contador.</p><span class="tag passos">🧭 Requisitos</span><ol><li>Leia o valor de cada item vendido até o usuário digitar 0</li><li>Acumule o total e conte os itens</li><li>No fechamento, exiba: quantidade de itens, total e valor médio por item</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">=== CAIXA TUA CANECA ===
+Digite o valor de cada item (0 para fechar a conta)
+Valor do item: R$ 25
+Valor do item: R$ 25
+Valor do item: R$ 40
+Valor do item: R$ 0
+Itens vendidos: 3
+TOTAL: R$ 90.00
+Valor médio: R$ 30.00</pre></div><details class="dica"><summary>💡 Cuidado com a divisão!</summary><div class="inner">Se o usuário digitar 0 logo de cara, <code>total / itens</code> seria uma divisão por zero. Proteja com <code>if itens &gt; 0</code>.</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex21.py</span></div><pre class="code">print("=== CAIXA TUA CANECA ===")
+print("Digite o valor de cada item (0 para fechar a conta)")
+
+total = 0
+itens = 0
+
+while True:
+    valor = float(input("Valor do item: R$ "))
+    if valor == 0:
+        break
+    total = total + valor
+    itens = itens + 1
+
+print(f"Itens vendidos: {itens}")
+print(f"TOTAL: R$ {total:.2f}")
+
+if itens &gt; 0:
+    media = total / itens
+    print(f"Valor médio: R$ {media:.2f}")</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex22">
+    <div class="ex-head">
+      <span class="ex-num">EX 22</span>
+      <h3>Projeto bônus: todas as tabuadas (loop aninhado)</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex22"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Descobrir sozinho o loop dentro de loop (sem código pronto!).</p><span class="tag passos">🧭 Roteiro</span><ol><li>Você já fez a tabuada de UM número (Exercício 8)</li><li>Agora coloque aquele for DENTRO de outro for que percorre os números de 1 a 10</li><li>Imprima um título antes de cada tabuada e uma linha em branco depois</li></ol><span class="tag saida">✅ Saída esperada (início)</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">--- Tabuada do 1 ---
+1 x 1 = 1
+1 x 2 = 2
+(...)
+--- Tabuada do 2 ---
+2 x 1 = 2
+2 x 2 = 4
+(...)</pre></div><details class="dica"><summary>💡 Como pensar</summary><div class="inner">O loop de fora escolhe QUAL tabuada (n = 1, 2, 3...). Para cada n, o loop de dentro roda as 10 multiplicações. Total: 100 prints com 4 linhas de código!</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex22.py</span></div><pre class="code">for n in range(1, 11):
+    print(f"--- Tabuada do {n} ---")
+    for i in range(1, 11):
+        print(f"{n} x {i} = {n * i}")
+    print()</pre></div></div></details>
+    </div>
+  </article>
+</section>
+
+<div class="checklist" id="checklist">
+  <h2>✅ Checklist de fim de semana</h2>
+  <p>Antes de seguir para a próxima semana, confirme que você consegue:</p>
+<label class="check-item"><input type="checkbox"><span>Escrever um while com contador (e saber por que ele para)</span></label>
+<label class="check-item"><input type="checkbox"><span>Explicar o que causa um loop infinito e como evitá-lo</span></label>
+<label class="check-item"><input type="checkbox"><span>Usar range() com início, fim e passo (e lembrar que o fim NÃO entra)</span></label>
+<label class="check-item"><input type="checkbox"><span>Somar valores com o padrão acumulador (soma += valor)</span></label>
+<label class="check-item"><input type="checkbox"><span>Contar ocorrências com o padrão contador</span></label>
+<label class="check-item"><input type="checkbox"><span>Encontrar o maior e o menor valor de uma sequência</span></label>
+<label class="check-item"><input type="checkbox"><span>Sair de um loop com break e pular uma volta com continue</span></label>
+<label class="check-item"><input type="checkbox"><span>Validar a entrada do usuário repetindo a pergunta</span></label>
+<label class="check-item"><input type="checkbox"><span>Percorrer as letras de uma palavra com for</span></label>
+<label class="check-item"><input type="checkbox"><span>Resolver o FizzBuzz sem olhar a solução 😄</span></label>
+</div>
+
+<div class="win-banner" id="winBanner">
+  <h2>🏆 SEMANA 3 COMPLETA!</h2>
+  <p>Você concluiu todos os exercícios. Agora o computador repete as tarefas chatas por você!</p>
+</div>
+
+<div class="preview-s2">
+<h2>📅 Prévia da Semana 4</h2><p>Na próxima semana: <strong>listas e strings</strong> — guardar vários valores numa única variável, <code>append()</code>, índices, fatiamento <code>[inicio:fim]</code> e métodos de texto. Seus programas vão começar a lidar com <strong>coleções de dados</strong>!</p></div>
+
+</main>
+
+<footer>python_para_iniciantes // semana_03 // exercícios guiados</footer>
+
+<script>
+// ===== Syntax highlight leve para Python =====
+(function(){
+  const KW = /\b(print|input|int|float|type|str|bool)\b/g;
+  document.querySelectorAll('pre.code').forEach(pre=>{
+    let src = pre.textContent;
+    // escapa HTML
+    src = src.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    // uma passada só, com alternação (comentário | string | builtin | bool | número)
+    src = src.replace(
+      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|insert|int|float|str|len|range|type|abs|round|max|min|sum|sorted|sort|reverse|append|remove|split|strip|upper|lower|replace|title|randint|random)\b|\b(True|False|None|if|elif|else|while|for|in|and|or|not|break|continue|import|from|def|return)\b|(\b\d+(?:\.\d+)?\b)/g,
+      function(m, com, str, fn, bool, num){
+        if(com)  return '<span class="tk-com">'+com+'</span>';
+        if(str)  return '<span class="tk-str">'+str+'</span>';
+        if(fn)   return '<span class="tk-fn">'+fn+'</span>';
+        if(bool) return '<span class="tk-kw">'+bool+'</span>';
+        if(num)  return '<span class="tk-num">'+num+'</span>';
+        return m;
+      }
+    );
+    pre.innerHTML = src;
+  });
+})();
+
+// ===== Armazenamento seguro (localStorage com fallback em memória) =====
+// Quando o aluno abre o arquivo .html no computador, o progresso fica salvo
+// no navegador. Se o localStorage estiver indisponível (modo restrito,
+// pré-visualização, etc.), o progresso funciona só em memória, sem quebrar.
+const storage = (function(){
+  const KEY = 'python_semana03_progresso';
+  let memoria = {};
+  let disponivel = false;
+  try{
+    localStorage.setItem('__teste__','1');
+    localStorage.removeItem('__teste__');
+    disponivel = true;
+  }catch(e){ disponivel = false; }
+
+  return {
+    carregar: function(){
+      if(disponivel){
+        try{ return JSON.parse(localStorage.getItem(KEY)) || {}; }
+        catch(e){ return {}; }
+      }
+      return memoria;
+    },
+    salvar: function(dados){
+      memoria = dados;
+      if(disponivel){
+        try{ localStorage.setItem(KEY, JSON.stringify(dados)); }catch(e){}
+      }
+    },
+    limpar: function(){
+      memoria = {};
+      if(disponivel){
+        try{ localStorage.removeItem(KEY); }catch(e){}
+      }
+    },
+    persistente: disponivel
+  };
+})();
+
+// ===== Progresso dos exercícios + checklist =====
+(function(){
+  const checks = document.querySelectorAll('.done-check');
+  const listChecks = document.querySelectorAll('.check-item input');
+  const total = checks.length;
+  const fill = document.getElementById('pfill');
+  const count = document.getElementById('pcount');
+  const msg = document.getElementById('pmsg');
+  const banner = document.getElementById('winBanner');
+  const resetBtn = document.getElementById('resetBtn');
+
+  const MSGS = [
+    [0,  'Marque os exercícios concluídos ✔'],
+    [1,  'Boa! Continue assim 💪'],
+    [7,  'Pegando o ritmo! 🔥'],
+    [11, 'Metade do caminho! 🚀'],
+    [16, 'Quase lá... força! ⚡'],
+    [22, 'SEMANA COMPLETA! 🏆']
+  ];
+
+  function estadoAtual(){
+    const dados = { ex: {}, lista: {} };
+    checks.forEach(c => { dados.ex[c.dataset.ex] = c.checked; });
+    listChecks.forEach((c,i) => { dados.lista['item'+i] = c.checked; });
+    return dados;
+  }
+
+  function atualizarBarra(){
+    const done = document.querySelectorAll('.done-check:checked').length;
+    const pct = Math.round(done/total*100);
+    fill.style.width = pct + '%';
+    count.textContent = done + ' / ' + total;
+    let m = MSGS[0][1];
+    for(const [min,text] of MSGS){ if(done >= min) m = text; }
+    msg.textContent = m;
+    banner.classList.toggle('show', done === total);
+  }
+
+  function aplicarEstado(dados){
+    checks.forEach(c => {
+      const marcado = !!(dados.ex && dados.ex[c.dataset.ex]);
+      c.checked = marcado;
+      c.closest('article.ex').classList.toggle('done', marcado);
+    });
+    listChecks.forEach((c,i) => {
+      c.checked = !!(dados.lista && dados.lista['item'+i]);
+    });
+    atualizarBarra();
+  }
+
+  // Restaura o progresso salvo ao abrir a página
+  aplicarEstado(storage.carregar());
+
+  // Salva a cada mudança
+  checks.forEach(c => {
+    c.addEventListener('change', function(){
+      this.closest('article.ex').classList.toggle('done', this.checked);
+      atualizarBarra();
+      storage.salvar(estadoAtual());
+    });
+  });
+  listChecks.forEach(c => {
+    c.addEventListener('change', function(){
+      storage.salvar(estadoAtual());
+    });
+  });
+
+  // Botão de reset com confirmação
+  resetBtn.addEventListener('click', function(){
+    if(confirm('Apagar todo o progresso desta semana?')){
+      storage.limpar();
+      aplicarEstado({});
+    }
+  });
+
+  // Aviso discreto se o progresso não puder ser salvo neste ambiente
+  if(!storage.persistente){
+    msg.textContent += ' (progresso não será salvo neste ambiente)';
+  }
+})();
+</script>
+</body>
+</html>

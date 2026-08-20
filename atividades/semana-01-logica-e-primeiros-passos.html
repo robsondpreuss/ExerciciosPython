@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Semana 20 — Projeto Final 4</title>
+<style>
+  :root{
+    --ink:#16243A;
+    --ink-soft:#4A5A74;
+    --paper:#F5F8FC;
+    --card:#FFFFFF;
+    --py-blue:#3776AB;
+    --py-blue-dark:#27598C;
+    --py-gold:#FFD43B;
+    --py-gold-dark:#C99700;
+    --term:#1B2435;
+    --term-line:#2B3850;
+    --green:#2EA56C;
+    --coral:#E2574C;
+    --radius:14px;
+    --mono:"Cascadia Code","JetBrains Mono",Consolas,"Roboto Mono",monospace;
+    --sans:"Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto}
+    *{transition:none !important;animation:none !important}
+  }
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.65}
+
+  /* ===== Barra de progresso fixa ===== */
+  .progress-wrap{
+    position:sticky;top:0;z-index:50;
+    background:var(--term);color:#fff;
+    padding:10px 18px;
+    display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+    box-shadow:0 2px 12px rgba(22,36,58,.25);
+  }
+  .progress-wrap .label{font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;white-space:nowrap}
+  .progress-bar{flex:1;min-width:140px;height:14px;background:var(--term-line);border-radius:99px;overflow:hidden}
+  .progress-fill{height:100%;width:0%;border-radius:99px;background:linear-gradient(90deg,var(--py-blue),var(--py-gold));transition:width .4s ease}
+  .progress-count{font-family:var(--mono);font-size:.85rem;color:var(--py-gold);white-space:nowrap}
+  .progress-msg{font-size:.78rem;color:#AFC3E0;white-space:nowrap}
+  .reset-btn{
+    font-family:var(--mono);font-size:.72rem;color:#AFC3E0;
+    background:transparent;border:1px solid var(--term-line);border-radius:8px;
+    padding:5px 11px;cursor:pointer;transition:all .15s ease;white-space:nowrap;
+  }
+  .reset-btn:hover,.reset-btn:focus-visible{color:#fff;border-color:#5A6E92;background:rgba(255,255,255,.06)}
+  .reset-btn:focus-visible{outline:2px solid var(--py-gold);outline-offset:2px}
+
+  /* ===== Hero ===== */
+  header.hero{
+    background:linear-gradient(150deg,var(--term) 0%,#22406B 70%,var(--py-blue) 100%);
+    color:#fff;padding:56px 20px 48px;text-align:center;position:relative;overflow:hidden;
+  }
+  header.hero::before{
+    content:"pandas  matplotlib  Flask  dashboard  🏆";
+    position:absolute;inset:auto 0 8px 0;font-family:var(--mono);font-size:.78rem;
+    color:rgba(255,255,255,.14);letter-spacing:.4em;white-space:nowrap;overflow:hidden;
+  }
+  .hero .kicker{
+    font-family:var(--mono);font-size:.85rem;color:var(--py-gold);
+    letter-spacing:.18em;text-transform:uppercase;margin-bottom:14px;
+  }
+  .hero h1{font-family:var(--mono);font-size:clamp(1.5rem,4.5vw,2.6rem);font-weight:700;line-height:1.25}
+  .hero h1 .cursor{display:inline-block;width:.55em;height:1.05em;background:var(--py-gold);vertical-align:text-bottom;margin-left:4px;animation:blink 1.1s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+  .hero p.sub{max-width:620px;margin:18px auto 0;color:#D7E4F5;font-size:1rem}
+  .hero .howto{
+    max-width:640px;margin:26px auto 0;background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.18);border-radius:var(--radius);
+    padding:14px 18px;font-size:.88rem;color:#E8F0FB;text-align:left;
+  }
+  .hero .howto strong{color:var(--py-gold)}
+
+  /* ===== Navegação por partes ===== */
+  nav.parts{
+    display:flex;gap:8px;flex-wrap:wrap;justify-content:center;
+    padding:18px 16px;max-width:980px;margin:0 auto;
+  }
+  nav.parts a{
+    font-family:var(--mono);font-size:.78rem;text-decoration:none;
+    color:var(--py-blue-dark);background:var(--card);
+    border:1.5px solid #D5E2F2;border-radius:99px;padding:7px 14px;
+    transition:all .15s ease;
+  }
+  nav.parts a:hover,nav.parts a:focus-visible{border-color:var(--py-blue);background:#EAF2FB}
+  nav.parts a:focus-visible{outline:2px solid var(--py-blue);outline-offset:2px}
+
+  main{max-width:880px;margin:0 auto;padding:8px 18px 80px}
+
+  /* ===== Seções (partes) ===== */
+  section.parte{margin-top:46px}
+  .parte-head{display:flex;align-items:baseline;gap:14px;border-bottom:3px solid var(--py-gold);padding-bottom:10px;margin-bottom:6px}
+  .parte-head .num{
+    font-family:var(--mono);font-size:2.4rem;font-weight:700;color:var(--py-blue);line-height:1;
+  }
+  .parte-head h2{font-family:var(--mono);font-size:clamp(1.05rem,2.8vw,1.45rem);color:var(--ink)}
+  .parte-intro{
+    background:var(--card);border:1px solid #E1E9F4;border-radius:var(--radius);
+    padding:18px 22px;margin-top:16px;font-size:.95rem;
+  }
+  .parte-intro h3{font-size:.8rem;font-family:var(--mono);color:var(--py-blue);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px}
+  .parte-intro p{margin-bottom:10px}
+  .parte-intro p:last-child{margin-bottom:0}
+  .parte-intro ol,.parte-intro ul{margin:8px 0 10px 22px}
+  table{border-collapse:collapse;width:100%;margin:10px 0;font-size:.88rem}
+  th,td{border:1px solid #DCE6F2;padding:7px 10px;text-align:left}
+  th{background:#EDF3FA;font-family:var(--mono);font-size:.78rem}
+  td code,p code,li code{
+    font-family:var(--mono);font-size:.85em;background:#EDF2F9;
+    border:1px solid #DCE6F2;border-radius:5px;padding:1px 5px;color:var(--py-blue-dark);
+  }
+
+  /* ===== Cartão de exercício ===== */
+  article.ex{
+    background:var(--card);border:1px solid #E1E9F4;border-radius:var(--radius);
+    margin-top:22px;overflow:hidden;
+    box-shadow:0 1px 4px rgba(22,36,58,.05);
+    transition:box-shadow .2s ease;
+  }
+  article.ex:hover{box-shadow:0 4px 16px rgba(22,36,58,.10)}
+  article.ex.done{border-color:var(--green)}
+  article.ex.done .ex-head{background:#EAF7F0}
+  .ex-head{
+    display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+    padding:14px 18px;background:#F2F6FC;border-bottom:1px solid #E1E9F4;
+  }
+  .ex-num{
+    font-family:var(--mono);font-weight:700;font-size:.85rem;color:#fff;
+    background:var(--py-blue);border-radius:8px;padding:5px 10px;white-space:nowrap;
+  }
+  article.ex.done .ex-num{background:var(--green)}
+  .ex-head h3{font-size:1.02rem;flex:1;min-width:180px}
+  .stars{font-size:.78rem;color:var(--py-gold-dark);background:#FFF6D6;border:1px solid #F2DE96;border-radius:99px;padding:3px 10px;white-space:nowrap}
+  .done-toggle{
+    display:flex;align-items:center;gap:7px;cursor:pointer;user-select:none;
+    font-size:.8rem;font-family:var(--mono);color:var(--ink-soft);
+  }
+  .done-toggle input{width:17px;height:17px;accent-color:var(--green);cursor:pointer}
+  .ex-body{padding:18px 20px 22px}
+  .ex-body p{margin-bottom:10px}
+  .ex-body ol,.ex-body ul{margin:6px 0 12px 22px}
+  .ex-body li{margin-bottom:4px}
+
+  .tag{
+    display:inline-block;font-family:var(--mono);font-size:.72rem;
+    text-transform:uppercase;letter-spacing:.08em;border-radius:6px;
+    padding:3px 9px;margin:4px 0 6px;
+  }
+  .tag.obj{background:#E7F0FB;color:var(--py-blue-dark)}
+  .tag.passos{background:#FFF3CC;color:#8a6d00}
+  .tag.saida{background:#E4F5EC;color:#1c7a4d}
+
+  /* ===== Blocos de código estilo terminal ===== */
+  .term-window{border-radius:12px;overflow:hidden;margin:12px 0;border:1px solid var(--term-line)}
+  .term-bar{
+    display:flex;align-items:center;gap:8px;background:#121A29;padding:8px 14px;
+  }
+  .term-bar .dot{width:11px;height:11px;border-radius:50%}
+  .dot.r{background:#FF5F57}.dot.y{background:#FEBC2E}.dot.g{background:#28C840}
+  .term-bar .fname{font-family:var(--mono);font-size:.75rem;color:#8FA6C8;margin-left:6px}
+  pre.code,pre.output{
+    background:var(--term);color:#E7EDF7;font-family:var(--mono);
+    font-size:.86rem;line-height:1.6;padding:14px 18px;overflow-x:auto;margin:0;
+  }
+  pre.output{color:#9FE8C0}
+  pre.output .prompt-in{color:#E7EDF7}
+  /* syntax highlight */
+  .tk-kw{color:#7EC1FF;font-weight:600}
+  .tk-str{color:#FFD98A}
+  .tk-com{color:#7C8DA8;font-style:italic}
+  .tk-num{color:#9FE8C0}
+  .tk-fn{color:#C7A6FF}
+
+  /* ===== Dicas / desafios / soluções ===== */
+  details{border-radius:10px;margin:12px 0;overflow:hidden;border:1.5px solid transparent}
+  details summary{
+    cursor:pointer;list-style:none;padding:11px 16px;font-weight:600;font-size:.9rem;
+    display:flex;align-items:center;gap:8px;user-select:none;
+  }
+  details summary::-webkit-details-marker{display:none}
+  details summary::after{content:"▾";margin-left:auto;transition:transform .2s ease;font-size:.85em}
+  details[open] summary::after{transform:rotate(180deg)}
+  details .inner{padding:4px 16px 14px}
+  details.dica{background:#FFF9E8;border-color:#F2DE96}
+  details.dica summary{color:#8a6d00}
+  details.desafio{background:#F3EDFB;border-color:#D9C8F2}
+  details.desafio summary{color:#6B3FA0}
+  details.solucao{background:#EAF7F0;border-color:#BFE5D0}
+  details.solucao summary{color:#1c7a4d}
+  details.solucao .aviso{font-size:.8rem;color:#1c7a4d;margin-bottom:8px;font-style:italic}
+
+  /* ===== Checklist final ===== */
+  .checklist{background:var(--card);border:1px solid #E1E9F4;border-radius:var(--radius);padding:22px;margin-top:30px}
+  .checklist h2{font-family:var(--mono);font-size:1.2rem;margin-bottom:6px}
+  .checklist p{font-size:.9rem;color:var(--ink-soft);margin-bottom:14px}
+  .check-item{display:flex;align-items:flex-start;gap:10px;padding:7px 4px;border-radius:8px;cursor:pointer}
+  .check-item:hover{background:#F2F6FC}
+  .check-item input{width:18px;height:18px;margin-top:3px;accent-color:var(--py-blue);cursor:pointer}
+  .check-item span{font-size:.93rem}
+  .check-item input:checked + span{color:var(--green);text-decoration:line-through;text-decoration-color:rgba(46,165,108,.5)}
+
+  /* banner 100% */
+  .win-banner{
+    display:none;margin-top:26px;text-align:center;color:#fff;
+    background:linear-gradient(120deg,var(--green),var(--py-blue));
+    border-radius:var(--radius);padding:26px 20px;
+  }
+  .win-banner.show{display:block;animation:pop .45s ease}
+  @keyframes pop{0%{transform:scale(.94);opacity:0}100%{transform:scale(1);opacity:1}}
+  .win-banner h2{font-family:var(--mono);font-size:1.4rem;margin-bottom:6px}
+
+  .preview-s2{
+    margin-top:36px;border:2px dashed var(--py-blue);border-radius:var(--radius);
+    padding:20px 22px;background:#EFF5FC;
+  }
+  .preview-s2 h2{font-family:var(--mono);font-size:1.05rem;color:var(--py-blue-dark);margin-bottom:8px}
+  footer{
+    text-align:center;font-family:var(--mono);font-size:.75rem;color:var(--ink-soft);
+    padding:26px 16px 40px;
+  }
+  @media(max-width:560px){
+    .progress-msg{display:none}
+    .ex-head h3{font-size:.95rem}
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-wrap" role="region" aria-label="Progresso da semana">
+  <span class="label">XP DA SEMANA</span>
+  <div class="progress-bar"><div class="progress-fill" id="pfill"></div></div>
+  <span class="progress-count" id="pcount">0 / 10</span>
+  <span class="progress-msg" id="pmsg">Marque os exercícios concluídos ✔</span>
+  <button class="reset-btn" id="resetBtn" title="Apagar todo o progresso salvo">↺ Resetar</button>
+</div>
+
+<header class="hero">
+  <div class="kicker">Python para Iniciantes · Exercícios Guiados</div>
+  <h1>SEMANA 20 — Projeto Final 4:<br>o Dashboard Web 🏆<span class="cursor" aria-hidden="true"></span></h1>
+  <p class="sub">A obra-prima absoluta: pandas analisa, matplotlib desenha, Flask serve. Um dashboard de verdade no navegador — números, gráficos, API e botão de atualizar.</p>
+  <div class="howto">
+    <strong>Como usar:</strong> digite o código você mesmo (não copie e cole!), compare com a saída esperada e marque <strong>✔ Concluído</strong> em cada exercício para encher sua barra de XP. As <strong>dicas</strong> e <strong>soluções</strong> ficam escondidas — só abra depois de tentar! Seu progresso fica salvo no navegador.
+  </div>
+</header>
+
+<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · Revisão</a><a href="#p2">2 · Etapas 1-2</a><a href="#p3">3 · Etapas 3-4</a><a href="#p4">4 · Etapas 5-6</a><a href="#p5">5 · A última formatura</a><a href="#checklist">✅ Checklist</a></nav>
+
+<main>
+
+<section class="parte" id="p1">
+  <div class="parte-head"><span class="num">01</span><h2>Revisão relâmpago</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>O último aquecimento de todos. Capriche — é pela honra! 😄</p></div>
+  <article class="ex" id="ex1">
+    <div class="ex-head">
+      <span class="ex-num">EX 01</span>
+      <h3>Quiz: preveja as 8 saídas 🧠</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex1"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>pandas, rotas, f-strings com CSS e os eternos clássicos.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Anote as previsões. Última chance de gabarito da jornada!</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex01_quiz.py</span></div><pre class="code">import pandas as pd
+
+df = pd.DataFrame({"p": ["a", "b", "a"], "v": [10, 20, 30]})
+
+print(len(df))
+print(df["v"].sum())
+print(df[df["p"] == "a"]["v"].sum())
+print(df.groupby("p")["v"].sum().idxmax())
+
+print(f"{{ color: red }}")
+print("/api/produtos".startswith("/api"))
+
+rota = "/tabuada/&lt;int:n&gt;"
+print("int" in rota)
+
+x = [1, 2, 3]
+print(x[::-1])</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">3
+60
+40
+a
+{ color: red }
+True
+True
+[3, 2, 1]</pre></div><details class="dica"><summary>💡 Gabarito comentado</summary><div class="inner">3 linhas · soma da coluna inteira · filtro p=="a" soma 10+30=40 · idxmax dos grupos {a: 40, b: 20} → "a" é o campeão · chaves duplas {{ }} viram chaves simples na f-string (S19!) · startswith (S14) · "int" é substring da rota · fatia reversa [::-1] (S4). 6+ acertos? Rumo ao dashboard!</div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex2">
+    <div class="ex-head">
+      <span class="ex-num">EX 02</span>
+      <h3>Caça aos bugs do dashboard 🐛🔍</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex2"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Os 5 bugs que travam dashboards de iniciantes.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>O código deveria gerar um gráfico e servir uma página — ache os 5 bugs ANTES de rodar</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex02_bugs.py</span></div><pre class="code">import pandas as pd
+import matplotlib.pyplot as plt
+from flask import Flask
+
+app = Flask(__name__)
+
+def grafico():
+    df = pd.read_csv("vendas.csv")
+    df.groupby("produto")["total"].sum().plot(kind="bar")
+    plt.show()
+    plt.savefig("grafico.png")
+
+@app.route("/")
+def painel():
+    return f"&lt;style&gt;body { background: red }&lt;/style&gt;&lt;h1&gt;Painel&lt;/h1&gt;"
+
+def api():
+    return jsonify({"ok": True})
+
+app.run(debug=True)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><p><strong>Os 5 bugs:</strong> (1) <code>plt.show()</code> num app web abre janela no SERVIDOR e trava tudo — em dashboard, NUNCA use show; use savefig (e o modo "Agg", que você verá na Etapa 3). (2) savefig DEPOIS do show = PNG em branco (Semana 18!). (3) O gráfico salvou fora da pasta <code>static</code> — o Flask não vai servi-lo. (4) Chaves SIMPLES no CSS dentro da f-string → erro; precisa <code>{{ }}</code>. (5) A função api() está sem o decorador <code>@app.route("/api")</code> (e sem importar jsonify) — sem o decorador, a rota simplesmente não existe.</p></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p2">
+  <div class="parte-head"><span class="num">02</span><h2>Dashboard — Etapas 1 e 2</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p><strong>A arquitetura da obra-prima:</strong></p><table><tr><th>Camada</th><th>Ferramenta</th><th>Semanas</th></tr><tr><td>Dados</td><td>vendas.csv + pandas</td><td>13, 17</td></tr><tr><td>Análise</td><td>groupby em funções</td><td>6, 17</td></tr><tr><td>Visual</td><td>matplotlib → PNG em static/</td><td>18</td></tr><tr><td>Entrega</td><td>Flask: painel + API + atualizar</td><td>19</td></tr></table><p>Estrutura de pastas: <code>app.py</code> · <code>dados/vendas.csv</code> · <code>static/</code> (gráficos). Crie o <code>app.py</code> e vamos por etapas!</p></div>
+  <article class="ex" id="ex3">
+    <div class="ex-head">
+      <span class="ex-num">EX 03</span>
+      <h3>Etapa 1: dados no lugar</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex3"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Pastas + CSV de exemplo + carregamento com pandas.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Funções <code>preparar()</code> (makedirs de dados/ e static/) e <code>gerar_exemplo()</code> (o vendas.csv da Semana 17, se não existir — reuse o gerador da Semana 16!)</li><li><code>carregar_dados()</code>: retorna <code>pd.read_csv(os.path.join("dados", "vendas.csv"))</code></li><li>Teste: imprima <code>len(df)</code> e o head()</li></ol><span class="tag saida">✅ Teste da etapa</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">6 vendas carregadas ✔</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">etapa1.py</span></div><pre class="code">import os
+import pandas as pd
+
+def preparar():
+    os.makedirs("dados", exist_ok=True)
+    os.makedirs("static", exist_ok=True)
+
+def gerar_exemplo():
+    caminho = os.path.join("dados", "vendas.csv")
+    if os.path.exists(caminho):
+        return
+    conteudo = """data,produto,qtd,total
+10/06/2026,caneca branca,3,75.0
+10/06/2026,caneca preta,12,270.0
+11/06/2026,azulejo,2,80.0
+11/06/2026,caneca preta,5,137.5
+12/06/2026,caneca branca,4,100.0
+12/06/2026,azulejo,1,40.0
+"""
+    with open(caminho, "w", encoding="utf-8") as arquivo:
+        arquivo.write(conteudo)
+
+def carregar_dados():
+    return pd.read_csv(os.path.join("dados", "vendas.csv"))
+
+preparar()
+gerar_exemplo()
+df = carregar_dados()
+print(f"{len(df)} vendas carregadas ✔")</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex4">
+    <div class="ex-head">
+      <span class="ex-num">EX 04</span>
+      <h3>Etapa 2: a análise em pandas</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex4"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>A função analisar() — agora na versão de uma linha por métrica.</p><span class="tag passos">🧭 Passo a passo</span><ol><li><code>analisar(df)</code> retorna o dicionário: faturamento (sum), unidades (sum), campeão (groupby + idxmax), ticket (mean)</li><li>Detalhe de gente grande: converta com <code>float()</code> e <code>int()</code> — os números do pandas têm tipos próprios que o jsonify da API não engole!</li></ol><span class="tag saida">✅ Teste da etapa</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">{'faturamento': 702.5, 'unidades': 27, 'campeao': 'caneca preta', 'ticket': 117.08}</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">etapa2.py</span></div><pre class="code">def analisar(df):
+    return {
+        "faturamento": float(df["total"].sum()),
+        "unidades": int(df["qtd"].sum()),
+        "campeao": df.groupby("produto")["qtd"].sum().idxmax(),
+        "ticket": round(float(df["total"].mean()), 2)
+    }</pre></div></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p3">
+  <div class="parte-head"><span class="num">03</span><h2>Dashboard — Etapas 3 e 4</h2></div>
+
+  <article class="ex" id="ex5">
+    <div class="ex-head">
+      <span class="ex-num">EX 05</span>
+      <h3>Etapa 3: gráficos em modo servidor 🖼️</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex5"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Gerar os PNGs por código — sem janela nenhuma (o segredo do modo Agg).</p><span class="tag passos">🧭 Passo a passo</span><ol><li>ANTES de importar o pyplot: <code>import matplotlib</code> e <code>matplotlib.use("Agg")</code> — o modo "só gerar imagem", obrigatório em servidores!</li><li><code>gerar_graficos(df)</code>: barras do faturamento por produto e linha por dia, salvos em static/ com tight_layout</li><li>Feche cada figura com <code>plt.close()</code> (servidor que não fecha figuras enche a memória!)</li></ol><span class="tag saida">✅ Teste da etapa</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">2 gráficos gerados em static/ ✔</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">etapa3.py</span></div><pre class="code">import matplotlib
+matplotlib.use("Agg")   # modo servidor: gera PNG sem abrir janela
+import matplotlib.pyplot as plt
+
+def gerar_graficos(df):
+    por_produto = df.groupby("produto")["total"].sum()
+    plt.figure(figsize=(6, 4))
+    plt.bar(por_produto.index, por_produto.values, color="#3776AB")
+    plt.title("Faturamento por produto")
+    plt.ylabel("R$")
+    plt.tight_layout()
+    plt.savefig("static/por_produto.png", dpi=120)
+    plt.close()
+
+    por_dia = df.groupby("data")["total"].sum()
+    plt.figure(figsize=(6, 4))
+    plt.plot(por_dia.index, por_dia.values, marker="o", color="#FFB000")
+    plt.title("Faturamento por dia")
+    plt.ylabel("R$")
+    plt.tight_layout()
+    plt.savefig("static/por_dia.png", dpi=120)
+    plt.close()
+    print("2 gráficos gerados em static/ ✔")</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex6">
+    <div class="ex-head">
+      <span class="ex-num">EX 06</span>
+      <h3>Etapa 4: o painel e a API 🌐</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex6"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>A rota / com os cartões de números + gráficos, e a /api/resumo.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Rota /: carregue, analise e monte o HTML — cartões com os 4 números e as duas imagens de /static/</li><li>Lembre das chaves duplas no CSS da f-string!</li><li>Rota /api/resumo: <code>jsonify(analisar(carregar_dados()))</code> — seu dashboard também é uma API</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(localhost:5000 → o painel com cartões e gráficos!)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">etapa4.py</span></div><pre class="code">from flask import Flask, jsonify
+
+app = Flask(__name__)
+
+@app.route("/")
+def painel():
+    r = analisar(carregar_dados())
+    return f"""
+    &lt;html&gt;&lt;head&gt;&lt;title&gt;Dashboard Tua Caneca&lt;/title&gt;
+    &lt;style&gt;
+      body {{ font-family: Arial; background: #F5F8FC; margin: 40px; }}
+      h1 {{ color: #3776AB; }}
+      .cartao {{ background: white; display: inline-block; padding: 18px 28px;
+                 margin: 8px; border-radius: 12px; box-shadow: 0 2px 8px #0002; }}
+      img {{ border-radius: 12px; margin: 10px; box-shadow: 0 2px 8px #0002; }}
+    &lt;/style&gt;&lt;/head&gt;&lt;body&gt;
+    &lt;h1&gt;☕ Dashboard Tua Caneca&lt;/h1&gt;
+    &lt;div class="cartao"&gt;&lt;b&gt;Faturamento&lt;/b&gt;&lt;br&gt;R$ {r["faturamento"]:.2f}&lt;/div&gt;
+    &lt;div class="cartao"&gt;&lt;b&gt;Unidades&lt;/b&gt;&lt;br&gt;{r["unidades"]}&lt;/div&gt;
+    &lt;div class="cartao"&gt;&lt;b&gt;Campeão&lt;/b&gt;&lt;br&gt;{r["campeao"]}&lt;/div&gt;
+    &lt;div class="cartao"&gt;&lt;b&gt;Ticket médio&lt;/b&gt;&lt;br&gt;R$ {r["ticket"]:.2f}&lt;/div&gt;
+    &lt;br&gt;
+    &lt;img src="/static/por_produto.png" width="440"&gt;
+    &lt;img src="/static/por_dia.png" width="440"&gt;
+    &lt;/body&gt;&lt;/html&gt;
+    """
+
+@app.route("/api/resumo")
+def api_resumo():
+    return jsonify(analisar(carregar_dados()))</pre></div></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p4">
+  <div class="parte-head"><span class="num">04</span><h2>Dashboard — Etapas 5 e 6</h2></div>
+
+  <article class="ex" id="ex7">
+    <div class="ex-head">
+      <span class="ex-num">EX 07</span>
+      <h3>Etapa 5: o botão de atualizar 🔄</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex7"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>A rota /atualizar: regenera os gráficos e volta ao painel.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Importe também o <code>redirect</code></li><li>Rota /atualizar: <code>gerar_graficos(carregar_dados())</code> e <code>return redirect("/")</code></li><li>No painel, adicione o link: <code>&lt;a href="/atualizar"&gt;🔄 Atualizar&lt;/a&gt;</code></li><li>Teste de verdade: edite o vendas.csv (adicione uma venda!), clique em atualizar e veja os números E os gráficos mudarem</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(clique → gráficos novos → de volta ao painel!)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">etapa5.py</span></div><pre class="code">from flask import redirect
+
+@app.route("/atualizar")
+def atualizar():
+    gerar_graficos(carregar_dados())
+    return redirect("/")</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex8">
+    <div class="ex-head">
+      <span class="ex-num">EX 08</span>
+      <h3>Etapa 6: a obra-prima integrada 🏁</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex8"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Montar o app.py final — e dar o play na sua formatura.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Junte as 5 etapas no app.py: preparar + gerar_exemplo + gráficos iniciais ANTES do app.run</li><li>Roteiro de teste final: painel → API → editar CSV → atualizar → tudo vivo?</li><li>Confira com a versão integrada na solução — e tire um print da tela: é o seu diploma 🏆</li></ol><span class="tag saida">✅ A formatura</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output"> * Running on http://127.0.0.1:5000
+(e no navegador: o dashboard completo, SEU)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">app.py</span></div><pre class="code">import os
+import pandas as pd
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+from flask import Flask, jsonify, redirect
+
+app = Flask(__name__)
+
+def preparar():
+    os.makedirs("dados", exist_ok=True)
+    os.makedirs("static", exist_ok=True)
+
+def gerar_exemplo():
+    caminho = os.path.join("dados", "vendas.csv")
+    if os.path.exists(caminho):
+        return
+    conteudo = """data,produto,qtd,total
+10/06/2026,caneca branca,3,75.0
+10/06/2026,caneca preta,12,270.0
+11/06/2026,azulejo,2,80.0
+11/06/2026,caneca preta,5,137.5
+12/06/2026,caneca branca,4,100.0
+12/06/2026,azulejo,1,40.0
+"""
+    with open(caminho, "w", encoding="utf-8") as arquivo:
+        arquivo.write(conteudo)
+
+def carregar_dados():
+    return pd.read_csv(os.path.join("dados", "vendas.csv"))
+
+def analisar(df):
+    return {
+        "faturamento": float(df["total"].sum()),
+        "unidades": int(df["qtd"].sum()),
+        "campeao": df.groupby("produto")["qtd"].sum().idxmax(),
+        "ticket": round(float(df["total"].mean()), 2)
+    }
+
+def gerar_graficos(df):
+    por_produto = df.groupby("produto")["total"].sum()
+    plt.figure(figsize=(6, 4))
+    plt.bar(por_produto.index, por_produto.values, color="#3776AB")
+    plt.title("Faturamento por produto")
+    plt.ylabel("R$")
+    plt.tight_layout()
+    plt.savefig("static/por_produto.png", dpi=120)
+    plt.close()
+
+    por_dia = df.groupby("data")["total"].sum()
+    plt.figure(figsize=(6, 4))
+    plt.plot(por_dia.index, por_dia.values, marker="o", color="#FFB000")
+    plt.title("Faturamento por dia")
+    plt.ylabel("R$")
+    plt.tight_layout()
+    plt.savefig("static/por_dia.png", dpi=120)
+    plt.close()
+
+@app.route("/")
+def painel():
+    r = analisar(carregar_dados())
+    return f"""
+    &lt;html&gt;&lt;head&gt;&lt;title&gt;Dashboard Tua Caneca&lt;/title&gt;
+    &lt;style&gt;
+      body {{ font-family: Arial; background: #F5F8FC; margin: 40px; }}
+      h1 {{ color: #3776AB; }}
+      .cartao {{ background: white; display: inline-block; padding: 18px 28px;
+                 margin: 8px; border-radius: 12px; box-shadow: 0 2px 8px #0002; }}
+      img {{ border-radius: 12px; margin: 10px; box-shadow: 0 2px 8px #0002; }}
+    &lt;/style&gt;&lt;/head&gt;&lt;body&gt;
+    &lt;h1&gt;☕ Dashboard Tua Caneca&lt;/h1&gt;
+    &lt;div class="cartao"&gt;&lt;b&gt;Faturamento&lt;/b&gt;&lt;br&gt;R$ {r["faturamento"]:.2f}&lt;/div&gt;
+    &lt;div class="cartao"&gt;&lt;b&gt;Unidades&lt;/b&gt;&lt;br&gt;{r["unidades"]}&lt;/div&gt;
+    &lt;div class="cartao"&gt;&lt;b&gt;Campeão&lt;/b&gt;&lt;br&gt;{r["campeao"]}&lt;/div&gt;
+    &lt;div class="cartao"&gt;&lt;b&gt;Ticket médio&lt;/b&gt;&lt;br&gt;R$ {r["ticket"]:.2f}&lt;/div&gt;
+    &lt;br&gt;
+    &lt;img src="/static/por_produto.png" width="440"&gt;
+    &lt;img src="/static/por_dia.png" width="440"&gt;
+    &lt;br&gt;&lt;a href="/atualizar"&gt;🔄 Atualizar&lt;/a&gt; · &lt;a href="/api/resumo"&gt;API JSON&lt;/a&gt;
+    &lt;/body&gt;&lt;/html&gt;
+    """
+
+@app.route("/api/resumo")
+def api_resumo():
+    return jsonify(analisar(carregar_dados()))
+
+@app.route("/atualizar")
+def atualizar():
+    gerar_graficos(carregar_dados())
+    return redirect("/")
+
+# ===== INICIALIZAÇÃO =====
+preparar()
+gerar_exemplo()
+gerar_graficos(carregar_dados())
+app.run(debug=True)</pre></div><p><strong>~110 linhas. 4 bibliotecas. 20 semanas.</strong> O aluno da Semana 1 não acreditaria — mas foi ele que começou. 👏🏆</p></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p5">
+  <div class="parte-head"><span class="num">05</span><h2>A última formatura</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Os dois desafios finais da jornada inteira. Sem soluções — sua assinatura no diploma é resolvê-los. 🏆</p></div>
+  <article class="ex" id="ex9">
+    <div class="ex-head">
+      <span class="ex-num">EX 09</span>
+      <h3>Desafio: o dashboard cresce 📈</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex9"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Três evoluções dignas de produção.</p><span class="tag passos">🧭 Roteiro</span><ol><li>Filtro por produto: rota <code>/produto/&lt;nome&gt;</code> mostrando só os dados daquele produto (pandas filtra, Flask serve!)</li><li>Upload simples: pesquise "flask upload file" e permita enviar um vendas.csv novo pelo navegador</li><li>O toque da Semana 15: um cartão com o faturamento em dólares, via sua cotacao_segura()</li><li>Cada item integra uma semana diferente — escolha pelo menos um e implemente</li></ol><details class="dica"><summary>💡 Pesquisar É programar</summary><div class="inner">Repare: este desafio manda você PESQUISAR. Programadores profissionais pesquisam o dia inteiro — a diferença é que agora você entende o que encontra.</div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex10">
+    <div class="ex-head">
+      <span class="ex-num">EX 10</span>
+      <h3>O desafio de todos os desafios 🏆</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex10"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>O projeto-assinatura: um dashboard web para um problema 100% seu.</p><span class="tag passos">🧭 Roteiro</span><ol><li>Escolha os dados da SUA vida: vendas do negócio, notas das turmas, finanças, treinos...</li><li>Pipeline completo: CSV/Excel → pandas → matplotlib → Flask</li><li>README caprichado + GitHub + screenshot no LinkedIn</li><li>Apresente para alguém — de preferência, ensinando. Foi assim que esta jornada toda foi feita. 😉</li><li>E então... comece o próximo projeto. Sempre o próximo projeto. 🚀</li></ol><details class="dica"><summary>💡 A última palavra</summary><div class="inner">20 semanas, ~270 exercícios, 4 sistemas completos. Você não terminou um curso: você se tornou alguém que transforma problemas em código. O resto é prática — e a prática, agora, é vida. Obrigado pela jornada, e bons códigos para sempre! 🏆🎓🐍</div></details>
+    </div>
+  </article>
+</section>
+
+<div class="checklist" id="checklist">
+  <h2>✅ Checklist de fim de semana</h2>
+  <p>Antes de seguir para a próxima semana, confirme que você consegue:</p>
+<label class="check-item"><input type="checkbox"><span>Prever saídas misturando pandas, Flask e os clássicos</span></label>
+<label class="check-item"><input type="checkbox"><span>Caçar os bugs típicos de dashboards (show no servidor, chaves em f-string...)</span></label>
+<label class="check-item"><input type="checkbox"><span>Estruturar um projeto web: dados/, static/, app.py</span></label>
+<label class="check-item"><input type="checkbox"><span>Carregar e analisar dados com pandas em funções</span></label>
+<label class="check-item"><input type="checkbox"><span>Gerar gráficos em PNG por código (modo Agg, sem janela!)</span></label>
+<label class="check-item"><input type="checkbox"><span>Montar o painel HTML com números e imagens</span></label>
+<label class="check-item"><input type="checkbox"><span>Expor a análise via API própria com jsonify</span></label>
+<label class="check-item"><input type="checkbox"><span>Criar a rota /atualizar com redirect</span></label>
+<label class="check-item"><input type="checkbox"><span>Integrar 4 bibliotecas num sistema coeso</span></label>
+<label class="check-item"><input type="checkbox"><span>Apresentar o dashboard rodando — sua obra-prima</span></label>
+</div>
+
+<div class="win-banner" id="winBanner">
+  <h2>🏆 SEMANA 20 COMPLETA!</h2>
+  <p>JORNADA ABSOLUTA COMPLETA! 20 semanas, ~270 exercícios, 4 projetos finais — do print() a um dashboard web. Não há mais curso à sua frente: há o mundo. Vá programar nele! 🏆🎓🐍✨</p>
+</div>
+
+<div class="preview-s2">
+<h2>🏆 A última formatura: 20 semanas</h2><p>Olhe a estrada: <strong>Fundamentos</strong> (1-8), <strong>POO e dados</strong> (9-12), <strong>Mundo real</strong> (13-16) e <strong>Dados &amp; Web</strong> (17-20). Você lê código, escreve código, conserta código — e agora SERVE código na web. Daqui em diante: aprofunde uma trilha (pandas avançado, Django, automação com bots, IA via APIs), mantenha o GitHub vivo, participe de comunidades e — o conselho eterno — <strong>construa coisas reais</strong>. Esta página é a última do curso, mas a primeira da sua carreira. Obrigado pela jornada! 🏆🎓🐍</p></div>
+
+</main>
+
+<footer>python_para_iniciantes // semana_20 // exercícios guiados</footer>
+
+<script>
+// ===== Syntax highlight leve para Python =====
+(function(){
+  const KW = /\b(print|input|int|float|type|str|bool)\b/g;
+  document.querySelectorAll('pre.code').forEach(pre=>{
+    let src = pre.textContent;
+    // escapa HTML
+    src = src.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    // uma passada só, com alternação (comentário | string | builtin | bool | número)
+    src = src.replace(
+      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|insert|int|float|str|len|range|type|abs|round|max|min|sum|sorted|sort|reverse|append|remove|split|strip|upper|lower|replace|title|randint|random|get|keys|values|items|open|readlines|read|write|close|count|index|pop|update|list|dict|tuple|enumerate|sqrt|floor|ceil|choice|shuffle|sample|sleep|now|today|strftime|dumps|dump|loads|load|isinstance|datetime|date|DictReader|DictWriter|writerows|writerow|writeheader|writer|reader|csv|Workbook|load_workbook|save|iter_rows|Font|listdir|makedirs|getcwd|rename|exists|getsize|splitext|join|endswith|startswith|copytree|copy|move|requests|status_code|json|DataFrame|read_csv|read_excel|to_excel|to_csv|head|describe|groupby|sort_values|value_counts|mean|idxmax|bar|barh|pie|plot|savefig|show|title|xlabel|ylabel|figure|legend|axhline|tight_layout|close|Flask|route|run|render_template|jsonify|redirect|request)\b|\b(True|False|None|if|elif|else|while|for|in|and|or|not|break|continue|import|from|def|return|try|except|finally|with|as|del|global|pass|class|self|super|lambda)\b|(\b\d+(?:\.\d+)?\b)/g,
+      function(m, com, str, fn, bool, num){
+        if(com)  return '<span class="tk-com">'+com+'</span>';
+        if(str)  return '<span class="tk-str">'+str+'</span>';
+        if(fn)   return '<span class="tk-fn">'+fn+'</span>';
+        if(bool) return '<span class="tk-kw">'+bool+'</span>';
+        if(num)  return '<span class="tk-num">'+num+'</span>';
+        return m;
+      }
+    );
+    pre.innerHTML = src;
+  });
+})();
+
+// ===== Armazenamento seguro (localStorage com fallback em memória) =====
+// Quando o aluno abre o arquivo .html no computador, o progresso fica salvo
+// no navegador. Se o localStorage estiver indisponível (modo restrito,
+// pré-visualização, etc.), o progresso funciona só em memória, sem quebrar.
+const storage = (function(){
+  const KEY = 'python_semana20_progresso';
+  let memoria = {};
+  let disponivel = false;
+  try{
+    localStorage.setItem('__teste__','1');
+    localStorage.removeItem('__teste__');
+    disponivel = true;
+  }catch(e){ disponivel = false; }
+
+  return {
+    carregar: function(){
+      if(disponivel){
+        try{ return JSON.parse(localStorage.getItem(KEY)) || {}; }
+        catch(e){ return {}; }
+      }
+      return memoria;
+    },
+    salvar: function(dados){
+      memoria = dados;
+      if(disponivel){
+        try{ localStorage.setItem(KEY, JSON.stringify(dados)); }catch(e){}
+      }
+    },
+    limpar: function(){
+      memoria = {};
+      if(disponivel){
+        try{ localStorage.removeItem(KEY); }catch(e){}
+      }
+    },
+    persistente: disponivel
+  };
+})();
+
+// ===== Progresso dos exercícios + checklist =====
+(function(){
+  const checks = document.querySelectorAll('.done-check');
+  const listChecks = document.querySelectorAll('.check-item input');
+  const total = checks.length;
+  const fill = document.getElementById('pfill');
+  const count = document.getElementById('pcount');
+  const msg = document.getElementById('pmsg');
+  const banner = document.getElementById('winBanner');
+  const resetBtn = document.getElementById('resetBtn');
+
+  const MSGS = [
+    [0,  'Marque os exercícios concluídos ✔'],
+    [1,  'Boa! Continue assim 💪'],
+    [3,  'Pegando o ritmo! 🔥'],
+    [5, 'Metade do caminho! 🚀'],
+    [8, 'Quase lá... força! ⚡'],
+    [10, 'SEMANA COMPLETA! 🏆']
+  ];
+
+  function estadoAtual(){
+    const dados = { ex: {}, lista: {} };
+    checks.forEach(c => { dados.ex[c.dataset.ex] = c.checked; });
+    listChecks.forEach((c,i) => { dados.lista['item'+i] = c.checked; });
+    return dados;
+  }
+
+  function atualizarBarra(){
+    const done = document.querySelectorAll('.done-check:checked').length;
+    const pct = Math.round(done/total*100);
+    fill.style.width = pct + '%';
+    count.textContent = done + ' / ' + total;
+    let m = MSGS[0][1];
+    for(const [min,text] of MSGS){ if(done >= min) m = text; }
+    msg.textContent = m;
+    banner.classList.toggle('show', done === total);
+  }
+
+  function aplicarEstado(dados){
+    checks.forEach(c => {
+      const marcado = !!(dados.ex && dados.ex[c.dataset.ex]);
+      c.checked = marcado;
+      c.closest('article.ex').classList.toggle('done', marcado);
+    });
+    listChecks.forEach((c,i) => {
+      c.checked = !!(dados.lista && dados.lista['item'+i]);
+    });
+    atualizarBarra();
+  }
+
+  // Restaura o progresso salvo ao abrir a página
+  aplicarEstado(storage.carregar());
+
+  // Salva a cada mudança
+  checks.forEach(c => {
+    c.addEventListener('change', function(){
+      this.closest('article.ex').classList.toggle('done', this.checked);
+      atualizarBarra();
+      storage.salvar(estadoAtual());
+    });
+  });
+  listChecks.forEach(c => {
+    c.addEventListener('change', function(){
+      storage.salvar(estadoAtual());
+    });
+  });
+
+  // Botão de reset com confirmação
+  resetBtn.addEventListener('click', function(){
+    if(confirm('Apagar todo o progresso desta semana?')){
+      storage.limpar();
+      aplicarEstado({});
+    }
+  });
+
+  // Aviso discreto se o progresso não puder ser salvo neste ambiente
+  if(!storage.persistente){
+    msg.textContent += ' (progresso não será salvo neste ambiente)';
+  }
+})();
+</script>
+</body>
+</html>

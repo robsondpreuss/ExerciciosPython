@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Semana 2 — Condicionais</title>
+<style>
+  :root{
+    --ink:#16243A;
+    --ink-soft:#4A5A74;
+    --paper:#F5F8FC;
+    --card:#FFFFFF;
+    --py-blue:#3776AB;
+    --py-blue-dark:#27598C;
+    --py-gold:#FFD43B;
+    --py-gold-dark:#C99700;
+    --term:#1B2435;
+    --term-line:#2B3850;
+    --green:#2EA56C;
+    --coral:#E2574C;
+    --radius:14px;
+    --mono:"Cascadia Code","JetBrains Mono",Consolas,"Roboto Mono",monospace;
+    --sans:"Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto}
+    *{transition:none !important;animation:none !important}
+  }
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.65}
+
+  /* ===== Barra de progresso fixa ===== */
+  .progress-wrap{
+    position:sticky;top:0;z-index:50;
+    background:var(--term);color:#fff;
+    padding:10px 18px;
+    display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+    box-shadow:0 2px 12px rgba(22,36,58,.25);
+  }
+  .progress-wrap .label{font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;white-space:nowrap}
+  .progress-bar{flex:1;min-width:140px;height:14px;background:var(--term-line);border-radius:99px;overflow:hidden}
+  .progress-fill{height:100%;width:0%;border-radius:99px;background:linear-gradient(90deg,var(--py-blue),var(--py-gold));transition:width .4s ease}
+  .progress-count{font-family:var(--mono);font-size:.85rem;color:var(--py-gold);white-space:nowrap}
+  .progress-msg{font-size:.78rem;color:#AFC3E0;white-space:nowrap}
+  .reset-btn{
+    font-family:var(--mono);font-size:.72rem;color:#AFC3E0;
+    background:transparent;border:1px solid var(--term-line);border-radius:8px;
+    padding:5px 11px;cursor:pointer;transition:all .15s ease;white-space:nowrap;
+  }
+  .reset-btn:hover,.reset-btn:focus-visible{color:#fff;border-color:#5A6E92;background:rgba(255,255,255,.06)}
+  .reset-btn:focus-visible{outline:2px solid var(--py-gold);outline-offset:2px}
+
+  /* ===== Hero ===== */
+  header.hero{
+    background:linear-gradient(150deg,var(--term) 0%,#22406B 70%,var(--py-blue) 100%);
+    color:#fff;padding:56px 20px 48px;text-align:center;position:relative;overflow:hidden;
+  }
+  header.hero::before{
+    content:"if  elif  else  ==  !=  &gt;=  &lt;=  and  or  not  in";
+    position:absolute;inset:auto 0 8px 0;font-family:var(--mono);font-size:.78rem;
+    color:rgba(255,255,255,.14);letter-spacing:.4em;white-space:nowrap;overflow:hidden;
+  }
+  .hero .kicker{
+    font-family:var(--mono);font-size:.85rem;color:var(--py-gold);
+    letter-spacing:.18em;text-transform:uppercase;margin-bottom:14px;
+  }
+  .hero h1{font-family:var(--mono);font-size:clamp(1.5rem,4.5vw,2.6rem);font-weight:700;line-height:1.25}
+  .hero h1 .cursor{display:inline-block;width:.55em;height:1.05em;background:var(--py-gold);vertical-align:text-bottom;margin-left:4px;animation:blink 1.1s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+  .hero p.sub{max-width:620px;margin:18px auto 0;color:#D7E4F5;font-size:1rem}
+  .hero .howto{
+    max-width:640px;margin:26px auto 0;background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.18);border-radius:var(--radius);
+    padding:14px 18px;font-size:.88rem;color:#E8F0FB;text-align:left;
+  }
+  .hero .howto strong{color:var(--py-gold)}
+
+  /* ===== Navegação por partes ===== */
+  nav.parts{
+    display:flex;gap:8px;flex-wrap:wrap;justify-content:center;
+    padding:18px 16px;max-width:980px;margin:0 auto;
+  }
+  nav.parts a{
+    font-family:var(--mono);font-size:.78rem;text-decoration:none;
+    color:var(--py-blue-dark);background:var(--card);
+    border:1.5px solid #D5E2F2;border-radius:99px;padding:7px 14px;
+    transition:all .15s ease;
+  }
+  nav.parts a:hover,nav.parts a:focus-visible{border-color:var(--py-blue);background:#EAF2FB}
+  nav.parts a:focus-visible{outline:2px solid var(--py-blue);outline-offset:2px}
+
+  main{max-width:880px;margin:0 auto;padding:8px 18px 80px}
+
+  /* ===== Seções (partes) ===== */
+  section.parte{margin-top:46px}
+  .parte-head{display:flex;align-items:baseline;gap:14px;border-bottom:3px solid var(--py-gold);padding-bottom:10px;margin-bottom:6px}
+  .parte-head .num{
+    font-family:var(--mono);font-size:2.4rem;font-weight:700;color:var(--py-blue);line-height:1;
+  }
+  .parte-head h2{font-family:var(--mono);font-size:clamp(1.05rem,2.8vw,1.45rem);color:var(--ink)}
+  .parte-intro{
+    background:var(--card);border:1px solid #E1E9F4;border-radius:var(--radius);
+    padding:18px 22px;margin-top:16px;font-size:.95rem;
+  }
+  .parte-intro h3{font-size:.8rem;font-family:var(--mono);color:var(--py-blue);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px}
+  .parte-intro p{margin-bottom:10px}
+  .parte-intro p:last-child{margin-bottom:0}
+  .parte-intro ol,.parte-intro ul{margin:8px 0 10px 22px}
+  table{border-collapse:collapse;width:100%;margin:10px 0;font-size:.88rem}
+  th,td{border:1px solid #DCE6F2;padding:7px 10px;text-align:left}
+  th{background:#EDF3FA;font-family:var(--mono);font-size:.78rem}
+  td code,p code,li code{
+    font-family:var(--mono);font-size:.85em;background:#EDF2F9;
+    border:1px solid #DCE6F2;border-radius:5px;padding:1px 5px;color:var(--py-blue-dark);
+  }
+
+  /* ===== Cartão de exercício ===== */
+  article.ex{
+    background:var(--card);border:1px solid #E1E9F4;border-radius:var(--radius);
+    margin-top:22px;overflow:hidden;
+    box-shadow:0 1px 4px rgba(22,36,58,.05);
+    transition:box-shadow .2s ease;
+  }
+  article.ex:hover{box-shadow:0 4px 16px rgba(22,36,58,.10)}
+  article.ex.done{border-color:var(--green)}
+  article.ex.done .ex-head{background:#EAF7F0}
+  .ex-head{
+    display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+    padding:14px 18px;background:#F2F6FC;border-bottom:1px solid #E1E9F4;
+  }
+  .ex-num{
+    font-family:var(--mono);font-weight:700;font-size:.85rem;color:#fff;
+    background:var(--py-blue);border-radius:8px;padding:5px 10px;white-space:nowrap;
+  }
+  article.ex.done .ex-num{background:var(--green)}
+  .ex-head h3{font-size:1.02rem;flex:1;min-width:180px}
+  .stars{font-size:.78rem;color:var(--py-gold-dark);background:#FFF6D6;border:1px solid #F2DE96;border-radius:99px;padding:3px 10px;white-space:nowrap}
+  .done-toggle{
+    display:flex;align-items:center;gap:7px;cursor:pointer;user-select:none;
+    font-size:.8rem;font-family:var(--mono);color:var(--ink-soft);
+  }
+  .done-toggle input{width:17px;height:17px;accent-color:var(--green);cursor:pointer}
+  .ex-body{padding:18px 20px 22px}
+  .ex-body p{margin-bottom:10px}
+  .ex-body ol,.ex-body ul{margin:6px 0 12px 22px}
+  .ex-body li{margin-bottom:4px}
+
+  .tag{
+    display:inline-block;font-family:var(--mono);font-size:.72rem;
+    text-transform:uppercase;letter-spacing:.08em;border-radius:6px;
+    padding:3px 9px;margin:4px 0 6px;
+  }
+  .tag.obj{background:#E7F0FB;color:var(--py-blue-dark)}
+  .tag.passos{background:#FFF3CC;color:#8a6d00}
+  .tag.saida{background:#E4F5EC;color:#1c7a4d}
+
+  /* ===== Blocos de código estilo terminal ===== */
+  .term-window{border-radius:12px;overflow:hidden;margin:12px 0;border:1px solid var(--term-line)}
+  .term-bar{
+    display:flex;align-items:center;gap:8px;background:#121A29;padding:8px 14px;
+  }
+  .term-bar .dot{width:11px;height:11px;border-radius:50%}
+  .dot.r{background:#FF5F57}.dot.y{background:#FEBC2E}.dot.g{background:#28C840}
+  .term-bar .fname{font-family:var(--mono);font-size:.75rem;color:#8FA6C8;margin-left:6px}
+  pre.code,pre.output{
+    background:var(--term);color:#E7EDF7;font-family:var(--mono);
+    font-size:.86rem;line-height:1.6;padding:14px 18px;overflow-x:auto;margin:0;
+  }
+  pre.output{color:#9FE8C0}
+  pre.output .prompt-in{color:#E7EDF7}
+  /* syntax highlight */
+  .tk-kw{color:#7EC1FF;font-weight:600}
+  .tk-str{color:#FFD98A}
+  .tk-com{color:#7C8DA8;font-style:italic}
+  .tk-num{color:#9FE8C0}
+  .tk-fn{color:#C7A6FF}
+
+  /* ===== Dicas / desafios / soluções ===== */
+  details{border-radius:10px;margin:12px 0;overflow:hidden;border:1.5px solid transparent}
+  details summary{
+    cursor:pointer;list-style:none;padding:11px 16px;font-weight:600;font-size:.9rem;
+    display:flex;align-items:center;gap:8px;user-select:none;
+  }
+  details summary::-webkit-details-marker{display:none}
+  details summary::after{content:"▾";margin-left:auto;transition:transform .2s ease;font-size:.85em}
+  details[open] summary::after{transform:rotate(180deg)}
+  details .inner{padding:4px 16px 14px}
+  details.dica{background:#FFF9E8;border-color:#F2DE96}
+  details.dica summary{color:#8a6d00}
+  details.desafio{background:#F3EDFB;border-color:#D9C8F2}
+  details.desafio summary{color:#6B3FA0}
+  details.solucao{background:#EAF7F0;border-color:#BFE5D0}
+  details.solucao summary{color:#1c7a4d}
+  details.solucao .aviso{font-size:.8rem;color:#1c7a4d;margin-bottom:8px;font-style:italic}
+
+  /* ===== Checklist final ===== */
+  .checklist{background:var(--card);border:1px solid #E1E9F4;border-radius:var(--radius);padding:22px;margin-top:30px}
+  .checklist h2{font-family:var(--mono);font-size:1.2rem;margin-bottom:6px}
+  .checklist p{font-size:.9rem;color:var(--ink-soft);margin-bottom:14px}
+  .check-item{display:flex;align-items:flex-start;gap:10px;padding:7px 4px;border-radius:8px;cursor:pointer}
+  .check-item:hover{background:#F2F6FC}
+  .check-item input{width:18px;height:18px;margin-top:3px;accent-color:var(--py-blue);cursor:pointer}
+  .check-item span{font-size:.93rem}
+  .check-item input:checked + span{color:var(--green);text-decoration:line-through;text-decoration-color:rgba(46,165,108,.5)}
+
+  /* banner 100% */
+  .win-banner{
+    display:none;margin-top:26px;text-align:center;color:#fff;
+    background:linear-gradient(120deg,var(--green),var(--py-blue));
+    border-radius:var(--radius);padding:26px 20px;
+  }
+  .win-banner.show{display:block;animation:pop .45s ease}
+  @keyframes pop{0%{transform:scale(.94);opacity:0}100%{transform:scale(1);opacity:1}}
+  .win-banner h2{font-family:var(--mono);font-size:1.4rem;margin-bottom:6px}
+
+  .preview-s2{
+    margin-top:36px;border:2px dashed var(--py-blue);border-radius:var(--radius);
+    padding:20px 22px;background:#EFF5FC;
+  }
+  .preview-s2 h2{font-family:var(--mono);font-size:1.05rem;color:var(--py-blue-dark);margin-bottom:8px}
+  footer{
+    text-align:center;font-family:var(--mono);font-size:.75rem;color:var(--ink-soft);
+    padding:26px 16px 40px;
+  }
+  @media(max-width:560px){
+    .progress-msg{display:none}
+    .ex-head h3{font-size:.95rem}
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-wrap" role="region" aria-label="Progresso da semana">
+  <span class="label">XP DA SEMANA</span>
+  <div class="progress-bar"><div class="progress-fill" id="pfill"></div></div>
+  <span class="progress-count" id="pcount">0 / 21</span>
+  <span class="progress-msg" id="pmsg">Marque os exercícios concluídos ✔</span>
+  <button class="reset-btn" id="resetBtn" title="Apagar todo o progresso salvo">↺ Resetar</button>
+</div>
+
+<header class="hero">
+  <div class="kicker">Python para Iniciantes · Exercícios Guiados</div>
+  <h1>SEMANA 2 — Condicionais:<br>o programa toma decisões<span class="cursor" aria-hidden="true"></span></h1>
+  <p class="sub">Aprenda a fazer seu programa escolher caminhos: operadores de comparação, if/else, elif, operadores lógicos (and, or, not) e condições aninhadas.</p>
+  <div class="howto">
+    <strong>Como usar:</strong> digite o código você mesmo (não copie e cole!), compare com a saída esperada e marque <strong>✔ Concluído</strong> em cada exercício para encher sua barra de XP. As <strong>dicas</strong> e <strong>soluções</strong> ficam escondidas — só abra depois de tentar! Seu progresso fica salvo no navegador.
+  </div>
+</header>
+
+<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · Comparações</a><a href="#p2">2 · if / else</a><a href="#p3">3 · elif</a><a href="#p4">4 · and / or / not</a><a href="#p5">5 · Aninhadas & in</a><a href="#p6">6 · Projetos</a><a href="#checklist">✅ Checklist</a></nav>
+
+<main>
+
+<section class="parte" id="p1">
+  <div class="parte-head"><span class="num">01</span><h2>Operadores de comparação</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Comparações fazem perguntas cuja resposta é sempre <code>True</code> (verdadeiro) ou <code>False</code> (falso) — o tipo <code>bool</code> que você conheceu na Semana 1.</p><table><tr><th>Operador</th><th>Pergunta</th><th>Exemplo</th><th>Resultado</th></tr><tr><td><code>==</code></td><td>é igual a?</td><td><code>5 == 5</code></td><td><code>True</code></td></tr><tr><td><code>!=</code></td><td>é diferente de?</td><td><code>5 != 3</code></td><td><code>True</code></td></tr><tr><td><code>&gt;</code></td><td>é maior que?</td><td><code>5 &gt; 8</code></td><td><code>False</code></td></tr><tr><td><code>&lt;</code></td><td>é menor que?</td><td><code>5 &lt; 8</code></td><td><code>True</code></td></tr><tr><td><code>&gt;=</code></td><td>é maior ou igual?</td><td><code>5 &gt;= 5</code></td><td><code>True</code></td></tr><tr><td><code>&lt;=</code></td><td>é menor ou igual?</td><td><code>4 &lt;= 3</code></td><td><code>False</code></td></tr></table><p>⚠️ Cuidado: <code>==</code> (com dois sinais) <strong>compara</strong>. <code>=</code> (com um sinal) <strong>guarda</strong> um valor na variável. Confundir os dois é o erro mais comum da semana!</p></div>
+  <article class="ex" id="ex1">
+    <div class="ex-head">
+      <span class="ex-num">EX 01</span>
+      <h3>Verdadeiro ou falso?</h3>
+      <span class="stars">⭐ básico</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex1"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Prever o resultado de comparações antes de executar.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie o arquivo <code>ex01_bool.py</code></li><li>PREVEJA o resultado de cada linha (anote num papel!)</li><li>Execute e compare com suas previsões</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex01_bool.py</span></div><pre class="code">print(10 &gt; 5)
+print(10 == 10)
+print(7 != 7)
+print(3 &gt;= 4)
+print("ana" == "Ana")</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">True
+True
+False
+False
+False</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner">A última linha surpreendeu? Comparação de textos diferencia maiúsculas de minúsculas: <code>"ana"</code> e <code>"Ana"</code> são textos DIFERENTES para o Python.</div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex2">
+    <div class="ex-head">
+      <span class="ex-num">EX 02</span>
+      <h3>Comparando textos</h3>
+      <span class="stars">⭐ básico</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex2"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Descobrir como o Python compara palavras.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>PREVEJA o resultado de cada linha, depois execute</li><li>Reflita: o que significa um texto ser "menor" que outro?</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex02_textos.py</span></div><pre class="code">print("abacaxi" &lt; "banana")
+print("Zebra" &lt; "abelha")
+print(len("python") == 6)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">True
+True
+True</pre></div><details class="dica"><summary>💡 Explicação</summary><div class="inner">Textos são comparados em ordem "alfabética" (na verdade, pela tabela de códigos dos caracteres — por isso TODAS as maiúsculas vêm antes das minúsculas, e <code>"Zebra" &lt; "abelha"</code> é <code>True</code>!). E <code>len()</code> conta os caracteres de um texto.</div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex3">
+    <div class="ex-head">
+      <span class="ex-num">EX 03</span>
+      <h3>== ou =? O erro clássico</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex3"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Aprender na prática a diferença entre atribuição e comparação.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Digite e execute este código <strong>com erro proposital</strong>:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex03_erro.py</span></div><pre class="code">idade = 18
+if idade = 18:
+    print("Tem 18 anos")</pre></div><p>Você verá um erro parecido com:</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output" style="color:#FF9B94">SyntaxError: invalid syntax. Maybe you meant '==' instead of '='?</pre></div><span class="tag passos">🧭 Continue</span><ol><li>Leia o erro: o próprio Python sugere a correção!</li><li>Troque <code>=</code> por <code>==</code> e execute de novo</li></ol><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><p><strong>Regra de ouro:</strong> <code>=</code> GUARDA um valor (<code>idade = 18</code> coloca 18 na caixinha). <code>==</code> PERGUNTA se é igual (<code>idade == 18</code> responde True ou False). Dentro de um <code>if</code>, sempre use <code>==</code>.</p></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p2">
+  <div class="parte-head"><span class="num">02</span><h2>if / else: o primeiro desvio</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>A estrutura <code>if</code> executa um bloco de código somente se a condição for <code>True</code>. O <code>else</code> define o que fazer caso contrário:</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">estrutura.py</span></div><pre class="code">if condicao:
+    # executa se a condição for True
+    print("Sim!")
+else:
+    # executa se a condição for False
+    print("Não!")</pre></div><p><strong>Duas regras visuais essenciais:</strong> (1) os <strong>dois pontos</strong> <code>:</code> no final da linha do <code>if</code> e do <code>else</code>; (2) a <strong>indentação</strong> — o código "de dentro" precisa estar deslocado <strong>4 espaços</strong> para a direita. É assim que o Python sabe o que pertence ao if!</p></div>
+  <article class="ex" id="ex4">
+    <div class="ex-head">
+      <span class="ex-num">EX 04</span>
+      <h3>Maior de idade 🚗</h3>
+      <span class="stars">⭐ básico</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex4"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Escrever seu primeiro if/else completo.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie o arquivo <code>ex04_idade.py</code></li><li>Peça a idade com <code>int(input(...))</code></li><li>Se a idade for maior ou igual a 18, diga que a pessoa pode tirar a CNH</li><li>Caso contrário, diga quantos anos ainda faltam</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex04_idade.py</span></div><pre class="code">idade = int(input("Qual sua idade? "))
+
+if idade ____ 18:
+    print("Você já pode tirar a CNH! 🚗")
+else:
+    falta = ____ - idade
+    print(f"Ainda faltam {falta} anos para a CNH.")</pre></div><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Qual sua idade? 15
+Ainda faltam 3 anos para a CNH.</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex04.py</span></div><pre class="code">idade = int(input("Qual sua idade? "))
+
+if idade &gt;= 18:
+    print("Você já pode tirar a CNH! 🚗")
+else:
+    falta = 18 - idade
+    print(f"Ainda faltam {falta} anos para a CNH.")</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex5">
+    <div class="ex-head">
+      <span class="ex-num">EX 05</span>
+      <h3>Par ou ímpar</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex5"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Reaproveitar o operador % (resto) da Semana 1 dentro de um if.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Peça um número inteiro</li><li>Lembre: se <code>numero % 2</code> for 0, o número é PAR</li><li>Use if/else para exibir "PAR" ou "ÍMPAR"</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Digite um número: 17
+17 é ÍMPAR</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner">A condição completa é <code>numero % 2 == 0</code> — primeiro o Python calcula o resto, depois compara com zero.</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex05.py</span></div><pre class="code">numero = int(input("Digite um número: "))
+
+if numero % 2 == 0:
+    print(f"{numero} é PAR")
+else:
+    print(f"{numero} é ÍMPAR")</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex6">
+    <div class="ex-head">
+      <span class="ex-num">EX 06</span>
+      <h3>Senha secreta 🔒</h3>
+      <span class="stars">⭐ básico</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex6"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Comparar textos num if/else.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Defina a constante <code>SENHA_CORRETA = "python123"</code></li><li>Peça a senha ao usuário</li><li>Compare com <code>==</code> e exiba "Acesso liberado" ou "Senha incorreta"</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Digite a senha: python123
+Acesso liberado! ✔</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner">A comparação de texto é EXATA: maiúsculas, espaços e acentos contam. <code>"Python123"</code> não passa!</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex06.py</span></div><pre class="code">SENHA_CORRETA = "python123"
+
+senha = input("Digite a senha: ")
+
+if senha == SENHA_CORRETA:
+    print("Acesso liberado! ✔")
+else:
+    print("Senha incorreta! ✖")</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex7">
+    <div class="ex-head">
+      <span class="ex-num">EX 07</span>
+      <h3>O erro de indentação</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex7"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Conhecer (e aprender a corrigir) o IndentationError.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Digite e execute este código <strong>com erro proposital</strong>:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex07_erro.py</span></div><pre class="code">idade = 20
+if idade &gt;= 18:
+print("Maior de idade")</pre></div><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output" style="color:#FF9B94">IndentationError: expected an indented block after 'if' statement</pre></div><span class="tag passos">🧭 Continue</span><ol><li>Leia o erro: o Python esperava um bloco indentado depois do if</li><li>Corrija adicionando 4 espaços antes do <code>print</code></li><li>Teste também o contrário: indente uma linha que NÃO deveria estar indentada e veja o que acontece</li></ol><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><p>Em Python, a indentação não é estética — é <strong>parte da linguagem</strong>. Tudo que pertence ao if precisa estar deslocado 4 espaços. A versão correta:</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex07.py</span></div><pre class="code">idade = 20
+if idade &gt;= 18:
+    print("Maior de idade")</pre></div></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p3">
+  <div class="parte-head"><span class="num">03</span><h2>elif: vários caminhos</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Quando há mais de duas possibilidades, usamos <code>elif</code> (abreviação de "else if"). O Python testa as condições <strong>de cima para baixo</strong> e executa apenas o PRIMEIRO bloco verdadeiro:</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">estrutura.py</span></div><pre class="code">if condicao1:
+    # caminho 1
+elif condicao2:
+    # caminho 2
+elif condicao3:
+    # caminho 3
+else:
+    # se nenhuma for True</pre></div><p>⚠️ A <strong>ordem das condições importa</strong> — você vai comprovar isso no Exercício 9!</p></div>
+  <article class="ex" id="ex8">
+    <div class="ex-head">
+      <span class="ex-num">EX 08</span>
+      <h3>Positivo, negativo ou zero</h3>
+      <span class="stars">⭐ básico</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex8"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Escrever sua primeira cadeia if/elif/else.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Peça um número (<code>float</code></li><li>Se for maior que 0 → "Positivo"; menor que 0 → "Negativo"; senão → "Zero"</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Digite um número: -4
+Negativo</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex08.py</span></div><pre class="code">numero = float(input("Digite um número: "))
+
+if numero &gt; 0:
+    print("Positivo")
+elif numero &lt; 0:
+    print("Negativo")
+else:
+    print("Zero")</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex9">
+    <div class="ex-head">
+      <span class="ex-num">EX 09</span>
+      <h3>Conceito da nota 📝</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex9"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Entender por que a ordem das condições importa.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Peça a nota (0 a 10)</li><li>Regras: 9 ou mais → A · 7 ou mais → B · 5 ou mais → C · abaixo de 5 → D</li><li>Complete o código testando <strong>da maior nota para a menor</strong></li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex09_conceito.py</span></div><pre class="code">nota = float(input("Digite a nota (0 a 10): "))
+
+if nota &gt;= 9:
+    print("Conceito A — Excelente!")
+elif nota &gt;= ____:
+    print("Conceito B — Muito bom!")
+elif nota &gt;= ____:
+    print("Conceito C — Recuperação")
+else:
+    print("Conceito D — Reprovado")</pre></div><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Digite a nota (0 a 10): 7.5
+Conceito B — Muito bom!</pre></div><details class="dica"><summary>💡 Por que a ordem importa?</summary><div class="inner">Experimente inverter: teste <code>nota &gt;= 5</code> PRIMEIRO e digite uma nota 9.5. O programa dirá "Conceito C"! Como o elif para no primeiro True, a condição mais "exigente" precisa vir primeiro.</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex09.py</span></div><pre class="code">nota = float(input("Digite a nota (0 a 10): "))
+
+if nota &gt;= 9:
+    print("Conceito A — Excelente!")
+elif nota &gt;= 7:
+    print("Conceito B — Muito bom!")
+elif nota &gt;= 5:
+    print("Conceito C — Recuperação")
+else:
+    print("Conceito D — Reprovado")</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex10">
+    <div class="ex-head">
+      <span class="ex-num">EX 10</span>
+      <h3>Classificador de idade</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex10"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Praticar elif com faixas de valores.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Peça a idade</li><li>Classifique: menor que 12 → Criança · menor que 18 → Adolescente · menor que 60 → Adulto · senão → Idoso</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Digite a idade: 15
+Adolescente</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner">Repare que não precisa escrever <code>idade &gt;= 12 and idade &lt; 18</code>: se o programa chegou no segundo elif, é porque a idade JÁ não é menor que 12. O elif "herda" o que já foi descartado.</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex10.py</span></div><pre class="code">idade = int(input("Digite a idade: "))
+
+if idade &lt; 12:
+    print("Criança")
+elif idade &lt; 18:
+    print("Adolescente")
+elif idade &lt; 60:
+    print("Adulto")
+else:
+    print("Idoso")</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex11">
+    <div class="ex-head">
+      <span class="ex-num">EX 11</span>
+      <h3>Calculadora com menu 🧮</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex11"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Montar um programa com múltiplos caminhos e tratamento de opção inválida.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Peça o primeiro número, a operação (<code>+</code>, <code>-</code>, <code>*</code> ou <code>/</code>) e o segundo número</li><li>Use if/elif para cada operação</li><li>Se a operação não existir, avise "Operação inválida!"</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Primeiro número: 8
+Operação (+, -, *, /): *
+Segundo número: 7
+Resultado: 56.0</pre></div><details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">E se o usuário tentar dividir por zero? Teste! Depois proteja a divisão: antes de dividir, verifique <code>if n2 == 0</code> e exiba um aviso em vez de deixar o programa quebrar.</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex11.py</span></div><pre class="code">n1 = float(input("Primeiro número: "))
+operacao = input("Operação (+, -, *, /): ")
+n2 = float(input("Segundo número: "))
+
+if operacao == "+":
+    print(f"Resultado: {n1 + n2}")
+elif operacao == "-":
+    print(f"Resultado: {n1 - n2}")
+elif operacao == "*":
+    print(f"Resultado: {n1 * n2}")
+elif operacao == "/":
+    if n2 == 0:
+        print("Não dá para dividir por zero!")
+    else:
+        print(f"Resultado: {n1 / n2}")
+else:
+    print("Operação inválida!")</pre></div></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p4">
+  <div class="parte-head"><span class="num">04</span><h2>Operadores lógicos: and, or e not</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Para combinar mais de uma condição no mesmo if:</p><table><tr><th>Operador</th><th>Resultado é True quando...</th><th>Exemplo</th></tr><tr><td><code>and</code></td><td>as DUAS condições são True</td><td><code>idade &gt;= 18 and tem_cnh</code></td></tr><tr><td><code>or</code></td><td>PELO MENOS UMA é True</td><td><code>dia == "sab" or dia == "dom"</code></td></tr><tr><td><code>not</code></td><td>inverte: True vira False</td><td><code>not chovendo</code></td></tr></table></div>
+  <article class="ex" id="ex12">
+    <div class="ex-head">
+      <span class="ex-num">EX 12</span>
+      <h3>Prevendo and, or e not</h3>
+      <span class="stars">⭐ básico</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex12"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Fixar a tabela-verdade na prática.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>PREVEJA cada linha, depois execute e compare</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex12_logicos.py</span></div><pre class="code">print(True and True)
+print(True and False)
+print(True or False)
+print(False or False)
+print(not True)
+print(10 &gt; 5 and 3 &lt; 1)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">True
+False
+True
+False
+False
+False</pre></div><details class="dica"><summary>💡 Macete</summary><div class="inner"><code>and</code> é exigente: precisa dos dois. <code>or</code> é flexível: basta um. <code>not</code> é do contra: inverte tudo. 😄</div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex13">
+    <div class="ex-head">
+      <span class="ex-num">EX 13</span>
+      <h3>Entrada no evento 🎟️</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex13"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Usar and para exigir duas condições ao mesmo tempo.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Pergunte a idade e se a pessoa tem convite (<code>sim</code> ou <code>não</code></li><li>Só libere a entrada se a idade for 18+ E a resposta for "sim"</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Sua idade: 22
+Tem convite? (sim/não): sim
+Entrada liberada! 🎉</pre></div><details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Versão com <code>or</code>: libere também quem está na "lista VIP" (pergunte e aceite se a resposta for sim), mesmo sem convite.</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex13.py</span></div><pre class="code">idade = int(input("Sua idade: "))
+convite = input("Tem convite? (sim/não): ")
+
+if idade &gt;= 18 and convite == "sim":
+    print("Entrada liberada! 🎉")
+else:
+    print("Entrada não permitida.")</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex14">
+    <div class="ex-head">
+      <span class="ex-num">EX 14</span>
+      <h3>Número na faixa</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex14"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Verificar se um valor está dentro de um intervalo.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Peça um número</li><li>Verifique se ele está entre 1 e 100 (inclusive) usando <code>and</code></li><li>Depois teste o atalho "pythônico": <code>1 &lt;= numero &lt;= 100</code></li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Digite um número: 150
+Fora da faixa ✖</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex14.py</span></div><pre class="code">numero = int(input("Digite um número: "))
+
+if numero &gt;= 1 and numero &lt;= 100:
+    print("Dentro da faixa ✔")
+else:
+    print("Fora da faixa ✖")
+
+# Atalho do Python (encadeamento de comparações):
+if 1 &lt;= numero &lt;= 100:
+    print("Dentro da faixa (atalho) ✔")</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex15">
+    <div class="ex-head">
+      <span class="ex-num">EX 15</span>
+      <h3>Ano bissexto 📆</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex15"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Combinar and e or numa regra do mundo real.</p><p><strong>A regra oficial:</strong> um ano é bissexto se for divisível por 4 E não for divisível por 100... OU se for divisível por 400. (2024 ✔ · 1900 ✖ · 2000 ✔)</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Traduza cada pedaço: "divisível por 4" é <code>ano % 4 == 0</code></li><li>Monte a expressão completa com <code>and</code>, <code>or</code> e parênteses</li><li>Teste com 2024 (sim), 1900 (não!) e 2000 (sim)</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Digite um ano: 1900
+1900 não é bissexto.</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner">Use parênteses para agrupar: a parte do <code>and</code> precisa ser avaliada junta, antes do <code>or</code>.</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex15.py</span></div><pre class="code">ano = int(input("Digite um ano: "))
+
+if (ano % 4 == 0 and ano % 100 != 0) or ano % 400 == 0:
+    print(f"{ano} é bissexto!")
+else:
+    print(f"{ano} não é bissexto.")</pre></div></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p5">
+  <div class="parte-head"><span class="num">05</span><h2>Condicionais aninhadas e o operador in</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Um <code>if</code> pode viver <strong>dentro</strong> de outro <code>if</code> — basta indentar mais 4 espaços. E o operador <code>in</code> verifica se algo está contido num texto: <code>"a" in "banana"</code> → <code>True</code>.</p></div>
+  <article class="ex" id="ex16">
+    <div class="ex-head">
+      <span class="ex-num">EX 16</span>
+      <h3>Login em duas etapas</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex16"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Usar um if dentro de outro if.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Defina <code>USUARIO = "robson"</code> e <code>SENHA = "1234"</code></li><li>Peça o usuário. SÓ SE estiver correto, peça a senha</li><li>Dentro do primeiro if, verifique a senha com outro if</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Usuário: robson
+Senha: 9999
+Senha incorreta!</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex16.py</span></div><pre class="code">USUARIO = "robson"
+SENHA = "1234"
+
+usuario = input("Usuário: ")
+
+if usuario == USUARIO:
+    senha = input("Senha: ")
+    if senha == SENHA:
+        print("Login realizado! ✔")
+    else:
+        print("Senha incorreta!")
+else:
+    print("Usuário não encontrado.")</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex17">
+    <div class="ex-head">
+      <span class="ex-num">EX 17</span>
+      <h3>Tem essa letra?</h3>
+      <span class="stars">⭐ básico</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex17"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Conhecer o operador in.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Peça uma palavra e uma letra</li><li>Use <code>letra in palavra</code> dentro de um if</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Digite uma palavra: banana
+Qual letra procurar? a
+A letra 'a' está em 'banana' ✔</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex17.py</span></div><pre class="code">palavra = input("Digite uma palavra: ")
+letra = input("Qual letra procurar? ")
+
+if letra in palavra:
+    print(f"A letra '{letra}' está em '{palavra}' ✔")
+else:
+    print(f"A letra '{letra}' NÃO está em '{palavra}' ✖")</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex18">
+    <div class="ex-head">
+      <span class="ex-num">EX 18</span>
+      <h3>Triângulo: existe e qual é? 📐</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex18"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Combinar and com condicionais aninhadas num problema clássico.</p><p><strong>Regras:</strong> três lados formam um triângulo se a soma de QUAISQUER dois for maior que o terceiro. Se existir: 3 lados iguais → equilátero · 2 iguais → isósceles · todos diferentes → escaleno.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Peça os lados a, b e c</li><li>Primeiro if: verifica a existência com 3 condições ligadas por <code>and</code></li><li>DENTRO dele, classifique com if/elif/else</li><li>Teste com (3, 4, 5) → escaleno e com (1, 1, 10) → não existe</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Lado a: 5
+Lado b: 5
+Lado c: 8
+Triângulo ISÓSCELES (2 lados iguais)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex18.py</span></div><pre class="code">a = float(input("Lado a: "))
+b = float(input("Lado b: "))
+c = float(input("Lado c: "))
+
+if a + b &gt; c and a + c &gt; b and b + c &gt; a:
+    if a == b and b == c:
+        print("Triângulo EQUILÁTERO (3 lados iguais)")
+    elif a == b or a == c or b == c:
+        print("Triângulo ISÓSCELES (2 lados iguais)")
+    else:
+        print("Triângulo ESCALENO (3 lados diferentes)")
+else:
+    print("Esses lados não formam um triângulo!")</pre></div></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p6">
+  <div class="parte-head"><span class="num">06</span><h2>Projetos da semana: juntando tudo!</h2></div>
+
+  <article class="ex" id="ex19">
+    <div class="ex-head">
+      <span class="ex-num">EX 19</span>
+      <h3>Projeto: Menu da lanchonete 🍔</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex19"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Montar um programa completo com menu, validação e cálculo de troco.</p><span class="tag passos">🧭 Requisitos</span><ol><li>Exiba o cardápio: 1 - X-Salada (R$ 12) · 2 - X-Bacon (R$ 15) · 3 - Suco (R$ 7)</li><li>Peça a opção e quanto dinheiro a pessoa tem</li><li>Defina o preço com if/elif (opção inválida → avise)</li><li>Se o dinheiro der: confirme e mostre o troco; senão, mostre quanto falta</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">=== LANCHONETE DO PYTHON ===
+1 - X-Salada ........ R$ 12.00
+2 - X-Bacon ......... R$ 15.00
+3 - Suco natural .... R$  7.00
+Escolha seu item (1-3): 2
+Quanto você tem? R$ 20
+Pedido confirmado! Troco: R$ 5.00</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex19.py</span></div><pre class="code">print("=== LANCHONETE DO PYTHON ===")
+print("1 - X-Salada ........ R$ 12.00")
+print("2 - X-Bacon ......... R$ 15.00")
+print("3 - Suco natural .... R$  7.00")
+
+opcao = int(input("Escolha seu item (1-3): "))
+dinheiro = float(input("Quanto você tem? R$ "))
+
+if opcao == 1:
+    preco = 12.00
+elif opcao == 2:
+    preco = 15.00
+elif opcao == 3:
+    preco = 7.00
+else:
+    preco = 0
+    print("Opção inválida!")
+
+if preco &gt; 0:
+    if dinheiro &gt;= preco:
+        troco = dinheiro - preco
+        print(f"Pedido confirmado! Troco: R$ {troco:.2f}")
+    else:
+        falta = preco - dinheiro
+        print(f"Dinheiro insuficiente. Faltam R$ {falta:.2f}")</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex20">
+    <div class="ex-head">
+      <span class="ex-num">EX 20</span>
+      <h3>Projeto: Tua Caneca v2 — desconto progressivo ☕</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex20"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Evoluir o projeto da Semana 1 com regras de negócio condicionais.</p><p><strong>Contexto:</strong> a loja de canecas agora dá desconto por volume: 20 canecas ou mais → 15% · 10 ou mais → 10% · abaixo disso → sem desconto. Cada caneca custa R$ 25,00.</p><span class="tag passos">🧭 Requisitos</span><ol><li>Peça a quantidade e calcule o subtotal</li><li>Defina o desconto com if/elif/else (atenção à ordem: teste o 20 primeiro!)</li><li>Calcule o total: <code>subtotal * (1 - desconto)</code></li><li>Exiba subtotal, percentual de desconto e total</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">=== TUA CANECA - ORÇAMENTO v2 ===
+Quantidade de canecas: 12
+Subtotal: R$ 300.00
+Desconto: 10%
+TOTAL: R$ 270.00</pre></div><details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Adicione frete grátis para pedidos acima de R$ 250 (senão, frete de R$ 15).</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex20.py</span></div><pre class="code">print("=== TUA CANECA - ORÇAMENTO v2 ===")
+PRECO = 25.00
+
+quantidade = int(input("Quantidade de canecas: "))
+subtotal = quantidade * PRECO
+
+if quantidade &gt;= 20:
+    desconto = 0.15
+elif quantidade &gt;= 10:
+    desconto = 0.10
+else:
+    desconto = 0
+
+total = subtotal * (1 - desconto)
+
+print(f"Subtotal: R$ {subtotal:.2f}")
+print(f"Desconto: {desconto * 100:.0f}%")
+print(f"TOTAL: R$ {total:.2f}")</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex21">
+    <div class="ex-head">
+      <span class="ex-num">EX 21</span>
+      <h3>Projeto bônus: Estacionamento rotativo 🅿️</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex21"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Resolver um problema completo sozinho (sem código pronto!).</p><p><strong>Regras:</strong> a primeira hora custa R$ 8,00. Cada hora extra custa R$ 5,00.</p><span class="tag passos">🧭 Roteiro</span><ol><li>Pergunte quantas horas o carro ficou</li><li>Se ficou 1 hora ou menos: valor fixo de R$ 8,00</li><li>Senão: R$ 8,00 + (horas extras × R$ 5,00)</li><li>Exiba o tempo e o valor com 2 casas decimais</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">=== ESTACIONAMENTO ROTATIVO ===
+Quantas horas o carro ficou? 4
+Tempo: 4h
+Valor a pagar: R$ 23.00</pre></div><details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Crie uma "diária máxima": se o valor passar de R$ 40,00, cobre apenas R$ 40,00.</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex21.py</span></div><pre class="code">print("=== ESTACIONAMENTO ROTATIVO ===")
+
+horas = int(input("Quantas horas o carro ficou? "))
+
+if horas &lt;= 1:
+    valor = 8.00
+else:
+    valor = 8.00 + (horas - 1) * 5.00
+
+# Desafio extra — diária máxima:
+if valor &gt; 40:
+    valor = 40.00
+
+print(f"Tempo: {horas}h")
+print(f"Valor a pagar: R$ {valor:.2f}")</pre></div></div></details>
+    </div>
+  </article>
+</section>
+
+<div class="checklist" id="checklist">
+  <h2>✅ Checklist de fim de semana</h2>
+  <p>Antes de seguir para a próxima semana, confirme que você consegue:</p>
+<label class="check-item"><input type="checkbox"><span>Usar os 6 operadores de comparação (==, !=, &gt;, &lt;, &gt;=, &lt;=)</span></label>
+<label class="check-item"><input type="checkbox"><span>Explicar a diferença entre = (atribuição) e == (comparação)</span></label>
+<label class="check-item"><input type="checkbox"><span>Escrever um if/else com indentação correta (4 espaços)</span></label>
+<label class="check-item"><input type="checkbox"><span>Encadear várias condições com elif na ordem certa</span></label>
+<label class="check-item"><input type="checkbox"><span>Combinar condições com and, or e not</span></label>
+<label class="check-item"><input type="checkbox"><span>Verificar se um texto contém algo com o operador in</span></label>
+<label class="check-item"><input type="checkbox"><span>Escrever um if dentro de outro if (aninhado)</span></label>
+<label class="check-item"><input type="checkbox"><span>Ler um IndentationError sem entrar em pânico</span></label>
+<label class="check-item"><input type="checkbox"><span>Montar um menu de opções com elif</span></label>
+<label class="check-item"><input type="checkbox"><span>Aplicar desconto progressivo com condições</span></label>
+</div>
+
+<div class="win-banner" id="winBanner">
+  <h2>🏆 SEMANA 2 COMPLETA!</h2>
+  <p>Você concluiu todos os exercícios. Seu programa já sabe tomar decisões!</p>
+</div>
+
+<div class="preview-s2">
+<h2>📅 Prévia da Semana 3</h2><p>Na próxima semana: <strong>loops</strong> (<code>while</code> e <code>for</code>), <code>range()</code>, acumuladores, <code>break</code> e <code>continue</code> — seu programa vai <strong>repetir tarefas</strong> sem você copiar e colar código!</p></div>
+
+</main>
+
+<footer>python_para_iniciantes // semana_02 // exercícios guiados</footer>
+
+<script>
+// ===== Syntax highlight leve para Python =====
+(function(){
+  const KW = /\b(print|input|int|float|type|str|bool)\b/g;
+  document.querySelectorAll('pre.code').forEach(pre=>{
+    let src = pre.textContent;
+    // escapa HTML
+    src = src.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    // uma passada só, com alternação (comentário | string | builtin | bool | número)
+    src = src.replace(
+      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|insert|int|float|str|len|range|type|abs|round|max|min|sum|sorted|sort|reverse|append|remove|split|strip|upper|lower|replace|title|randint|random)\b|\b(True|False|None|if|elif|else|while|for|in|and|or|not|break|continue|import|from|def|return)\b|(\b\d+(?:\.\d+)?\b)/g,
+      function(m, com, str, fn, bool, num){
+        if(com)  return '<span class="tk-com">'+com+'</span>';
+        if(str)  return '<span class="tk-str">'+str+'</span>';
+        if(fn)   return '<span class="tk-fn">'+fn+'</span>';
+        if(bool) return '<span class="tk-kw">'+bool+'</span>';
+        if(num)  return '<span class="tk-num">'+num+'</span>';
+        return m;
+      }
+    );
+    pre.innerHTML = src;
+  });
+})();
+
+// ===== Armazenamento seguro (localStorage com fallback em memória) =====
+// Quando o aluno abre o arquivo .html no computador, o progresso fica salvo
+// no navegador. Se o localStorage estiver indisponível (modo restrito,
+// pré-visualização, etc.), o progresso funciona só em memória, sem quebrar.
+const storage = (function(){
+  const KEY = 'python_semana02_progresso';
+  let memoria = {};
+  let disponivel = false;
+  try{
+    localStorage.setItem('__teste__','1');
+    localStorage.removeItem('__teste__');
+    disponivel = true;
+  }catch(e){ disponivel = false; }
+
+  return {
+    carregar: function(){
+      if(disponivel){
+        try{ return JSON.parse(localStorage.getItem(KEY)) || {}; }
+        catch(e){ return {}; }
+      }
+      return memoria;
+    },
+    salvar: function(dados){
+      memoria = dados;
+      if(disponivel){
+        try{ localStorage.setItem(KEY, JSON.stringify(dados)); }catch(e){}
+      }
+    },
+    limpar: function(){
+      memoria = {};
+      if(disponivel){
+        try{ localStorage.removeItem(KEY); }catch(e){}
+      }
+    },
+    persistente: disponivel
+  };
+})();
+
+// ===== Progresso dos exercícios + checklist =====
+(function(){
+  const checks = document.querySelectorAll('.done-check');
+  const listChecks = document.querySelectorAll('.check-item input');
+  const total = checks.length;
+  const fill = document.getElementById('pfill');
+  const count = document.getElementById('pcount');
+  const msg = document.getElementById('pmsg');
+  const banner = document.getElementById('winBanner');
+  const resetBtn = document.getElementById('resetBtn');
+
+  const MSGS = [
+    [0,  'Marque os exercícios concluídos ✔'],
+    [1,  'Boa! Continue assim 💪'],
+    [6,  'Pegando o ritmo! 🔥'],
+    [10, 'Metade do caminho! 🚀'],
+    [16, 'Quase lá... força! ⚡'],
+    [21, 'SEMANA COMPLETA! 🏆']
+  ];
+
+  function estadoAtual(){
+    const dados = { ex: {}, lista: {} };
+    checks.forEach(c => { dados.ex[c.dataset.ex] = c.checked; });
+    listChecks.forEach((c,i) => { dados.lista['item'+i] = c.checked; });
+    return dados;
+  }
+
+  function atualizarBarra(){
+    const done = document.querySelectorAll('.done-check:checked').length;
+    const pct = Math.round(done/total*100);
+    fill.style.width = pct + '%';
+    count.textContent = done + ' / ' + total;
+    let m = MSGS[0][1];
+    for(const [min,text] of MSGS){ if(done >= min) m = text; }
+    msg.textContent = m;
+    banner.classList.toggle('show', done === total);
+  }
+
+  function aplicarEstado(dados){
+    checks.forEach(c => {
+      const marcado = !!(dados.ex && dados.ex[c.dataset.ex]);
+      c.checked = marcado;
+      c.closest('article.ex').classList.toggle('done', marcado);
+    });
+    listChecks.forEach((c,i) => {
+      c.checked = !!(dados.lista && dados.lista['item'+i]);
+    });
+    atualizarBarra();
+  }
+
+  // Restaura o progresso salvo ao abrir a página
+  aplicarEstado(storage.carregar());
+
+  // Salva a cada mudança
+  checks.forEach(c => {
+    c.addEventListener('change', function(){
+      this.closest('article.ex').classList.toggle('done', this.checked);
+      atualizarBarra();
+      storage.salvar(estadoAtual());
+    });
+  });
+  listChecks.forEach(c => {
+    c.addEventListener('change', function(){
+      storage.salvar(estadoAtual());
+    });
+  });
+
+  // Botão de reset com confirmação
+  resetBtn.addEventListener('click', function(){
+    if(confirm('Apagar todo o progresso desta semana?')){
+      storage.limpar();
+      aplicarEstado({});
+    }
+  });
+
+  // Aviso discreto se o progresso não puder ser salvo neste ambiente
+  if(!storage.persistente){
+    msg.textContent += ' (progresso não será salvo neste ambiente)';
+  }
+})();
+</script>
+</body>
+</html>

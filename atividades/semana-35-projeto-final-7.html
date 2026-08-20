@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Semana 12 — Projeto Final 2</title>
+<style>
+  :root{
+    --ink:#16243A;
+    --ink-soft:#4A5A74;
+    --paper:#F5F8FC;
+    --card:#FFFFFF;
+    --py-blue:#3776AB;
+    --py-blue-dark:#27598C;
+    --py-gold:#FFD43B;
+    --py-gold-dark:#C99700;
+    --term:#1B2435;
+    --term-line:#2B3850;
+    --green:#2EA56C;
+    --coral:#E2574C;
+    --radius:14px;
+    --mono:"Cascadia Code","JetBrains Mono",Consolas,"Roboto Mono",monospace;
+    --sans:"Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto}
+    *{transition:none !important;animation:none !important}
+  }
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.65}
+
+  /* ===== Barra de progresso fixa ===== */
+  .progress-wrap{
+    position:sticky;top:0;z-index:50;
+    background:var(--term);color:#fff;
+    padding:10px 18px;
+    display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+    box-shadow:0 2px 12px rgba(22,36,58,.25);
+  }
+  .progress-wrap .label{font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;white-space:nowrap}
+  .progress-bar{flex:1;min-width:140px;height:14px;background:var(--term-line);border-radius:99px;overflow:hidden}
+  .progress-fill{height:100%;width:0%;border-radius:99px;background:linear-gradient(90deg,var(--py-blue),var(--py-gold));transition:width .4s ease}
+  .progress-count{font-family:var(--mono);font-size:.85rem;color:var(--py-gold);white-space:nowrap}
+  .progress-msg{font-size:.78rem;color:#AFC3E0;white-space:nowrap}
+  .reset-btn{
+    font-family:var(--mono);font-size:.72rem;color:#AFC3E0;
+    background:transparent;border:1px solid var(--term-line);border-radius:8px;
+    padding:5px 11px;cursor:pointer;transition:all .15s ease;white-space:nowrap;
+  }
+  .reset-btn:hover,.reset-btn:focus-visible{color:#fff;border-color:#5A6E92;background:rgba(255,255,255,.06)}
+  .reset-btn:focus-visible{outline:2px solid var(--py-gold);outline-offset:2px}
+
+  /* ===== Hero ===== */
+  header.hero{
+    background:linear-gradient(150deg,var(--term) 0%,#22406B 70%,var(--py-blue) 100%);
+    color:#fff;padding:56px 20px 48px;text-align:center;position:relative;overflow:hidden;
+  }
+  header.hero::before{
+    content:"class  self  json  datetime  def  🎓";
+    position:absolute;inset:auto 0 8px 0;font-family:var(--mono);font-size:.78rem;
+    color:rgba(255,255,255,.14);letter-spacing:.4em;white-space:nowrap;overflow:hidden;
+  }
+  .hero .kicker{
+    font-family:var(--mono);font-size:.85rem;color:var(--py-gold);
+    letter-spacing:.18em;text-transform:uppercase;margin-bottom:14px;
+  }
+  .hero h1{font-family:var(--mono);font-size:clamp(1.5rem,4.5vw,2.6rem);font-weight:700;line-height:1.25}
+  .hero h1 .cursor{display:inline-block;width:.55em;height:1.05em;background:var(--py-gold);vertical-align:text-bottom;margin-left:4px;animation:blink 1.1s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+  .hero p.sub{max-width:620px;margin:18px auto 0;color:#D7E4F5;font-size:1rem}
+  .hero .howto{
+    max-width:640px;margin:26px auto 0;background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.18);border-radius:var(--radius);
+    padding:14px 18px;font-size:.88rem;color:#E8F0FB;text-align:left;
+  }
+  .hero .howto strong{color:var(--py-gold)}
+
+  /* ===== Navegação por partes ===== */
+  nav.parts{
+    display:flex;gap:8px;flex-wrap:wrap;justify-content:center;
+    padding:18px 16px;max-width:980px;margin:0 auto;
+  }
+  nav.parts a{
+    font-family:var(--mono);font-size:.78rem;text-decoration:none;
+    color:var(--py-blue-dark);background:var(--card);
+    border:1.5px solid #D5E2F2;border-radius:99px;padding:7px 14px;
+    transition:all .15s ease;
+  }
+  nav.parts a:hover,nav.parts a:focus-visible{border-color:var(--py-blue);background:#EAF2FB}
+  nav.parts a:focus-visible{outline:2px solid var(--py-blue);outline-offset:2px}
+
+  main{max-width:880px;margin:0 auto;padding:8px 18px 80px}
+
+  /* ===== Seções (partes) ===== */
+  section.parte{margin-top:46px}
+  .parte-head{display:flex;align-items:baseline;gap:14px;border-bottom:3px solid var(--py-gold);padding-bottom:10px;margin-bottom:6px}
+  .parte-head .num{
+    font-family:var(--mono);font-size:2.4rem;font-weight:700;color:var(--py-blue);line-height:1;
+  }
+  .parte-head h2{font-family:var(--mono);font-size:clamp(1.05rem,2.8vw,1.45rem);color:var(--ink)}
+  .parte-intro{
+    background:var(--card);border:1px solid #E1E9F4;border-radius:var(--radius);
+    padding:18px 22px;margin-top:16px;font-size:.95rem;
+  }
+  .parte-intro h3{font-size:.8rem;font-family:var(--mono);color:var(--py-blue);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px}
+  .parte-intro p{margin-bottom:10px}
+  .parte-intro p:last-child{margin-bottom:0}
+  .parte-intro ol,.parte-intro ul{margin:8px 0 10px 22px}
+  table{border-collapse:collapse;width:100%;margin:10px 0;font-size:.88rem}
+  th,td{border:1px solid #DCE6F2;padding:7px 10px;text-align:left}
+  th{background:#EDF3FA;font-family:var(--mono);font-size:.78rem}
+  td code,p code,li code{
+    font-family:var(--mono);font-size:.85em;background:#EDF2F9;
+    border:1px solid #DCE6F2;border-radius:5px;padding:1px 5px;color:var(--py-blue-dark);
+  }
+
+  /* ===== Cartão de exercício ===== */
+  article.ex{
+    background:var(--card);border:1px solid #E1E9F4;border-radius:var(--radius);
+    margin-top:22px;overflow:hidden;
+    box-shadow:0 1px 4px rgba(22,36,58,.05);
+    transition:box-shadow .2s ease;
+  }
+  article.ex:hover{box-shadow:0 4px 16px rgba(22,36,58,.10)}
+  article.ex.done{border-color:var(--green)}
+  article.ex.done .ex-head{background:#EAF7F0}
+  .ex-head{
+    display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+    padding:14px 18px;background:#F2F6FC;border-bottom:1px solid #E1E9F4;
+  }
+  .ex-num{
+    font-family:var(--mono);font-weight:700;font-size:.85rem;color:#fff;
+    background:var(--py-blue);border-radius:8px;padding:5px 10px;white-space:nowrap;
+  }
+  article.ex.done .ex-num{background:var(--green)}
+  .ex-head h3{font-size:1.02rem;flex:1;min-width:180px}
+  .stars{font-size:.78rem;color:var(--py-gold-dark);background:#FFF6D6;border:1px solid #F2DE96;border-radius:99px;padding:3px 10px;white-space:nowrap}
+  .done-toggle{
+    display:flex;align-items:center;gap:7px;cursor:pointer;user-select:none;
+    font-size:.8rem;font-family:var(--mono);color:var(--ink-soft);
+  }
+  .done-toggle input{width:17px;height:17px;accent-color:var(--green);cursor:pointer}
+  .ex-body{padding:18px 20px 22px}
+  .ex-body p{margin-bottom:10px}
+  .ex-body ol,.ex-body ul{margin:6px 0 12px 22px}
+  .ex-body li{margin-bottom:4px}
+
+  .tag{
+    display:inline-block;font-family:var(--mono);font-size:.72rem;
+    text-transform:uppercase;letter-spacing:.08em;border-radius:6px;
+    padding:3px 9px;margin:4px 0 6px;
+  }
+  .tag.obj{background:#E7F0FB;color:var(--py-blue-dark)}
+  .tag.passos{background:#FFF3CC;color:#8a6d00}
+  .tag.saida{background:#E4F5EC;color:#1c7a4d}
+
+  /* ===== Blocos de código estilo terminal ===== */
+  .term-window{border-radius:12px;overflow:hidden;margin:12px 0;border:1px solid var(--term-line)}
+  .term-bar{
+    display:flex;align-items:center;gap:8px;background:#121A29;padding:8px 14px;
+  }
+  .term-bar .dot{width:11px;height:11px;border-radius:50%}
+  .dot.r{background:#FF5F57}.dot.y{background:#FEBC2E}.dot.g{background:#28C840}
+  .term-bar .fname{font-family:var(--mono);font-size:.75rem;color:#8FA6C8;margin-left:6px}
+  pre.code,pre.output{
+    background:var(--term);color:#E7EDF7;font-family:var(--mono);
+    font-size:.86rem;line-height:1.6;padding:14px 18px;overflow-x:auto;margin:0;
+  }
+  pre.output{color:#9FE8C0}
+  pre.output .prompt-in{color:#E7EDF7}
+  /* syntax highlight */
+  .tk-kw{color:#7EC1FF;font-weight:600}
+  .tk-str{color:#FFD98A}
+  .tk-com{color:#7C8DA8;font-style:italic}
+  .tk-num{color:#9FE8C0}
+  .tk-fn{color:#C7A6FF}
+
+  /* ===== Dicas / desafios / soluções ===== */
+  details{border-radius:10px;margin:12px 0;overflow:hidden;border:1.5px solid transparent}
+  details summary{
+    cursor:pointer;list-style:none;padding:11px 16px;font-weight:600;font-size:.9rem;
+    display:flex;align-items:center;gap:8px;user-select:none;
+  }
+  details summary::-webkit-details-marker{display:none}
+  details summary::after{content:"▾";margin-left:auto;transition:transform .2s ease;font-size:.85em}
+  details[open] summary::after{transform:rotate(180deg)}
+  details .inner{padding:4px 16px 14px}
+  details.dica{background:#FFF9E8;border-color:#F2DE96}
+  details.dica summary{color:#8a6d00}
+  details.desafio{background:#F3EDFB;border-color:#D9C8F2}
+  details.desafio summary{color:#6B3FA0}
+  details.solucao{background:#EAF7F0;border-color:#BFE5D0}
+  details.solucao summary{color:#1c7a4d}
+  details.solucao .aviso{font-size:.8rem;color:#1c7a4d;margin-bottom:8px;font-style:italic}
+
+  /* ===== Checklist final ===== */
+  .checklist{background:var(--card);border:1px solid #E1E9F4;border-radius:var(--radius);padding:22px;margin-top:30px}
+  .checklist h2{font-family:var(--mono);font-size:1.2rem;margin-bottom:6px}
+  .checklist p{font-size:.9rem;color:var(--ink-soft);margin-bottom:14px}
+  .check-item{display:flex;align-items:flex-start;gap:10px;padding:7px 4px;border-radius:8px;cursor:pointer}
+  .check-item:hover{background:#F2F6FC}
+  .check-item input{width:18px;height:18px;margin-top:3px;accent-color:var(--py-blue);cursor:pointer}
+  .check-item span{font-size:.93rem}
+  .check-item input:checked + span{color:var(--green);text-decoration:line-through;text-decoration-color:rgba(46,165,108,.5)}
+
+  /* banner 100% */
+  .win-banner{
+    display:none;margin-top:26px;text-align:center;color:#fff;
+    background:linear-gradient(120deg,var(--green),var(--py-blue));
+    border-radius:var(--radius);padding:26px 20px;
+  }
+  .win-banner.show{display:block;animation:pop .45s ease}
+  @keyframes pop{0%{transform:scale(.94);opacity:0}100%{transform:scale(1);opacity:1}}
+  .win-banner h2{font-family:var(--mono);font-size:1.4rem;margin-bottom:6px}
+
+  .preview-s2{
+    margin-top:36px;border:2px dashed var(--py-blue);border-radius:var(--radius);
+    padding:20px 22px;background:#EFF5FC;
+  }
+  .preview-s2 h2{font-family:var(--mono);font-size:1.05rem;color:var(--py-blue-dark);margin-bottom:8px}
+  footer{
+    text-align:center;font-family:var(--mono);font-size:.75rem;color:var(--ink-soft);
+    padding:26px 16px 40px;
+  }
+  @media(max-width:560px){
+    .progress-msg{display:none}
+    .ex-head h3{font-size:.95rem}
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-wrap" role="region" aria-label="Progresso da semana">
+  <span class="label">XP DA SEMANA</span>
+  <div class="progress-bar"><div class="progress-fill" id="pfill"></div></div>
+  <span class="progress-count" id="pcount">0 / 10</span>
+  <span class="progress-msg" id="pmsg">Marque os exercícios concluídos ✔</span>
+  <button class="reset-btn" id="resetBtn" title="Apagar todo o progresso salvo">↺ Resetar</button>
+</div>
+
+<header class="hero">
+  <div class="kicker">Python para Iniciantes · Exercícios Guiados</div>
+  <h1>SEMANA 12 — Projeto Final 2:<br>Tua Caneca 2.0 🎓<span class="cursor" aria-hidden="true"></span></h1>
+  <p class="sub">A formatura: revisão de POO, caça aos bugs de classes e a construção em 6 etapas do sistema definitivo — classes Produto e Loja, vendas com datetime, relatório e JSON.</p>
+  <div class="howto">
+    <strong>Como usar:</strong> digite o código você mesmo (não copie e cole!), compare com a saída esperada e marque <strong>✔ Concluído</strong> em cada exercício para encher sua barra de XP. As <strong>dicas</strong> e <strong>soluções</strong> ficam escondidas — só abra depois de tentar! Seu progresso fica salvo no navegador.
+  </div>
+</header>
+
+<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · Revisão</a><a href="#p2">2 · Etapas 1-2</a><a href="#p3">3 · Etapas 3-4</a><a href="#p4">4 · Etapas 5-6</a><a href="#p5">5 · Desafios & formatura</a><a href="#checklist">✅ Checklist</a></nav>
+
+<main>
+
+<section class="parte" id="p1">
+  <div class="parte-head"><span class="num">01</span><h2>Revisão relâmpago</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Dois aquecimentos antes da obra final — agora com POO, JSON e módulos no caldeirão.</p></div>
+  <article class="ex" id="ex1">
+    <div class="ex-head">
+      <span class="ex-num">EX 01</span>
+      <h3>Quiz: preveja as 8 saídas 🧠</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex1"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Testar POO, json e os clássicos numa tacada só.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Anote suas previsões ANTES de executar — vale nota de honra 😄</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex01_quiz.py</span></div><pre class="code">import json
+
+class Caixa:
+    def __init__(self, valor):
+        self.valor = valor
+
+    def dobrar(self):
+        self.valor = self.valor * 2
+        return self.valor
+
+c = Caixa(5)
+print(c.dobrar())
+print(c.valor)
+
+a = Caixa(1)
+b = Caixa(1)
+print(a.valor == b.valor)
+
+texto = json.dumps({"x": [1, 2, 3]})
+print(type(texto).__name__)
+
+print("a;b;c".split(";"))
+print({"k": 1}.get("k", 0) + 1)
+print(sorted([3, 1, 2], reverse=True))
+
+x, y = 5, 2
+x, y = y, x
+print(x, y)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">10
+10
+True
+str
+['a', 'b', 'c']
+2
+[3, 2, 1]
+2 5</pre></div><details class="dica"><summary>💡 Gabarito comentado</summary><div class="inner">dobrar() retorna E altera (10/10) · objetos diferentes podem ter valores iguais (True) · dumps devolve string (str) · split (S4) · get com padrão (S5) · sorted decrescente · troca por desempacotamento (S5). 6+ acertos? Mãos à obra!</div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex2">
+    <div class="ex-head">
+      <span class="ex-num">EX 02</span>
+      <h3>Caça aos bugs de POO 🐛🔍</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex2"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Encontrar os 5 bugs clássicos de quem está começando com classes.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>O código deveria criar um produto e aplicar 10% de desconto — mas tem 5 bugs</li><li>Encontre todos antes de rodar, depois corrija um por um</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex02_bugs.py</span></div><pre class="code">class Produto:
+    def _init_(self, nome, preco):
+        nome = nome
+        self.preco = preco
+
+    def aplicar_desconto(percentual):
+        preco = preco * (1 - percentual)
+
+caneca = Produto("Caneca", 25)
+print(caneca.nome)
+caneca.aplicar_desconto(0.1)
+print(caneca.preco)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><p><strong>Os 5 bugs:</strong> (1) <code>_init_</code> com UM underline não é o <code>__init__</code> — vira método comum e o Python reclama que <code>Produto()</code> não aceita argumentos! (2) <code>nome = nome</code> sem <code>self.</code> não cria atributo — o nome se perde. (3) <code>aplicar_desconto(percentual)</code> esqueceu o <code>self</code>. (4) Dentro dele, <code>preco</code> sem <code>self.</code> duas vezes — não altera o objeto. (5) Consequência: <code>caneca.nome</code> daria AttributeError mesmo se chegasse lá.</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex02.py</span></div><pre class="code">class Produto:
+    def __init__(self, nome, preco):
+        self.nome = nome
+        self.preco = preco
+
+    def aplicar_desconto(self, percentual):
+        self.preco = self.preco * (1 - percentual)
+
+caneca = Produto("Caneca", 25)
+print(caneca.nome)
+caneca.aplicar_desconto(0.1)
+print(caneca.preco)</pre></div><p>Saída correta: Caneca / 22.5. Memorize a dupla fatal: <strong>__init__ com dois underlines</strong> e <strong>self em tudo</strong>.</p></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p2">
+  <div class="parte-head"><span class="num">02</span><h2>Tua Caneca 2.0 — Etapas 1 e 2</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p><strong>A obra final:</strong> reconstruir o sistema da Semana 8, agora orientado a objetos. A arquitetura:</p><table><tr><th>Peça</th><th>Responsabilidade</th><th>Semanas</th></tr><tr><td>classe <code>Produto</code></td><td>dados e regras de UM produto</td><td>10</td></tr><tr><td>classe <code>Loja</code></td><td>gerencia produtos, vendas e relatórios</td><td>10, 11</td></tr><tr><td><code>to_dict</code> + json</td><td>persistência</td><td>11</td></tr><tr><td><code>datetime</code></td><td>carimbo das vendas</td><td>9</td></tr><tr><td><code>pedir_inteiro</code></td><td>blindagem das entradas</td><td>7</td></tr><tr><td>menu em loop</td><td>interface</td><td>2, 3</td></tr></table><p>Crie o arquivo <code>tuacaneca20.py</code> — ele cresce etapa por etapa, sempre funcionando.</p></div>
+  <article class="ex" id="ex3">
+    <div class="ex-head">
+      <span class="ex-num">EX 03</span>
+      <h3>Etapa 1: a classe Produto</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex3"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>A peça básica: produto com regras de venda e passaporte para o JSON.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Atributos: nome, preco, estoque</li><li><code>vender(qtd)</code>: valida (0 < qtd ≤ estoque); dá baixa e retorna True/False</li><li><code>to_dict()</code> e <code>__str__</code> completam a peça</li><li>Teste isolado: crie um produto, venda, imprima</li></ol><span class="tag saida">✅ Teste da etapa</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">caneca branca — R$ 25.00 (10 un.)
+caneca branca — R$ 25.00 (7 un.)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">etapa1.py</span></div><pre class="code">class Produto:
+    def __init__(self, nome, preco, estoque):
+        self.nome = nome
+        self.preco = preco
+        self.estoque = estoque
+
+    def vender(self, qtd):
+        if qtd &lt;= 0 or qtd &gt; self.estoque:
+            return False
+        self.estoque = self.estoque - qtd
+        return True
+
+    def to_dict(self):
+        return {"nome": self.nome, "preco": self.preco, "estoque": self.estoque}
+
+    def __str__(self):
+        return f"{self.nome} — R$ {self.preco:.2f} ({self.estoque} un.)"</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex4">
+    <div class="ex-head">
+      <span class="ex-num">EX 04</span>
+      <h3>Etapa 2: a classe Loja nasce</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex4"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>A gerente: guarda os produtos e sabe encontrá-los.</p><span class="tag passos">🧭 Passo a passo</span><ol><li><code>__init__</code>: <code>self.produtos = []</code> e <code>self.vendas = []</code></li><li><code>adicionar(produto)</code>: append do OBJETO</li><li><code>buscar(nome)</code>: percorre e RETORNA o objeto (ou <code>None</code> se não achar)</li><li><code>listar()</code>: imprime o catálogo (o __str__ trabalha por você)</li></ol><span class="tag saida">✅ Teste da etapa</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">--- CATÁLOGO ---
+caneca branca — R$ 25.00 (10 un.)
+caneca preta — R$ 27.50 (8 un.)</pre></div><details class="dica"><summary>💡 O retorno do objeto</summary><div class="inner">O <code>buscar</code> devolvendo o OBJETO é o truque da arquitetura: quem recebe pode chamar <code>produto.vender(...)</code> direto. Retornar None quando não acha permite o teste <code>if produto is None</code>.</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">etapa2.py</span></div><pre class="code">class Loja:
+    def __init__(self):
+        self.produtos = []
+        self.vendas = []
+
+    def adicionar(self, produto):
+        self.produtos.append(produto)
+
+    def buscar(self, nome):
+        for produto in self.produtos:
+            if produto.nome == nome:
+                return produto
+        return None
+
+    def listar(self):
+        print("--- CATÁLOGO ---")
+        for produto in self.produtos:
+            print(produto)</pre></div></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p3">
+  <div class="parte-head"><span class="num">03</span><h2>Tua Caneca 2.0 — Etapas 3 e 4</h2></div>
+
+  <article class="ex" id="ex5">
+    <div class="ex-head">
+      <span class="ex-num">EX 05</span>
+      <h3>Etapa 3: vendas com carimbo 💰🕐</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex5"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>O método registrar_venda: validação, desconto progressivo e datetime.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Método <code>definir_desconto(self, qtd)</code>: 20+ → 15% · 10+ → 10% · senão 0</li><li><code>registrar_venda(self, nome, qtd)</code>: busca o produto (None → avisa e return)</li><li>Tenta <code>produto.vender(qtd)</code> (False → avisa o disponível e return)</li><li>Calcula o total com desconto, carimba com <code>datetime.now().strftime(...)</code> e guarda o dict na lista de vendas</li></ol><span class="tag saida">✅ Teste: 12 canecas pretas</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Venda registrada! Total: R$ 270.00</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">etapa3.py</span></div><pre class="code">from datetime import datetime
+
+# dentro da classe Loja:
+    def definir_desconto(self, qtd):
+        if qtd &gt;= 20:
+            return 0.15
+        elif qtd &gt;= 10:
+            return 0.10
+        return 0
+
+    def registrar_venda(self, nome, qtd):
+        produto = self.buscar(nome)
+        if produto is None:
+            print("Produto não encontrado!")
+            return
+        if not produto.vender(qtd):
+            print(f"Quantidade inválida! Disponível: {produto.estoque}")
+            return
+        desconto = self.definir_desconto(qtd)
+        total = qtd * produto.preco * (1 - desconto)
+        data = datetime.now().strftime("%d/%m/%Y %H:%M")
+        self.vendas.append({"produto": nome, "qtd": qtd,
+                            "total": total, "data": data})
+        print(f"Venda registrada! Total: R$ {total:.2f}")</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex6">
+    <div class="ex-head">
+      <span class="ex-num">EX 06</span>
+      <h3>Etapa 4: o relatório 📊</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex6"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Faturamento, unidades e o produto campeão — agora como método da Loja.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Lista vazia → avise e return</li><li>Percorra <code>self.vendas</code> acumulando faturamento e usando o dict contador para unidades por produto</li><li>Encontre o campeão com o padrão maior (Semana 3)</li><li>Bônus visual: liste as últimas vendas com o carimbo de data!</li></ol><span class="tag saida">✅ Exemplo</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Faturamento: R$ 345.00
+Canecas vendidas: 15
+Campeão: caneca preta (12 un.)
+Últimas vendas:
+12/06/2026 15:02 — 12x caneca preta — R$ 270.00</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">etapa4.py</span></div><pre class="code"># dentro da classe Loja:
+    def relatorio(self):
+        if len(self.vendas) == 0:
+            print("Nenhuma venda registrada.")
+            return
+        faturamento = 0
+        unidades = 0
+        por_produto = {}
+        for venda in self.vendas:
+            faturamento = faturamento + venda["total"]
+            unidades = unidades + venda["qtd"]
+            nome = venda["produto"]
+            por_produto[nome] = por_produto.get(nome, 0) + venda["qtd"]
+
+        print(f"Faturamento: R$ {faturamento:.2f}")
+        print(f"Canecas vendidas: {unidades}")
+
+        campeao = ""
+        maior = 0
+        for nome, qtd in por_produto.items():
+            if qtd &gt; maior:
+                maior = qtd
+                campeao = nome
+        print(f"Campeão: {campeao} ({maior} un.)")
+
+        print("Últimas vendas:")
+        for venda in self.vendas:
+            print(f"{venda['data']} — {venda['qtd']}x {venda['produto']} — R$ {venda['total']:.2f}")</pre></div></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p4">
+  <div class="parte-head"><span class="num">04</span><h2>Tua Caneca 2.0 — Etapas 5 e 6</h2></div>
+
+  <article class="ex" id="ex7">
+    <div class="ex-head">
+      <span class="ex-num">EX 07</span>
+      <h3>Etapa 5: vida eterna em JSON 💾</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex7"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Métodos salvar() e carregar() na Loja, com a ponte to_dict.</p><span class="tag passos">🧭 Passo a passo</span><ol><li><code>salvar(self)</code>: converte cada produto com to_dict e grava a lista em <code>loja.json</code></li><li><code>carregar(self)</code>: lê o JSON e reconstrói os objetos Produto; no <code>FileNotFoundError</code>, adiciona 3 produtos padrão</li><li>Teste o ciclo completo: carregue, venda, salve, feche, abra — a baixa persistiu!</li></ol><span class="tag saida">✅ Ao salvar</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Loja salva em loja.json ✔</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">etapa5.py</span></div><pre class="code">import json
+
+# dentro da classe Loja:
+    def salvar(self):
+        dados = []
+        for produto in self.produtos:
+            dados.append(produto.to_dict())
+        with open("loja.json", "w", encoding="utf-8") as arquivo:
+            json.dump(dados, arquivo, indent=2, ensure_ascii=False)
+        print("Loja salva em loja.json ✔")
+
+    def carregar(self):
+        try:
+            with open("loja.json", "r", encoding="utf-8") as arquivo:
+                dados = json.load(arquivo)
+            for d in dados:
+                self.adicionar(Produto(d["nome"], d["preco"], d["estoque"]))
+        except FileNotFoundError:
+            self.adicionar(Produto("caneca branca", 25.0, 10))
+            self.adicionar(Produto("caneca preta", 27.5, 8))
+            self.adicionar(Produto("azulejo", 40.0, 5))</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex8">
+    <div class="ex-head">
+      <span class="ex-num">EX 08</span>
+      <h3>Etapa 6: menu blindado e o sistema completo 🛡️🏁</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex8"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Juntar tudo: o programa principal com pedir_inteiro — e conferir com a versão integrada.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Adicione a <code>pedir_inteiro</code> (ou importe do seu módulo validacoes — Semana 9!)</li><li>Programa principal: cria a Loja, carrega, e roda o menu: 1-Catálogo · 2-Venda · 3-Relatório · 4-Salvar e sair</li><li>Teste de estresse: texto no menu, produto inexistente, quantidade maior que o estoque</li><li>Compare com a versão integrada completa na solução — e comemore 🎉</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">=== TUA CANECA 2.0 ===
+1-Catálogo  2-Venda  3-Relatório  4-Salvar e sair
+Opção: 2
+Produto: caneca preta
+Quantidade: 12
+Venda registrada! Total: R$ 270.00</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">tuacaneca20.py</span></div><pre class="code">import json
+from datetime import datetime
+
+class Produto:
+    def __init__(self, nome, preco, estoque):
+        self.nome = nome
+        self.preco = preco
+        self.estoque = estoque
+
+    def vender(self, qtd):
+        if qtd &lt;= 0 or qtd &gt; self.estoque:
+            return False
+        self.estoque = self.estoque - qtd
+        return True
+
+    def to_dict(self):
+        return {"nome": self.nome, "preco": self.preco, "estoque": self.estoque}
+
+    def __str__(self):
+        return f"{self.nome} — R$ {self.preco:.2f} ({self.estoque} un.)"
+
+class Loja:
+    def __init__(self):
+        self.produtos = []
+        self.vendas = []
+
+    def adicionar(self, produto):
+        self.produtos.append(produto)
+
+    def buscar(self, nome):
+        for produto in self.produtos:
+            if produto.nome == nome:
+                return produto
+        return None
+
+    def listar(self):
+        print("--- CATÁLOGO ---")
+        for produto in self.produtos:
+            print(produto)
+
+    def definir_desconto(self, qtd):
+        if qtd &gt;= 20:
+            return 0.15
+        elif qtd &gt;= 10:
+            return 0.10
+        return 0
+
+    def registrar_venda(self, nome, qtd):
+        produto = self.buscar(nome)
+        if produto is None:
+            print("Produto não encontrado!")
+            return
+        if not produto.vender(qtd):
+            print(f"Quantidade inválida! Disponível: {produto.estoque}")
+            return
+        desconto = self.definir_desconto(qtd)
+        total = qtd * produto.preco * (1 - desconto)
+        data = datetime.now().strftime("%d/%m/%Y %H:%M")
+        self.vendas.append({"produto": nome, "qtd": qtd,
+                            "total": total, "data": data})
+        print(f"Venda registrada! Total: R$ {total:.2f}")
+
+    def relatorio(self):
+        if len(self.vendas) == 0:
+            print("Nenhuma venda registrada.")
+            return
+        faturamento = 0
+        por_produto = {}
+        for venda in self.vendas:
+            faturamento = faturamento + venda["total"]
+            por_produto[venda["produto"]] = por_produto.get(venda["produto"], 0) + venda["qtd"]
+        print(f"Faturamento: R$ {faturamento:.2f}")
+        campeao = ""
+        maior = 0
+        for nome, qtd in por_produto.items():
+            if qtd &gt; maior:
+                maior = qtd
+                campeao = nome
+        print(f"Campeão: {campeao} ({maior} un.)")
+
+    def salvar(self):
+        dados = []
+        for produto in self.produtos:
+            dados.append(produto.to_dict())
+        with open("loja.json", "w", encoding="utf-8") as arquivo:
+            json.dump(dados, arquivo, indent=2, ensure_ascii=False)
+        print("Loja salva ✔")
+
+    def carregar(self):
+        try:
+            with open("loja.json", "r", encoding="utf-8") as arquivo:
+                dados = json.load(arquivo)
+            for d in dados:
+                self.adicionar(Produto(d["nome"], d["preco"], d["estoque"]))
+        except FileNotFoundError:
+            self.adicionar(Produto("caneca branca", 25.0, 10))
+            self.adicionar(Produto("caneca preta", 27.5, 8))
+            self.adicionar(Produto("azulejo", 40.0, 5))
+
+def pedir_inteiro(mensagem):
+    while True:
+        try:
+            return int(input(mensagem))
+        except ValueError:
+            print("Digite um número inteiro!")
+
+# ===== PROGRAMA PRINCIPAL =====
+loja = Loja()
+loja.carregar()
+
+while True:
+    print()
+    print("=== TUA CANECA 2.0 ===")
+    print("1-Catálogo  2-Venda  3-Relatório  4-Salvar e sair")
+    opcao = pedir_inteiro("Opção: ")
+
+    if opcao == 1:
+        loja.listar()
+    elif opcao == 2:
+        nome = input("Produto: ")
+        qtd = pedir_inteiro("Quantidade: ")
+        loja.registrar_venda(nome, qtd)
+    elif opcao == 3:
+        loja.relatorio()
+    elif opcao == 4:
+        loja.salvar()
+        print("Até logo, e parabéns pela formação! 🎓")
+        break
+    else:
+        print("Opção inválida!")</pre></div><p><strong>~110 linhas, 12 semanas de conteúdo.</strong> Compare com a versão da Semana 8: as MESMAS funcionalidades, mas agora cada responsabilidade tem dono (Produto cuida de produto, Loja cuida da loja) — é assim que sistemas crescem sem desabar. Olhe para o seu primeiro <code>print("Olá, mundo!")</code> e sinta o orgulho. 👏</p></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p5">
+  <div class="parte-head"><span class="num">05</span><h2>Desafios livres e formatura</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Os últimos desafios não têm solução completa — porque a partir daqui, o programador é você. 🎓</p></div>
+  <article class="ex" id="ex9">
+    <div class="ex-head">
+      <span class="ex-num">EX 09</span>
+      <h3>Desafio: a linha personalizada 💼</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex9"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Integrar a herança da Semana 11 ao sistema.</p><span class="tag passos">🧭 Roteiro</span><ol><li>Adicione a classe <code>CanecaPersonalizada(Produto)</code> (taxa de arte no super().__init__)</li><li>O problema interessante: ao salvar e carregar, como saber qual classe recriar? Dica: inclua <code>"tipo"</code> no to_dict e decida no carregar com um if</li><li>Teste: crie uma personalizada, salve, recarregue — ela voltou com a classe certa?</li></ol><details class="dica"><summary>💡 Você acabou de tocar num tema avançado</summary><div class="inner">Salvar e reconstruir objetos com suas classes corretas se chama "serialização" — frameworks profissionais fazem exatamente o que você acabou de inventar com o campo "tipo". 😉</div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex10">
+    <div class="ex-head">
+      <span class="ex-num">EX 10</span>
+      <h3>Desafio final: seu sistema, seu portfólio 🚀</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex10"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>A prova de formatura: um sistema completo para um negócio À SUA ESCOLHA.</p><span class="tag passos">🧭 Roteiro</span><ol><li>Escolha o domínio: locadora de jogos, petshop, biblioteca, oficina, cantina...</li><li>Modele ANTES de programar: quais classes? Quais atributos e métodos? Desenhe num papel</li><li>Mantenha os pilares: classes · menu · regras de negócio · relatório · JSON · entradas blindadas</li><li>Capriche e suba no GitHub com um README explicando — seu primeiro projeto de portfólio!</li><li>Apresente para alguém explicando as DECISÕES (por que essa classe? por que esse método?)</li></ol><details class="dica"><summary>💡 A última dica das 12 semanas</summary><div class="inner">Daqui em diante, a pergunta nunca mais será "será que eu consigo?" — será "qual projeto eu vou fazer agora?". Continue construindo. Parabéns pela formação! 🎓🐍</div></details>
+    </div>
+  </article>
+</section>
+
+<div class="checklist" id="checklist">
+  <h2>✅ Checklist de fim de semana</h2>
+  <p>Antes de seguir para a próxima semana, confirme que você consegue:</p>
+<label class="check-item"><input type="checkbox"><span>Prever saídas de código com classes, json e desempacotamento</span></label>
+<label class="check-item"><input type="checkbox"><span>Encontrar bugs clássicos de POO (self esquecido, _init_ errado)</span></label>
+<label class="check-item"><input type="checkbox"><span>Modelar um sistema em classes ANTES de programar</span></label>
+<label class="check-item"><input type="checkbox"><span>Implementar uma classe Produto com regras e to_dict</span></label>
+<label class="check-item"><input type="checkbox"><span>Implementar uma classe Loja que gerencia objetos Produto</span></label>
+<label class="check-item"><input type="checkbox"><span>Registrar vendas com desconto e carimbo de datetime</span></label>
+<label class="check-item"><input type="checkbox"><span>Gerar relatório com dict contador sobre as vendas</span></label>
+<label class="check-item"><input type="checkbox"><span>Persistir os objetos da loja em JSON (salvar e carregar)</span></label>
+<label class="check-item"><input type="checkbox"><span>Blindar o menu com a pedir_inteiro do seu módulo de validações</span></label>
+<label class="check-item"><input type="checkbox"><span>Apresentar o sistema explicando as decisões de design</span></label>
+</div>
+
+<div class="win-banner" id="winBanner">
+  <h2>🏆 SEMANA 12 COMPLETA!</h2>
+  <p>FORMAÇÃO POO COMPLETA! Do print() à POO com JSON em 12 semanas. Você programa em Python — e o módulo avançado (planilhas, automações e APIs) começa na Semana 13! 🎓🐍🏆</p>
+</div>
+
+<div class="preview-s2">
+<h2>📅 Prévia da Semana 13</h2><p>Bem-vindo ao <strong>módulo avançado</strong>! Na próxima semana: <strong>CSV de verdade</strong> (o módulo <code>csv</code> com DictReader/DictWriter) e <strong>planilhas Excel</strong> com <code>openpyxl</code> — seu Python conversando direto com o mundo do Office. Depois vêm automações de arquivos e APIs da internet. A jornada só esquenta! 🚀</p></div>
+
+</main>
+
+<footer>python_para_iniciantes // semana_12 // exercícios guiados</footer>
+
+<script>
+// ===== Syntax highlight leve para Python =====
+(function(){
+  const KW = /\b(print|input|int|float|type|str|bool)\b/g;
+  document.querySelectorAll('pre.code').forEach(pre=>{
+    let src = pre.textContent;
+    // escapa HTML
+    src = src.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    // uma passada só, com alternação (comentário | string | builtin | bool | número)
+    src = src.replace(
+      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|insert|int|float|str|len|range|type|abs|round|max|min|sum|sorted|sort|reverse|append|remove|split|strip|upper|lower|replace|title|randint|random|get|keys|values|items|open|readlines|read|write|close|count|index|pop|update|list|dict|tuple|enumerate|sqrt|floor|ceil|choice|shuffle|sample|sleep|now|today|strftime|dumps|dump|loads|load|isinstance|datetime|date|DictReader|DictWriter|writerows|writerow|writeheader|writer|reader|csv|Workbook|load_workbook|save|iter_rows|Font|listdir|makedirs|getcwd|rename|exists|getsize|splitext|join|endswith|startswith|copytree|copy|move|requests|status_code|json)\b|\b(True|False|None|if|elif|else|while|for|in|and|or|not|break|continue|import|from|def|return|try|except|finally|with|as|del|global|pass|class|self|super|lambda)\b|(\b\d+(?:\.\d+)?\b)/g,
+      function(m, com, str, fn, bool, num){
+        if(com)  return '<span class="tk-com">'+com+'</span>';
+        if(str)  return '<span class="tk-str">'+str+'</span>';
+        if(fn)   return '<span class="tk-fn">'+fn+'</span>';
+        if(bool) return '<span class="tk-kw">'+bool+'</span>';
+        if(num)  return '<span class="tk-num">'+num+'</span>';
+        return m;
+      }
+    );
+    pre.innerHTML = src;
+  });
+})();
+
+// ===== Armazenamento seguro (localStorage com fallback em memória) =====
+// Quando o aluno abre o arquivo .html no computador, o progresso fica salvo
+// no navegador. Se o localStorage estiver indisponível (modo restrito,
+// pré-visualização, etc.), o progresso funciona só em memória, sem quebrar.
+const storage = (function(){
+  const KEY = 'python_semana12_progresso';
+  let memoria = {};
+  let disponivel = false;
+  try{
+    localStorage.setItem('__teste__','1');
+    localStorage.removeItem('__teste__');
+    disponivel = true;
+  }catch(e){ disponivel = false; }
+
+  return {
+    carregar: function(){
+      if(disponivel){
+        try{ return JSON.parse(localStorage.getItem(KEY)) || {}; }
+        catch(e){ return {}; }
+      }
+      return memoria;
+    },
+    salvar: function(dados){
+      memoria = dados;
+      if(disponivel){
+        try{ localStorage.setItem(KEY, JSON.stringify(dados)); }catch(e){}
+      }
+    },
+    limpar: function(){
+      memoria = {};
+      if(disponivel){
+        try{ localStorage.removeItem(KEY); }catch(e){}
+      }
+    },
+    persistente: disponivel
+  };
+})();
+
+// ===== Progresso dos exercícios + checklist =====
+(function(){
+  const checks = document.querySelectorAll('.done-check');
+  const listChecks = document.querySelectorAll('.check-item input');
+  const total = checks.length;
+  const fill = document.getElementById('pfill');
+  const count = document.getElementById('pcount');
+  const msg = document.getElementById('pmsg');
+  const banner = document.getElementById('winBanner');
+  const resetBtn = document.getElementById('resetBtn');
+
+  const MSGS = [
+    [0,  'Marque os exercícios concluídos ✔'],
+    [1,  'Boa! Continue assim 💪'],
+    [3,  'Pegando o ritmo! 🔥'],
+    [5, 'Metade do caminho! 🚀'],
+    [8, 'Quase lá... força! ⚡'],
+    [10, 'SEMANA COMPLETA! 🏆']
+  ];
+
+  function estadoAtual(){
+    const dados = { ex: {}, lista: {} };
+    checks.forEach(c => { dados.ex[c.dataset.ex] = c.checked; });
+    listChecks.forEach((c,i) => { dados.lista['item'+i] = c.checked; });
+    return dados;
+  }
+
+  function atualizarBarra(){
+    const done = document.querySelectorAll('.done-check:checked').length;
+    const pct = Math.round(done/total*100);
+    fill.style.width = pct + '%';
+    count.textContent = done + ' / ' + total;
+    let m = MSGS[0][1];
+    for(const [min,text] of MSGS){ if(done >= min) m = text; }
+    msg.textContent = m;
+    banner.classList.toggle('show', done === total);
+  }
+
+  function aplicarEstado(dados){
+    checks.forEach(c => {
+      const marcado = !!(dados.ex && dados.ex[c.dataset.ex]);
+      c.checked = marcado;
+      c.closest('article.ex').classList.toggle('done', marcado);
+    });
+    listChecks.forEach((c,i) => {
+      c.checked = !!(dados.lista && dados.lista['item'+i]);
+    });
+    atualizarBarra();
+  }
+
+  // Restaura o progresso salvo ao abrir a página
+  aplicarEstado(storage.carregar());
+
+  // Salva a cada mudança
+  checks.forEach(c => {
+    c.addEventListener('change', function(){
+      this.closest('article.ex').classList.toggle('done', this.checked);
+      atualizarBarra();
+      storage.salvar(estadoAtual());
+    });
+  });
+  listChecks.forEach(c => {
+    c.addEventListener('change', function(){
+      storage.salvar(estadoAtual());
+    });
+  });
+
+  // Botão de reset com confirmação
+  resetBtn.addEventListener('click', function(){
+    if(confirm('Apagar todo o progresso desta semana?')){
+      storage.limpar();
+      aplicarEstado({});
+    }
+  });
+
+  // Aviso discreto se o progresso não puder ser salvo neste ambiente
+  if(!storage.persistente){
+    msg.textContent += ' (progresso não será salvo neste ambiente)';
+  }
+})();
+</script>
+</body>
+</html>

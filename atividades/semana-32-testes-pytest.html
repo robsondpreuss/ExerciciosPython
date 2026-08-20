@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Semana 7 — Erros e Arquivos</title>
+<style>
+  :root{
+    --ink:#16243A;
+    --ink-soft:#4A5A74;
+    --paper:#F5F8FC;
+    --card:#FFFFFF;
+    --py-blue:#3776AB;
+    --py-blue-dark:#27598C;
+    --py-gold:#FFD43B;
+    --py-gold-dark:#C99700;
+    --term:#1B2435;
+    --term-line:#2B3850;
+    --green:#2EA56C;
+    --coral:#E2574C;
+    --radius:14px;
+    --mono:"Cascadia Code","JetBrains Mono",Consolas,"Roboto Mono",monospace;
+    --sans:"Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto}
+    *{transition:none !important;animation:none !important}
+  }
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.65}
+
+  /* ===== Barra de progresso fixa ===== */
+  .progress-wrap{
+    position:sticky;top:0;z-index:50;
+    background:var(--term);color:#fff;
+    padding:10px 18px;
+    display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+    box-shadow:0 2px 12px rgba(22,36,58,.25);
+  }
+  .progress-wrap .label{font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;white-space:nowrap}
+  .progress-bar{flex:1;min-width:140px;height:14px;background:var(--term-line);border-radius:99px;overflow:hidden}
+  .progress-fill{height:100%;width:0%;border-radius:99px;background:linear-gradient(90deg,var(--py-blue),var(--py-gold));transition:width .4s ease}
+  .progress-count{font-family:var(--mono);font-size:.85rem;color:var(--py-gold);white-space:nowrap}
+  .progress-msg{font-size:.78rem;color:#AFC3E0;white-space:nowrap}
+  .reset-btn{
+    font-family:var(--mono);font-size:.72rem;color:#AFC3E0;
+    background:transparent;border:1px solid var(--term-line);border-radius:8px;
+    padding:5px 11px;cursor:pointer;transition:all .15s ease;white-space:nowrap;
+  }
+  .reset-btn:hover,.reset-btn:focus-visible{color:#fff;border-color:#5A6E92;background:rgba(255,255,255,.06)}
+  .reset-btn:focus-visible{outline:2px solid var(--py-gold);outline-offset:2px}
+
+  /* ===== Hero ===== */
+  header.hero{
+    background:linear-gradient(150deg,var(--term) 0%,#22406B 70%,var(--py-blue) 100%);
+    color:#fff;padding:56px 20px 48px;text-align:center;position:relative;overflow:hidden;
+  }
+  header.hero::before{
+    content:"try  except  open(  with  as  .write(  .read(";
+    position:absolute;inset:auto 0 8px 0;font-family:var(--mono);font-size:.78rem;
+    color:rgba(255,255,255,.14);letter-spacing:.4em;white-space:nowrap;overflow:hidden;
+  }
+  .hero .kicker{
+    font-family:var(--mono);font-size:.85rem;color:var(--py-gold);
+    letter-spacing:.18em;text-transform:uppercase;margin-bottom:14px;
+  }
+  .hero h1{font-family:var(--mono);font-size:clamp(1.5rem,4.5vw,2.6rem);font-weight:700;line-height:1.25}
+  .hero h1 .cursor{display:inline-block;width:.55em;height:1.05em;background:var(--py-gold);vertical-align:text-bottom;margin-left:4px;animation:blink 1.1s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+  .hero p.sub{max-width:620px;margin:18px auto 0;color:#D7E4F5;font-size:1rem}
+  .hero .howto{
+    max-width:640px;margin:26px auto 0;background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.18);border-radius:var(--radius);
+    padding:14px 18px;font-size:.88rem;color:#E8F0FB;text-align:left;
+  }
+  .hero .howto strong{color:var(--py-gold)}
+
+  /* ===== Navegação por partes ===== */
+  nav.parts{
+    display:flex;gap:8px;flex-wrap:wrap;justify-content:center;
+    padding:18px 16px;max-width:980px;margin:0 auto;
+  }
+  nav.parts a{
+    font-family:var(--mono);font-size:.78rem;text-decoration:none;
+    color:var(--py-blue-dark);background:var(--card);
+    border:1.5px solid #D5E2F2;border-radius:99px;padding:7px 14px;
+    transition:all .15s ease;
+  }
+  nav.parts a:hover,nav.parts a:focus-visible{border-color:var(--py-blue);background:#EAF2FB}
+  nav.parts a:focus-visible{outline:2px solid var(--py-blue);outline-offset:2px}
+
+  main{max-width:880px;margin:0 auto;padding:8px 18px 80px}
+
+  /* ===== Seções (partes) ===== */
+  section.parte{margin-top:46px}
+  .parte-head{display:flex;align-items:baseline;gap:14px;border-bottom:3px solid var(--py-gold);padding-bottom:10px;margin-bottom:6px}
+  .parte-head .num{
+    font-family:var(--mono);font-size:2.4rem;font-weight:700;color:var(--py-blue);line-height:1;
+  }
+  .parte-head h2{font-family:var(--mono);font-size:clamp(1.05rem,2.8vw,1.45rem);color:var(--ink)}
+  .parte-intro{
+    background:var(--card);border:1px solid #E1E9F4;border-radius:var(--radius);
+    padding:18px 22px;margin-top:16px;font-size:.95rem;
+  }
+  .parte-intro h3{font-size:.8rem;font-family:var(--mono);color:var(--py-blue);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px}
+  .parte-intro p{margin-bottom:10px}
+  .parte-intro p:last-child{margin-bottom:0}
+  .parte-intro ol,.parte-intro ul{margin:8px 0 10px 22px}
+  table{border-collapse:collapse;width:100%;margin:10px 0;font-size:.88rem}
+  th,td{border:1px solid #DCE6F2;padding:7px 10px;text-align:left}
+  th{background:#EDF3FA;font-family:var(--mono);font-size:.78rem}
+  td code,p code,li code{
+    font-family:var(--mono);font-size:.85em;background:#EDF2F9;
+    border:1px solid #DCE6F2;border-radius:5px;padding:1px 5px;color:var(--py-blue-dark);
+  }
+
+  /* ===== Cartão de exercício ===== */
+  article.ex{
+    background:var(--card);border:1px solid #E1E9F4;border-radius:var(--radius);
+    margin-top:22px;overflow:hidden;
+    box-shadow:0 1px 4px rgba(22,36,58,.05);
+    transition:box-shadow .2s ease;
+  }
+  article.ex:hover{box-shadow:0 4px 16px rgba(22,36,58,.10)}
+  article.ex.done{border-color:var(--green)}
+  article.ex.done .ex-head{background:#EAF7F0}
+  .ex-head{
+    display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+    padding:14px 18px;background:#F2F6FC;border-bottom:1px solid #E1E9F4;
+  }
+  .ex-num{
+    font-family:var(--mono);font-weight:700;font-size:.85rem;color:#fff;
+    background:var(--py-blue);border-radius:8px;padding:5px 10px;white-space:nowrap;
+  }
+  article.ex.done .ex-num{background:var(--green)}
+  .ex-head h3{font-size:1.02rem;flex:1;min-width:180px}
+  .stars{font-size:.78rem;color:var(--py-gold-dark);background:#FFF6D6;border:1px solid #F2DE96;border-radius:99px;padding:3px 10px;white-space:nowrap}
+  .done-toggle{
+    display:flex;align-items:center;gap:7px;cursor:pointer;user-select:none;
+    font-size:.8rem;font-family:var(--mono);color:var(--ink-soft);
+  }
+  .done-toggle input{width:17px;height:17px;accent-color:var(--green);cursor:pointer}
+  .ex-body{padding:18px 20px 22px}
+  .ex-body p{margin-bottom:10px}
+  .ex-body ol,.ex-body ul{margin:6px 0 12px 22px}
+  .ex-body li{margin-bottom:4px}
+
+  .tag{
+    display:inline-block;font-family:var(--mono);font-size:.72rem;
+    text-transform:uppercase;letter-spacing:.08em;border-radius:6px;
+    padding:3px 9px;margin:4px 0 6px;
+  }
+  .tag.obj{background:#E7F0FB;color:var(--py-blue-dark)}
+  .tag.passos{background:#FFF3CC;color:#8a6d00}
+  .tag.saida{background:#E4F5EC;color:#1c7a4d}
+
+  /* ===== Blocos de código estilo terminal ===== */
+  .term-window{border-radius:12px;overflow:hidden;margin:12px 0;border:1px solid var(--term-line)}
+  .term-bar{
+    display:flex;align-items:center;gap:8px;background:#121A29;padding:8px 14px;
+  }
+  .term-bar .dot{width:11px;height:11px;border-radius:50%}
+  .dot.r{background:#FF5F57}.dot.y{background:#FEBC2E}.dot.g{background:#28C840}
+  .term-bar .fname{font-family:var(--mono);font-size:.75rem;color:#8FA6C8;margin-left:6px}
+  pre.code,pre.output{
+    background:var(--term);color:#E7EDF7;font-family:var(--mono);
+    font-size:.86rem;line-height:1.6;padding:14px 18px;overflow-x:auto;margin:0;
+  }
+  pre.output{color:#9FE8C0}
+  pre.output .prompt-in{color:#E7EDF7}
+  /* syntax highlight */
+  .tk-kw{color:#7EC1FF;font-weight:600}
+  .tk-str{color:#FFD98A}
+  .tk-com{color:#7C8DA8;font-style:italic}
+  .tk-num{color:#9FE8C0}
+  .tk-fn{color:#C7A6FF}
+
+  /* ===== Dicas / desafios / soluções ===== */
+  details{border-radius:10px;margin:12px 0;overflow:hidden;border:1.5px solid transparent}
+  details summary{
+    cursor:pointer;list-style:none;padding:11px 16px;font-weight:600;font-size:.9rem;
+    display:flex;align-items:center;gap:8px;user-select:none;
+  }
+  details summary::-webkit-details-marker{display:none}
+  details summary::after{content:"▾";margin-left:auto;transition:transform .2s ease;font-size:.85em}
+  details[open] summary::after{transform:rotate(180deg)}
+  details .inner{padding:4px 16px 14px}
+  details.dica{background:#FFF9E8;border-color:#F2DE96}
+  details.dica summary{color:#8a6d00}
+  details.desafio{background:#F3EDFB;border-color:#D9C8F2}
+  details.desafio summary{color:#6B3FA0}
+  details.solucao{background:#EAF7F0;border-color:#BFE5D0}
+  details.solucao summary{color:#1c7a4d}
+  details.solucao .aviso{font-size:.8rem;color:#1c7a4d;margin-bottom:8px;font-style:italic}
+
+  /* ===== Checklist final ===== */
+  .checklist{background:var(--card);border:1px solid #E1E9F4;border-radius:var(--radius);padding:22px;margin-top:30px}
+  .checklist h2{font-family:var(--mono);font-size:1.2rem;margin-bottom:6px}
+  .checklist p{font-size:.9rem;color:var(--ink-soft);margin-bottom:14px}
+  .check-item{display:flex;align-items:flex-start;gap:10px;padding:7px 4px;border-radius:8px;cursor:pointer}
+  .check-item:hover{background:#F2F6FC}
+  .check-item input{width:18px;height:18px;margin-top:3px;accent-color:var(--py-blue);cursor:pointer}
+  .check-item span{font-size:.93rem}
+  .check-item input:checked + span{color:var(--green);text-decoration:line-through;text-decoration-color:rgba(46,165,108,.5)}
+
+  /* banner 100% */
+  .win-banner{
+    display:none;margin-top:26px;text-align:center;color:#fff;
+    background:linear-gradient(120deg,var(--green),var(--py-blue));
+    border-radius:var(--radius);padding:26px 20px;
+  }
+  .win-banner.show{display:block;animation:pop .45s ease}
+  @keyframes pop{0%{transform:scale(.94);opacity:0}100%{transform:scale(1);opacity:1}}
+  .win-banner h2{font-family:var(--mono);font-size:1.4rem;margin-bottom:6px}
+
+  .preview-s2{
+    margin-top:36px;border:2px dashed var(--py-blue);border-radius:var(--radius);
+    padding:20px 22px;background:#EFF5FC;
+  }
+  .preview-s2 h2{font-family:var(--mono);font-size:1.05rem;color:var(--py-blue-dark);margin-bottom:8px}
+  footer{
+    text-align:center;font-family:var(--mono);font-size:.75rem;color:var(--ink-soft);
+    padding:26px 16px 40px;
+  }
+  @media(max-width:560px){
+    .progress-msg{display:none}
+    .ex-head h3{font-size:.95rem}
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-wrap" role="region" aria-label="Progresso da semana">
+  <span class="label">XP DA SEMANA</span>
+  <div class="progress-bar"><div class="progress-fill" id="pfill"></div></div>
+  <span class="progress-count" id="pcount">0 / 16</span>
+  <span class="progress-msg" id="pmsg">Marque os exercícios concluídos ✔</span>
+  <button class="reset-btn" id="resetBtn" title="Apagar todo o progresso salvo">↺ Resetar</button>
+</div>
+
+<header class="hero">
+  <div class="kicker">Python para Iniciantes · Exercícios Guiados</div>
+  <h1>SEMANA 7 — Erros e Arquivos:<br>programas à prova de tudo<span class="cursor" aria-hidden="true"></span></h1>
+  <p class="sub">Programas que não quebram (try/except) e dados que sobrevivem ao fechamento: gravar e ler arquivos .txt, processar dados linha a linha e o "CSV caseiro".</p>
+  <div class="howto">
+    <strong>Como usar:</strong> digite o código você mesmo (não copie e cole!), compare com a saída esperada e marque <strong>✔ Concluído</strong> em cada exercício para encher sua barra de XP. As <strong>dicas</strong> e <strong>soluções</strong> ficam escondidas — só abra depois de tentar! Seu progresso fica salvo no navegador.
+  </div>
+</header>
+
+<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · try / except</a><a href="#p2">2 · Gravando</a><a href="#p3">3 · Lendo</a><a href="#p4">4 · Processando</a><a href="#p5">5 · Funções + arquivos</a><a href="#p6">6 · Projetos</a><a href="#checklist">✅ Checklist</a></nav>
+
+<main>
+
+<section class="parte" id="p1">
+  <div class="parte-head"><span class="num">01</span><h2>try / except: errar sem quebrar</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Até hoje, um erro = programa morto. Mas erros têm nome e podem ser <strong>capturados</strong>:</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">estrutura.py</span></div><pre class="code">try:
+    # código que PODE dar erro
+    numero = int(input("Número: "))
+except ValueError:
+    # plano B se o erro acontecer
+    print("Isso não é um número!")</pre></div><p>Se tudo der certo, o except é ignorado. Se o erro estourar, o Python pula para o plano B em vez de quebrar. Profissionais chamam isso de <strong>programação defensiva</strong>.</p></div>
+  <article class="ex" id="ex1">
+    <div class="ex-head">
+      <span class="ex-num">EX 01</span>
+      <h3>Colecionador de erros 🐛</h3>
+      <span class="stars">⭐ básico</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex1"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Conhecer os 3 erros mais comuns de execução pelo nome.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Execute UMA linha por vez (comente as outras com #)</li><li>Para cada uma, anote o NOME do erro (última linha do traceback)</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex01_erros.py</span></div><pre class="code">print(int("abc"))      # erro 1
+print(10 / 0)          # erro 2
+print("2" + 2)         # erro 3</pre></div><span class="tag saida">✅ Os três erros</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">ValueError: invalid literal for int() ...
+ZeroDivisionError: division by zero
+TypeError: can only concatenate str ...</pre></div><details class="dica"><summary>💡 Como ler um traceback</summary><div class="inner">Vá direto para a ÚLTIMA linha: ela tem o tipo do erro e a explicação. As linhas de cima mostram ONDE (arquivo e linha) ele aconteceu. Traceback não é bronca — é um mapa do tesouro! 🗺️</div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex2">
+    <div class="ex-head">
+      <span class="ex-num">EX 02</span>
+      <h3>Primeira rede de proteção</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex2"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Capturar um ValueError.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Digite e execute respondendo "abc" e depois um número de verdade:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex02_try.py</span></div><pre class="code">try:
+    numero = int(input("Digite um número: "))
+    print(f"O dobro é {numero * 2}")
+except ValueError:
+    print("Isso não é um número válido!")</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Digite um número: abc
+Isso não é um número válido!</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner">Repare que o print do dobro está DENTRO do try: se a conversão falhar, ele nem tenta executar — vai direto para o except.</div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex3">
+    <div class="ex-head">
+      <span class="ex-num">EX 03</span>
+      <h3>Um plano B para cada erro</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex3"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Tratar erros diferentes com mensagens diferentes.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Monte uma divisão de dois números pedidos ao usuário</li><li>Use DOIS excepts: um para <code>ValueError</code> (texto em vez de número) e outro para <code>ZeroDivisionError</code></li><li>Teste os dois caminhos!</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Dividendo: 10
+Divisor: 0
+Não dá para dividir por zero!</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex03.py</span></div><pre class="code">try:
+    a = float(input("Dividendo: "))
+    b = float(input("Divisor: "))
+    print(f"Resultado: {a / b}")
+except ValueError:
+    print("Digite apenas números!")
+except ZeroDivisionError:
+    print("Não dá para dividir por zero!")</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex4">
+    <div class="ex-head">
+      <span class="ex-num">EX 04</span>
+      <h3>A entrada blindada 🛡️</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex4"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Criar a função mais útil da sua caixa de ferramentas: pedir_inteiro().</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Junte 3 semanas numa função: loop (S3) + função com return (S6) + try/except (S7)</li><li>A função insiste até receber um inteiro válido — e RETORNA ele</li><li>Quem chama tem garantia de receber um número!</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Sua idade: vinte
+Digite um número inteiro!
+Sua idade: 35
+Idade registrada: 35</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex04.py</span></div><pre class="code">def pedir_inteiro(mensagem):
+    while True:
+        try:
+            return int(input(mensagem))
+        except ValueError:
+            print("Digite um número inteiro!")
+
+idade = pedir_inteiro("Sua idade: ")
+print(f"Idade registrada: {idade}")</pre></div><p>Guarde essa função com carinho — ela volta no projeto final! O <code>return</code> dentro do try encerra o loop E a função de uma vez quando dá certo.</p></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p2">
+  <div class="parte-head"><span class="num">02</span><h2>Gravando arquivos</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Tudo que seus programas fizeram até hoje EVAPORA quando eles fecham. Arquivos resolvem isso:</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">estrutura.py</span></div><pre class="code">with open("dados.txt", "w", encoding="utf-8") as arquivo:
+    arquivo.write("primeira linha\n")</pre></div><p>Os modos: <code>"w"</code> (write) cria o arquivo — e <strong>APAGA</strong> se já existir! <code>"a"</code> (append) acrescenta no final sem apagar. O <code>with</code> fecha o arquivo sozinho ao terminar (sempre use!). E o <code>\n</code> quebra a linha — o write não quebra sozinho como o print.</p></div>
+  <article class="ex" id="ex5">
+    <div class="ex-head">
+      <span class="ex-num">EX 05</span>
+      <h3>Primeiro arquivo 📄</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex5"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Criar um arquivo de texto com Python.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Digite e execute:</li><li>Depois, abra a pasta do seu script e procure o <code>ola.txt</code> — abra no Bloco de Notas!</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex05_gravar.py</span></div><pre class="code">with open("ola.txt", "w", encoding="utf-8") as arquivo:
+    arquivo.write("Meu primeiro arquivo!\n")
+    arquivo.write("Criado com Python.\n")
+
+print("Arquivo gravado! Vá conferir na pasta.")</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Arquivo gravado! Vá conferir na pasta.</pre></div><details class="dica"><summary>💡 Experimento importante</summary><div class="inner">Rode o programa DUAS vezes e abra o arquivo: continua com 2 linhas, não 4! O modo "w" recomeça do zero a cada execução. Guarde isso para o próximo exercício...</div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex6">
+    <div class="ex-head">
+      <span class="ex-num">EX 06</span>
+      <h3>Diário de bordo (modo "a") 📓</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex6"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Acrescentar sem apagar.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Peça uma frase ao usuário e grave em <code>diario.txt</code> com o modo <code>"a"</code></li><li>Rode o programa 3 vezes com frases diferentes</li><li>Abra o arquivo: as 3 frases estão lá! ✔</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Como foi seu dia? Aprendi a gravar arquivos!
+Registrado no diário ✔</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex06.py</span></div><pre class="code">frase = input("Como foi seu dia? ")
+
+with open("diario.txt", "a", encoding="utf-8") as arquivo:
+    arquivo.write(frase + "\n")
+
+print("Registrado no diário ✔")</pre></div></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p3">
+  <div class="parte-head"><span class="num">03</span><h2>Lendo arquivos</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Para ler, o modo é <code>"r"</code> (read). Duas formas: <code>arquivo.read()</code> traz TUDO numa string só; <code>for linha in arquivo</code> percorre linha a linha (melhor para processar dados).</p></div>
+  <article class="ex" id="ex7">
+    <div class="ex-head">
+      <span class="ex-num">EX 07</span>
+      <h3>Lendo tudo de uma vez</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex7"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Recuperar o conteúdo gravado.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Leia o <code>ola.txt</code> do Exercício 5:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex07_ler.py</span></div><pre class="code">with open("ola.txt", "r", encoding="utf-8") as arquivo:
+    conteudo = arquivo.read()
+
+print(conteudo)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Meu primeiro arquivo!
+Criado com Python.</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner">O conteúdo vem como uma string normal — dá para usar len(), split(), in... tudo que você sabe de strings!</div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex8">
+    <div class="ex-head">
+      <span class="ex-num">EX 08</span>
+      <h3>Linha a linha (e o mistério do espaçamento)</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex8"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Percorrer um arquivo com for — e descobrir por que o strip() é essencial.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Leia o diário linha a linha, primeiro SEM strip:</li><li>Note as linhas em branco extras na saída!</li><li>Adicione <code>.strip()</code> e rode de novo</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex08_linhas.py</span></div><pre class="code">with open("diario.txt", "r", encoding="utf-8") as arquivo:
+    for linha in arquivo:
+        print(linha)          # com "fantasma"
+        # print(linha.strip())  # sem "fantasma"</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><p>Cada linha do arquivo termina com um <code>\n</code> invisível — e o print adiciona OUTRO. Resultado: linha em branco extra. O <code>.strip()</code> (Semana 4!) remove o <code>\n</code> fantasma. Regra prática: <strong>leu linha de arquivo? strip() nela.</strong></p></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex9">
+    <div class="ex-head">
+      <span class="ex-num">EX 09</span>
+      <h3>O arquivo que não existe</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex9"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Tratar o FileNotFoundError.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Tente abrir <code>"tesouro.txt"</code> (que não existe) e veja o erro</li><li>Proteja com try/except <code>FileNotFoundError</code></li><li>No plano B, avise o usuário com uma mensagem amigável</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output" style="color:#FF9B94">FileNotFoundError: [Errno 2] No such file or directory: 'tesouro.txt'</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex09.py</span></div><pre class="code">try:
+    with open("tesouro.txt", "r", encoding="utf-8") as arquivo:
+        print(arquivo.read())
+except FileNotFoundError:
+    print("Arquivo não encontrado! Verifique o nome e a pasta.")</pre></div><p>Esse tratamento é OBRIGATÓRIO em programas reais: você nunca tem certeza de que o arquivo está lá. No projeto final, vamos usá-lo para carregar dados "se existirem".</p></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p4">
+  <div class="parte-head"><span class="num">04</span><h2>Processando dados de arquivos</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Agora a mágica completa: <strong>listas ↔ arquivos</strong>. Gravar = percorrer a lista escrevendo uma linha por item. Ler = percorrer as linhas adicionando numa lista. Seus dados ganham vida eterna! ⚡</p></div>
+  <article class="ex" id="ex10">
+    <div class="ex-head">
+      <span class="ex-num">EX 10</span>
+      <h3>Lista de compras eterna 🛒</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex10"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Salvar uma lista em arquivo e carregá-la de volta.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Parte 1 — gravar: monte a lista com input (até "fim") e grave um item por linha</li><li>Parte 2 — ler: em OUTRO script, leia o arquivo de volta para uma lista (com strip!)</li><li>Feche tudo, rode só a parte 2: a lista sobreviveu! 🎉</li></ol><span class="tag saida">✅ Saída da parte 2</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Lista carregada: ['arroz', 'feijão', 'erva-mate']</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">parte1_gravar.py</span></div><pre class="code">compras = []
+while True:
+    item = input("Item (ou 'fim'): ")
+    if item == "fim":
+        break
+    compras.append(item)
+
+with open("compras.txt", "w", encoding="utf-8") as arquivo:
+    for item in compras:
+        arquivo.write(item + "\n")
+
+print("Lista salva!")</pre></div><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">parte2_ler.py</span></div><pre class="code">lista = []
+with open("compras.txt", "r", encoding="utf-8") as arquivo:
+    for linha in arquivo:
+        lista.append(linha.strip())
+
+print(f"Lista carregada: {lista}")</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex11">
+    <div class="ex-head">
+      <span class="ex-num">EX 11</span>
+      <h3>Média a partir do arquivo</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex11"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Ler números de um arquivo e calcular sobre eles.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie na mão (no Bloco de Notas) um <code>notas.txt</code> com uma nota por linha: 8.5, 7.0, 9.5, 6.0</li><li>Leia cada linha, converta com <code>float(linha.strip())</code> e acumule numa lista</li><li>Calcule e exiba a média</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Notas lidas: [8.5, 7.0, 9.5, 6.0]
+Média: 7.8</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex11.py</span></div><pre class="code">notas = []
+
+with open("notas.txt", "r", encoding="utf-8") as arquivo:
+    for linha in arquivo:
+        notas.append(float(linha.strip()))
+
+print(f"Notas lidas: {notas}")
+print(f"Média: {sum(notas) / len(notas):.1f}")</pre></div><p>Atenção à ordem: primeiro strip (limpa), depois float (converte). Arquivo só guarda TEXTO — converter é por nossa conta.</p></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex12">
+    <div class="ex-head">
+      <span class="ex-num">EX 12</span>
+      <h3>O "CSV caseiro" 📊</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex12"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Guardar VÁRIOS dados por linha com separador — o formato dos dados profissionais.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie <code>produtos.txt</code> com linhas no formato <code>nome;preco</code> — ex.: <code>caneca branca;25.00</code></li><li>Leia cada linha, use <code>split(";")</code> para separar os campos</li><li>Desempacote: <code>nome, preco = linha.strip().split(";")</code></li><li>Exiba como tabela e some o total</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">caneca branca — R$ 25.00
+caneca preta — R$ 27.50
+azulejo — R$ 40.00
+TOTAL: R$ 92.50</pre></div><details class="dica"><summary>💡 Você acabou de inventar o CSV!</summary><div class="inner">Arquivos com "valores separados por caractere" são o formato CSV — o mesmo que o Excel exporta. Você está a um passo de processar planilhas com Python! 🤯</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex12.py</span></div><pre class="code">total = 0
+
+with open("produtos.txt", "r", encoding="utf-8") as arquivo:
+    for linha in arquivo:
+        nome, preco = linha.strip().split(";")
+        preco = float(preco)
+        total = total + preco
+        print(f"{nome} — R$ {preco:.2f}")
+
+print(f"TOTAL: R$ {total:.2f}")</pre></div></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p5">
+  <div class="parte-head"><span class="num">05</span><h2>Funções + arquivos: salvar e carregar</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>O padrão profissional: um PAR de funções, <code>salvar_dados(lista)</code> e <code>carregar_dados()</code>. Todo programa com persistência tem essa dupla — e a carga trata o "primeiro uso" (arquivo ainda não existe) com try/except.</p></div>
+  <article class="ex" id="ex13">
+    <div class="ex-head">
+      <span class="ex-num">EX 13</span>
+      <h3>A dupla salvar/carregar</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex13"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Escrever o par de funções que você vai usar para sempre.</p><span class="tag passos">🧭 Passo a passo</span><ol><li><code>salvar_tarefas(tarefas)</code>: grava a lista, um item por linha</li><li><code>carregar_tarefas()</code>: lê e RETORNA a lista — e se o arquivo não existir, retorna <code>[]</code> (lista vazia) via except</li><li>Teste: carregue, adicione um item, salve, rode de novo</li></ol><span class="tag saida">✅ Três execuções seguidas</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Tarefas: []
+Tarefas: ['estudar python']
+Tarefas: ['estudar python', 'criar exercícios']</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex13.py</span></div><pre class="code">def salvar_tarefas(tarefas):
+    with open("tarefas.txt", "w", encoding="utf-8") as arquivo:
+        for tarefa in tarefas:
+            arquivo.write(tarefa + "\n")
+
+def carregar_tarefas():
+    try:
+        tarefas = []
+        with open("tarefas.txt", "r", encoding="utf-8") as arquivo:
+            for linha in arquivo:
+                tarefas.append(linha.strip())
+        return tarefas
+    except FileNotFoundError:
+        return []   # primeiro uso: começa vazio
+
+tarefas = carregar_tarefas()
+print(f"Tarefas: {tarefas}")
+
+nova = input("Nova tarefa: ")
+tarefas.append(nova)
+salvar_tarefas(tarefas)</pre></div></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p6">
+  <div class="parte-head"><span class="num">06</span><h2>Projetos da semana: juntando tudo!</h2></div>
+
+  <article class="ex" id="ex14">
+    <div class="ex-head">
+      <span class="ex-num">EX 14</span>
+      <h3>Projeto: Registro de vendas Tua Caneca 💾</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex14"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Vendas que sobrevivem: cada venda vira uma linha no arquivo, e o relatório lê tudo.</p><span class="tag passos">🧭 Requisitos</span><ol><li>Menu: 1-Registrar venda · 2-Relatório · 3-Sair</li><li>Registrar: peça cor e quantidade; grave <code>cor;quantidade;total</code> com modo <code>"a"</code> em <code>vendas.txt</code></li><li>Relatório: leia o arquivo (protegido com FileNotFoundError!), some os totais e conte as vendas</li><li>Use sua <code>pedir_inteiro()</code> nas entradas numéricas!</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">1-Registrar  2-Relatório  3-Sair
+Opção: 2
+Vendas registradas: 3
+Faturamento total: R$ 175.00</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex14.py</span></div><pre class="code">PRECO = 25.00
+
+def pedir_inteiro(mensagem):
+    while True:
+        try:
+            return int(input(mensagem))
+        except ValueError:
+            print("Digite um número inteiro!")
+
+while True:
+    print()
+    print("1-Registrar  2-Relatório  3-Sair")
+    opcao = pedir_inteiro("Opção: ")
+
+    if opcao == 1:
+        cor = input("Cor: ")
+        qtd = pedir_inteiro("Quantidade: ")
+        total = qtd * PRECO
+        with open("vendas.txt", "a", encoding="utf-8") as arquivo:
+            arquivo.write(f"{cor};{qtd};{total}\n")
+        print(f"Venda registrada: R$ {total:.2f}")
+    elif opcao == 2:
+        try:
+            vendas = 0
+            faturamento = 0
+            with open("vendas.txt", "r", encoding="utf-8") as arquivo:
+                for linha in arquivo:
+                    cor, qtd, total = linha.strip().split(";")
+                    vendas = vendas + 1
+                    faturamento = faturamento + float(total)
+            print(f"Vendas registradas: {vendas}")
+            print(f"Faturamento total: R$ {faturamento:.2f}")
+        except FileNotFoundError:
+            print("Nenhuma venda registrada ainda.")
+    elif opcao == 3:
+        break
+    else:
+        print("Opção inválida!")</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex15">
+    <div class="ex-head">
+      <span class="ex-num">EX 15</span>
+      <h3>Projeto: Lista de tarefas v2 — agora eterna ✅</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex15"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Dar persistência ao projeto final da Semana 4.</p><span class="tag passos">🧭 Requisitos</span><ol><li>Pegue sua lista de tarefas da Semana 4 (menu adicionar/listar/remover/sair)</li><li>No INÍCIO: <code>tarefas = carregar_tarefas()</code> (Exercício 13)</li><li>Após cada mudança (adicionar/remover): <code>salvar_tarefas(tarefas)</code></li><li>Feche, abra de novo: as tarefas continuam lá! 🎉</li></ol><span class="tag saida">✅ Ao reabrir o programa</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">📋 Tarefas: ['estudar python', 'preparar aula']</pre></div><details class="dica"><summary>💡 Repare na evolução</summary><div class="inner">Semana 4: o programa funcionava. Semana 7: ele LEMBRA. Essa diferença — dados persistentes — é o que separa um exercício de um software de verdade.</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex15.py</span></div><pre class="code">def salvar_tarefas(tarefas):
+    with open("tarefas.txt", "w", encoding="utf-8") as arquivo:
+        for tarefa in tarefas:
+            arquivo.write(tarefa + "\n")
+
+def carregar_tarefas():
+    try:
+        tarefas = []
+        with open("tarefas.txt", "r", encoding="utf-8") as arquivo:
+            for linha in arquivo:
+                tarefas.append(linha.strip())
+        return tarefas
+    except FileNotFoundError:
+        return []
+
+tarefas = carregar_tarefas()
+
+while True:
+    print()
+    print("1-Adicionar  2-Listar  3-Remover  4-Sair")
+    opcao = int(input("Opção: "))
+
+    if opcao == 1:
+        tarefas.append(input("Nova tarefa: "))
+        salvar_tarefas(tarefas)
+    elif opcao == 2:
+        print(f"📋 Tarefas: {tarefas}")
+    elif opcao == 3:
+        tarefa = input("Qual remover? ")
+        if tarefa in tarefas:
+            tarefas.remove(tarefa)
+            salvar_tarefas(tarefas)
+        else:
+            print("Não encontrada!")
+    elif opcao == 4:
+        break</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex16">
+    <div class="ex-head">
+      <span class="ex-num">EX 16</span>
+      <h3>Projeto bônus: Agenda de contatos 📒</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex16"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Construir sozinho um sistema com CSV caseiro (sem código pronto!).</p><span class="tag passos">🧭 Roteiro</span><ol><li>Arquivo <code>contatos.txt</code> no formato <code>nome;telefone</code></li><li>Menu: adicionar (modo "a") · listar todos · buscar por nome · sair</li><li>Na busca, percorra as linhas comparando o nome após o split</li><li>Blinde TUDO: pedir_inteiro no menu, FileNotFoundError nas leituras</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Buscar: Ana
+Ana: (51) 98888-7777</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex16.py</span></div><pre class="code">def pedir_inteiro(mensagem):
+    while True:
+        try:
+            return int(input(mensagem))
+        except ValueError:
+            print("Digite um número!")
+
+while True:
+    print()
+    print("1-Adicionar  2-Listar  3-Buscar  4-Sair")
+    opcao = pedir_inteiro("Opção: ")
+
+    if opcao == 1:
+        nome = input("Nome: ")
+        telefone = input("Telefone: ")
+        with open("contatos.txt", "a", encoding="utf-8") as arquivo:
+            arquivo.write(f"{nome};{telefone}\n")
+        print("Contato salvo!")
+    elif opcao == 2:
+        try:
+            with open("contatos.txt", "r", encoding="utf-8") as arquivo:
+                for linha in arquivo:
+                    nome, telefone = linha.strip().split(";")
+                    print(f"— {nome}: {telefone}")
+        except FileNotFoundError:
+            print("Agenda vazia.")
+    elif opcao == 3:
+        busca = input("Buscar: ")
+        encontrado = False
+        try:
+            with open("contatos.txt", "r", encoding="utf-8") as arquivo:
+                for linha in arquivo:
+                    nome, telefone = linha.strip().split(";")
+                    if nome == busca:
+                        print(f"{nome}: {telefone}")
+                        encontrado = True
+        except FileNotFoundError:
+            pass
+        if not encontrado:
+            print("Não encontrado!")
+    elif opcao == 4:
+        break</pre></div></div></details>
+    </div>
+  </article>
+</section>
+
+<div class="checklist" id="checklist">
+  <h2>✅ Checklist de fim de semana</h2>
+  <p>Antes de seguir para a próxima semana, confirme que você consegue:</p>
+<label class="check-item"><input type="checkbox"><span>Ler um traceback e identificar o TIPO do erro na última linha</span></label>
+<label class="check-item"><input type="checkbox"><span>Proteger uma conversão com try/except ValueError</span></label>
+<label class="check-item"><input type="checkbox"><span>Tratar erros diferentes com excepts separados</span></label>
+<label class="check-item"><input type="checkbox"><span>Criar uma função de entrada "blindada" (while + try + return)</span></label>
+<label class="check-item"><input type="checkbox"><span>Gravar um arquivo com with open(..., "w") e write()</span></label>
+<label class="check-item"><input type="checkbox"><span>Acrescentar linhas sem apagar com o modo "a"</span></label>
+<label class="check-item"><input type="checkbox"><span>Ler um arquivo inteiro com read() e linha a linha com for</span></label>
+<label class="check-item"><input type="checkbox"><span>Lembrar do strip() para tirar o \n das linhas lidas</span></label>
+<label class="check-item"><input type="checkbox"><span>Tratar FileNotFoundError ao abrir arquivos</span></label>
+<label class="check-item"><input type="checkbox"><span>Salvar e carregar uma lista usando split(";")</span></label>
+</div>
+
+<div class="win-banner" id="winBanner">
+  <h2>🏆 SEMANA 7 COMPLETA!</h2>
+  <p>Você concluiu todos os exercícios. Seus programas agora aguentam o tranco do mundo real!</p>
+</div>
+
+<div class="preview-s2">
+<h2>📅 Prévia da Semana 8</h2><p>Chegou a hora: o <strong>PROJETO FINAL</strong>! Você vai construir, etapa por etapa, um sistema completo de vendas com menu, estoque em dicionário, relatórios, dados salvos em arquivo e entradas blindadas com try/except. Tudo que você aprendeu nas 7 semanas, num programa só. 🎓</p></div>
+
+</main>
+
+<footer>python_para_iniciantes // semana_07 // exercícios guiados</footer>
+
+<script>
+// ===== Syntax highlight leve para Python =====
+(function(){
+  const KW = /\b(print|input|int|float|type|str|bool)\b/g;
+  document.querySelectorAll('pre.code').forEach(pre=>{
+    let src = pre.textContent;
+    // escapa HTML
+    src = src.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    // uma passada só, com alternação (comentário | string | builtin | bool | número)
+    src = src.replace(
+      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|insert|int|float|str|len|range|type|abs|round|max|min|sum|sorted|sort|reverse|append|remove|split|strip|upper|lower|replace|title|randint|random|get|keys|values|items|open|readlines|read|write|close|count|index|pop|update|list|dict|tuple|enumerate)\b|\b(True|False|None|if|elif|else|while|for|in|and|or|not|break|continue|import|from|def|return|try|except|finally|with|as|del|global|pass)\b|(\b\d+(?:\.\d+)?\b)/g,
+      function(m, com, str, fn, bool, num){
+        if(com)  return '<span class="tk-com">'+com+'</span>';
+        if(str)  return '<span class="tk-str">'+str+'</span>';
+        if(fn)   return '<span class="tk-fn">'+fn+'</span>';
+        if(bool) return '<span class="tk-kw">'+bool+'</span>';
+        if(num)  return '<span class="tk-num">'+num+'</span>';
+        return m;
+      }
+    );
+    pre.innerHTML = src;
+  });
+})();
+
+// ===== Armazenamento seguro (localStorage com fallback em memória) =====
+// Quando o aluno abre o arquivo .html no computador, o progresso fica salvo
+// no navegador. Se o localStorage estiver indisponível (modo restrito,
+// pré-visualização, etc.), o progresso funciona só em memória, sem quebrar.
+const storage = (function(){
+  const KEY = 'python_semana07_progresso';
+  let memoria = {};
+  let disponivel = false;
+  try{
+    localStorage.setItem('__teste__','1');
+    localStorage.removeItem('__teste__');
+    disponivel = true;
+  }catch(e){ disponivel = false; }
+
+  return {
+    carregar: function(){
+      if(disponivel){
+        try{ return JSON.parse(localStorage.getItem(KEY)) || {}; }
+        catch(e){ return {}; }
+      }
+      return memoria;
+    },
+    salvar: function(dados){
+      memoria = dados;
+      if(disponivel){
+        try{ localStorage.setItem(KEY, JSON.stringify(dados)); }catch(e){}
+      }
+    },
+    limpar: function(){
+      memoria = {};
+      if(disponivel){
+        try{ localStorage.removeItem(KEY); }catch(e){}
+      }
+    },
+    persistente: disponivel
+  };
+})();
+
+// ===== Progresso dos exercícios + checklist =====
+(function(){
+  const checks = document.querySelectorAll('.done-check');
+  const listChecks = document.querySelectorAll('.check-item input');
+  const total = checks.length;
+  const fill = document.getElementById('pfill');
+  const count = document.getElementById('pcount');
+  const msg = document.getElementById('pmsg');
+  const banner = document.getElementById('winBanner');
+  const resetBtn = document.getElementById('resetBtn');
+
+  const MSGS = [
+    [0,  'Marque os exercícios concluídos ✔'],
+    [1,  'Boa! Continue assim 💪'],
+    [5,  'Pegando o ritmo! 🔥'],
+    [8, 'Metade do caminho! 🚀'],
+    [12, 'Quase lá... força! ⚡'],
+    [16, 'SEMANA COMPLETA! 🏆']
+  ];
+
+  function estadoAtual(){
+    const dados = { ex: {}, lista: {} };
+    checks.forEach(c => { dados.ex[c.dataset.ex] = c.checked; });
+    listChecks.forEach((c,i) => { dados.lista['item'+i] = c.checked; });
+    return dados;
+  }
+
+  function atualizarBarra(){
+    const done = document.querySelectorAll('.done-check:checked').length;
+    const pct = Math.round(done/total*100);
+    fill.style.width = pct + '%';
+    count.textContent = done + ' / ' + total;
+    let m = MSGS[0][1];
+    for(const [min,text] of MSGS){ if(done >= min) m = text; }
+    msg.textContent = m;
+    banner.classList.toggle('show', done === total);
+  }
+
+  function aplicarEstado(dados){
+    checks.forEach(c => {
+      const marcado = !!(dados.ex && dados.ex[c.dataset.ex]);
+      c.checked = marcado;
+      c.closest('article.ex').classList.toggle('done', marcado);
+    });
+    listChecks.forEach((c,i) => {
+      c.checked = !!(dados.lista && dados.lista['item'+i]);
+    });
+    atualizarBarra();
+  }
+
+  // Restaura o progresso salvo ao abrir a página
+  aplicarEstado(storage.carregar());
+
+  // Salva a cada mudança
+  checks.forEach(c => {
+    c.addEventListener('change', function(){
+      this.closest('article.ex').classList.toggle('done', this.checked);
+      atualizarBarra();
+      storage.salvar(estadoAtual());
+    });
+  });
+  listChecks.forEach(c => {
+    c.addEventListener('change', function(){
+      storage.salvar(estadoAtual());
+    });
+  });
+
+  // Botão de reset com confirmação
+  resetBtn.addEventListener('click', function(){
+    if(confirm('Apagar todo o progresso desta semana?')){
+      storage.limpar();
+      aplicarEstado({});
+    }
+  });
+
+  // Aviso discreto se o progresso não puder ser salvo neste ambiente
+  if(!storage.persistente){
+    msg.textContent += ' (progresso não será salvo neste ambiente)';
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Semana 19 — Web com Flask</title>
+<style>
+  :root{
+    --ink:#16243A;
+    --ink-soft:#4A5A74;
+    --paper:#F5F8FC;
+    --card:#FFFFFF;
+    --py-blue:#3776AB;
+    --py-blue-dark:#27598C;
+    --py-gold:#FFD43B;
+    --py-gold-dark:#C99700;
+    --term:#1B2435;
+    --term-line:#2B3850;
+    --green:#2EA56C;
+    --coral:#E2574C;
+    --radius:14px;
+    --mono:"Cascadia Code","JetBrains Mono",Consolas,"Roboto Mono",monospace;
+    --sans:"Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto}
+    *{transition:none !important;animation:none !important}
+  }
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.65}
+
+  /* ===== Barra de progresso fixa ===== */
+  .progress-wrap{
+    position:sticky;top:0;z-index:50;
+    background:var(--term);color:#fff;
+    padding:10px 18px;
+    display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+    box-shadow:0 2px 12px rgba(22,36,58,.25);
+  }
+  .progress-wrap .label{font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;white-space:nowrap}
+  .progress-bar{flex:1;min-width:140px;height:14px;background:var(--term-line);border-radius:99px;overflow:hidden}
+  .progress-fill{height:100%;width:0%;border-radius:99px;background:linear-gradient(90deg,var(--py-blue),var(--py-gold));transition:width .4s ease}
+  .progress-count{font-family:var(--mono);font-size:.85rem;color:var(--py-gold);white-space:nowrap}
+  .progress-msg{font-size:.78rem;color:#AFC3E0;white-space:nowrap}
+  .reset-btn{
+    font-family:var(--mono);font-size:.72rem;color:#AFC3E0;
+    background:transparent;border:1px solid var(--term-line);border-radius:8px;
+    padding:5px 11px;cursor:pointer;transition:all .15s ease;white-space:nowrap;
+  }
+  .reset-btn:hover,.reset-btn:focus-visible{color:#fff;border-color:#5A6E92;background:rgba(255,255,255,.06)}
+  .reset-btn:focus-visible{outline:2px solid var(--py-gold);outline-offset:2px}
+
+  /* ===== Hero ===== */
+  header.hero{
+    background:linear-gradient(150deg,var(--term) 0%,#22406B 70%,var(--py-blue) 100%);
+    color:#fff;padding:56px 20px 48px;text-align:center;position:relative;overflow:hidden;
+  }
+  header.hero::before{
+    content:"from flask import Flask  @app.route(  app.run(  localhost";
+    position:absolute;inset:auto 0 8px 0;font-family:var(--mono);font-size:.78rem;
+    color:rgba(255,255,255,.14);letter-spacing:.4em;white-space:nowrap;overflow:hidden;
+  }
+  .hero .kicker{
+    font-family:var(--mono);font-size:.85rem;color:var(--py-gold);
+    letter-spacing:.18em;text-transform:uppercase;margin-bottom:14px;
+  }
+  .hero h1{font-family:var(--mono);font-size:clamp(1.5rem,4.5vw,2.6rem);font-weight:700;line-height:1.25}
+  .hero h1 .cursor{display:inline-block;width:.55em;height:1.05em;background:var(--py-gold);vertical-align:text-bottom;margin-left:4px;animation:blink 1.1s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+  .hero p.sub{max-width:620px;margin:18px auto 0;color:#D7E4F5;font-size:1rem}
+  .hero .howto{
+    max-width:640px;margin:26px auto 0;background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.18);border-radius:var(--radius);
+    padding:14px 18px;font-size:.88rem;color:#E8F0FB;text-align:left;
+  }
+  .hero .howto strong{color:var(--py-gold)}
+
+  /* ===== Navegação por partes ===== */
+  nav.parts{
+    display:flex;gap:8px;flex-wrap:wrap;justify-content:center;
+    padding:18px 16px;max-width:980px;margin:0 auto;
+  }
+  nav.parts a{
+    font-family:var(--mono);font-size:.78rem;text-decoration:none;
+    color:var(--py-blue-dark);background:var(--card);
+    border:1.5px solid #D5E2F2;border-radius:99px;padding:7px 14px;
+    transition:all .15s ease;
+  }
+  nav.parts a:hover,nav.parts a:focus-visible{border-color:var(--py-blue);background:#EAF2FB}
+  nav.parts a:focus-visible{outline:2px solid var(--py-blue);outline-offset:2px}
+
+  main{max-width:880px;margin:0 auto;padding:8px 18px 80px}
+
+  /* ===== Seções (partes) ===== */
+  section.parte{margin-top:46px}
+  .parte-head{display:flex;align-items:baseline;gap:14px;border-bottom:3px solid var(--py-gold);padding-bottom:10px;margin-bottom:6px}
+  .parte-head .num{
+    font-family:var(--mono);font-size:2.4rem;font-weight:700;color:var(--py-blue);line-height:1;
+  }
+  .parte-head h2{font-family:var(--mono);font-size:clamp(1.05rem,2.8vw,1.45rem);color:var(--ink)}
+  .parte-intro{
+    background:var(--card);border:1px solid #E1E9F4;border-radius:var(--radius);
+    padding:18px 22px;margin-top:16px;font-size:.95rem;
+  }
+  .parte-intro h3{font-size:.8rem;font-family:var(--mono);color:var(--py-blue);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px}
+  .parte-intro p{margin-bottom:10px}
+  .parte-intro p:last-child{margin-bottom:0}
+  .parte-intro ol,.parte-intro ul{margin:8px 0 10px 22px}
+  table{border-collapse:collapse;width:100%;margin:10px 0;font-size:.88rem}
+  th,td{border:1px solid #DCE6F2;padding:7px 10px;text-align:left}
+  th{background:#EDF3FA;font-family:var(--mono);font-size:.78rem}
+  td code,p code,li code{
+    font-family:var(--mono);font-size:.85em;background:#EDF2F9;
+    border:1px solid #DCE6F2;border-radius:5px;padding:1px 5px;color:var(--py-blue-dark);
+  }
+
+  /* ===== Cartão de exercício ===== */
+  article.ex{
+    background:var(--card);border:1px solid #E1E9F4;border-radius:var(--radius);
+    margin-top:22px;overflow:hidden;
+    box-shadow:0 1px 4px rgba(22,36,58,.05);
+    transition:box-shadow .2s ease;
+  }
+  article.ex:hover{box-shadow:0 4px 16px rgba(22,36,58,.10)}
+  article.ex.done{border-color:var(--green)}
+  article.ex.done .ex-head{background:#EAF7F0}
+  .ex-head{
+    display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+    padding:14px 18px;background:#F2F6FC;border-bottom:1px solid #E1E9F4;
+  }
+  .ex-num{
+    font-family:var(--mono);font-weight:700;font-size:.85rem;color:#fff;
+    background:var(--py-blue);border-radius:8px;padding:5px 10px;white-space:nowrap;
+  }
+  article.ex.done .ex-num{background:var(--green)}
+  .ex-head h3{font-size:1.02rem;flex:1;min-width:180px}
+  .stars{font-size:.78rem;color:var(--py-gold-dark);background:#FFF6D6;border:1px solid #F2DE96;border-radius:99px;padding:3px 10px;white-space:nowrap}
+  .done-toggle{
+    display:flex;align-items:center;gap:7px;cursor:pointer;user-select:none;
+    font-size:.8rem;font-family:var(--mono);color:var(--ink-soft);
+  }
+  .done-toggle input{width:17px;height:17px;accent-color:var(--green);cursor:pointer}
+  .ex-body{padding:18px 20px 22px}
+  .ex-body p{margin-bottom:10px}
+  .ex-body ol,.ex-body ul{margin:6px 0 12px 22px}
+  .ex-body li{margin-bottom:4px}
+
+  .tag{
+    display:inline-block;font-family:var(--mono);font-size:.72rem;
+    text-transform:uppercase;letter-spacing:.08em;border-radius:6px;
+    padding:3px 9px;margin:4px 0 6px;
+  }
+  .tag.obj{background:#E7F0FB;color:var(--py-blue-dark)}
+  .tag.passos{background:#FFF3CC;color:#8a6d00}
+  .tag.saida{background:#E4F5EC;color:#1c7a4d}
+
+  /* ===== Blocos de código estilo terminal ===== */
+  .term-window{border-radius:12px;overflow:hidden;margin:12px 0;border:1px solid var(--term-line)}
+  .term-bar{
+    display:flex;align-items:center;gap:8px;background:#121A29;padding:8px 14px;
+  }
+  .term-bar .dot{width:11px;height:11px;border-radius:50%}
+  .dot.r{background:#FF5F57}.dot.y{background:#FEBC2E}.dot.g{background:#28C840}
+  .term-bar .fname{font-family:var(--mono);font-size:.75rem;color:#8FA6C8;margin-left:6px}
+  pre.code,pre.output{
+    background:var(--term);color:#E7EDF7;font-family:var(--mono);
+    font-size:.86rem;line-height:1.6;padding:14px 18px;overflow-x:auto;margin:0;
+  }
+  pre.output{color:#9FE8C0}
+  pre.output .prompt-in{color:#E7EDF7}
+  /* syntax highlight */
+  .tk-kw{color:#7EC1FF;font-weight:600}
+  .tk-str{color:#FFD98A}
+  .tk-com{color:#7C8DA8;font-style:italic}
+  .tk-num{color:#9FE8C0}
+  .tk-fn{color:#C7A6FF}
+
+  /* ===== Dicas / desafios / soluções ===== */
+  details{border-radius:10px;margin:12px 0;overflow:hidden;border:1.5px solid transparent}
+  details summary{
+    cursor:pointer;list-style:none;padding:11px 16px;font-weight:600;font-size:.9rem;
+    display:flex;align-items:center;gap:8px;user-select:none;
+  }
+  details summary::-webkit-details-marker{display:none}
+  details summary::after{content:"▾";margin-left:auto;transition:transform .2s ease;font-size:.85em}
+  details[open] summary::after{transform:rotate(180deg)}
+  details .inner{padding:4px 16px 14px}
+  details.dica{background:#FFF9E8;border-color:#F2DE96}
+  details.dica summary{color:#8a6d00}
+  details.desafio{background:#F3EDFB;border-color:#D9C8F2}
+  details.desafio summary{color:#6B3FA0}
+  details.solucao{background:#EAF7F0;border-color:#BFE5D0}
+  details.solucao summary{color:#1c7a4d}
+  details.solucao .aviso{font-size:.8rem;color:#1c7a4d;margin-bottom:8px;font-style:italic}
+
+  /* ===== Checklist final ===== */
+  .checklist{background:var(--card);border:1px solid #E1E9F4;border-radius:var(--radius);padding:22px;margin-top:30px}
+  .checklist h2{font-family:var(--mono);font-size:1.2rem;margin-bottom:6px}
+  .checklist p{font-size:.9rem;color:var(--ink-soft);margin-bottom:14px}
+  .check-item{display:flex;align-items:flex-start;gap:10px;padding:7px 4px;border-radius:8px;cursor:pointer}
+  .check-item:hover{background:#F2F6FC}
+  .check-item input{width:18px;height:18px;margin-top:3px;accent-color:var(--py-blue);cursor:pointer}
+  .check-item span{font-size:.93rem}
+  .check-item input:checked + span{color:var(--green);text-decoration:line-through;text-decoration-color:rgba(46,165,108,.5)}
+
+  /* banner 100% */
+  .win-banner{
+    display:none;margin-top:26px;text-align:center;color:#fff;
+    background:linear-gradient(120deg,var(--green),var(--py-blue));
+    border-radius:var(--radius);padding:26px 20px;
+  }
+  .win-banner.show{display:block;animation:pop .45s ease}
+  @keyframes pop{0%{transform:scale(.94);opacity:0}100%{transform:scale(1);opacity:1}}
+  .win-banner h2{font-family:var(--mono);font-size:1.4rem;margin-bottom:6px}
+
+  .preview-s2{
+    margin-top:36px;border:2px dashed var(--py-blue);border-radius:var(--radius);
+    padding:20px 22px;background:#EFF5FC;
+  }
+  .preview-s2 h2{font-family:var(--mono);font-size:1.05rem;color:var(--py-blue-dark);margin-bottom:8px}
+  footer{
+    text-align:center;font-family:var(--mono);font-size:.75rem;color:var(--ink-soft);
+    padding:26px 16px 40px;
+  }
+  @media(max-width:560px){
+    .progress-msg{display:none}
+    .ex-head h3{font-size:.95rem}
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-wrap" role="region" aria-label="Progresso da semana">
+  <span class="label">XP DA SEMANA</span>
+  <div class="progress-bar"><div class="progress-fill" id="pfill"></div></div>
+  <span class="progress-count" id="pcount">0 / 10</span>
+  <span class="progress-msg" id="pmsg">Marque os exercícios concluídos ✔</span>
+  <button class="reset-btn" id="resetBtn" title="Apagar todo o progresso salvo">↺ Resetar</button>
+</div>
+
+<header class="hero">
+  <div class="kicker">Python para Iniciantes · Exercícios Guiados</div>
+  <h1>SEMANA 19 — Flask:<br>seu Python vira um site<span class="cursor" aria-hidden="true"></span></h1>
+  <p class="sub">O microframework web mais querido do Python: rotas, páginas HTML geradas por código, rotas dinâmicas e o momento de glória — criar a sua PRÓPRIA API.</p>
+  <div class="howto">
+    <strong>Como usar:</strong> digite o código você mesmo (não copie e cole!), compare com a saída esperada e marque <strong>✔ Concluído</strong> em cada exercício para encher sua barra de XP. As <strong>dicas</strong> e <strong>soluções</strong> ficam escondidas — só abra depois de tentar! Seu progresso fica salvo no navegador.
+  </div>
+</header>
+
+<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · Primeiro site</a><a href="#p2">2 · Rotas dinâmicas</a><a href="#p3">3 · Dados na página</a><a href="#p4">4 · Sua API!</a><a href="#p5">5 · Estilo</a><a href="#p6">6 · Projetos</a><a href="#checklist">✅ Checklist</a></nav>
+
+<main>
+
+<section class="parte" id="p1">
+  <div class="parte-head"><span class="num">01</span><h2>O primeiro site da sua vida</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Instale com <code>pip install flask</code>. O Flask transforma funções Python em páginas web: o decorador <code>@app.route("/")</code> diz "quando alguém visitar este endereço, execute esta função e mostre o que ela retornar". O <code>app.run()</code> liga o servidor — acesse <code>http://localhost:5000</code> no navegador, e pare com Ctrl+C no terminal.</p></div>
+  <article class="ex" id="ex1">
+    <div class="ex-head">
+      <span class="ex-num">EX 01</span>
+      <h3>Olá, web! 🌐</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex1"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Colocar um servidor no ar em 7 linhas.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie e execute <code>site.py</code>:</li><li>O terminal mostra "Running on http://127.0.0.1:5000" — abra esse endereço no navegador!</li><li>Deixe o terminal rodando; para encerrar, Ctrl+C</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">site.py</span></div><pre class="code">from flask import Flask
+
+app = Flask(__name__)
+
+@app.route("/")
+def inicio():
+    return "&lt;h1&gt;Olá, web! Meu primeiro site em Python 🐍&lt;/h1&gt;"
+
+app.run(debug=True)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output"> * Running on http://127.0.0.1:5000
+(e o título gigante no navegador!)</pre></div><details class="dica"><summary>💡 O que é debug=True?</summary><div class="inner">O modo desenvolvedor: o servidor REINICIA sozinho a cada alteração salva no código (sem ele, você teria que parar e rodar de novo toda hora). E "localhost" / "127.0.0.1" significam "esta máquina" — seu site é só seu, por enquanto. 😉</div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex2">
+    <div class="ex-head">
+      <span class="ex-num">EX 02</span>
+      <h3>Mais rotas, mais páginas</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex2"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Cada rota é uma página do site.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Adicione uma rota /sobre ao site.py (o servidor reinicia sozinho!):</li><li>Visite localhost:5000/sobre — e repare nos links navegando entre as páginas</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex02_rotas.py</span></div><pre class="code">@app.route("/sobre")
+def sobre():
+    return """
+    &lt;h1&gt;Sobre a Tua Caneca&lt;/h1&gt;
+    &lt;p&gt;Canecas e azulejos personalizados com sublimação.&lt;/p&gt;
+    &lt;a href="/"&gt;← Voltar&lt;/a&gt;
+    """</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(duas páginas, um site!)</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner">O retorno é HTML puro — tudo que você sabe de HTML das suas aulas vale aqui. E a string com aspas triplas (Semana 1!) deixa o HTML multilinha legível.</div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p2">
+  <div class="parte-head"><span class="num">02</span><h2>Rotas dinâmicas: a URL vira variável</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>O pulo do gato: <code>@app.route("/ola/&lt;nome&gt;")</code> captura o pedaço da URL e entrega como PARÂMETRO da função. Uma rota, infinitas páginas.</p></div>
+  <article class="ex" id="ex3">
+    <div class="ex-head">
+      <span class="ex-num">EX 03</span>
+      <h3>Página personalizada</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex3"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Capturar um valor da URL.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Adicione a rota e visite /ola/Ana, /ola/Robson, /ola/qualquer-coisa:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex03_dinamica.py</span></div><pre class="code">@app.route("/ola/&lt;nome&gt;")
+def ola(nome):
+    return f"&lt;h1&gt;Olá, {nome.title()}! 👋&lt;/h1&gt;"</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(/ola/robson → "Olá, Robson! 👋")</pre></div><details class="dica"><summary>💡 Olha a Semana 4 aí</summary><div class="inner">O <code>.title()</code> capitalizando o nome direto da URL — todo o seu arsenal de strings funciona, porque a variável da rota é... uma string comum!</div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex4">
+    <div class="ex-head">
+      <span class="ex-num">EX 04</span>
+      <h3>A tabuada vira página 🤯</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex4"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Um loop da Semana 3 gerando HTML — e o conversor <code>&lt;int:n&gt;</code>.</p><span class="tag passos">🧭 Passo a passo</span><ol><li><code>&lt;int:n&gt;</code> já entrega o valor CONVERTIDO para inteiro</li><li>Monte o HTML num acumulador de string dentro do for (Semana 3 + 4!):</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex04_tabuada.py</span></div><pre class="code">@app.route("/tabuada/&lt;int:n&gt;")
+def tabuada(n):
+    linhas = ""
+    for i in range(1, 11):
+        linhas = linhas + f"&lt;li&gt;{n} x {i} = {n * i}&lt;/li&gt;"
+    return f"&lt;h1&gt;Tabuada do {n}&lt;/h1&gt;&lt;ul&gt;{linhas}&lt;/ul&gt;"</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(/tabuada/7 → a tabuada inteira em lista HTML!)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><p>Visite /tabuada/7, /tabuada/9... A função roda A CADA visita, gerando a página na hora — é por isso que se chama página <strong>dinâmica</strong>. E se você visitar /tabuada/banana? O <code>&lt;int:n&gt;</code> rejeita e devolve 404 — validação de graça!</p></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p3">
+  <div class="parte-head"><span class="num">03</span><h2>Dados na página</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>O padrão central da web: <strong>dados + loop + HTML</strong>. Seu catalogo.json (Semana 11) está prestes a virar uma página de verdade.</p></div>
+  <article class="ex" id="ex5">
+    <div class="ex-head">
+      <span class="ex-num">EX 05</span>
+      <h3>O catálogo no navegador 🛍️</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex5"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Ler o JSON e montar a página de produtos.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Garanta um catalogo.json com 3 produtos (nome, preco, estoque)</li><li>Na rota /catalogo: carregue o JSON, monte um item HTML por produto no loop</li><li>Capriche: mostre "ESGOTADO" quando o estoque for 0 (Semana 2 na web!)</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(/catalogo → a lista de produtos com preços!)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex05.py</span></div><pre class="code">import json
+from flask import Flask
+
+app = Flask(__name__)
+
+@app.route("/catalogo")
+def catalogo():
+    with open("catalogo.json", "r", encoding="utf-8") as arquivo:
+        produtos = json.load(arquivo)
+
+    itens = ""
+    for p in produtos:
+        if p["estoque"] &gt; 0:
+            situacao = f"{p['estoque']} em estoque"
+        else:
+            situacao = "ESGOTADO"
+        itens = itens + f"&lt;li&gt;&lt;b&gt;{p['nome']}&lt;/b&gt; — R$ {p['preco']:.2f} ({situacao})&lt;/li&gt;"
+
+    return f"&lt;h1&gt;☕ Catálogo Tua Caneca&lt;/h1&gt;&lt;ul&gt;{itens}&lt;/ul&gt;"
+
+app.run(debug=True)</pre></div></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p4">
+  <div class="parte-head"><span class="num">04</span><h2>Sua própria API! 👨‍🍳</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>O momento de glória: depois de 4 semanas PEDINDO ao garçom (ViaCEP, AwesomeAPI)... agora o garçom é você. O <code>jsonify</code> transforma dicionários e listas em respostas JSON oficiais — e qualquer programa do mundo pode consumir o seu sistema.</p></div>
+  <article class="ex" id="ex6">
+    <div class="ex-head">
+      <span class="ex-num">EX 06</span>
+      <h3>A API da Tua Caneca</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex6"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Servir o catálogo como JSON.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Importe o jsonify: <code>from flask import Flask, jsonify</code></li><li>Crie a rota /api/produtos retornando <code>jsonify(produtos)</code></li><li>Visite no navegador: JSON puro, formatado, oficial!</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex06_api.py</span></div><pre class="code">from flask import Flask, jsonify
+import json
+
+app = Flask(__name__)
+
+@app.route("/api/produtos")
+def api_produtos():
+    with open("catalogo.json", "r", encoding="utf-8") as arquivo:
+        produtos = json.load(arquivo)
+    return jsonify(produtos)
+
+app.run(debug=True)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(/api/produtos → seu catálogo em JSON, como uma API de verdade!)</pre></div><details class="dica"><summary>💡 Por que /api/ no nome?</summary><div class="inner">Convenção: rotas de páginas servem HTML para HUMANOS; rotas /api/ servem JSON para PROGRAMAS. O mesmo dado, dois públicos.</div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex7">
+    <div class="ex-head">
+      <span class="ex-num">EX 07</span>
+      <h3>Consumindo a si mesmo 🔄</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex7"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Fechar o ciclo: o requests da Semana 15 consultando a SUA API.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Com o servidor rodando num terminal, abra OUTRO terminal e rode:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex07_cliente.py</span></div><pre class="code">import requests
+
+resposta = requests.get("http://localhost:5000/api/produtos", timeout=5)
+produtos = resposta.json()
+
+for p in produtos:
+    print(f"{p['nome']} — R$ {p['preco']:.2f}")</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">caneca branca — R$ 25.00
+caneca preta — R$ 27.50
+azulejo — R$ 40.00</pre></div><details class="dica"><summary>💡 Sinta o momento</summary><div class="inner">Cliente (requests) e servidor (Flask), os dois escritos por você, conversando em JSON. Esse diálogo é a ESPINHA DORSAL da internet moderna — e agora você domina os dois lados. 🏆</div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p5">
+  <div class="parte-head"><span class="num">05</span><h2>Páginas com estilo</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>HTML pelado funciona, mas dói nos olhos. Um bloco de CSS dentro de <code>&lt;style&gt;</code> já transforma tudo — e um detalhe técnico importante: <strong>em f-strings, as chaves do CSS precisam ser DUPLAS</strong> (<code>{{</code> e <code>}}</code>), senão o Python acha que são variáveis!</p></div>
+  <article class="ex" id="ex8">
+    <div class="ex-head">
+      <span class="ex-num">EX 08</span>
+      <h3>A repaginada ✨</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex8"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Montar uma "base" de página com CSS reutilizável.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie uma função <code>pagina(titulo, conteudo)</code> que devolve o HTML completo com estilo</li><li>Todas as rotas passam a usá-la — DRY na web (Semana 6!)</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(o site de cara nova, com fundo claro e cartões)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex08.py</span></div><pre class="code">def pagina(titulo, conteudo):
+    return f"""
+    &lt;html&gt;&lt;head&gt;&lt;title&gt;{titulo}&lt;/title&gt;
+    &lt;style&gt;
+      body {{ font-family: Arial; background: #F5F8FC; margin: 40px; }}
+      h1 {{ color: #3776AB; }}
+      .cartao {{ background: white; padding: 20px; border-radius: 12px;
+                 box-shadow: 0 2px 8px #0002; max-width: 600px; }}
+    &lt;/style&gt;&lt;/head&gt;
+    &lt;body&gt;&lt;div class="cartao"&gt;&lt;h1&gt;{titulo}&lt;/h1&gt;{conteudo}&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;
+    """
+
+@app.route("/")
+def inicio():
+    return pagina("Tua Caneca", "&lt;p&gt;Bem-vindo à loja! &lt;a href='/catalogo'&gt;Ver catálogo →&lt;/a&gt;&lt;/p&gt;")</pre></div><p>Repare nas chaves duplas <code>{{ }}</code> no CSS e simples <code>{ }</code> nas variáveis — a f-string precisa saber quem é quem!</p></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p6">
+  <div class="parte-head"><span class="num">06</span><h2>Projetos da semana: juntando tudo!</h2></div>
+
+  <article class="ex" id="ex9">
+    <div class="ex-head">
+      <span class="ex-num">EX 09</span>
+      <h3>Projeto: O site da Tua Caneca ☕🌐</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex9"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Site completo: home, catálogo em tabela e API.</p><span class="tag passos">🧭 Requisitos</span><ol><li>Home (/): boas-vindas + navegação</li><li>/catalogo: TABELA HTML dos produtos (<code>&lt;table&gt;</code> com cabeçalho), dados do catalogo.json</li><li>/api/produtos: o JSON para os programas</li><li>Tudo com a função pagina() do exercício anterior</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(três rotas, um site de verdade!)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex09.py</span></div><pre class="code">import json
+from flask import Flask, jsonify
+
+app = Flask(__name__)
+
+def carregar():
+    with open("catalogo.json", "r", encoding="utf-8") as arquivo:
+        return json.load(arquivo)
+
+def pagina(titulo, conteudo):
+    return f"""
+    &lt;html&gt;&lt;head&gt;&lt;title&gt;{titulo}&lt;/title&gt;
+    &lt;style&gt;
+      body {{ font-family: Arial; background: #F5F8FC; margin: 40px; }}
+      h1 {{ color: #3776AB; }}
+      table {{ border-collapse: collapse; background: white; }}
+      td, th {{ border: 1px solid #ccc; padding: 8px 14px; }}
+    &lt;/style&gt;&lt;/head&gt;
+    &lt;body&gt;&lt;h1&gt;{titulo}&lt;/h1&gt;{conteudo}&lt;/body&gt;&lt;/html&gt;
+    """
+
+@app.route("/")
+def inicio():
+    return pagina("☕ Tua Caneca",
+                  "&lt;p&gt;Personalizados com sublimação.&lt;/p&gt;"
+                  "&lt;a href='/catalogo'&gt;Catálogo&lt;/a&gt; · &lt;a href='/api/produtos'&gt;API&lt;/a&gt;")
+
+@app.route("/catalogo")
+def catalogo():
+    linhas = ""
+    for p in carregar():
+        linhas = linhas + (f"&lt;tr&gt;&lt;td&gt;{p['nome']}&lt;/td&gt;"
+                           f"&lt;td&gt;R$ {p['preco']:.2f}&lt;/td&gt;"
+                           f"&lt;td&gt;{p['estoque']}&lt;/td&gt;&lt;/tr&gt;")
+    tabela = ("&lt;table&gt;&lt;tr&gt;&lt;th&gt;Produto&lt;/th&gt;&lt;th&gt;Preço&lt;/th&gt;&lt;th&gt;Estoque&lt;/th&gt;&lt;/tr&gt;"
+              + linhas + "&lt;/table&gt;")
+    return pagina("Catálogo", tabela)
+
+@app.route("/api/produtos")
+def api_produtos():
+    return jsonify(carregar())
+
+app.run(debug=True)</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex10">
+    <div class="ex-head">
+      <span class="ex-num">EX 10</span>
+      <h3>Projeto bônus: O gráfico na página 📊</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex10"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Servir o PNG da Semana 18 dentro do site (sem código pronto!).</p><span class="tag passos">🧭 Roteiro</span><ol><li>Crie a pasta <code>static</code> ao lado do site.py — o Flask serve tudo dela automaticamente!</li><li>Copie (ou gere por código) o por_produto.png da Semana 18 para dentro dela</li><li>Na rota /relatorio: <code>&lt;img src="/static/por_produto.png" width="500"&gt;</code></li><li>Reflita: matplotlib gera, Flask serve, navegador exibe — o seu dashboard está nascendo...</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(/relatorio → o gráfico dentro da página!)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex10.py</span></div><pre class="code">@app.route("/relatorio")
+def relatorio():
+    conteudo = """
+    &lt;p&gt;Faturamento por produto:&lt;/p&gt;
+    &lt;img src="/static/por_produto.png" width="500"&gt;
+    """
+    return pagina("📊 Relatório", conteudo)</pre></div><p>A pasta <code>static</code> é mágica por convenção: qualquer arquivo nela fica acessível em /static/nome. É o ensaio geral para o projeto final!</p></div></details>
+    </div>
+  </article>
+</section>
+
+<div class="checklist" id="checklist">
+  <h2>✅ Checklist de fim de semana</h2>
+  <p>Antes de seguir para a próxima semana, confirme que você consegue:</p>
+<label class="check-item"><input type="checkbox"><span>Criar um app Flask e rodar o servidor local</span></label>
+<label class="check-item"><input type="checkbox"><span>Acessar o site no navegador via localhost:5000</span></label>
+<label class="check-item"><input type="checkbox"><span>Criar várias rotas com @app.route</span></label>
+<label class="check-item"><input type="checkbox"><span>Retornar HTML gerado por f-strings</span></label>
+<label class="check-item"><input type="checkbox"><span>Criar rotas dinâmicas com variáveis na URL (&lt;nome&gt;, &lt;int:n&gt;)</span></label>
+<label class="check-item"><input type="checkbox"><span>Montar páginas a partir de dados (JSON, listas, loops)</span></label>
+<label class="check-item"><input type="checkbox"><span>Criar uma API própria com jsonify</span></label>
+<label class="check-item"><input type="checkbox"><span>Consumir a própria API com requests (o ciclo completo!)</span></label>
+<label class="check-item"><input type="checkbox"><span>Servir imagens da pasta static</span></label>
+<label class="check-item"><input type="checkbox"><span>Explicar o caminho navegador → rota → função → resposta</span></label>
+</div>
+
+<div class="win-banner" id="winBanner">
+  <h2>🏆 SEMANA 19 COMPLETA!</h2>
+  <p>Você concluiu todos os exercícios. Tem um servidor web rodando na sua máquina — e foi você que escreveu!</p>
+</div>
+
+<div class="preview-s2">
+<h2>📅 Prévia da Semana 20</h2><p>A GRANDE final: o <strong>PROJETO FINAL 4 — Dashboard Web Tua Caneca</strong>. pandas analisa, matplotlib desenha, Flask serve: um painel de verdade, no navegador, com números, gráficos e API própria. A última obra da jornada! 🏆📊🌐</p></div>
+
+</main>
+
+<footer>python_para_iniciantes // semana_19 // exercícios guiados</footer>
+
+<script>
+// ===== Syntax highlight leve para Python =====
+(function(){
+  const KW = /\b(print|input|int|float|type|str|bool)\b/g;
+  document.querySelectorAll('pre.code').forEach(pre=>{
+    let src = pre.textContent;
+    // escapa HTML
+    src = src.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    // uma passada só, com alternação (comentário | string | builtin | bool | número)
+    src = src.replace(
+      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|insert|int|float|str|len|range|type|abs|round|max|min|sum|sorted|sort|reverse|append|remove|split|strip|upper|lower|replace|title|randint|random|get|keys|values|items|open|readlines|read|write|close|count|index|pop|update|list|dict|tuple|enumerate|sqrt|floor|ceil|choice|shuffle|sample|sleep|now|today|strftime|dumps|dump|loads|load|isinstance|datetime|date|DictReader|DictWriter|writerows|writerow|writeheader|writer|reader|csv|Workbook|load_workbook|save|iter_rows|Font|listdir|makedirs|getcwd|rename|exists|getsize|splitext|join|endswith|startswith|copytree|copy|move|requests|status_code|json|DataFrame|read_csv|read_excel|to_excel|to_csv|head|describe|groupby|sort_values|value_counts|mean|idxmax|bar|barh|pie|plot|savefig|show|title|xlabel|ylabel|figure|legend|axhline|tight_layout|close|Flask|route|run|render_template|jsonify|redirect|request)\b|\b(True|False|None|if|elif|else|while|for|in|and|or|not|break|continue|import|from|def|return|try|except|finally|with|as|del|global|pass|class|self|super|lambda)\b|(\b\d+(?:\.\d+)?\b)/g,
+      function(m, com, str, fn, bool, num){
+        if(com)  return '<span class="tk-com">'+com+'</span>';
+        if(str)  return '<span class="tk-str">'+str+'</span>';
+        if(fn)   return '<span class="tk-fn">'+fn+'</span>';
+        if(bool) return '<span class="tk-kw">'+bool+'</span>';
+        if(num)  return '<span class="tk-num">'+num+'</span>';
+        return m;
+      }
+    );
+    pre.innerHTML = src;
+  });
+})();
+
+// ===== Armazenamento seguro (localStorage com fallback em memória) =====
+// Quando o aluno abre o arquivo .html no computador, o progresso fica salvo
+// no navegador. Se o localStorage estiver indisponível (modo restrito,
+// pré-visualização, etc.), o progresso funciona só em memória, sem quebrar.
+const storage = (function(){
+  const KEY = 'python_semana19_progresso';
+  let memoria = {};
+  let disponivel = false;
+  try{
+    localStorage.setItem('__teste__','1');
+    localStorage.removeItem('__teste__');
+    disponivel = true;
+  }catch(e){ disponivel = false; }
+
+  return {
+    carregar: function(){
+      if(disponivel){
+        try{ return JSON.parse(localStorage.getItem(KEY)) || {}; }
+        catch(e){ return {}; }
+      }
+      return memoria;
+    },
+    salvar: function(dados){
+      memoria = dados;
+      if(disponivel){
+        try{ localStorage.setItem(KEY, JSON.stringify(dados)); }catch(e){}
+      }
+    },
+    limpar: function(){
+      memoria = {};
+      if(disponivel){
+        try{ localStorage.removeItem(KEY); }catch(e){}
+      }
+    },
+    persistente: disponivel
+  };
+})();
+
+// ===== Progresso dos exercícios + checklist =====
+(function(){
+  const checks = document.querySelectorAll('.done-check');
+  const listChecks = document.querySelectorAll('.check-item input');
+  const total = checks.length;
+  const fill = document.getElementById('pfill');
+  const count = document.getElementById('pcount');
+  const msg = document.getElementById('pmsg');
+  const banner = document.getElementById('winBanner');
+  const resetBtn = document.getElementById('resetBtn');
+
+  const MSGS = [
+    [0,  'Marque os exercícios concluídos ✔'],
+    [1,  'Boa! Continue assim 💪'],
+    [3,  'Pegando o ritmo! 🔥'],
+    [5, 'Metade do caminho! 🚀'],
+    [8, 'Quase lá... força! ⚡'],
+    [10, 'SEMANA COMPLETA! 🏆']
+  ];
+
+  function estadoAtual(){
+    const dados = { ex: {}, lista: {} };
+    checks.forEach(c => { dados.ex[c.dataset.ex] = c.checked; });
+    listChecks.forEach((c,i) => { dados.lista['item'+i] = c.checked; });
+    return dados;
+  }
+
+  function atualizarBarra(){
+    const done = document.querySelectorAll('.done-check:checked').length;
+    const pct = Math.round(done/total*100);
+    fill.style.width = pct + '%';
+    count.textContent = done + ' / ' + total;
+    let m = MSGS[0][1];
+    for(const [min,text] of MSGS){ if(done >= min) m = text; }
+    msg.textContent = m;
+    banner.classList.toggle('show', done === total);
+  }
+
+  function aplicarEstado(dados){
+    checks.forEach(c => {
+      const marcado = !!(dados.ex && dados.ex[c.dataset.ex]);
+      c.checked = marcado;
+      c.closest('article.ex').classList.toggle('done', marcado);
+    });
+    listChecks.forEach((c,i) => {
+      c.checked = !!(dados.lista && dados.lista['item'+i]);
+    });
+    atualizarBarra();
+  }
+
+  // Restaura o progresso salvo ao abrir a página
+  aplicarEstado(storage.carregar());
+
+  // Salva a cada mudança
+  checks.forEach(c => {
+    c.addEventListener('change', function(){
+      this.closest('article.ex').classList.toggle('done', this.checked);
+      atualizarBarra();
+      storage.salvar(estadoAtual());
+    });
+  });
+  listChecks.forEach(c => {
+    c.addEventListener('change', function(){
+      storage.salvar(estadoAtual());
+    });
+  });
+
+  // Botão de reset com confirmação
+  resetBtn.addEventListener('click', function(){
+    if(confirm('Apagar todo o progresso desta semana?')){
+      storage.limpar();
+      aplicarEstado({});
+    }
+  });
+
+  // Aviso discreto se o progresso não puder ser salvo neste ambiente
+  if(!storage.persistente){
+    msg.textContent += ' (progresso não será salvo neste ambiente)';
+  }
+})();
+</script>
+</body>
+</html>

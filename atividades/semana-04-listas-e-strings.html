@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Semana 25 — Projeto Final 5</title>
+<style>
+  :root{
+    --ink:#16243A;
+    --ink-soft:#4A5A74;
+    --paper:#F5F8FC;
+    --card:#FFFFFF;
+    --py-blue:#3776AB;
+    --py-blue-dark:#27598C;
+    --py-gold:#FFD43B;
+    --py-gold-dark:#C99700;
+    --term:#1B2435;
+    --term-line:#2B3850;
+    --green:#2EA56C;
+    --coral:#E2574C;
+    --radius:14px;
+    --mono:"Cascadia Code","JetBrains Mono",Consolas,"Roboto Mono",monospace;
+    --sans:"Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto}
+    *{transition:none !important;animation:none !important}
+  }
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.65}
+
+  /* ===== Barra de progresso fixa ===== */
+  .progress-wrap{
+    position:sticky;top:0;z-index:50;
+    background:var(--term);color:#fff;
+    padding:10px 18px;
+    display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+    box-shadow:0 2px 12px rgba(22,36,58,.25);
+  }
+  .progress-wrap .label{font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;white-space:nowrap}
+  .progress-bar{flex:1;min-width:140px;height:14px;background:var(--term-line);border-radius:99px;overflow:hidden}
+  .progress-fill{height:100%;width:0%;border-radius:99px;background:linear-gradient(90deg,var(--py-blue),var(--py-gold));transition:width .4s ease}
+  .progress-count{font-family:var(--mono);font-size:.85rem;color:var(--py-gold);white-space:nowrap}
+  .progress-msg{font-size:.78rem;color:#AFC3E0;white-space:nowrap}
+  .reset-btn{
+    font-family:var(--mono);font-size:.72rem;color:#AFC3E0;
+    background:transparent;border:1px solid var(--term-line);border-radius:8px;
+    padding:5px 11px;cursor:pointer;transition:all .15s ease;white-space:nowrap;
+  }
+  .reset-btn:hover,.reset-btn:focus-visible{color:#fff;border-color:#5A6E92;background:rgba(255,255,255,.06)}
+  .reset-btn:focus-visible{outline:2px solid var(--py-gold);outline-offset:2px}
+
+  /* ===== Hero ===== */
+  header.hero{
+    background:linear-gradient(150deg,var(--term) 0%,#22406B 70%,var(--py-blue) 100%);
+    color:#fff;padding:56px 20px 48px;text-align:center;position:relative;overflow:hidden;
+  }
+  header.hero::before{
+    content:"Flask  SQLite  CRUD  SQL  API  🏆";
+    position:absolute;inset:auto 0 8px 0;font-family:var(--mono);font-size:.78rem;
+    color:rgba(255,255,255,.14);letter-spacing:.4em;white-space:nowrap;overflow:hidden;
+  }
+  .hero .kicker{
+    font-family:var(--mono);font-size:.85rem;color:var(--py-gold);
+    letter-spacing:.18em;text-transform:uppercase;margin-bottom:14px;
+  }
+  .hero h1{font-family:var(--mono);font-size:clamp(1.5rem,4.5vw,2.6rem);font-weight:700;line-height:1.25}
+  .hero h1 .cursor{display:inline-block;width:.55em;height:1.05em;background:var(--py-gold);vertical-align:text-bottom;margin-left:4px;animation:blink 1.1s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+  .hero p.sub{max-width:620px;margin:18px auto 0;color:#D7E4F5;font-size:1rem}
+  .hero .howto{
+    max-width:640px;margin:26px auto 0;background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.18);border-radius:var(--radius);
+    padding:14px 18px;font-size:.88rem;color:#E8F0FB;text-align:left;
+  }
+  .hero .howto strong{color:var(--py-gold)}
+
+  /* ===== Navegação por partes ===== */
+  nav.parts{
+    display:flex;gap:8px;flex-wrap:wrap;justify-content:center;
+    padding:18px 16px;max-width:980px;margin:0 auto;
+  }
+  nav.parts a{
+    font-family:var(--mono);font-size:.78rem;text-decoration:none;
+    color:var(--py-blue-dark);background:var(--card);
+    border:1.5px solid #D5E2F2;border-radius:99px;padding:7px 14px;
+    transition:all .15s ease;
+  }
+  nav.parts a:hover,nav.parts a:focus-visible{border-color:var(--py-blue);background:#EAF2FB}
+  nav.parts a:focus-visible{outline:2px solid var(--py-blue);outline-offset:2px}
+
+  main{max-width:880px;margin:0 auto;padding:8px 18px 80px}
+
+  /* ===== Seções (partes) ===== */
+  section.parte{margin-top:46px}
+  .parte-head{display:flex;align-items:baseline;gap:14px;border-bottom:3px solid var(--py-gold);padding-bottom:10px;margin-bottom:6px}
+  .parte-head .num{
+    font-family:var(--mono);font-size:2.4rem;font-weight:700;color:var(--py-blue);line-height:1;
+  }
+  .parte-head h2{font-family:var(--mono);font-size:clamp(1.05rem,2.8vw,1.45rem);color:var(--ink)}
+  .parte-intro{
+    background:var(--card);border:1px solid #E1E9F4;border-radius:var(--radius);
+    padding:18px 22px;margin-top:16px;font-size:.95rem;
+  }
+  .parte-intro h3{font-size:.8rem;font-family:var(--mono);color:var(--py-blue);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px}
+  .parte-intro p{margin-bottom:10px}
+  .parte-intro p:last-child{margin-bottom:0}
+  .parte-intro ol,.parte-intro ul{margin:8px 0 10px 22px}
+  table{border-collapse:collapse;width:100%;margin:10px 0;font-size:.88rem}
+  th,td{border:1px solid #DCE6F2;padding:7px 10px;text-align:left}
+  th{background:#EDF3FA;font-family:var(--mono);font-size:.78rem}
+  td code,p code,li code{
+    font-family:var(--mono);font-size:.85em;background:#EDF2F9;
+    border:1px solid #DCE6F2;border-radius:5px;padding:1px 5px;color:var(--py-blue-dark);
+  }
+
+  /* ===== Cartão de exercício ===== */
+  article.ex{
+    background:var(--card);border:1px solid #E1E9F4;border-radius:var(--radius);
+    margin-top:22px;overflow:hidden;
+    box-shadow:0 1px 4px rgba(22,36,58,.05);
+    transition:box-shadow .2s ease;
+  }
+  article.ex:hover{box-shadow:0 4px 16px rgba(22,36,58,.10)}
+  article.ex.done{border-color:var(--green)}
+  article.ex.done .ex-head{background:#EAF7F0}
+  .ex-head{
+    display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+    padding:14px 18px;background:#F2F6FC;border-bottom:1px solid #E1E9F4;
+  }
+  .ex-num{
+    font-family:var(--mono);font-weight:700;font-size:.85rem;color:#fff;
+    background:var(--py-blue);border-radius:8px;padding:5px 10px;white-space:nowrap;
+  }
+  article.ex.done .ex-num{background:var(--green)}
+  .ex-head h3{font-size:1.02rem;flex:1;min-width:180px}
+  .stars{font-size:.78rem;color:var(--py-gold-dark);background:#FFF6D6;border:1px solid #F2DE96;border-radius:99px;padding:3px 10px;white-space:nowrap}
+  .done-toggle{
+    display:flex;align-items:center;gap:7px;cursor:pointer;user-select:none;
+    font-size:.8rem;font-family:var(--mono);color:var(--ink-soft);
+  }
+  .done-toggle input{width:17px;height:17px;accent-color:var(--green);cursor:pointer}
+  .ex-body{padding:18px 20px 22px}
+  .ex-body p{margin-bottom:10px}
+  .ex-body ol,.ex-body ul{margin:6px 0 12px 22px}
+  .ex-body li{margin-bottom:4px}
+
+  .tag{
+    display:inline-block;font-family:var(--mono);font-size:.72rem;
+    text-transform:uppercase;letter-spacing:.08em;border-radius:6px;
+    padding:3px 9px;margin:4px 0 6px;
+  }
+  .tag.obj{background:#E7F0FB;color:var(--py-blue-dark)}
+  .tag.passos{background:#FFF3CC;color:#8a6d00}
+  .tag.saida{background:#E4F5EC;color:#1c7a4d}
+
+  /* ===== Blocos de código estilo terminal ===== */
+  .term-window{border-radius:12px;overflow:hidden;margin:12px 0;border:1px solid var(--term-line)}
+  .term-bar{
+    display:flex;align-items:center;gap:8px;background:#121A29;padding:8px 14px;
+  }
+  .term-bar .dot{width:11px;height:11px;border-radius:50%}
+  .dot.r{background:#FF5F57}.dot.y{background:#FEBC2E}.dot.g{background:#28C840}
+  .term-bar .fname{font-family:var(--mono);font-size:.75rem;color:#8FA6C8;margin-left:6px}
+  pre.code,pre.output{
+    background:var(--term);color:#E7EDF7;font-family:var(--mono);
+    font-size:.86rem;line-height:1.6;padding:14px 18px;overflow-x:auto;margin:0;
+  }
+  pre.output{color:#9FE8C0}
+  pre.output .prompt-in{color:#E7EDF7}
+  /* syntax highlight */
+  .tk-kw{color:#7EC1FF;font-weight:600}
+  .tk-str{color:#FFD98A}
+  .tk-com{color:#7C8DA8;font-style:italic}
+  .tk-num{color:#9FE8C0}
+  .tk-fn{color:#C7A6FF}
+
+  /* ===== Dicas / desafios / soluções ===== */
+  details{border-radius:10px;margin:12px 0;overflow:hidden;border:1.5px solid transparent}
+  details summary{
+    cursor:pointer;list-style:none;padding:11px 16px;font-weight:600;font-size:.9rem;
+    display:flex;align-items:center;gap:8px;user-select:none;
+  }
+  details summary::-webkit-details-marker{display:none}
+  details summary::after{content:"▾";margin-left:auto;transition:transform .2s ease;font-size:.85em}
+  details[open] summary::after{transform:rotate(180deg)}
+  details .inner{padding:4px 16px 14px}
+  details.dica{background:#FFF9E8;border-color:#F2DE96}
+  details.dica summary{color:#8a6d00}
+  details.desafio{background:#F3EDFB;border-color:#D9C8F2}
+  details.desafio summary{color:#6B3FA0}
+  details.solucao{background:#EAF7F0;border-color:#BFE5D0}
+  details.solucao summary{color:#1c7a4d}
+  details.solucao .aviso{font-size:.8rem;color:#1c7a4d;margin-bottom:8px;font-style:italic}
+
+  /* ===== Checklist final ===== */
+  .checklist{background:var(--card);border:1px solid #E1E9F4;border-radius:var(--radius);padding:22px;margin-top:30px}
+  .checklist h2{font-family:var(--mono);font-size:1.2rem;margin-bottom:6px}
+  .checklist p{font-size:.9rem;color:var(--ink-soft);margin-bottom:14px}
+  .check-item{display:flex;align-items:flex-start;gap:10px;padding:7px 4px;border-radius:8px;cursor:pointer}
+  .check-item:hover{background:#F2F6FC}
+  .check-item input{width:18px;height:18px;margin-top:3px;accent-color:var(--py-blue);cursor:pointer}
+  .check-item span{font-size:.93rem}
+  .check-item input:checked + span{color:var(--green);text-decoration:line-through;text-decoration-color:rgba(46,165,108,.5)}
+
+  /* banner 100% */
+  .win-banner{
+    display:none;margin-top:26px;text-align:center;color:#fff;
+    background:linear-gradient(120deg,var(--green),var(--py-blue));
+    border-radius:var(--radius);padding:26px 20px;
+  }
+  .win-banner.show{display:block;animation:pop .45s ease}
+  @keyframes pop{0%{transform:scale(.94);opacity:0}100%{transform:scale(1);opacity:1}}
+  .win-banner h2{font-family:var(--mono);font-size:1.4rem;margin-bottom:6px}
+
+  .preview-s2{
+    margin-top:36px;border:2px dashed var(--py-blue);border-radius:var(--radius);
+    padding:20px 22px;background:#EFF5FC;
+  }
+  .preview-s2 h2{font-family:var(--mono);font-size:1.05rem;color:var(--py-blue-dark);margin-bottom:8px}
+  footer{
+    text-align:center;font-family:var(--mono);font-size:.75rem;color:var(--ink-soft);
+    padding:26px 16px 40px;
+  }
+  @media(max-width:560px){
+    .progress-msg{display:none}
+    .ex-head h3{font-size:.95rem}
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-wrap" role="region" aria-label="Progresso da semana">
+  <span class="label">XP DA SEMANA</span>
+  <div class="progress-bar"><div class="progress-fill" id="pfill"></div></div>
+  <span class="progress-count" id="pcount">0 / 10</span>
+  <span class="progress-msg" id="pmsg">Marque os exercícios concluídos ✔</span>
+  <button class="reset-btn" id="resetBtn" title="Apagar todo o progresso salvo">↺ Resetar</button>
+</div>
+
+<header class="hero">
+  <div class="kicker">Python para Iniciantes · Exercícios Guiados</div>
+  <h1>SEMANA 25 — Projeto Final 5:<br>a Loja Tua Caneca Web 🏆<span class="cursor" aria-hidden="true"></span></h1>
+  <p class="sub">A obra-prima da trilha profissional: Flask + SQLite num app web completo — catálogo, CRUD com banco, vendas com baixa de estoque, relatório com SQL e API JSON. Tudo das 25 semanas, num sistema só.</p>
+  <div class="howto">
+    <strong>Como usar:</strong> digite o código você mesmo (não copie e cole!), compare com a saída esperada e marque <strong>✔ Concluído</strong> em cada exercício para encher sua barra de XP. As <strong>dicas</strong> e <strong>soluções</strong> ficam escondidas — só abra depois de tentar! Seu progresso fica salvo no navegador.
+  </div>
+</header>
+
+<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · Revisão</a><a href="#p2">2 · Etapas 1-2</a><a href="#p3">3 · Etapas 3-4</a><a href="#p4">4 · Etapas 5-6</a><a href="#p5">5 · Formatura</a><a href="#checklist">✅ Checklist</a></nav>
+
+<main>
+
+<section class="parte" id="p1">
+  <div class="parte-head"><span class="num">01</span><h2>Revisão relâmpago</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>O último aquecimento da trilha. Capriche — você chegou longe demais para não fechar com chave de ouro! 😄</p></div>
+  <article class="ex" id="ex1">
+    <div class="ex-head">
+      <span class="ex-num">EX 01</span>
+      <h3>Quiz: preveja as 8 saídas 🧠</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex1"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Testar SQL, Flask e os clássicos numa tacada só.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Anote as previsões antes de rodar. Última chance de gabarito da trilha!</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex01_quiz.py</span></div><pre class="code">import sqlite3
+
+con = sqlite3.connect(":memory:")
+cur = con.cursor()
+cur.execute("CREATE TABLE t (nome TEXT, valor INTEGER)")
+cur.executemany("INSERT INTO t VALUES (?, ?)",
+                [("a", 10), ("b", 20), ("a", 30)])
+
+cur.execute("SELECT COUNT(*) FROM t")
+print(cur.fetchone()[0])
+
+cur.execute("SELECT SUM(valor) FROM t WHERE nome = ?", ("a",))
+print(cur.fetchone()[0])
+
+cur.execute("SELECT nome, SUM(valor) FROM t GROUP BY nome ORDER BY SUM(valor) DESC")
+print(cur.fetchall())
+
+print("/produtos".startswith("/"))
+print(f"{{'a': 1}}")
+print(len([x for x in range(5) if x % 2 == 0]))
+print("CRUD"[::-1])</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">3
+40
+[('a', 40), ('b', 20)]
+True
+{'a': 1}
+3
+DURC</pre></div><details class="dica"><summary>💡 Gabarito comentado</summary><div class="inner">3 linhas inseridas · SUM com WHERE nome="a" → 10+30=40 · GROUP BY+ORDER BY: a soma 40, b soma 20 → ordenado decrescente · startswith (S14) · chaves duplas viram simples na f-string (S19!) · list comprehension de pares 0,2,4 → 3 itens (S17) · fatia reversa de "CRUD" (S4). O <code>:memory:</code> cria um banco temporário na RAM — ótimo para testes! 6+ acertos? Rumo à obra-prima!</div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex2">
+    <div class="ex-head">
+      <span class="ex-num">EX 02</span>
+      <h3>Caça aos bugs de banco + web 🐛🔍</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex2"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Os 5 bugs que mais derrubam apps Flask com banco.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>O código deveria cadastrar um produto pela web — ache os 5 bugs ANTES de rodar</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex02_bugs.py</span></div><pre class="code">from flask import Flask, request
+import sqlite3
+
+app = Flask(__name__)
+
+@app.route("/salvar")
+def salvar():
+    nome = request.form.get("nome")
+    conexao = sqlite3.connect("loja.db")
+    cursor = conexao.cursor()
+    cursor.execute("INSERT INTO produtos (nome) VALUES (" + nome + ")")
+    return redirect("/")
+
+app.run(debug=True)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><p><strong>Os 5 bugs:</strong> (1) a rota recebe formulário mas não declara <code>methods=["POST"]</code> — só aceitaria GET. (2) <code>"INSERT ... VALUES (" + nome + ")"</code> é o pecado mortal: concatenação = SQL injection! Use <code>?</code> (Semana 21). (3) faltou <code>conexao.commit()</code> — sem ele o INSERT não é salvo. (4) <code>redirect</code> foi usado mas NÃO importado (<code>from flask import ..., redirect</code>). (5) a conexão nunca é fechada (<code>conexao.close()</code>).</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex02.py</span></div><pre class="code">from flask import Flask, request, redirect
+import sqlite3
+
+app = Flask(__name__)
+
+@app.route("/salvar", methods=["POST"])
+def salvar():
+    nome = request.form.get("nome")
+    conexao = sqlite3.connect("loja.db")
+    cursor = conexao.cursor()
+    cursor.execute("INSERT INTO produtos (nome) VALUES (?)", (nome,))
+    conexao.commit()
+    conexao.close()
+    return redirect("/")
+
+app.run(debug=True)</pre></div><p>Esses 5 são os erros mais comuns de quem começa com Flask + banco. Decorá-los economiza horas de depuração!</p></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p2">
+  <div class="parte-head"><span class="num">02</span><h2>Loja Tua Caneca Web — Etapas 1 e 2</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p><strong>A obra-prima da trilha:</strong> uma loja web completa, com banco de dados, construída em 6 etapas — cada uma funcionando. <em>(Esta é a versão <strong>monolítica</strong> — um app só com tudo dentro, em SQLite. Nas Semanas 26-30 vamos transformá-la num sistema profissional: MariaDB + API REST + JWT + frontend desacoplado.)</em> A arquitetura:</p><table><tr><th>Etapa</th><th>Entrega</th><th>Semanas</th></tr><tr><td>1</td><td>Banco: tabelas produtos e vendas + dados iniciais</td><td>21, 22</td></tr><tr><td>2</td><td>App Flask: catálogo do banco na web</td><td>19, 23</td></tr><tr><td>3</td><td>CRUD de produtos (cadastrar, excluir)</td><td>23</td></tr><tr><td>4</td><td>Vendas com baixa de estoque</td><td>22, 23</td></tr><tr><td>5</td><td>Relatório SQL (GROUP BY) + API JSON</td><td>22, 19</td></tr><tr><td>6</td><td>App integrado completo</td><td>todas</td></tr></table><p>Crie o <code>app.py</code> — ele cresce etapa por etapa até o sistema final.</p></div>
+  <article class="ex" id="ex3">
+    <div class="ex-head">
+      <span class="ex-num">EX 03</span>
+      <h3>Etapa 1: o banco inicializado</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex3"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Criar as tabelas e semear dados iniciais por código.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Função <code>iniciar_banco()</code>: CREATE TABLE IF NOT EXISTS para <code>produtos</code> e <code>vendas</code></li><li>Se a tabela produtos estiver vazia (COUNT(*) == 0), insira 3 produtos de exemplo</li><li>Rode duas vezes: a segunda não pode duplicar nem quebrar (IF NOT EXISTS + checagem de vazio)</li></ol><span class="tag saida">✅ Primeira execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Banco inicializado ✔ (3 produtos de exemplo)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">etapa1.py</span></div><pre class="code">import sqlite3
+
+def iniciar_banco():
+    conexao = sqlite3.connect("loja.db")
+    cursor = conexao.cursor()
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS produtos (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nome TEXT, preco REAL, estoque INTEGER
+        )
+    """)
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS vendas (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            produto TEXT, qtd INTEGER, total REAL
+        )
+    """)
+    cursor.execute("SELECT COUNT(*) FROM produtos")
+    if cursor.fetchone()[0] == 0:
+        cursor.executemany(
+            "INSERT INTO produtos (nome, preco, estoque) VALUES (?, ?, ?)",
+            [("caneca branca", 25.0, 10),
+             ("caneca preta", 27.5, 8),
+             ("azulejo", 40.0, 5)])
+        print("Banco inicializado ✔ (3 produtos de exemplo)")
+    conexao.commit()
+    conexao.close()
+
+iniciar_banco()</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex4">
+    <div class="ex-head">
+      <span class="ex-num">EX 04</span>
+      <h3>Etapa 2: o catálogo na web</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex4"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>App Flask que mostra os produtos do banco numa página.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Importe Flask, crie o app e chame <code>iniciar_banco()</code> no início</li><li>Rota /: SELECT dos produtos + tabela HTML (Semanas 19 e 23)</li><li>Rode e veja o catálogo no navegador</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(localhost:5000 → tabela com os 3 produtos do banco)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">etapa2.py</span></div><pre class="code">from flask import Flask
+import sqlite3
+
+app = Flask(__name__)
+
+@app.route("/")
+def catalogo():
+    conexao = sqlite3.connect("loja.db")
+    cursor = conexao.cursor()
+    cursor.execute("SELECT id, nome, preco, estoque FROM produtos ORDER BY nome")
+    linhas = cursor.fetchall()
+    conexao.close()
+
+    html = "&lt;h1&gt;☕ Loja Tua Caneca&lt;/h1&gt;&lt;table border='1' cellpadding='6'&gt;"
+    html += "&lt;tr&gt;&lt;th&gt;Nome&lt;/th&gt;&lt;th&gt;Preço&lt;/th&gt;&lt;th&gt;Estoque&lt;/th&gt;&lt;/tr&gt;"
+    for id, nome, preco, estoque in linhas:
+        html += f"&lt;tr&gt;&lt;td&gt;{nome}&lt;/td&gt;&lt;td&gt;R$ {preco:.2f}&lt;/td&gt;&lt;td&gt;{estoque}&lt;/td&gt;&lt;/tr&gt;"
+    html += "&lt;/table&gt;"
+    return html
+
+iniciar_banco()   # da Etapa 1
+app.run(debug=True)</pre></div></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p3">
+  <div class="parte-head"><span class="num">03</span><h2>Loja Tua Caneca Web — Etapas 3 e 4</h2></div>
+
+  <article class="ex" id="ex5">
+    <div class="ex-head">
+      <span class="ex-num">EX 05</span>
+      <h3>Etapa 3: CRUD de produtos</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex5"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Cadastrar e excluir produtos pela web.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Adicione um formulário de cadastro na página / (nome, preco, estoque)</li><li>Rota /salvar (POST): valida, INSERT com placeholders, commit, redirect</li><li>Link "excluir" em cada linha + rota /excluir/&lt;int:id&gt; (DELETE)</li><li>Tudo com as boas práticas das Semanas 21-23: ?, validação, POST-redirect-GET</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(cadastra e exclui produtos direto no catálogo)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">etapa3.py</span></div><pre class="code">from flask import Flask, request, redirect
+import sqlite3
+
+# ... dentro do app, somadas à rota / (com formulário) e às novas rotas:
+
+@app.route("/salvar", methods=["POST"])
+def salvar():
+    nome = request.form.get("nome", "").strip()
+    if not nome:
+        return redirect("/")
+    try:
+        preco = float(request.form.get("preco"))
+        estoque = int(request.form.get("estoque"))
+    except (ValueError, TypeError):
+        return redirect("/")
+    conexao = sqlite3.connect("loja.db")
+    conexao.execute(
+        "INSERT INTO produtos (nome, preco, estoque) VALUES (?, ?, ?)",
+        (nome, preco, estoque))
+    conexao.commit()
+    conexao.close()
+    return redirect("/")
+
+@app.route("/excluir/&lt;int:id&gt;")
+def excluir(id):
+    conexao = sqlite3.connect("loja.db")
+    conexao.execute("DELETE FROM produtos WHERE id = ?", (id,))
+    conexao.commit()
+    conexao.close()
+    return redirect("/")</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex6">
+    <div class="ex-head">
+      <span class="ex-num">EX 06</span>
+      <h3>Etapa 4: registrar vendas 💰</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex6"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>A venda completa: valida o estoque, dá baixa e registra — o coração do sistema.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Rota /vender (GET mostra form com nome + qtd; POST processa)</li><li>No POST: SELECT o estoque; se insuficiente, avisa; se ok, UPDATE (baixa) + INSERT na tabela vendas</li><li>Calcule o total (qtd × preço) ao registrar a venda</li><li>Combina toda a lógica da Semana 22 com o formulário da Semana 23</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(form de venda → baixa no estoque + venda registrada na tabela)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">etapa4.py</span></div><pre class="code">from flask import Flask, request
+import sqlite3
+
+@app.route("/vender", methods=["GET", "POST"])
+def vender():
+    if request.method == "POST":
+        nome = request.form.get("nome")
+        qtd = int(request.form.get("qtd"))
+
+        conexao = sqlite3.connect("loja.db")
+        cursor = conexao.cursor()
+        cursor.execute("SELECT preco, estoque FROM produtos WHERE nome = ?", (nome,))
+        r = cursor.fetchone()
+
+        if r is None:
+            msg = "Produto não encontrado!"
+        elif r[1] &lt; qtd:
+            msg = f"Estoque insuficiente! Disponível: {r[1]}"
+        else:
+            preco, estoque = r
+            total = qtd * preco
+            cursor.execute(
+                "UPDATE produtos SET estoque = estoque - ? WHERE nome = ?",
+                (qtd, nome))
+            cursor.execute(
+                "INSERT INTO vendas (produto, qtd, total) VALUES (?, ?, ?)",
+                (nome, qtd, total))
+            conexao.commit()
+            msg = f"Venda registrada! Total: R$ {total:.2f}"
+        conexao.close()
+        return f"&lt;h1&gt;{msg}&lt;/h1&gt;&lt;a href='/vender'&gt;← Nova venda&lt;/a&gt; | &lt;a href='/'&gt;Catálogo&lt;/a&gt;"
+
+    return """
+    &lt;h1&gt;Registrar venda&lt;/h1&gt;
+    &lt;form method="post" action="/vender"&gt;
+        &lt;input name="nome" placeholder="Produto"&gt;
+        &lt;input name="qtd" placeholder="Quantidade"&gt;
+        &lt;button&gt;Vender&lt;/button&gt;
+    &lt;/form&gt;&lt;a href="/"&gt;← Catálogo&lt;/a&gt;
+    """</pre></div></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p4">
+  <div class="parte-head"><span class="num">04</span><h2>Loja Tua Caneca Web — Etapas 5 e 6</h2></div>
+
+  <article class="ex" id="ex7">
+    <div class="ex-head">
+      <span class="ex-num">EX 07</span>
+      <h3>Etapa 5: relatório SQL + API JSON 📊</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex7"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Uma página de relatório com GROUP BY e uma rota de API.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Rota /relatorio: agregações (SUM total, COUNT vendas) + ranking por produto com GROUP BY (Semana 22)</li><li>Monte uma página HTML com os números e o ranking</li><li>Rota /api/produtos: <code>jsonify</code> do catálogo (Semanas 19) — seu sistema também é uma API!</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(/relatorio → faturamento + ranking; /api/produtos → JSON do catálogo)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">etapa5.py</span></div><pre class="code">from flask import Flask, jsonify
+import sqlite3
+
+@app.route("/relatorio")
+def relatorio():
+    conexao = sqlite3.connect("loja.db")
+    cursor = conexao.cursor()
+
+    cursor.execute("SELECT SUM(total), COUNT(*) FROM vendas")
+    faturamento, qtd = cursor.fetchone()
+    faturamento = faturamento or 0
+
+    cursor.execute("""
+        SELECT produto, SUM(qtd) FROM vendas
+        GROUP BY produto ORDER BY SUM(qtd) DESC
+    """)
+    ranking = cursor.fetchall()
+    conexao.close()
+
+    html = f"&lt;h1&gt;📊 Relatório&lt;/h1&gt;&lt;p&gt;Faturamento: R$ {faturamento:.2f} em {qtd} vendas&lt;/p&gt;"
+    html += "&lt;h2&gt;Ranking&lt;/h2&gt;&lt;ul&gt;"
+    for produto, unidades in ranking:
+        html += f"&lt;li&gt;{produto}: {unidades} un.&lt;/li&gt;"
+    html += "&lt;/ul&gt;&lt;a href='/'&gt;← Catálogo&lt;/a&gt;"
+    return html
+
+@app.route("/api/produtos")
+def api_produtos():
+    conexao = sqlite3.connect("loja.db")
+    cursor = conexao.cursor()
+    cursor.execute("SELECT nome, preco, estoque FROM produtos")
+    produtos = [{"nome": n, "preco": p, "estoque": e}
+                for n, p, e in cursor.fetchall()]
+    conexao.close()
+    return jsonify(produtos)</pre></div><p>Repare na list comprehension (Semana 17) montando a lista de dicionários para o jsonify — código enxuto de gente grande!</p></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex8">
+    <div class="ex-head">
+      <span class="ex-num">EX 08</span>
+      <h3>Etapa 6: a obra-prima integrada 🏁</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex8"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Montar o app.py final e dar o play na formatura da trilha.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Junte tudo no app.py: iniciar_banco + catálogo com form + salvar + excluir + vender + relatorio + api</li><li>Um menu de navegação no topo ligando as páginas</li><li>Roteiro de teste: cadastrar → vender → relatório → API → tudo conectado?</li><li>Confira com a versão integrada e tire um print: é o seu diploma da trilha profissional 🏆</li></ol><span class="tag saida">✅ A formatura</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output"> * Running on http://127.0.0.1:5000
+(catálogo, cadastro, vendas, relatório e API — um sistema web completo!)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">app.py</span></div><pre class="code">from flask import Flask, request, redirect, jsonify
+import sqlite3
+
+app = Flask(__name__)
+
+def iniciar_banco():
+    conexao = sqlite3.connect("loja.db")
+    cursor = conexao.cursor()
+    cursor.execute("""CREATE TABLE IF NOT EXISTS produtos (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nome TEXT, preco REAL, estoque INTEGER)""")
+    cursor.execute("""CREATE TABLE IF NOT EXISTS vendas (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        produto TEXT, qtd INTEGER, total REAL)""")
+    cursor.execute("SELECT COUNT(*) FROM produtos")
+    if cursor.fetchone()[0] == 0:
+        cursor.executemany(
+            "INSERT INTO produtos (nome, preco, estoque) VALUES (?, ?, ?)",
+            [("caneca branca", 25.0, 10), ("caneca preta", 27.5, 8),
+             ("azulejo", 40.0, 5)])
+    conexao.commit()
+    conexao.close()
+
+def menu():
+    return ("&lt;nav&gt;&lt;a href='/'&gt;Catálogo&lt;/a&gt; | &lt;a href='/vender'&gt;Vender&lt;/a&gt; | "
+            "&lt;a href='/relatorio'&gt;Relatório&lt;/a&gt; | &lt;a href='/api/produtos'&gt;API&lt;/a&gt;&lt;/nav&gt;&lt;hr&gt;")
+
+@app.route("/")
+def catalogo():
+    conexao = sqlite3.connect("loja.db")
+    cursor = conexao.cursor()
+    cursor.execute("SELECT id, nome, preco, estoque FROM produtos ORDER BY nome")
+    linhas = cursor.fetchall()
+    conexao.close()
+    tabela = "&lt;table border='1' cellpadding='6'&gt;&lt;tr&gt;&lt;th&gt;Nome&lt;/th&gt;&lt;th&gt;Preço&lt;/th&gt;&lt;th&gt;Estoque&lt;/th&gt;&lt;th&gt;Ação&lt;/th&gt;&lt;/tr&gt;"
+    for id, nome, preco, estoque in linhas:
+        tabela += (f"&lt;tr&gt;&lt;td&gt;{nome}&lt;/td&gt;&lt;td&gt;R$ {preco:.2f}&lt;/td&gt;&lt;td&gt;{estoque}&lt;/td&gt;"
+                   f"&lt;td&gt;&lt;a href='/excluir/{id}'&gt;excluir&lt;/a&gt;&lt;/td&gt;&lt;/tr&gt;")
+    tabela += "&lt;/table&gt;"
+    return f"""
+    &lt;html&gt;&lt;head&gt;&lt;title&gt;Loja Tua Caneca&lt;/title&gt;
+    &lt;style&gt;body{{font-family:Arial;background:#F5F8FC;margin:40px}}
+    h1{{color:#3776AB}} input{{padding:6px;margin:3px}} table{{background:#fff}}&lt;/style&gt;
+    &lt;/head&gt;&lt;body&gt;{menu()}&lt;h1&gt;☕ Loja Tua Caneca&lt;/h1&gt;
+    &lt;form method="post" action="/salvar"&gt;
+        &lt;input name="nome" placeholder="Nome"&gt;
+        &lt;input name="preco" placeholder="Preço"&gt;
+        &lt;input name="estoque" placeholder="Estoque"&gt;
+        &lt;button&gt;Cadastrar&lt;/button&gt;
+    &lt;/form&gt;&lt;br&gt;{tabela}&lt;/body&gt;&lt;/html&gt;
+    """
+
+@app.route("/salvar", methods=["POST"])
+def salvar():
+    nome = request.form.get("nome", "").strip()
+    if not nome:
+        return redirect("/")
+    try:
+        preco = float(request.form.get("preco"))
+        estoque = int(request.form.get("estoque"))
+    except (ValueError, TypeError):
+        return redirect("/")
+    conexao = sqlite3.connect("loja.db")
+    conexao.execute("INSERT INTO produtos (nome, preco, estoque) VALUES (?, ?, ?)",
+                    (nome, preco, estoque))
+    conexao.commit()
+    conexao.close()
+    return redirect("/")
+
+@app.route("/excluir/&lt;int:id&gt;")
+def excluir(id):
+    conexao = sqlite3.connect("loja.db")
+    conexao.execute("DELETE FROM produtos WHERE id = ?", (id,))
+    conexao.commit()
+    conexao.close()
+    return redirect("/")
+
+@app.route("/vender", methods=["GET", "POST"])
+def vender():
+    if request.method == "POST":
+        nome = request.form.get("nome")
+        qtd = int(request.form.get("qtd"))
+        conexao = sqlite3.connect("loja.db")
+        cursor = conexao.cursor()
+        cursor.execute("SELECT preco, estoque FROM produtos WHERE nome = ?", (nome,))
+        r = cursor.fetchone()
+        if r is None:
+            msg = "Produto não encontrado!"
+        elif r[1] &lt; qtd:
+            msg = f"Estoque insuficiente! Disponível: {r[1]}"
+        else:
+            total = qtd * r[0]
+            cursor.execute("UPDATE produtos SET estoque = estoque - ? WHERE nome = ?",
+                           (qtd, nome))
+            cursor.execute("INSERT INTO vendas (produto, qtd, total) VALUES (?, ?, ?)",
+                           (nome, qtd, total))
+            conexao.commit()
+            msg = f"Venda registrada! Total: R$ {total:.2f}"
+        conexao.close()
+        return f"{menu()}&lt;h1&gt;{msg}&lt;/h1&gt;"
+    return f"""{menu()}&lt;h1&gt;Registrar venda&lt;/h1&gt;
+    &lt;form method="post" action="/vender"&gt;
+        &lt;input name="nome" placeholder="Produto"&gt;
+        &lt;input name="qtd" placeholder="Quantidade"&gt;
+        &lt;button&gt;Vender&lt;/button&gt;&lt;/form&gt;"""
+
+@app.route("/relatorio")
+def relatorio():
+    conexao = sqlite3.connect("loja.db")
+    cursor = conexao.cursor()
+    cursor.execute("SELECT SUM(total), COUNT(*) FROM vendas")
+    faturamento, qtd = cursor.fetchone()
+    faturamento = faturamento or 0
+    cursor.execute("""SELECT produto, SUM(qtd) FROM vendas
+                      GROUP BY produto ORDER BY SUM(qtd) DESC""")
+    ranking = cursor.fetchall()
+    conexao.close()
+    itens = "".join(f"&lt;li&gt;{p}: {u} un.&lt;/li&gt;" for p, u in ranking)
+    return f"{menu()}&lt;h1&gt;📊 Relatório&lt;/h1&gt;&lt;p&gt;Faturamento: R$ {faturamento:.2f} em {qtd} vendas&lt;/p&gt;&lt;ul&gt;{itens}&lt;/ul&gt;"
+
+@app.route("/api/produtos")
+def api_produtos():
+    conexao = sqlite3.connect("loja.db")
+    cursor = conexao.cursor()
+    cursor.execute("SELECT nome, preco, estoque FROM produtos")
+    produtos = [{"nome": n, "preco": p, "estoque": e}
+                for n, p, e in cursor.fetchall()]
+    conexao.close()
+    return jsonify(produtos)
+
+iniciar_banco()
+app.run(debug=True)</pre></div><p><strong>~130 linhas. Flask + SQLite + CRUD + vendas + relatório SQL + API.</strong> Compare com o seu primeiro <code>print("Olá, mundo!")</code> da Semana 1. Você construiu uma aplicação web de verdade, com banco de dados — o tipo de sistema que sustenta negócios reais. 👏🏆</p></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p5">
+  <div class="parte-head"><span class="num">05</span><h2>Formatura da trilha profissional</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Os dois últimos desafios — sem solução, porque a partir daqui o desenvolvedor é você. 🏆</p></div>
+  <article class="ex" id="ex9">
+    <div class="ex-head">
+      <span class="ex-num">EX 09</span>
+      <h3>Desafio: a loja turbinada com IA 🤖</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex9"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Integrar tudo que você aprendeu, incluindo a Semana 24.</p><span class="tag passos">🧭 Roteiro</span><ol><li>No cadastro de produto, gere a descrição automaticamente com <code>perguntar_ia()</code> (Semana 24) e salve numa coluna nova</li><li>Adicione uma página de edição completa (GET mostra form preenchido, POST faz UPDATE)</li><li>Crie uma rota de busca: <code>/buscar?termo=...</code> usando <code>request.args.get</code> e LIKE no banco</li><li>Escolha pelo menos um e implemente — cada um integra uma semana diferente</li></ol><details class="dica"><summary>💡 Você tem todas as peças</summary><div class="inner">IA (S24), edição (S23), busca com LIKE (S22), formulários (S23)... cada desafio é só combinar peças que você JÁ domina. Programar avançado é, na maior parte, reconhecer quais peças encaixam. E você tem um baú cheio delas. 🧰</div></details><details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Quer ir além? Pesquise "Flask deploy gratuito" e coloque sua loja NO AR, acessível por qualquer pessoa na internet. Ver seu sistema rodando num endereço de verdade é uma sensação inesquecível. 🌐</div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex10">
+    <div class="ex-head">
+      <span class="ex-num">EX 10</span>
+      <h3>O desafio que encerra a jornada 🏆</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex10"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>O projeto-assinatura: um sistema web completo para um problema 100% seu.</p><span class="tag passos">🧭 Roteiro</span><ol><li>Escolha um domínio real da SUA vida: controle de uma locadora, sistema de uma clínica, gestão de turmas, finanças pessoais, estoque do seu negócio...</li><li>Modele as tabelas, construa o CRUD web, adicione relatórios com SQL e — se fizer sentido — um toque de IA</li><li>Estruture como projeto profissional: código organizado, README explicando, banco inicializado por código</li><li>Suba no GitHub, coloque o link no LinkedIn e no currículo</li><li>E o mais importante: APRESENTE para alguém, explicando suas decisões. Ensinar é a forma definitiva de dominar — você percorreu 25 semanas, sabe disso melhor que ninguém. 🎓</li></ol><details class="dica"><summary>💡 A última palavra da trilha</summary><div class="inner">25 semanas. ~290 exercícios. 5 sistemas completos. Do <code>print()</code> a aplicações web com banco de dados e IA. Você não aprendeu apenas Python — você aprendeu a transformar QUALQUER problema em software. A pergunta nunca mais será "será que eu consigo?". Será "qual problema eu resolvo agora?". Obrigado pela jornada, parabéns pela formatura, e bons códigos para a vida toda! 🏆🐍✨</div></details>
+    </div>
+  </article>
+</section>
+
+<div class="checklist" id="checklist">
+  <h2>✅ Checklist de fim de semana</h2>
+  <p>Antes de seguir para a próxima semana, confirme que você consegue:</p>
+<label class="check-item"><input type="checkbox"><span>Prever saídas misturando SQL, Flask e os clássicos</span></label>
+<label class="check-item"><input type="checkbox"><span>Caçar bugs típicos de banco/web (WHERE faltando, commit, methods, ?)</span></label>
+<label class="check-item"><input type="checkbox"><span>Estruturar um app web com banco: app.py e inicialização por código</span></label>
+<label class="check-item"><input type="checkbox"><span>Modelar e inicializar as tabelas (CREATE IF NOT EXISTS + dados iniciais)</span></label>
+<label class="check-item"><input type="checkbox"><span>Implementar o CRUD de produtos via web</span></label>
+<label class="check-item"><input type="checkbox"><span>Registrar vendas com baixa de estoque (SELECT + UPDATE + INSERT)</span></label>
+<label class="check-item"><input type="checkbox"><span>Gerar um relatório com agregações SQL (GROUP BY) numa página</span></label>
+<label class="check-item"><input type="checkbox"><span>Expor uma API JSON do catálogo</span></label>
+<label class="check-item"><input type="checkbox"><span>Integrar (opcional) uma descrição gerada por IA</span></label>
+<label class="check-item"><input type="checkbox"><span>Apresentar o sistema completo rodando — sua obra-prima</span></label>
+</div>
+
+<div class="win-banner" id="winBanner">
+  <h2>🏆 SEMANA 25 COMPLETA!</h2>
+  <p>MÓDULO DADOS &amp; SQL COMPLETO! 25 semanas, ~290 exercícios, 5 projetos finais — do print() a apps web com banco e IA. E o módulo profissional (MariaDB, API REST, JWT e arquitetura desacoplada) começa na Semana 26! 🏆🎓🐍</p>
+</div>
+
+<div class="preview-s2">
+<h2>📅 Prévia da Semana 26 — começa o módulo PROFISSIONAL</h2><p>Você construiu um sistema completo... mas ele é um <strong>monolito</strong>: um único app Flask que faz tudo (banco, lógica e telas) e usa SQLite. A partir da Semana 26, a virada para o mundo real: migração para <strong>MariaDB</strong> (com DBeaver para gerência), uma <strong>API REST</strong> de verdade (backend desacoplado), <strong>autenticação com JWT</strong> e um <strong>frontend separado</strong> consumindo a API. O mesmo negócio, agora com arquitetura profissional. 🏛️🔐🚀</p></div>
+
+</main>
+
+<footer>python_para_iniciantes // semana_25 // exercícios guiados</footer>
+
+<script>
+// ===== Syntax highlight leve para Python =====
+(function(){
+  const KW = /\b(print|input|int|float|type|str|bool)\b/g;
+  document.querySelectorAll('pre.code').forEach(pre=>{
+    let src = pre.textContent;
+    // escapa HTML
+    src = src.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    // uma passada só, com alternação (comentário | string | builtin | bool | número)
+    src = src.replace(
+      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|insert|int|float|str|len|range|type|abs|round|max|min|sum|sorted|sort|reverse|append|remove|split|strip|upper|lower|replace|title|randint|random|get|keys|values|items|open|readlines|read|write|close|count|index|pop|update|list|dict|tuple|enumerate|sqrt|floor|ceil|choice|shuffle|sample|sleep|now|today|strftime|dumps|dump|loads|load|isinstance|datetime|date|DictReader|DictWriter|writerows|writerow|writeheader|writer|reader|csv|Workbook|load_workbook|save|iter_rows|Font|listdir|makedirs|getcwd|rename|exists|getsize|splitext|join|endswith|startswith|copytree|copy|move|requests|status_code|json|DataFrame|read_csv|read_excel|to_excel|to_csv|head|describe|groupby|sort_values|value_counts|mean|idxmax|bar|barh|pie|plot|savefig|show|title|xlabel|ylabel|figure|legend|axhline|tight_layout|close|Flask|route|run|render_template|jsonify|redirect|request|connect|cursor|execute|executemany|fetchall|fetchone|commit|environ|getenv|post)\b|\b(True|False|None|if|elif|else|while|for|in|and|or|not|break|continue|import|from|def|return|try|except|finally|with|as|del|global|pass|class|self|super|lambda)\b|(\b\d+(?:\.\d+)?\b)/g,
+      function(m, com, str, fn, bool, num){
+        if(com)  return '<span class="tk-com">'+com+'</span>';
+        if(str)  return '<span class="tk-str">'+str+'</span>';
+        if(fn)   return '<span class="tk-fn">'+fn+'</span>';
+        if(bool) return '<span class="tk-kw">'+bool+'</span>';
+        if(num)  return '<span class="tk-num">'+num+'</span>';
+        return m;
+      }
+    );
+    pre.innerHTML = src;
+  });
+})();
+
+// ===== Armazenamento seguro (localStorage com fallback em memória) =====
+// Quando o aluno abre o arquivo .html no computador, o progresso fica salvo
+// no navegador. Se o localStorage estiver indisponível (modo restrito,
+// pré-visualização, etc.), o progresso funciona só em memória, sem quebrar.
+const storage = (function(){
+  const KEY = 'python_semana25_progresso';
+  let memoria = {};
+  let disponivel = false;
+  try{
+    localStorage.setItem('__teste__','1');
+    localStorage.removeItem('__teste__');
+    disponivel = true;
+  }catch(e){ disponivel = false; }
+
+  return {
+    carregar: function(){
+      if(disponivel){
+        try{ return JSON.parse(localStorage.getItem(KEY)) || {}; }
+        catch(e){ return {}; }
+      }
+      return memoria;
+    },
+    salvar: function(dados){
+      memoria = dados;
+      if(disponivel){
+        try{ localStorage.setItem(KEY, JSON.stringify(dados)); }catch(e){}
+      }
+    },
+    limpar: function(){
+      memoria = {};
+      if(disponivel){
+        try{ localStorage.removeItem(KEY); }catch(e){}
+      }
+    },
+    persistente: disponivel
+  };
+})();
+
+// ===== Progresso dos exercícios + checklist =====
+(function(){
+  const checks = document.querySelectorAll('.done-check');
+  const listChecks = document.querySelectorAll('.check-item input');
+  const total = checks.length;
+  const fill = document.getElementById('pfill');
+  const count = document.getElementById('pcount');
+  const msg = document.getElementById('pmsg');
+  const banner = document.getElementById('winBanner');
+  const resetBtn = document.getElementById('resetBtn');
+
+  const MSGS = [
+    [0,  'Marque os exercícios concluídos ✔'],
+    [1,  'Boa! Continue assim 💪'],
+    [3,  'Pegando o ritmo! 🔥'],
+    [5, 'Metade do caminho! 🚀'],
+    [8, 'Quase lá... força! ⚡'],
+    [10, 'SEMANA COMPLETA! 🏆']
+  ];
+
+  function estadoAtual(){
+    const dados = { ex: {}, lista: {} };
+    checks.forEach(c => { dados.ex[c.dataset.ex] = c.checked; });
+    listChecks.forEach((c,i) => { dados.lista['item'+i] = c.checked; });
+    return dados;
+  }
+
+  function atualizarBarra(){
+    const done = document.querySelectorAll('.done-check:checked').length;
+    const pct = Math.round(done/total*100);
+    fill.style.width = pct + '%';
+    count.textContent = done + ' / ' + total;
+    let m = MSGS[0][1];
+    for(const [min,text] of MSGS){ if(done >= min) m = text; }
+    msg.textContent = m;
+    banner.classList.toggle('show', done === total);
+  }
+
+  function aplicarEstado(dados){
+    checks.forEach(c => {
+      const marcado = !!(dados.ex && dados.ex[c.dataset.ex]);
+      c.checked = marcado;
+      c.closest('article.ex').classList.toggle('done', marcado);
+    });
+    listChecks.forEach((c,i) => {
+      c.checked = !!(dados.lista && dados.lista['item'+i]);
+    });
+    atualizarBarra();
+  }
+
+  // Restaura o progresso salvo ao abrir a página
+  aplicarEstado(storage.carregar());
+
+  // Salva a cada mudança
+  checks.forEach(c => {
+    c.addEventListener('change', function(){
+      this.closest('article.ex').classList.toggle('done', this.checked);
+      atualizarBarra();
+      storage.salvar(estadoAtual());
+    });
+  });
+  listChecks.forEach(c => {
+    c.addEventListener('change', function(){
+      storage.salvar(estadoAtual());
+    });
+  });
+
+  // Botão de reset com confirmação
+  resetBtn.addEventListener('click', function(){
+    if(confirm('Apagar todo o progresso desta semana?')){
+      storage.limpar();
+      aplicarEstado({});
+    }
+  });
+
+  // Aviso discreto se o progresso não puder ser salvo neste ambiente
+  if(!storage.persistente){
+    msg.textContent += ' (progresso não será salvo neste ambiente)';
+  }
+})();
+</script>
+</body>
+</html>

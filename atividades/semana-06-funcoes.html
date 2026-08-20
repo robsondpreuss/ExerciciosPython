@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Semana 16 — Projeto Final 3</title>
+<style>
+  :root{
+    --ink:#16243A;
+    --ink-soft:#4A5A74;
+    --paper:#F5F8FC;
+    --card:#FFFFFF;
+    --py-blue:#3776AB;
+    --py-blue-dark:#27598C;
+    --py-gold:#FFD43B;
+    --py-gold-dark:#C99700;
+    --term:#1B2435;
+    --term-line:#2B3850;
+    --green:#2EA56C;
+    --coral:#E2574C;
+    --radius:14px;
+    --mono:"Cascadia Code","JetBrains Mono",Consolas,"Roboto Mono",monospace;
+    --sans:"Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto}
+    *{transition:none !important;animation:none !important}
+  }
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.65}
+
+  /* ===== Barra de progresso fixa ===== */
+  .progress-wrap{
+    position:sticky;top:0;z-index:50;
+    background:var(--term);color:#fff;
+    padding:10px 18px;
+    display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+    box-shadow:0 2px 12px rgba(22,36,58,.25);
+  }
+  .progress-wrap .label{font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;white-space:nowrap}
+  .progress-bar{flex:1;min-width:140px;height:14px;background:var(--term-line);border-radius:99px;overflow:hidden}
+  .progress-fill{height:100%;width:0%;border-radius:99px;background:linear-gradient(90deg,var(--py-blue),var(--py-gold));transition:width .4s ease}
+  .progress-count{font-family:var(--mono);font-size:.85rem;color:var(--py-gold);white-space:nowrap}
+  .progress-msg{font-size:.78rem;color:#AFC3E0;white-space:nowrap}
+  .reset-btn{
+    font-family:var(--mono);font-size:.72rem;color:#AFC3E0;
+    background:transparent;border:1px solid var(--term-line);border-radius:8px;
+    padding:5px 11px;cursor:pointer;transition:all .15s ease;white-space:nowrap;
+  }
+  .reset-btn:hover,.reset-btn:focus-visible{color:#fff;border-color:#5A6E92;background:rgba(255,255,255,.06)}
+  .reset-btn:focus-visible{outline:2px solid var(--py-gold);outline-offset:2px}
+
+  /* ===== Hero ===== */
+  header.hero{
+    background:linear-gradient(150deg,var(--term) 0%,#22406B 70%,var(--py-blue) 100%);
+    color:#fff;padding:56px 20px 48px;text-align:center;position:relative;overflow:hidden;
+  }
+  header.hero::before{
+    content:"csv  openpyxl  requests  os  shutil  🏆";
+    position:absolute;inset:auto 0 8px 0;font-family:var(--mono);font-size:.78rem;
+    color:rgba(255,255,255,.14);letter-spacing:.4em;white-space:nowrap;overflow:hidden;
+  }
+  .hero .kicker{
+    font-family:var(--mono);font-size:.85rem;color:var(--py-gold);
+    letter-spacing:.18em;text-transform:uppercase;margin-bottom:14px;
+  }
+  .hero h1{font-family:var(--mono);font-size:clamp(1.5rem,4.5vw,2.6rem);font-weight:700;line-height:1.25}
+  .hero h1 .cursor{display:inline-block;width:.55em;height:1.05em;background:var(--py-gold);vertical-align:text-bottom;margin-left:4px;animation:blink 1.1s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+  .hero p.sub{max-width:620px;margin:18px auto 0;color:#D7E4F5;font-size:1rem}
+  .hero .howto{
+    max-width:640px;margin:26px auto 0;background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.18);border-radius:var(--radius);
+    padding:14px 18px;font-size:.88rem;color:#E8F0FB;text-align:left;
+  }
+  .hero .howto strong{color:var(--py-gold)}
+
+  /* ===== Navegação por partes ===== */
+  nav.parts{
+    display:flex;gap:8px;flex-wrap:wrap;justify-content:center;
+    padding:18px 16px;max-width:980px;margin:0 auto;
+  }
+  nav.parts a{
+    font-family:var(--mono);font-size:.78rem;text-decoration:none;
+    color:var(--py-blue-dark);background:var(--card);
+    border:1.5px solid #D5E2F2;border-radius:99px;padding:7px 14px;
+    transition:all .15s ease;
+  }
+  nav.parts a:hover,nav.parts a:focus-visible{border-color:var(--py-blue);background:#EAF2FB}
+  nav.parts a:focus-visible{outline:2px solid var(--py-blue);outline-offset:2px}
+
+  main{max-width:880px;margin:0 auto;padding:8px 18px 80px}
+
+  /* ===== Seções (partes) ===== */
+  section.parte{margin-top:46px}
+  .parte-head{display:flex;align-items:baseline;gap:14px;border-bottom:3px solid var(--py-gold);padding-bottom:10px;margin-bottom:6px}
+  .parte-head .num{
+    font-family:var(--mono);font-size:2.4rem;font-weight:700;color:var(--py-blue);line-height:1;
+  }
+  .parte-head h2{font-family:var(--mono);font-size:clamp(1.05rem,2.8vw,1.45rem);color:var(--ink)}
+  .parte-intro{
+    background:var(--card);border:1px solid #E1E9F4;border-radius:var(--radius);
+    padding:18px 22px;margin-top:16px;font-size:.95rem;
+  }
+  .parte-intro h3{font-size:.8rem;font-family:var(--mono);color:var(--py-blue);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px}
+  .parte-intro p{margin-bottom:10px}
+  .parte-intro p:last-child{margin-bottom:0}
+  .parte-intro ol,.parte-intro ul{margin:8px 0 10px 22px}
+  table{border-collapse:collapse;width:100%;margin:10px 0;font-size:.88rem}
+  th,td{border:1px solid #DCE6F2;padding:7px 10px;text-align:left}
+  th{background:#EDF3FA;font-family:var(--mono);font-size:.78rem}
+  td code,p code,li code{
+    font-family:var(--mono);font-size:.85em;background:#EDF2F9;
+    border:1px solid #DCE6F2;border-radius:5px;padding:1px 5px;color:var(--py-blue-dark);
+  }
+
+  /* ===== Cartão de exercício ===== */
+  article.ex{
+    background:var(--card);border:1px solid #E1E9F4;border-radius:var(--radius);
+    margin-top:22px;overflow:hidden;
+    box-shadow:0 1px 4px rgba(22,36,58,.05);
+    transition:box-shadow .2s ease;
+  }
+  article.ex:hover{box-shadow:0 4px 16px rgba(22,36,58,.10)}
+  article.ex.done{border-color:var(--green)}
+  article.ex.done .ex-head{background:#EAF7F0}
+  .ex-head{
+    display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+    padding:14px 18px;background:#F2F6FC;border-bottom:1px solid #E1E9F4;
+  }
+  .ex-num{
+    font-family:var(--mono);font-weight:700;font-size:.85rem;color:#fff;
+    background:var(--py-blue);border-radius:8px;padding:5px 10px;white-space:nowrap;
+  }
+  article.ex.done .ex-num{background:var(--green)}
+  .ex-head h3{font-size:1.02rem;flex:1;min-width:180px}
+  .stars{font-size:.78rem;color:var(--py-gold-dark);background:#FFF6D6;border:1px solid #F2DE96;border-radius:99px;padding:3px 10px;white-space:nowrap}
+  .done-toggle{
+    display:flex;align-items:center;gap:7px;cursor:pointer;user-select:none;
+    font-size:.8rem;font-family:var(--mono);color:var(--ink-soft);
+  }
+  .done-toggle input{width:17px;height:17px;accent-color:var(--green);cursor:pointer}
+  .ex-body{padding:18px 20px 22px}
+  .ex-body p{margin-bottom:10px}
+  .ex-body ol,.ex-body ul{margin:6px 0 12px 22px}
+  .ex-body li{margin-bottom:4px}
+
+  .tag{
+    display:inline-block;font-family:var(--mono);font-size:.72rem;
+    text-transform:uppercase;letter-spacing:.08em;border-radius:6px;
+    padding:3px 9px;margin:4px 0 6px;
+  }
+  .tag.obj{background:#E7F0FB;color:var(--py-blue-dark)}
+  .tag.passos{background:#FFF3CC;color:#8a6d00}
+  .tag.saida{background:#E4F5EC;color:#1c7a4d}
+
+  /* ===== Blocos de código estilo terminal ===== */
+  .term-window{border-radius:12px;overflow:hidden;margin:12px 0;border:1px solid var(--term-line)}
+  .term-bar{
+    display:flex;align-items:center;gap:8px;background:#121A29;padding:8px 14px;
+  }
+  .term-bar .dot{width:11px;height:11px;border-radius:50%}
+  .dot.r{background:#FF5F57}.dot.y{background:#FEBC2E}.dot.g{background:#28C840}
+  .term-bar .fname{font-family:var(--mono);font-size:.75rem;color:#8FA6C8;margin-left:6px}
+  pre.code,pre.output{
+    background:var(--term);color:#E7EDF7;font-family:var(--mono);
+    font-size:.86rem;line-height:1.6;padding:14px 18px;overflow-x:auto;margin:0;
+  }
+  pre.output{color:#9FE8C0}
+  pre.output .prompt-in{color:#E7EDF7}
+  /* syntax highlight */
+  .tk-kw{color:#7EC1FF;font-weight:600}
+  .tk-str{color:#FFD98A}
+  .tk-com{color:#7C8DA8;font-style:italic}
+  .tk-num{color:#9FE8C0}
+  .tk-fn{color:#C7A6FF}
+
+  /* ===== Dicas / desafios / soluções ===== */
+  details{border-radius:10px;margin:12px 0;overflow:hidden;border:1.5px solid transparent}
+  details summary{
+    cursor:pointer;list-style:none;padding:11px 16px;font-weight:600;font-size:.9rem;
+    display:flex;align-items:center;gap:8px;user-select:none;
+  }
+  details summary::-webkit-details-marker{display:none}
+  details summary::after{content:"▾";margin-left:auto;transition:transform .2s ease;font-size:.85em}
+  details[open] summary::after{transform:rotate(180deg)}
+  details .inner{padding:4px 16px 14px}
+  details.dica{background:#FFF9E8;border-color:#F2DE96}
+  details.dica summary{color:#8a6d00}
+  details.desafio{background:#F3EDFB;border-color:#D9C8F2}
+  details.desafio summary{color:#6B3FA0}
+  details.solucao{background:#EAF7F0;border-color:#BFE5D0}
+  details.solucao summary{color:#1c7a4d}
+  details.solucao .aviso{font-size:.8rem;color:#1c7a4d;margin-bottom:8px;font-style:italic}
+
+  /* ===== Checklist final ===== */
+  .checklist{background:var(--card);border:1px solid #E1E9F4;border-radius:var(--radius);padding:22px;margin-top:30px}
+  .checklist h2{font-family:var(--mono);font-size:1.2rem;margin-bottom:6px}
+  .checklist p{font-size:.9rem;color:var(--ink-soft);margin-bottom:14px}
+  .check-item{display:flex;align-items:flex-start;gap:10px;padding:7px 4px;border-radius:8px;cursor:pointer}
+  .check-item:hover{background:#F2F6FC}
+  .check-item input{width:18px;height:18px;margin-top:3px;accent-color:var(--py-blue);cursor:pointer}
+  .check-item span{font-size:.93rem}
+  .check-item input:checked + span{color:var(--green);text-decoration:line-through;text-decoration-color:rgba(46,165,108,.5)}
+
+  /* banner 100% */
+  .win-banner{
+    display:none;margin-top:26px;text-align:center;color:#fff;
+    background:linear-gradient(120deg,var(--green),var(--py-blue));
+    border-radius:var(--radius);padding:26px 20px;
+  }
+  .win-banner.show{display:block;animation:pop .45s ease}
+  @keyframes pop{0%{transform:scale(.94);opacity:0}100%{transform:scale(1);opacity:1}}
+  .win-banner h2{font-family:var(--mono);font-size:1.4rem;margin-bottom:6px}
+
+  .preview-s2{
+    margin-top:36px;border:2px dashed var(--py-blue);border-radius:var(--radius);
+    padding:20px 22px;background:#EFF5FC;
+  }
+  .preview-s2 h2{font-family:var(--mono);font-size:1.05rem;color:var(--py-blue-dark);margin-bottom:8px}
+  footer{
+    text-align:center;font-family:var(--mono);font-size:.75rem;color:var(--ink-soft);
+    padding:26px 16px 40px;
+  }
+  @media(max-width:560px){
+    .progress-msg{display:none}
+    .ex-head h3{font-size:.95rem}
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-wrap" role="region" aria-label="Progresso da semana">
+  <span class="label">XP DA SEMANA</span>
+  <div class="progress-bar"><div class="progress-fill" id="pfill"></div></div>
+  <span class="progress-count" id="pcount">0 / 10</span>
+  <span class="progress-msg" id="pmsg">Marque os exercícios concluídos ✔</span>
+  <button class="reset-btn" id="resetBtn" title="Apagar todo o progresso salvo">↺ Resetar</button>
+</div>
+
+<header class="hero">
+  <div class="kicker">Python para Iniciantes · Exercícios Guiados</div>
+  <h1>SEMANA 16 — Projeto Final 3:<br>a Central Tua Caneca 🏆<span class="cursor" aria-hidden="true"></span></h1>
+  <p class="sub">A obra-prima do módulo avançado: vendas importadas de CSV, análise com funções, cotação do dólar via API, relatório Excel formatado e backup automático — tudo num sistema só.</p>
+  <div class="howto">
+    <strong>Como usar:</strong> digite o código você mesmo (não copie e cole!), compare com a saída esperada e marque <strong>✔ Concluído</strong> em cada exercício para encher sua barra de XP. As <strong>dicas</strong> e <strong>soluções</strong> ficam escondidas — só abra depois de tentar! Seu progresso fica salvo no navegador.
+  </div>
+</header>
+
+<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · Revisão</a><a href="#p2">2 · Etapas 1-2</a><a href="#p3">3 · Etapas 3-4</a><a href="#p4">4 · Etapas 5-6</a><a href="#p5">5 · Formatura definitiva</a><a href="#checklist">✅ Checklist</a></nav>
+
+<main>
+
+<section class="parte" id="p1">
+  <div class="parte-head"><span class="num">01</span><h2>Revisão relâmpago</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>O último aquecimento antes da obra-prima. Tudo do módulo avançado no caldeirão!</p></div>
+  <article class="ex" id="ex1">
+    <div class="ex-head">
+      <span class="ex-num">EX 01</span>
+      <h3>Quiz: preveja as 8 saídas 🧠</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex1"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Testar csv, os, json e os clássicos das 16 semanas.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Anote suas previsões antes de rodar — última chance de gabaritar! 😄</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex01_quiz.py</span></div><pre class="code">import os
+import json
+
+print("foto.jpg".endswith(".jpg"))
+print("relatorio.final.pdf".split(".")[-1])
+print(os.path.join("dados", "vendas.csv"))
+
+dados = json.loads('{"qtd": "12"}')
+print(type(dados["qtd"]).__name__)
+print(int(dados["qtd"]) * 2)
+
+linha = {"produto": "caneca", "total": "75.0"}
+print(float(linha["total"]) &gt;= 50)
+
+print(round(1536 / 1024, 1))
+
+pares = [("a", 1), ("b", 2)]
+for letra, numero in pares:
+    pass
+print(letra, numero)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">True
+pdf
+dados\vendas.csv (ou dados/vendas.csv no Linux!)
+str
+24
+True
+1.5
+b 2</pre></div><details class="dica"><summary>💡 Gabarito comentado</summary><div class="inner">endswith (S14) · split do último ponto (S4+14) · join portátil — a barra muda por sistema! (S14) · JSON traz "12" como string (S15) · conversão antes da conta · float de campo CSV (S13) · bytes→KB (S14) · o for deixa as variáveis com os ÚLTIMOS valores (S3+5). 6+? Pronto para a Central!</div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex2">
+    <div class="ex-head">
+      <span class="ex-num">EX 02</span>
+      <h3>Caça aos bugs de automação 🐛🔍</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex2"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Os 5 bugs que mais derrubam scripts de automação no mundo real.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>O código deveria gravar um CSV e movê-lo para a pasta saida — mas tem 5 bugs</li><li>Ache todos antes de executar!</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex02_bugs.py</span></div><pre class="code">import csv
+
+with open("relatorio.csv", "w") as arquivo:
+    escritor = csv.writer(arquivo)
+    escritor.writerow("nome", "total")
+    escritor.writerow(["Ana", 75.0])
+
+os.makedirs("saida")
+shutil.move("relatorio.csv", "saida\relatorio.csv")</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><p><strong>Os 5 bugs:</strong> (1) faltou <code>newline=""</code> (e o <code>encoding="utf-8"</code>) no open — linhas em branco no Windows. (2) <code>writerow("nome", "total")</code> passa DOIS argumentos: o writerow recebe UMA LISTA — <code>writerow(["nome", "total"])</code>. (3) <code>os</code> e <code>shutil</code> usados sem import! (4) <code>os.makedirs("saida")</code> sem <code>exist_ok=True</code> quebra na 2ª execução. (5) Caminho com <code>"\\"</code> na mão em vez de <code>os.path.join</code> — funciona só no Windows e é frágil.</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex02.py</span></div><pre class="code">import os
+import csv
+import shutil
+
+with open("relatorio.csv", "w", newline="", encoding="utf-8") as arquivo:
+    escritor = csv.writer(arquivo)
+    escritor.writerow(["nome", "total"])
+    escritor.writerow(["Ana", 75.0])
+
+os.makedirs("saida", exist_ok=True)
+shutil.move("relatorio.csv", os.path.join("saida", "relatorio.csv"))</pre></div></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p2">
+  <div class="parte-head"><span class="num">02</span><h2>Central Tua Caneca — Etapas 1 e 2</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p><strong>A obra-prima:</strong> a Central importa as vendas de um CSV, analisa, busca o dólar na API, gera relatório Excel e faz backup — o fluxo de dados completo de um pequeno negócio. A arquitetura:</p><table><tr><th>Etapa</th><th>Entrega</th><th>Semanas</th></tr><tr><td>1</td><td>Estrutura de pastas + CSV de exemplo</td><td>13, 14</td></tr><tr><td>2</td><td>Importação das vendas (CSV → lista de dicts)</td><td>5, 13</td></tr><tr><td>3</td><td>Análise (faturamento, campeão, ticket médio)</td><td>3, 5, 6</td></tr><tr><td>4</td><td>Cotação do dólar com fallback</td><td>15</td></tr><tr><td>5</td><td>Relatório .xlsx com data no nome</td><td>9, 13</td></tr><tr><td>6</td><td>Backup + menu integrado</td><td>14, e TODAS</td></tr></table><p>Crie o arquivo <code>central.py</code> — a obra cresce etapa por etapa.</p></div>
+  <article class="ex" id="ex3">
+    <div class="ex-head">
+      <span class="ex-num">EX 03</span>
+      <h3>Etapa 1: o canteiro de obras</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex3"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Estrutura de pastas e dados de exemplo gerados por código.</p><span class="tag passos">🧭 Passo a passo</span><ol><li><code>preparar_pastas()</code>: cria dados/, relatorios/ e backup/ (makedirs + exist_ok)</li><li><code>gerar_exemplo()</code>: se <code>dados/vendas.csv</code> NÃO existir, grava 4 vendas de exemplo com DictWriter</li><li>Rode duas vezes: a segunda não pode reclamar nem sobrescrever!</li></ol><span class="tag saida">✅ Primeira execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Pastas prontas ✔
+vendas.csv de exemplo gerado ✔</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">etapa1.py</span></div><pre class="code">import os
+import csv
+
+PASTAS = ["dados", "relatorios", "backup"]
+
+def preparar_pastas():
+    for pasta in PASTAS:
+        os.makedirs(pasta, exist_ok=True)
+    print("Pastas prontas ✔")
+
+def gerar_exemplo():
+    caminho = os.path.join("dados", "vendas.csv")
+    if os.path.exists(caminho):
+        return
+    campos = ["data", "produto", "qtd", "total"]
+    exemplos = [
+        {"data": "10/06/2026", "produto": "caneca branca", "qtd": 3, "total": 75.0},
+        {"data": "10/06/2026", "produto": "caneca preta", "qtd": 12, "total": 270.0},
+        {"data": "11/06/2026", "produto": "azulejo", "qtd": 2, "total": 80.0},
+        {"data": "12/06/2026", "produto": "caneca preta", "qtd": 5, "total": 137.5},
+    ]
+    with open(caminho, "w", newline="", encoding="utf-8") as arquivo:
+        escritor = csv.DictWriter(arquivo, fieldnames=campos)
+        escritor.writeheader()
+        for linha in exemplos:
+            escritor.writerow(linha)
+    print("vendas.csv de exemplo gerado ✔")
+
+preparar_pastas()
+gerar_exemplo()</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex4">
+    <div class="ex-head">
+      <span class="ex-num">EX 04</span>
+      <h3>Etapa 2: importando as vendas</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex4"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>CSV → lista de dicionários, com tipos convertidos.</p><span class="tag passos">🧭 Passo a passo</span><ol><li><code>importar_vendas()</code>: lê com DictReader e RETORNA a lista</li><li>Converta na entrada: <code>linha["qtd"] = int(...)</code> e <code>linha["total"] = float(...)</code> — quem converte na porta nunca mais se preocupa</li><li>Teste: importe e imprima quantas vendas chegaram</li></ol><span class="tag saida">✅ Teste da etapa</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">4 vendas importadas ✔</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">etapa2.py</span></div><pre class="code">def importar_vendas():
+    vendas = []
+    caminho = os.path.join("dados", "vendas.csv")
+    with open(caminho, "r", encoding="utf-8") as arquivo:
+        leitor = csv.DictReader(arquivo)
+        for linha in leitor:
+            linha["qtd"] = int(linha["qtd"])
+            linha["total"] = float(linha["total"])
+            vendas.append(linha)
+    return vendas
+
+vendas = importar_vendas()
+print(f"{len(vendas)} vendas importadas ✔")</pre></div></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p3">
+  <div class="parte-head"><span class="num">03</span><h2>Central Tua Caneca — Etapas 3 e 4</h2></div>
+
+  <article class="ex" id="ex5">
+    <div class="ex-head">
+      <span class="ex-num">EX 05</span>
+      <h3>Etapa 3: a análise 📊</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex5"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Uma função que devolve TODO o resumo num dicionário.</p><span class="tag passos">🧭 Passo a passo</span><ol><li><code>analisar(vendas)</code> percorre a lista acumulando: faturamento, unidades, dict contador por produto</li><li>Calcule o campeão (padrão maior) e o ticket médio (faturamento ÷ nº de vendas)</li><li>RETORNE tudo num dicionário: <code>{"faturamento": ..., "unidades": ..., "campeao": ..., "ticket": ...}</code></li><li>Quem chama decide como exibir — separação de responsabilidades (Semana 6)!</li></ol><span class="tag saida">✅ Teste da etapa</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Faturamento: R$ 562.50
+Unidades: 22
+Campeão: caneca preta
+Ticket médio: R$ 140.62</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">etapa3.py</span></div><pre class="code">def analisar(vendas):
+    faturamento = 0
+    unidades = 0
+    por_produto = {}
+    for venda in vendas:
+        faturamento = faturamento + venda["total"]
+        unidades = unidades + venda["qtd"]
+        nome = venda["produto"]
+        por_produto[nome] = por_produto.get(nome, 0) + venda["qtd"]
+
+    campeao = ""
+    maior = 0
+    for nome, qtd in por_produto.items():
+        if qtd &gt; maior:
+            maior = qtd
+            campeao = nome
+
+    return {
+        "faturamento": faturamento,
+        "unidades": unidades,
+        "campeao": campeao,
+        "ticket": faturamento / len(vendas)
+    }</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex6">
+    <div class="ex-head">
+      <span class="ex-num">EX 06</span>
+      <h3>Etapa 4: o dólar com 3 vidas 💵</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex6"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Integrar a cotacao_segura da Semana 15: API → cache → padrão.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Traga (ou importe do seu módulo!) a função com fallback em camadas</li><li>Toque final: quando a API responder, ATUALIZE o cache — assim o plano B fica sempre fresco</li><li>Use-a para calcular o faturamento em dólares</li></ol><span class="tag saida">✅ Teste da etapa</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Dólar: R$ 5.43
+Faturamento em US$ 103.59</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">etapa4.py</span></div><pre class="code">import json
+from datetime import datetime
+
+def cotacao_segura():
+    try:
+        import requests
+        url = "https://economia.awesomeapi.com.br/json/last/USD-BRL"
+        cotacao = float(requests.get(url, timeout=5).json()["USDBRL"]["bid"])
+        cache = {"cotacao": cotacao,
+                 "consultado_em": datetime.now().strftime("%d/%m/%Y %H:%M")}
+        with open("cache_dolar.json", "w", encoding="utf-8") as arquivo:
+            json.dump(cache, arquivo, indent=2, ensure_ascii=False)
+        return cotacao
+    except Exception:
+        try:
+            with open("cache_dolar.json", "r", encoding="utf-8") as arquivo:
+                cache = json.load(arquivo)
+            print(f"(offline) Usando cache de {cache['consultado_em']}")
+            return cache["cotacao"]
+        except FileNotFoundError:
+            print("(offline, sem cache) Cotação padrão R$ 5.00")
+            return 5.00</pre></div></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p4">
+  <div class="parte-head"><span class="num">04</span><h2>Central Tua Caneca — Etapas 5 e 6</h2></div>
+
+  <article class="ex" id="ex7">
+    <div class="ex-head">
+      <span class="ex-num">EX 07</span>
+      <h3>Etapa 5: o relatório executivo 📑</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex7"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Excel formatado, com fórmula, resumo e data no nome do arquivo.</p><span class="tag passos">🧭 Passo a passo</span><ol><li><code>gerar_relatorio(vendas, resumo, dolar)</code>: cabeçalho em negrito + dados + linha TOTAL com =SUM</li><li>Bloco de resumo embaixo: campeão, ticket médio e faturamento em US$</li><li>Nome com carimbo: <code>strftime("relatorio_%Y-%m-%d_%H-%M.xlsx")</code>, salvo em relatorios/</li><li>Gere dois relatórios em horários diferentes: eles convivem, auto-organizados!</li></ol><span class="tag saida">✅ Teste da etapa</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Relatório salvo: relatorios/relatorio_2026-06-12_17-00.xlsx ✔</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">etapa5.py</span></div><pre class="code">from openpyxl import Workbook
+from openpyxl.styles import Font
+
+def gerar_relatorio(vendas, resumo, dolar):
+    planilha = Workbook()
+    aba = planilha.active
+    aba.title = "Vendas"
+
+    aba.append(["Data", "Produto", "Qtd", "Total (R$)"])
+    for celula in aba[1]:
+        celula.font = Font(bold=True)
+
+    for venda in vendas:
+        aba.append([venda["data"], venda["produto"],
+                    venda["qtd"], venda["total"]])
+
+    linha_total = len(vendas) + 2
+    aba[f"C{linha_total}"] = "TOTAL:"
+    aba[f"D{linha_total}"] = f"=SUM(D2:D{len(vendas) + 1})"
+
+    aba.append([])
+    aba.append(["Campeão", resumo["campeao"]])
+    aba.append(["Ticket médio (R$)", round(resumo["ticket"], 2)])
+    aba.append(["Faturamento (US$)", round(resumo["faturamento"] / dolar, 2)])
+
+    nome = datetime.now().strftime("relatorio_%Y-%m-%d_%H-%M.xlsx")
+    caminho = os.path.join("relatorios", nome)
+    planilha.save(caminho)
+    print(f"Relatório salvo: {caminho} ✔")</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex8">
+    <div class="ex-head">
+      <span class="ex-num">EX 08</span>
+      <h3>Etapa 6: backup e o menu da Central 🏁</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex8"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>A última peça: backup com copytree e o menu que rege a orquestra.</p><span class="tag passos">🧭 Passo a passo</span><ol><li><code>fazer_backup()</code>: copytree de dados/ para backup/backup_DATA</li><li>Menu: 1-Análise · 2-Relatório Excel · 3-Backup · 4-Sair</li><li>Teste de estresse final: rode sem internet, rode duas vezes seguidas, apague o vendas.csv e rode</li><li>Confira com a versão integrada — e respire fundo: é a sua formatura 🏆</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">=== CENTRAL TUA CANECA ===
+1-Análise  2-Relatório Excel  3-Backup  4-Sair
+Opção: 2
+Dólar: R$ 5.43
+Relatório salvo: relatorios/relatorio_2026-06-12_17-05.xlsx ✔</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">central.py</span></div><pre class="code">import os
+import csv
+import json
+import shutil
+from datetime import datetime
+from openpyxl import Workbook
+from openpyxl.styles import Font
+
+PASTAS = ["dados", "relatorios", "backup"]
+
+def preparar_pastas():
+    for pasta in PASTAS:
+        os.makedirs(pasta, exist_ok=True)
+
+def gerar_exemplo():
+    caminho = os.path.join("dados", "vendas.csv")
+    if os.path.exists(caminho):
+        return
+    campos = ["data", "produto", "qtd", "total"]
+    exemplos = [
+        {"data": "10/06/2026", "produto": "caneca branca", "qtd": 3, "total": 75.0},
+        {"data": "10/06/2026", "produto": "caneca preta", "qtd": 12, "total": 270.0},
+        {"data": "11/06/2026", "produto": "azulejo", "qtd": 2, "total": 80.0},
+        {"data": "12/06/2026", "produto": "caneca preta", "qtd": 5, "total": 137.5},
+    ]
+    with open(caminho, "w", newline="", encoding="utf-8") as arquivo:
+        escritor = csv.DictWriter(arquivo, fieldnames=campos)
+        escritor.writeheader()
+        for linha in exemplos:
+            escritor.writerow(linha)
+
+def importar_vendas():
+    vendas = []
+    with open(os.path.join("dados", "vendas.csv"), "r", encoding="utf-8") as arquivo:
+        leitor = csv.DictReader(arquivo)
+        for linha in leitor:
+            linha["qtd"] = int(linha["qtd"])
+            linha["total"] = float(linha["total"])
+            vendas.append(linha)
+    return vendas
+
+def analisar(vendas):
+    faturamento = 0
+    unidades = 0
+    por_produto = {}
+    for venda in vendas:
+        faturamento = faturamento + venda["total"]
+        unidades = unidades + venda["qtd"]
+        por_produto[venda["produto"]] = por_produto.get(venda["produto"], 0) + venda["qtd"]
+    campeao = ""
+    maior = 0
+    for nome, qtd in por_produto.items():
+        if qtd &gt; maior:
+            maior = qtd
+            campeao = nome
+    return {"faturamento": faturamento, "unidades": unidades,
+            "campeao": campeao, "ticket": faturamento / len(vendas)}
+
+def cotacao_segura():
+    try:
+        import requests
+        url = "https://economia.awesomeapi.com.br/json/last/USD-BRL"
+        cotacao = float(requests.get(url, timeout=5).json()["USDBRL"]["bid"])
+        cache = {"cotacao": cotacao,
+                 "consultado_em": datetime.now().strftime("%d/%m/%Y %H:%M")}
+        with open("cache_dolar.json", "w", encoding="utf-8") as arquivo:
+            json.dump(cache, arquivo, indent=2, ensure_ascii=False)
+        return cotacao
+    except Exception:
+        try:
+            with open("cache_dolar.json", "r", encoding="utf-8") as arquivo:
+                cache = json.load(arquivo)
+            print(f"(offline) Usando cache de {cache['consultado_em']}")
+            return cache["cotacao"]
+        except FileNotFoundError:
+            print("(offline, sem cache) Cotação padrão R$ 5.00")
+            return 5.00
+
+def gerar_relatorio(vendas, resumo, dolar):
+    planilha = Workbook()
+    aba = planilha.active
+    aba.title = "Vendas"
+    aba.append(["Data", "Produto", "Qtd", "Total (R$)"])
+    for celula in aba[1]:
+        celula.font = Font(bold=True)
+    for venda in vendas:
+        aba.append([venda["data"], venda["produto"], venda["qtd"], venda["total"]])
+    linha_total = len(vendas) + 2
+    aba[f"C{linha_total}"] = "TOTAL:"
+    aba[f"D{linha_total}"] = f"=SUM(D2:D{len(vendas) + 1})"
+    aba.append([])
+    aba.append(["Campeão", resumo["campeao"]])
+    aba.append(["Ticket médio (R$)", round(resumo["ticket"], 2)])
+    aba.append(["Faturamento (US$)", round(resumo["faturamento"] / dolar, 2)])
+    nome = datetime.now().strftime("relatorio_%Y-%m-%d_%H-%M.xlsx")
+    caminho = os.path.join("relatorios", nome)
+    planilha.save(caminho)
+    print(f"Relatório salvo: {caminho} ✔")
+
+def fazer_backup():
+    nome = datetime.now().strftime("backup_%Y-%m-%d_%H-%M-%S")
+    destino = os.path.join("backup", nome)
+    shutil.copytree("dados", destino)
+    print(f"Backup criado: {destino} ✔")
+
+# ===== PROGRAMA PRINCIPAL =====
+preparar_pastas()
+gerar_exemplo()
+
+while True:
+    print()
+    print("=== CENTRAL TUA CANECA ===")
+    print("1-Análise  2-Relatório Excel  3-Backup  4-Sair")
+    opcao = input("Opção: ")
+
+    if opcao == "1":
+        resumo = analisar(importar_vendas())
+        print(f"Faturamento: R$ {resumo['faturamento']:.2f}")
+        print(f"Unidades: {resumo['unidades']}")
+        print(f"Campeão: {resumo['campeao']}")
+        print(f"Ticket médio: R$ {resumo['ticket']:.2f}")
+    elif opcao == "2":
+        vendas = importar_vendas()
+        resumo = analisar(vendas)
+        dolar = cotacao_segura()
+        print(f"Dólar: R$ {dolar:.2f}")
+        gerar_relatorio(vendas, resumo, dolar)
+    elif opcao == "3":
+        fazer_backup()
+    elif opcao == "4":
+        print("Central encerrada. Parabéns pela jornada! 🏆")
+        break
+    else:
+        print("Opção inválida!")</pre></div><p><strong>~130 linhas, 16 semanas, 4 formatos de dados, 1 API e 0 medo de erro.</strong> Compare com seu primeiro print: a distância percorrida é a prova de que você aprendeu a aprender. 👏🏆</p></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p5">
+  <div class="parte-head"><span class="num">05</span><h2>Formatura definitiva</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Os dois últimos desafios da jornada — e nenhum tem solução, porque agora o autor é você. 🏆</p></div>
+  <article class="ex" id="ex9">
+    <div class="ex-head">
+      <span class="ex-num">EX 09</span>
+      <h3>Desafio: a Central no piloto automático 🤖</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex9"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Fazer a Central rodar sozinha, sem ninguém apertar botão.</p><span class="tag passos">🧭 Roteiro</span><ol><li>Crie um <code>modo_automatico.py</code>: sem menu — importa, analisa, gera relatório e faz backup numa tacada</li><li>Caminho 1 (Python puro): um loop com <code>time.sleep(3600)</code> gera relatório de hora em hora</li><li>Caminho 2 (profissional): pesquise "Agendador de Tarefas do Windows executar script Python" — o sistema operacional roda seu script no horário marcado, todo dia</li><li>Toque final: a Central escreve um <code>log.txt</code> (modo "a"!) registrando cada execução com data</li></ol><details class="dica"><summary>💡 Você acabou de descrever um "job"</summary><div class="inner">Scripts agendados que processam dados e geram relatórios são chamados de jobs — e empresas pagam bem por quem sabe construí-los. Você sabe. 😉</div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex10">
+    <div class="ex-head">
+      <span class="ex-num">EX 10</span>
+      <h3>Desafio final: a obra é sua 🚀</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex10"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>O projeto de portfólio que fecha a formação.</p><span class="tag passos">🧭 Roteiro</span><ol><li>Escolha um fluxo REAL da sua vida: notas de alunos, finanças pessoais, estoque do negócio, relatórios do trabalho...</li><li>Monte a SUA central: importação (CSV/Excel/JSON) → análise → relatório → backup — e, se fizer sentido, uma API no meio</li><li>Estruture como projeto: pastas organizadas, funções com nomes claros, README explicando</li><li>Suba no GitHub, coloque o link no currículo e no LinkedIn</li><li>E ensine alguém: explicar é a forma definitiva de aprender — você, melhor que ninguém, sabe disso. 🎓</li></ol><details class="dica"><summary>💡 A última dica de todas</summary><div class="inner">Em 16 semanas você encarou ~230 exercícios e 3 sistemas completos. A pergunta nunca mais será "será que eu consigo?" — será "qual problema eu resolvo agora?". Obrigado pela jornada, e bons códigos! 🏆🐍</div></details>
+    </div>
+  </article>
+</section>
+
+<div class="checklist" id="checklist">
+  <h2>✅ Checklist de fim de semana</h2>
+  <p>Antes de seguir para a próxima semana, confirme que você consegue:</p>
+<label class="check-item"><input type="checkbox"><span>Prever saídas misturando csv, os, json e os clássicos</span></label>
+<label class="check-item"><input type="checkbox"><span>Caçar bugs típicos de automação (newline, join, encoding, except)</span></label>
+<label class="check-item"><input type="checkbox"><span>Estruturar as pastas de um projeto via código (makedirs)</span></label>
+<label class="check-item"><input type="checkbox"><span>Importar e converter dados de um CSV com DictReader</span></label>
+<label class="check-item"><input type="checkbox"><span>Analisar dados com funções que retornam dicionários</span></label>
+<label class="check-item"><input type="checkbox"><span>Consumir uma API com fallback offline em camadas</span></label>
+<label class="check-item"><input type="checkbox"><span>Gerar um relatório .xlsx formatado e com fórmula</span></label>
+<label class="check-item"><input type="checkbox"><span>Nomear arquivos com data via strftime (organização automática)</span></label>
+<label class="check-item"><input type="checkbox"><span>Fazer backup de pastas com copytree</span></label>
+<label class="check-item"><input type="checkbox"><span>Integrar 16 semanas de conteúdo num menu coeso</span></label>
+</div>
+
+<div class="win-banner" id="winBanner">
+  <h2>🏆 SEMANA 16 COMPLETA!</h2>
+  <p>MÓDULO AVANÇADO COMPLETO! Do zero absoluto a sistemas conectados ao mundo real em 16 semanas. E a trilha Dados & Web começa na Semana 17! 🏆🎓🐍</p>
+</div>
+
+<div class="preview-s2">
+<h2>📅 Prévia da Semana 17</h2><p>Bem-vindo à <strong>trilha Dados &amp; Web</strong>! Na próxima semana: <strong>pandas</strong> — a biblioteca número 1 de análise de dados do planeta. O relatório que levava 30 linhas de loop vira UMA linha de <code>groupby</code>. Depois vêm gráficos com matplotlib, seu primeiro site com Flask e o dashboard web final. 📊🚀</p></div>
+
+</main>
+
+<footer>python_para_iniciantes // semana_16 // exercícios guiados</footer>
+
+<script>
+// ===== Syntax highlight leve para Python =====
+(function(){
+  const KW = /\b(print|input|int|float|type|str|bool)\b/g;
+  document.querySelectorAll('pre.code').forEach(pre=>{
+    let src = pre.textContent;
+    // escapa HTML
+    src = src.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    // uma passada só, com alternação (comentário | string | builtin | bool | número)
+    src = src.replace(
+      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|insert|int|float|str|len|range|type|abs|round|max|min|sum|sorted|sort|reverse|append|remove|split|strip|upper|lower|replace|title|randint|random|get|keys|values|items|open|readlines|read|write|close|count|index|pop|update|list|dict|tuple|enumerate|sqrt|floor|ceil|choice|shuffle|sample|sleep|now|today|strftime|dumps|dump|loads|load|isinstance|datetime|date|DictReader|DictWriter|writerows|writerow|writeheader|writer|reader|csv|Workbook|load_workbook|save|iter_rows|Font|listdir|makedirs|getcwd|rename|exists|getsize|splitext|join|endswith|startswith|copytree|copy|move|requests|status_code|json|DataFrame|read_csv|read_excel|to_excel|to_csv|head|describe|groupby|sort_values|value_counts|mean|idxmax|bar|barh|pie|plot|savefig|show|title|xlabel|ylabel|figure|legend|axhline|tight_layout|close|Flask|route|run|render_template|jsonify|redirect|request)\b|\b(True|False|None|if|elif|else|while|for|in|and|or|not|break|continue|import|from|def|return|try|except|finally|with|as|del|global|pass|class|self|super|lambda)\b|(\b\d+(?:\.\d+)?\b)/g,
+      function(m, com, str, fn, bool, num){
+        if(com)  return '<span class="tk-com">'+com+'</span>';
+        if(str)  return '<span class="tk-str">'+str+'</span>';
+        if(fn)   return '<span class="tk-fn">'+fn+'</span>';
+        if(bool) return '<span class="tk-kw">'+bool+'</span>';
+        if(num)  return '<span class="tk-num">'+num+'</span>';
+        return m;
+      }
+    );
+    pre.innerHTML = src;
+  });
+})();
+
+// ===== Armazenamento seguro (localStorage com fallback em memória) =====
+// Quando o aluno abre o arquivo .html no computador, o progresso fica salvo
+// no navegador. Se o localStorage estiver indisponível (modo restrito,
+// pré-visualização, etc.), o progresso funciona só em memória, sem quebrar.
+const storage = (function(){
+  const KEY = 'python_semana16_progresso';
+  let memoria = {};
+  let disponivel = false;
+  try{
+    localStorage.setItem('__teste__','1');
+    localStorage.removeItem('__teste__');
+    disponivel = true;
+  }catch(e){ disponivel = false; }
+
+  return {
+    carregar: function(){
+      if(disponivel){
+        try{ return JSON.parse(localStorage.getItem(KEY)) || {}; }
+        catch(e){ return {}; }
+      }
+      return memoria;
+    },
+    salvar: function(dados){
+      memoria = dados;
+      if(disponivel){
+        try{ localStorage.setItem(KEY, JSON.stringify(dados)); }catch(e){}
+      }
+    },
+    limpar: function(){
+      memoria = {};
+      if(disponivel){
+        try{ localStorage.removeItem(KEY); }catch(e){}
+      }
+    },
+    persistente: disponivel
+  };
+})();
+
+// ===== Progresso dos exercícios + checklist =====
+(function(){
+  const checks = document.querySelectorAll('.done-check');
+  const listChecks = document.querySelectorAll('.check-item input');
+  const total = checks.length;
+  const fill = document.getElementById('pfill');
+  const count = document.getElementById('pcount');
+  const msg = document.getElementById('pmsg');
+  const banner = document.getElementById('winBanner');
+  const resetBtn = document.getElementById('resetBtn');
+
+  const MSGS = [
+    [0,  'Marque os exercícios concluídos ✔'],
+    [1,  'Boa! Continue assim 💪'],
+    [3,  'Pegando o ritmo! 🔥'],
+    [5, 'Metade do caminho! 🚀'],
+    [8, 'Quase lá... força! ⚡'],
+    [10, 'SEMANA COMPLETA! 🏆']
+  ];
+
+  function estadoAtual(){
+    const dados = { ex: {}, lista: {} };
+    checks.forEach(c => { dados.ex[c.dataset.ex] = c.checked; });
+    listChecks.forEach((c,i) => { dados.lista['item'+i] = c.checked; });
+    return dados;
+  }
+
+  function atualizarBarra(){
+    const done = document.querySelectorAll('.done-check:checked').length;
+    const pct = Math.round(done/total*100);
+    fill.style.width = pct + '%';
+    count.textContent = done + ' / ' + total;
+    let m = MSGS[0][1];
+    for(const [min,text] of MSGS){ if(done >= min) m = text; }
+    msg.textContent = m;
+    banner.classList.toggle('show', done === total);
+  }
+
+  function aplicarEstado(dados){
+    checks.forEach(c => {
+      const marcado = !!(dados.ex && dados.ex[c.dataset.ex]);
+      c.checked = marcado;
+      c.closest('article.ex').classList.toggle('done', marcado);
+    });
+    listChecks.forEach((c,i) => {
+      c.checked = !!(dados.lista && dados.lista['item'+i]);
+    });
+    atualizarBarra();
+  }
+
+  // Restaura o progresso salvo ao abrir a página
+  aplicarEstado(storage.carregar());
+
+  // Salva a cada mudança
+  checks.forEach(c => {
+    c.addEventListener('change', function(){
+      this.closest('article.ex').classList.toggle('done', this.checked);
+      atualizarBarra();
+      storage.salvar(estadoAtual());
+    });
+  });
+  listChecks.forEach(c => {
+    c.addEventListener('change', function(){
+      storage.salvar(estadoAtual());
+    });
+  });
+
+  // Botão de reset com confirmação
+  resetBtn.addEventListener('click', function(){
+    if(confirm('Apagar todo o progresso desta semana?')){
+      storage.limpar();
+      aplicarEstado({});
+    }
+  });
+
+  // Aviso discreto se o progresso não puder ser salvo neste ambiente
+  if(!storage.persistente){
+    msg.textContent += ' (progresso não será salvo neste ambiente)';
+  }
+})();
+</script>
+</body>
+</html>

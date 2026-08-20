@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Semana 5 — Dicionários e Tuplas</title>
+<style>
+  :root{
+    --ink:#16243A;
+    --ink-soft:#4A5A74;
+    --paper:#F5F8FC;
+    --card:#FFFFFF;
+    --py-blue:#3776AB;
+    --py-blue-dark:#27598C;
+    --py-gold:#FFD43B;
+    --py-gold-dark:#C99700;
+    --term:#1B2435;
+    --term-line:#2B3850;
+    --green:#2EA56C;
+    --coral:#E2574C;
+    --radius:14px;
+    --mono:"Cascadia Code","JetBrains Mono",Consolas,"Roboto Mono",monospace;
+    --sans:"Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto}
+    *{transition:none !important;animation:none !important}
+  }
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.65}
+
+  /* ===== Barra de progresso fixa ===== */
+  .progress-wrap{
+    position:sticky;top:0;z-index:50;
+    background:var(--term);color:#fff;
+    padding:10px 18px;
+    display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+    box-shadow:0 2px 12px rgba(22,36,58,.25);
+  }
+  .progress-wrap .label{font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;white-space:nowrap}
+  .progress-bar{flex:1;min-width:140px;height:14px;background:var(--term-line);border-radius:99px;overflow:hidden}
+  .progress-fill{height:100%;width:0%;border-radius:99px;background:linear-gradient(90deg,var(--py-blue),var(--py-gold));transition:width .4s ease}
+  .progress-count{font-family:var(--mono);font-size:.85rem;color:var(--py-gold);white-space:nowrap}
+  .progress-msg{font-size:.78rem;color:#AFC3E0;white-space:nowrap}
+  .reset-btn{
+    font-family:var(--mono);font-size:.72rem;color:#AFC3E0;
+    background:transparent;border:1px solid var(--term-line);border-radius:8px;
+    padding:5px 11px;cursor:pointer;transition:all .15s ease;white-space:nowrap;
+  }
+  .reset-btn:hover,.reset-btn:focus-visible{color:#fff;border-color:#5A6E92;background:rgba(255,255,255,.06)}
+  .reset-btn:focus-visible{outline:2px solid var(--py-gold);outline-offset:2px}
+
+  /* ===== Hero ===== */
+  header.hero{
+    background:linear-gradient(150deg,var(--term) 0%,#22406B 70%,var(--py-blue) 100%);
+    color:#fff;padding:56px 20px 48px;text-align:center;position:relative;overflow:hidden;
+  }
+  header.hero::before{
+    content:"{ }  chave: valor  .get(  .items(  in  ( , )";
+    position:absolute;inset:auto 0 8px 0;font-family:var(--mono);font-size:.78rem;
+    color:rgba(255,255,255,.14);letter-spacing:.4em;white-space:nowrap;overflow:hidden;
+  }
+  .hero .kicker{
+    font-family:var(--mono);font-size:.85rem;color:var(--py-gold);
+    letter-spacing:.18em;text-transform:uppercase;margin-bottom:14px;
+  }
+  .hero h1{font-family:var(--mono);font-size:clamp(1.5rem,4.5vw,2.6rem);font-weight:700;line-height:1.25}
+  .hero h1 .cursor{display:inline-block;width:.55em;height:1.05em;background:var(--py-gold);vertical-align:text-bottom;margin-left:4px;animation:blink 1.1s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+  .hero p.sub{max-width:620px;margin:18px auto 0;color:#D7E4F5;font-size:1rem}
+  .hero .howto{
+    max-width:640px;margin:26px auto 0;background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.18);border-radius:var(--radius);
+    padding:14px 18px;font-size:.88rem;color:#E8F0FB;text-align:left;
+  }
+  .hero .howto strong{color:var(--py-gold)}
+
+  /* ===== Navegação por partes ===== */
+  nav.parts{
+    display:flex;gap:8px;flex-wrap:wrap;justify-content:center;
+    padding:18px 16px;max-width:980px;margin:0 auto;
+  }
+  nav.parts a{
+    font-family:var(--mono);font-size:.78rem;text-decoration:none;
+    color:var(--py-blue-dark);background:var(--card);
+    border:1.5px solid #D5E2F2;border-radius:99px;padding:7px 14px;
+    transition:all .15s ease;
+  }
+  nav.parts a:hover,nav.parts a:focus-visible{border-color:var(--py-blue);background:#EAF2FB}
+  nav.parts a:focus-visible{outline:2px solid var(--py-blue);outline-offset:2px}
+
+  main{max-width:880px;margin:0 auto;padding:8px 18px 80px}
+
+  /* ===== Seções (partes) ===== */
+  section.parte{margin-top:46px}
+  .parte-head{display:flex;align-items:baseline;gap:14px;border-bottom:3px solid var(--py-gold);padding-bottom:10px;margin-bottom:6px}
+  .parte-head .num{
+    font-family:var(--mono);font-size:2.4rem;font-weight:700;color:var(--py-blue);line-height:1;
+  }
+  .parte-head h2{font-family:var(--mono);font-size:clamp(1.05rem,2.8vw,1.45rem);color:var(--ink)}
+  .parte-intro{
+    background:var(--card);border:1px solid #E1E9F4;border-radius:var(--radius);
+    padding:18px 22px;margin-top:16px;font-size:.95rem;
+  }
+  .parte-intro h3{font-size:.8rem;font-family:var(--mono);color:var(--py-blue);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px}
+  .parte-intro p{margin-bottom:10px}
+  .parte-intro p:last-child{margin-bottom:0}
+  .parte-intro ol,.parte-intro ul{margin:8px 0 10px 22px}
+  table{border-collapse:collapse;width:100%;margin:10px 0;font-size:.88rem}
+  th,td{border:1px solid #DCE6F2;padding:7px 10px;text-align:left}
+  th{background:#EDF3FA;font-family:var(--mono);font-size:.78rem}
+  td code,p code,li code{
+    font-family:var(--mono);font-size:.85em;background:#EDF2F9;
+    border:1px solid #DCE6F2;border-radius:5px;padding:1px 5px;color:var(--py-blue-dark);
+  }
+
+  /* ===== Cartão de exercício ===== */
+  article.ex{
+    background:var(--card);border:1px solid #E1E9F4;border-radius:var(--radius);
+    margin-top:22px;overflow:hidden;
+    box-shadow:0 1px 4px rgba(22,36,58,.05);
+    transition:box-shadow .2s ease;
+  }
+  article.ex:hover{box-shadow:0 4px 16px rgba(22,36,58,.10)}
+  article.ex.done{border-color:var(--green)}
+  article.ex.done .ex-head{background:#EAF7F0}
+  .ex-head{
+    display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+    padding:14px 18px;background:#F2F6FC;border-bottom:1px solid #E1E9F4;
+  }
+  .ex-num{
+    font-family:var(--mono);font-weight:700;font-size:.85rem;color:#fff;
+    background:var(--py-blue);border-radius:8px;padding:5px 10px;white-space:nowrap;
+  }
+  article.ex.done .ex-num{background:var(--green)}
+  .ex-head h3{font-size:1.02rem;flex:1;min-width:180px}
+  .stars{font-size:.78rem;color:var(--py-gold-dark);background:#FFF6D6;border:1px solid #F2DE96;border-radius:99px;padding:3px 10px;white-space:nowrap}
+  .done-toggle{
+    display:flex;align-items:center;gap:7px;cursor:pointer;user-select:none;
+    font-size:.8rem;font-family:var(--mono);color:var(--ink-soft);
+  }
+  .done-toggle input{width:17px;height:17px;accent-color:var(--green);cursor:pointer}
+  .ex-body{padding:18px 20px 22px}
+  .ex-body p{margin-bottom:10px}
+  .ex-body ol,.ex-body ul{margin:6px 0 12px 22px}
+  .ex-body li{margin-bottom:4px}
+
+  .tag{
+    display:inline-block;font-family:var(--mono);font-size:.72rem;
+    text-transform:uppercase;letter-spacing:.08em;border-radius:6px;
+    padding:3px 9px;margin:4px 0 6px;
+  }
+  .tag.obj{background:#E7F0FB;color:var(--py-blue-dark)}
+  .tag.passos{background:#FFF3CC;color:#8a6d00}
+  .tag.saida{background:#E4F5EC;color:#1c7a4d}
+
+  /* ===== Blocos de código estilo terminal ===== */
+  .term-window{border-radius:12px;overflow:hidden;margin:12px 0;border:1px solid var(--term-line)}
+  .term-bar{
+    display:flex;align-items:center;gap:8px;background:#121A29;padding:8px 14px;
+  }
+  .term-bar .dot{width:11px;height:11px;border-radius:50%}
+  .dot.r{background:#FF5F57}.dot.y{background:#FEBC2E}.dot.g{background:#28C840}
+  .term-bar .fname{font-family:var(--mono);font-size:.75rem;color:#8FA6C8;margin-left:6px}
+  pre.code,pre.output{
+    background:var(--term);color:#E7EDF7;font-family:var(--mono);
+    font-size:.86rem;line-height:1.6;padding:14px 18px;overflow-x:auto;margin:0;
+  }
+  pre.output{color:#9FE8C0}
+  pre.output .prompt-in{color:#E7EDF7}
+  /* syntax highlight */
+  .tk-kw{color:#7EC1FF;font-weight:600}
+  .tk-str{color:#FFD98A}
+  .tk-com{color:#7C8DA8;font-style:italic}
+  .tk-num{color:#9FE8C0}
+  .tk-fn{color:#C7A6FF}
+
+  /* ===== Dicas / desafios / soluções ===== */
+  details{border-radius:10px;margin:12px 0;overflow:hidden;border:1.5px solid transparent}
+  details summary{
+    cursor:pointer;list-style:none;padding:11px 16px;font-weight:600;font-size:.9rem;
+    display:flex;align-items:center;gap:8px;user-select:none;
+  }
+  details summary::-webkit-details-marker{display:none}
+  details summary::after{content:"▾";margin-left:auto;transition:transform .2s ease;font-size:.85em}
+  details[open] summary::after{transform:rotate(180deg)}
+  details .inner{padding:4px 16px 14px}
+  details.dica{background:#FFF9E8;border-color:#F2DE96}
+  details.dica summary{color:#8a6d00}
+  details.desafio{background:#F3EDFB;border-color:#D9C8F2}
+  details.desafio summary{color:#6B3FA0}
+  details.solucao{background:#EAF7F0;border-color:#BFE5D0}
+  details.solucao summary{color:#1c7a4d}
+  details.solucao .aviso{font-size:.8rem;color:#1c7a4d;margin-bottom:8px;font-style:italic}
+
+  /* ===== Checklist final ===== */
+  .checklist{background:var(--card);border:1px solid #E1E9F4;border-radius:var(--radius);padding:22px;margin-top:30px}
+  .checklist h2{font-family:var(--mono);font-size:1.2rem;margin-bottom:6px}
+  .checklist p{font-size:.9rem;color:var(--ink-soft);margin-bottom:14px}
+  .check-item{display:flex;align-items:flex-start;gap:10px;padding:7px 4px;border-radius:8px;cursor:pointer}
+  .check-item:hover{background:#F2F6FC}
+  .check-item input{width:18px;height:18px;margin-top:3px;accent-color:var(--py-blue);cursor:pointer}
+  .check-item span{font-size:.93rem}
+  .check-item input:checked + span{color:var(--green);text-decoration:line-through;text-decoration-color:rgba(46,165,108,.5)}
+
+  /* banner 100% */
+  .win-banner{
+    display:none;margin-top:26px;text-align:center;color:#fff;
+    background:linear-gradient(120deg,var(--green),var(--py-blue));
+    border-radius:var(--radius);padding:26px 20px;
+  }
+  .win-banner.show{display:block;animation:pop .45s ease}
+  @keyframes pop{0%{transform:scale(.94);opacity:0}100%{transform:scale(1);opacity:1}}
+  .win-banner h2{font-family:var(--mono);font-size:1.4rem;margin-bottom:6px}
+
+  .preview-s2{
+    margin-top:36px;border:2px dashed var(--py-blue);border-radius:var(--radius);
+    padding:20px 22px;background:#EFF5FC;
+  }
+  .preview-s2 h2{font-family:var(--mono);font-size:1.05rem;color:var(--py-blue-dark);margin-bottom:8px}
+  footer{
+    text-align:center;font-family:var(--mono);font-size:.75rem;color:var(--ink-soft);
+    padding:26px 16px 40px;
+  }
+  @media(max-width:560px){
+    .progress-msg{display:none}
+    .ex-head h3{font-size:.95rem}
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-wrap" role="region" aria-label="Progresso da semana">
+  <span class="label">XP DA SEMANA</span>
+  <div class="progress-bar"><div class="progress-fill" id="pfill"></div></div>
+  <span class="progress-count" id="pcount">0 / 18</span>
+  <span class="progress-msg" id="pmsg">Marque os exercícios concluídos ✔</span>
+  <button class="reset-btn" id="resetBtn" title="Apagar todo o progresso salvo">↺ Resetar</button>
+</div>
+
+<header class="hero">
+  <div class="kicker">Python para Iniciantes · Exercícios Guiados</div>
+  <h1>SEMANA 5 — Dicionários:<br>dados com nome e sobrenome<span class="cursor" aria-hidden="true"></span></h1>
+  <p class="sub">Organize informações como um cadastro de verdade: pares chave-valor, .get(), percorrer com .items(), dicionários como contadores, listas de dicionários e tuplas.</p>
+  <div class="howto">
+    <strong>Como usar:</strong> digite o código você mesmo (não copie e cole!), compare com a saída esperada e marque <strong>✔ Concluído</strong> em cada exercício para encher sua barra de XP. As <strong>dicas</strong> e <strong>soluções</strong> ficam escondidas — só abra depois de tentar! Seu progresso fica salvo no navegador.
+  </div>
+</header>
+
+<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · Criando</a><a href="#p2">2 · Percorrendo</a><a href="#p3">3 · Consultas & contagens</a><a href="#p4">4 · Listas de dicts</a><a href="#p5">5 · Tuplas</a><a href="#p6">6 · Projetos</a><a href="#checklist">✅ Checklist</a></nav>
+
+<main>
+
+<section class="parte" id="p1">
+  <div class="parte-head"><span class="num">01</span><h2>Criando e acessando dicionários</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>A lista guarda valores por <strong>posição</strong> (0, 1, 2...). O <strong>dicionário</strong> guarda valores por <strong>nome</strong> — cada item é um par <strong>chave: valor</strong>, entre chaves:</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">exemplo.py</span></div><pre class="code">cliente = {
+    "nome": "Ana",
+    "idade": 28,
+    "cidade": "Porto Alegre"
+}</pre></div><p>Para acessar, use a chave no lugar do índice: <code>cliente["nome"]</code> → "Ana". É como um cadastro: você não pede "o campo 2", você pede "a idade".</p></div>
+  <article class="ex" id="ex1">
+    <div class="ex-head">
+      <span class="ex-num">EX 01</span>
+      <h3>Primeiro dicionário 📇</h3>
+      <span class="stars">⭐ básico</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex1"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Criar um dicionário e acessar valores pela chave.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie o arquivo <code>ex01_dicionario.py</code> com o cadastro do cliente</li><li>PREVEJA cada saída antes de executar</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex01_dicionario.py</span></div><pre class="code">cliente = {
+    "nome": "Ana",
+    "idade": 28,
+    "cidade": "Porto Alegre"
+}
+
+print(cliente)
+print(cliente["nome"])
+print(cliente["cidade"])
+print(len(cliente))</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">{'nome': 'Ana', 'idade': 28, 'cidade': 'Porto Alegre'}
+Ana
+Porto Alegre
+3</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner">As chaves de texto precisam de aspas tanto na criação quanto no acesso: <code>cliente["nome"]</code>. E <code>len()</code> conta os PARES chave-valor, não as letras.</div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex2">
+    <div class="ex-head">
+      <span class="ex-num">EX 02</span>
+      <h3>KeyError e o salvador .get()</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex2"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Conhecer o erro de chave inexistente — e o jeito seguro de consultar.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Com o mesmo dicionário, tente acessar uma chave que não existe:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex02_erro.py</span></div><pre class="code">print(cliente["telefone"])</pre></div><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output" style="color:#FF9B94">KeyError: 'telefone'</pre></div><span class="tag passos">🧭 Continue</span><ol><li>Agora troque pelo método seguro: <code>cliente.get("telefone")</code></li><li>Teste também com um valor padrão: <code>cliente.get("telefone", "não cadastrado")</code></li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">None
+não cadastrado</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><p><code>dicionario[chave]</code> QUEBRA o programa se a chave não existir. <code>dicionario.get(chave)</code> devolve <code>None</code> (ou o valor padrão que você definir no segundo argumento) e a vida segue. Use <code>.get()</code> sempre que não tiver certeza de que a chave existe.</p></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex3">
+    <div class="ex-head">
+      <span class="ex-num">EX 03</span>
+      <h3>Atualizando o cadastro</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex3"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Adicionar, alterar e remover chaves.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>PREVEJA como o dicionário estará ao final, depois execute</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex03_atualizando.py</span></div><pre class="code">cliente = {"nome": "Ana", "idade": 28, "cidade": "Porto Alegre"}
+
+cliente["telefone"] = "(51) 99999-0000"   # chave nova? ADICIONA
+cliente["idade"] = 29                      # chave existe? ALTERA
+del cliente["cidade"]                      # remove o par inteiro
+
+print(cliente)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">{'nome': 'Ana', 'idade': 29, 'telefone': '(51) 99999-0000'}</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner">A mesma sintaxe <code>dicionario[chave] = valor</code> serve para criar E para atualizar — o Python decide sozinho: se a chave já existe, sobrescreve; se não, cria.</div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p2">
+  <div class="parte-head"><span class="num">02</span><h2>Percorrendo dicionários</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>O <code>for</code> percorre as <strong>chaves</strong> de um dicionário. Para chave e valor juntos, use <code>.items()</code>:</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">formas.py</span></div><pre class="code">for chave in dicionario:          # só as chaves
+    print(chave, dicionario[chave])
+
+for chave, valor in dicionario.items():   # os dois de uma vez
+    print(chave, valor)</pre></div></div>
+  <article class="ex" id="ex4">
+    <div class="ex-head">
+      <span class="ex-num">EX 04</span>
+      <h3>Percorrendo o produto</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex4"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Visitar cada par chave-valor com for.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Digite, preveja e execute:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex04_percorrendo.py</span></div><pre class="code">produto = {"nome": "Caneca", "preco": 25.0, "estoque": 12}
+
+for chave in produto:
+    print(f"{chave}: {produto[chave]}")</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">nome: Caneca
+preco: 25.0
+estoque: 12</pre></div>
+    </div>
+  </article>
+
+  <article class="ex" id="ex5">
+    <div class="ex-head">
+      <span class="ex-num">EX 05</span>
+      <h3>keys, values e items</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex5"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Conhecer as três "visões" de um dicionário.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>PREVEJA e execute:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex05_visoes.py</span></div><pre class="code">produto = {"nome": "Caneca", "preco": 25.0, "estoque": 12}
+
+print(produto.keys())
+print(produto.values())
+
+for chave, valor in produto.items():
+    print(chave, "→", valor)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">dict_keys(['nome', 'preco', 'estoque'])
+dict_values(['Caneca', 25.0, 12])
+nome → Caneca
+preco → 25.0
+estoque → 12</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner"><code>.items()</code> entrega cada par como uma duplinha — por isso o for usa DUAS variáveis: <code>for chave, valor in ...</code>. (Spoiler: essa duplinha é uma tupla, assunto da Parte 5!)</div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex6">
+    <div class="ex-head">
+      <span class="ex-num">EX 06</span>
+      <h3>Tabela de preços ☕</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex6"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Formatar um dicionário como tabela bonita.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie <code>precos = {"branca": 25.0, "preta": 27.5, "personalizada": 35.0}</code></li><li>Percorra com <code>.items()</code> e exiba cada linha como "branca ...... R$ 25.00"</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">=== TABELA DE PREÇOS ===
+branca: R$ 25.00
+preta: R$ 27.50
+personalizada: R$ 35.00</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex06.py</span></div><pre class="code">precos = {"branca": 25.0, "preta": 27.5, "personalizada": 35.0}
+
+print("=== TABELA DE PREÇOS ===")
+for cor, preco in precos.items():
+    print(f"{cor}: R$ {preco:.2f}")</pre></div></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p3">
+  <div class="parte-head"><span class="num">03</span><h2>Consultas e contagens</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Dois superpoderes dos dicionários: servir de <strong>tabela de consulta</strong> (o <code>in</code> verifica se a chave existe) e de <strong>contador</strong> — o padrão <code>contagem[chave] = contagem.get(chave, 0) + 1</code> conta qualquer coisa.</p></div>
+  <article class="ex" id="ex7">
+    <div class="ex-head">
+      <span class="ex-num">EX 07</span>
+      <h3>Mini-tradutor 🇧🇷→🇺🇸</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex7"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Usar o dicionário como tabela de consulta com in.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie um dicionário com 5 palavras PT → EN (ex.: "gato": "cat")</li><li>Peça uma palavra ao usuário</li><li>Se estiver no dicionário, traduza; senão, avise que não conhece</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Palavra em português: gato
+Em inglês: cat</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner">Com dicionários, o <code>in</code> verifica as CHAVES: <code>if palavra in dicionario</code>.</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex07.py</span></div><pre class="code">dicionario = {
+    "gato": "cat",
+    "cachorro": "dog",
+    "casa": "house",
+    "livro": "book",
+    "caneca": "mug"
+}
+
+palavra = input("Palavra em português: ").lower()
+
+if palavra in dicionario:
+    print(f"Em inglês: {dicionario[palavra]}")
+else:
+    print("Ainda não conheço essa palavra! 😅")</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex8">
+    <div class="ex-head">
+      <span class="ex-num">EX 08</span>
+      <h3>Contando votos</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex8"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Aprender o padrão contador com dicionário — um dos mais usados em análise de dados!</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie <code>votos = ["ana", "bruno", "ana", "carla", "ana", "bruno"]</code></li><li>Crie <code>contagem = {}</code> vazio</li><li>Percorra os votos: se o nome já está na contagem, some 1; senão, comece com 1</li><li>Exiba o resultado</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">{'ana': 3, 'bruno': 2, 'carla': 1}</pre></div><details class="dica"><summary>💡 O atalho profissional</summary><div class="inner">O if/else inteiro vira UMA linha com o get: <code>contagem[nome] = contagem.get(nome, 0) + 1</code> — "pegue o valor atual (ou 0 se não existir) e some 1".</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex08.py</span></div><pre class="code">votos = ["ana", "bruno", "ana", "carla", "ana", "bruno"]
+contagem = {}
+
+for nome in votos:
+    if nome in contagem:
+        contagem[nome] = contagem[nome] + 1
+    else:
+        contagem[nome] = 1
+
+print(contagem)
+
+# Versão enxuta com .get():
+contagem2 = {}
+for nome in votos:
+    contagem2[nome] = contagem2.get(nome, 0) + 1
+print(contagem2)</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex9">
+    <div class="ex-head">
+      <span class="ex-num">EX 09</span>
+      <h3>Contando letras</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex9"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Aplicar o padrão contador em um texto.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Peça uma palavra</li><li>Conte quantas vezes cada letra aparece, usando o padrão do exercício anterior</li><li>Teste com "banana"</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Digite uma palavra: banana
+{'b': 1, 'a': 3, 'n': 2}</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex09.py</span></div><pre class="code">palavra = input("Digite uma palavra: ").lower()
+contagem = {}
+
+for letra in palavra:
+    contagem[letra] = contagem.get(letra, 0) + 1
+
+print(contagem)</pre></div></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p4">
+  <div class="parte-head"><span class="num">04</span><h2>Listas de dicionários: sua primeira "tabela"</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Combine as duas estruturas e você tem uma tabela de banco de dados: a <strong>lista</strong> é o conjunto de linhas, cada <strong>dicionário</strong> é uma linha com colunas nomeadas. É EXATAMENTE assim que APIs e sistemas reais trafegam dados!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">exemplo.py</span></div><pre class="code">produtos = [
+    {"nome": "Caneca branca", "preco": 25.0},
+    {"nome": "Caneca preta", "preco": 27.5},
+    {"nome": "Azulejo", "preco": 40.0}
+]</pre></div></div>
+  <article class="ex" id="ex10">
+    <div class="ex-head">
+      <span class="ex-num">EX 10</span>
+      <h3>Catálogo de produtos</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex10"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Percorrer uma lista de dicionários.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie a lista de produtos do exemplo acima</li><li>Percorra com <code>for produto in produtos</code></li><li>Para cada um, exiba nome e preço formatado</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Caneca branca — R$ 25.00
+Caneca preta — R$ 27.50
+Azulejo — R$ 40.00</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner">Dentro do loop, cada <code>produto</code> é um dicionário completo: acesse os campos com <code>produto['nome']</code>. Repare nas aspas: simples por dentro, duplas por fora (ou vice-versa)!</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex10.py</span></div><pre class="code">produtos = [
+    {"nome": "Caneca branca", "preco": 25.0},
+    {"nome": "Caneca preta", "preco": 27.5},
+    {"nome": "Azulejo", "preco": 40.0}
+]
+
+for produto in produtos:
+    print(f"{produto['nome']} — R$ {produto['preco']:.2f}")</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex11">
+    <div class="ex-head">
+      <span class="ex-num">EX 11</span>
+      <h3>Filtrando por preço</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex11"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Aplicar o padrão filtro (Semana 4) numa lista de dicionários.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Use a mesma lista de produtos</li><li>Crie uma lista nova só com os produtos de até R$ 30,00</li><li>A condição olha um campo do dicionário: <code>produto['preco'] &lt;= 30</code></li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Até R$ 30,00:
+Caneca branca — R$ 25.00
+Caneca preta — R$ 27.50</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex11.py</span></div><pre class="code">produtos = [
+    {"nome": "Caneca branca", "preco": 25.0},
+    {"nome": "Caneca preta", "preco": 27.5},
+    {"nome": "Azulejo", "preco": 40.0}
+]
+
+baratos = []
+for produto in produtos:
+    if produto["preco"] &lt;= 30:
+        baratos.append(produto)
+
+print("Até R$ 30,00:")
+for produto in baratos:
+    print(f"{produto['nome']} — R$ {produto['preco']:.2f}")</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex12">
+    <div class="ex-head">
+      <span class="ex-num">EX 12</span>
+      <h3>Dicionário com lista dentro</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex12"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Misturar estruturas: as notas de cada aluno.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie <code>notas = {"Ana": [8, 7, 9], "Bruno": [6, 7, 5], "Carla": [10, 9, 10]}</code></li><li>Percorra com <code>.items()</code></li><li>Para cada aluno, calcule a média com <code>sum(lista) / len(lista)</code></li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Ana: média 8.0
+Bruno: média 6.0
+Carla: média 9.7</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex12.py</span></div><pre class="code">notas = {"Ana": [8, 7, 9], "Bruno": [6, 7, 5], "Carla": [10, 9, 10]}
+
+for aluno, lista in notas.items():
+    media = sum(lista) / len(lista)
+    print(f"{aluno}: média {media:.1f}")</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex13">
+    <div class="ex-head">
+      <span class="ex-num">EX 13</span>
+      <h3>Buscando na "tabela"</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex13"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Procurar um registro específico numa lista de dicionários.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie uma lista de 3 alunos (dicionários com nome e curso)</li><li>Peça um nome ao usuário</li><li>Percorra a lista procurando: se achar, mostre os dados</li><li>Use uma variável <code>encontrado = False</code> para saber se deve avisar "não encontrado" no final</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Buscar aluno: Bruno
+Bruno está no curso de Python</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex13.py</span></div><pre class="code">alunos = [
+    {"nome": "Ana", "curso": "Excel"},
+    {"nome": "Bruno", "curso": "Python"},
+    {"nome": "Carla", "curso": "Power BI"}
+]
+
+busca = input("Buscar aluno: ")
+encontrado = False
+
+for aluno in alunos:
+    if aluno["nome"] == busca:
+        print(f"{aluno['nome']} está no curso de {aluno['curso']}")
+        encontrado = True
+
+if not encontrado:
+    print("Aluno não encontrado!")</pre></div></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p5">
+  <div class="parte-head"><span class="num">05</span><h2>Tuplas: a lista que não muda</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>A <strong>tupla</strong> é uma sequência como a lista, mas <strong>imutável</strong> — depois de criada, não dá para alterar. Usa parênteses: <code>coordenada = (10, 25)</code>. Serve para dados que NÃO devem mudar (coordenadas, datas, configurações).</p></div>
+  <article class="ex" id="ex14">
+    <div class="ex-head">
+      <span class="ex-num">EX 14</span>
+      <h3>Tupla e o TypeError</h3>
+      <span class="stars">⭐ básico</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex14"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Comprovar a imutabilidade na prática.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie e acesse uma tupla normalmente</li><li>Depois tente ALTERAR um item (erro proposital!):</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex14_tupla.py</span></div><pre class="code">coordenada = (10, 25)
+
+print(coordenada[0])
+print(len(coordenada))
+
+coordenada[0] = 99   # 💥</pre></div><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output" style="color:#FF9B94">TypeError: 'tuple' object does not support item assignment</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><p>Acesso por índice e <code>len()</code> funcionam igual à lista — mas atribuir um valor a uma posição é proibido. Se você precisa de uma versão alterada, crie uma tupla NOVA. Essa "trava" protege dados que não deveriam mudar por acidente.</p></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex15">
+    <div class="ex-head">
+      <span class="ex-num">EX 15</span>
+      <h3>Desempacotamento ✨</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex15"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Distribuir os valores de uma tupla em variáveis — e fazer o truque da troca.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>PREVEJA e execute:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex15_desempacotar.py</span></div><pre class="code">coordenada = (10, 25)
+x, y = coordenada
+print(f"x = {x}, y = {y}")
+
+a, b = 1, 2
+a, b = b, a   # a famosa troca sem variável auxiliar!
+print(f"a = {a}, b = {b}")</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">x = 10, y = 25
+a = 2, b = 1</pre></div><details class="dica"><summary>💡 Você já usava isso!</summary><div class="inner">O <code>for chave, valor in dicionario.items()</code> da Parte 2 é desempacotamento: cada par vem como tupla e o for distribui nas duas variáveis. Tudo se conecta! 🤯</div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p6">
+  <div class="parte-head"><span class="num">06</span><h2>Projetos da semana: juntando tudo!</h2></div>
+
+  <article class="ex" id="ex16">
+    <div class="ex-head">
+      <span class="ex-num">EX 16</span>
+      <h3>Projeto: Estoque Tua Caneca ☕</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex16"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Sistema de estoque com dicionário: consulta e venda com baixa automática.</p><span class="tag passos">🧭 Requisitos</span><ol><li>Crie <code>estoque = {"branca": 10, "preta": 6, "azul": 0}</code></li><li>Menu em loop: 1-Consultar · 2-Vender · 3-Sair</li><li>Consultar: peça a cor e mostre a quantidade (cor inexistente → avise)</li><li>Vender: só permita se a cor existir E tiver estoque; dê baixa de 1 unidade</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">1-Consultar  2-Vender  3-Sair
+Opção: 2
+Cor vendida: preta
+Venda registrada! Restam 5
+1-Consultar  2-Vender  3-Sair
+Opção: 2
+Cor vendida: azul
+Sem estoque dessa cor!</pre></div><details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Na opção Consultar, se o usuário digitar "todas", exiba o estoque completo com <code>.items()</code>.</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex16.py</span></div><pre class="code">estoque = {"branca": 10, "preta": 6, "azul": 0}
+
+while True:
+    print()
+    print("1-Consultar  2-Vender  3-Sair")
+    opcao = int(input("Opção: "))
+
+    if opcao == 1:
+        cor = input("Cor: ")
+        if cor in estoque:
+            print(f"Estoque de {cor}: {estoque[cor]}")
+        else:
+            print("Cor não cadastrada!")
+    elif opcao == 2:
+        cor = input("Cor vendida: ")
+        if cor in estoque and estoque[cor] &gt; 0:
+            estoque[cor] = estoque[cor] - 1
+            print(f"Venda registrada! Restam {estoque[cor]}")
+        else:
+            print("Sem estoque dessa cor!")
+    elif opcao == 3:
+        break
+    else:
+        print("Opção inválida!")</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex17">
+    <div class="ex-head">
+      <span class="ex-num">EX 17</span>
+      <h3>Projeto: Cadastro de clientes 📇</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex17"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Montar um mini-CRM: lista de dicionários com menu completo.</p><span class="tag passos">🧭 Requisitos</span><ol><li>Comece com <code>clientes = []</code></li><li>Menu: 1-Adicionar (nome + telefone → dicionário → append) · 2-Listar todos · 3-Buscar por nome · 4-Sair</li><li>Reaproveite a busca com flag do Exercício 13!</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">1-Adicionar  2-Listar  3-Buscar  4-Sair
+Opção: 1
+Nome: Ana
+Telefone: (51) 98888-7777
+Cliente cadastrado!
+Opção: 2
+— Ana: (51) 98888-7777</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex17.py</span></div><pre class="code">clientes = []
+
+while True:
+    print()
+    print("1-Adicionar  2-Listar  3-Buscar  4-Sair")
+    opcao = int(input("Opção: "))
+
+    if opcao == 1:
+        nome = input("Nome: ")
+        telefone = input("Telefone: ")
+        clientes.append({"nome": nome, "telefone": telefone})
+        print("Cliente cadastrado!")
+    elif opcao == 2:
+        for cliente in clientes:
+            print(f"— {cliente['nome']}: {cliente['telefone']}")
+    elif opcao == 3:
+        busca = input("Buscar: ")
+        encontrado = False
+        for cliente in clientes:
+            if cliente["nome"] == busca:
+                print(f"{cliente['nome']}: {cliente['telefone']}")
+                encontrado = True
+        if not encontrado:
+            print("Cliente não encontrado!")
+    elif opcao == 4:
+        break
+    else:
+        print("Opção inválida!")</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex18">
+    <div class="ex-head">
+      <span class="ex-num">EX 18</span>
+      <h3>Projeto bônus: Tradutor v2</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex18"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Melhorar o tradutor sozinho (sem código pronto!).</p><span class="tag passos">🧭 Roteiro</span><ol><li>Pegue seu tradutor do Exercício 7</li><li>Coloque-o num loop que traduz até o usuário digitar "sair"</li><li>Quando a palavra NÃO existir, mostre as palavras disponíveis (<code>.keys()</code></li><li>Bônus: ofereça cadastrar a tradução nova na hora (dicionários são mutáveis!)</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Palavra (ou 'sair'): mesa
+Não conheço! Palavras disponíveis: ['gato', 'cachorro', 'casa', 'livro', 'caneca']
+Quer cadastrar? (sim/não): sim
+Tradução de mesa: table
+Cadastrada! ✔</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex18.py</span></div><pre class="code">dicionario = {"gato": "cat", "cachorro": "dog", "casa": "house",
+              "livro": "book", "caneca": "mug"}
+
+while True:
+    palavra = input("Palavra (ou 'sair'): ").lower()
+    if palavra == "sair":
+        break
+    if palavra in dicionario:
+        print(f"Em inglês: {dicionario[palavra]}")
+    else:
+        print(f"Não conheço! Palavras disponíveis: {list(dicionario.keys())}")
+        resposta = input("Quer cadastrar? (sim/não): ")
+        if resposta == "sim":
+            traducao = input(f"Tradução de {palavra}: ")
+            dicionario[palavra] = traducao
+            print("Cadastrada! ✔")</pre></div></div></details>
+    </div>
+  </article>
+</section>
+
+<div class="checklist" id="checklist">
+  <h2>✅ Checklist de fim de semana</h2>
+  <p>Antes de seguir para a próxima semana, confirme que você consegue:</p>
+<label class="check-item"><input type="checkbox"><span>Criar um dicionário e acessar valores pela chave</span></label>
+<label class="check-item"><input type="checkbox"><span>Usar .get() para evitar o KeyError</span></label>
+<label class="check-item"><input type="checkbox"><span>Adicionar, alterar e remover chaves (del)</span></label>
+<label class="check-item"><input type="checkbox"><span>Percorrer um dicionário com for e .items()</span></label>
+<label class="check-item"><input type="checkbox"><span>Verificar se uma chave existe com in</span></label>
+<label class="check-item"><input type="checkbox"><span>Usar um dicionário como contador (o padrão get(chave, 0) + 1)</span></label>
+<label class="check-item"><input type="checkbox"><span>Montar uma lista de dicionários (uma "tabela" de dados)</span></label>
+<label class="check-item"><input type="checkbox"><span>Filtrar e buscar dentro de uma lista de dicionários</span></label>
+<label class="check-item"><input type="checkbox"><span>Explicar a diferença entre tupla e lista (imutabilidade)</span></label>
+<label class="check-item"><input type="checkbox"><span>Desempacotar uma tupla em variáveis (x, y = tupla)</span></label>
+</div>
+
+<div class="win-banner" id="winBanner">
+  <h2>🏆 SEMANA 5 COMPLETA!</h2>
+  <p>Você concluiu todos os exercícios. Seus dados agora têm nome e sobrenome!</p>
+</div>
+
+<div class="preview-s2">
+<h2>📅 Prévia da Semana 6</h2><p>Na próxima semana: <strong>funções</strong> — <code>def</code>, parâmetros, <code>return</code> e escopo. Você vai parar de repetir código e começar a montar programas como quem monta LEGO: peça por peça, cada uma com sua responsabilidade.</p></div>
+
+</main>
+
+<footer>python_para_iniciantes // semana_05 // exercícios guiados</footer>
+
+<script>
+// ===== Syntax highlight leve para Python =====
+(function(){
+  const KW = /\b(print|input|int|float|type|str|bool)\b/g;
+  document.querySelectorAll('pre.code').forEach(pre=>{
+    let src = pre.textContent;
+    // escapa HTML
+    src = src.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    // uma passada só, com alternação (comentário | string | builtin | bool | número)
+    src = src.replace(
+      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|insert|int|float|str|len|range|type|abs|round|max|min|sum|sorted|sort|reverse|append|remove|split|strip|upper|lower|replace|title|randint|random|get|keys|values|items|open|readlines|read|write|close|count|index|pop|update|list|dict|tuple|enumerate)\b|\b(True|False|None|if|elif|else|while|for|in|and|or|not|break|continue|import|from|def|return|try|except|finally|with|as|del|global|pass)\b|(\b\d+(?:\.\d+)?\b)/g,
+      function(m, com, str, fn, bool, num){
+        if(com)  return '<span class="tk-com">'+com+'</span>';
+        if(str)  return '<span class="tk-str">'+str+'</span>';
+        if(fn)   return '<span class="tk-fn">'+fn+'</span>';
+        if(bool) return '<span class="tk-kw">'+bool+'</span>';
+        if(num)  return '<span class="tk-num">'+num+'</span>';
+        return m;
+      }
+    );
+    pre.innerHTML = src;
+  });
+})();
+
+// ===== Armazenamento seguro (localStorage com fallback em memória) =====
+// Quando o aluno abre o arquivo .html no computador, o progresso fica salvo
+// no navegador. Se o localStorage estiver indisponível (modo restrito,
+// pré-visualização, etc.), o progresso funciona só em memória, sem quebrar.
+const storage = (function(){
+  const KEY = 'python_semana05_progresso';
+  let memoria = {};
+  let disponivel = false;
+  try{
+    localStorage.setItem('__teste__','1');
+    localStorage.removeItem('__teste__');
+    disponivel = true;
+  }catch(e){ disponivel = false; }
+
+  return {
+    carregar: function(){
+      if(disponivel){
+        try{ return JSON.parse(localStorage.getItem(KEY)) || {}; }
+        catch(e){ return {}; }
+      }
+      return memoria;
+    },
+    salvar: function(dados){
+      memoria = dados;
+      if(disponivel){
+        try{ localStorage.setItem(KEY, JSON.stringify(dados)); }catch(e){}
+      }
+    },
+    limpar: function(){
+      memoria = {};
+      if(disponivel){
+        try{ localStorage.removeItem(KEY); }catch(e){}
+      }
+    },
+    persistente: disponivel
+  };
+})();
+
+// ===== Progresso dos exercícios + checklist =====
+(function(){
+  const checks = document.querySelectorAll('.done-check');
+  const listChecks = document.querySelectorAll('.check-item input');
+  const total = checks.length;
+  const fill = document.getElementById('pfill');
+  const count = document.getElementById('pcount');
+  const msg = document.getElementById('pmsg');
+  const banner = document.getElementById('winBanner');
+  const resetBtn = document.getElementById('resetBtn');
+
+  const MSGS = [
+    [0,  'Marque os exercícios concluídos ✔'],
+    [1,  'Boa! Continue assim 💪'],
+    [5,  'Pegando o ritmo! 🔥'],
+    [9, 'Metade do caminho! 🚀'],
+    [14, 'Quase lá... força! ⚡'],
+    [18, 'SEMANA COMPLETA! 🏆']
+  ];
+
+  function estadoAtual(){
+    const dados = { ex: {}, lista: {} };
+    checks.forEach(c => { dados.ex[c.dataset.ex] = c.checked; });
+    listChecks.forEach((c,i) => { dados.lista['item'+i] = c.checked; });
+    return dados;
+  }
+
+  function atualizarBarra(){
+    const done = document.querySelectorAll('.done-check:checked').length;
+    const pct = Math.round(done/total*100);
+    fill.style.width = pct + '%';
+    count.textContent = done + ' / ' + total;
+    let m = MSGS[0][1];
+    for(const [min,text] of MSGS){ if(done >= min) m = text; }
+    msg.textContent = m;
+    banner.classList.toggle('show', done === total);
+  }
+
+  function aplicarEstado(dados){
+    checks.forEach(c => {
+      const marcado = !!(dados.ex && dados.ex[c.dataset.ex]);
+      c.checked = marcado;
+      c.closest('article.ex').classList.toggle('done', marcado);
+    });
+    listChecks.forEach((c,i) => {
+      c.checked = !!(dados.lista && dados.lista['item'+i]);
+    });
+    atualizarBarra();
+  }
+
+  // Restaura o progresso salvo ao abrir a página
+  aplicarEstado(storage.carregar());
+
+  // Salva a cada mudança
+  checks.forEach(c => {
+    c.addEventListener('change', function(){
+      this.closest('article.ex').classList.toggle('done', this.checked);
+      atualizarBarra();
+      storage.salvar(estadoAtual());
+    });
+  });
+  listChecks.forEach(c => {
+    c.addEventListener('change', function(){
+      storage.salvar(estadoAtual());
+    });
+  });
+
+  // Botão de reset com confirmação
+  resetBtn.addEventListener('click', function(){
+    if(confirm('Apagar todo o progresso desta semana?')){
+      storage.limpar();
+      aplicarEstado({});
+    }
+  });
+
+  // Aviso discreto se o progresso não puder ser salvo neste ambiente
+  if(!storage.persistente){
+    msg.textContent += ' (progresso não será salvo neste ambiente)';
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Semana 6 — Funções</title>
+<style>
+  :root{
+    --ink:#16243A;
+    --ink-soft:#4A5A74;
+    --paper:#F5F8FC;
+    --card:#FFFFFF;
+    --py-blue:#3776AB;
+    --py-blue-dark:#27598C;
+    --py-gold:#FFD43B;
+    --py-gold-dark:#C99700;
+    --term:#1B2435;
+    --term-line:#2B3850;
+    --green:#2EA56C;
+    --coral:#E2574C;
+    --radius:14px;
+    --mono:"Cascadia Code","JetBrains Mono",Consolas,"Roboto Mono",monospace;
+    --sans:"Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto}
+    *{transition:none !important;animation:none !important}
+  }
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.65}
+
+  /* ===== Barra de progresso fixa ===== */
+  .progress-wrap{
+    position:sticky;top:0;z-index:50;
+    background:var(--term);color:#fff;
+    padding:10px 18px;
+    display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+    box-shadow:0 2px 12px rgba(22,36,58,.25);
+  }
+  .progress-wrap .label{font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;white-space:nowrap}
+  .progress-bar{flex:1;min-width:140px;height:14px;background:var(--term-line);border-radius:99px;overflow:hidden}
+  .progress-fill{height:100%;width:0%;border-radius:99px;background:linear-gradient(90deg,var(--py-blue),var(--py-gold));transition:width .4s ease}
+  .progress-count{font-family:var(--mono);font-size:.85rem;color:var(--py-gold);white-space:nowrap}
+  .progress-msg{font-size:.78rem;color:#AFC3E0;white-space:nowrap}
+  .reset-btn{
+    font-family:var(--mono);font-size:.72rem;color:#AFC3E0;
+    background:transparent;border:1px solid var(--term-line);border-radius:8px;
+    padding:5px 11px;cursor:pointer;transition:all .15s ease;white-space:nowrap;
+  }
+  .reset-btn:hover,.reset-btn:focus-visible{color:#fff;border-color:#5A6E92;background:rgba(255,255,255,.06)}
+  .reset-btn:focus-visible{outline:2px solid var(--py-gold);outline-offset:2px}
+
+  /* ===== Hero ===== */
+  header.hero{
+    background:linear-gradient(150deg,var(--term) 0%,#22406B 70%,var(--py-blue) 100%);
+    color:#fff;padding:56px 20px 48px;text-align:center;position:relative;overflow:hidden;
+  }
+  header.hero::before{
+    content:"def  return  (parametros)  chamada()  escopo";
+    position:absolute;inset:auto 0 8px 0;font-family:var(--mono);font-size:.78rem;
+    color:rgba(255,255,255,.14);letter-spacing:.4em;white-space:nowrap;overflow:hidden;
+  }
+  .hero .kicker{
+    font-family:var(--mono);font-size:.85rem;color:var(--py-gold);
+    letter-spacing:.18em;text-transform:uppercase;margin-bottom:14px;
+  }
+  .hero h1{font-family:var(--mono);font-size:clamp(1.5rem,4.5vw,2.6rem);font-weight:700;line-height:1.25}
+  .hero h1 .cursor{display:inline-block;width:.55em;height:1.05em;background:var(--py-gold);vertical-align:text-bottom;margin-left:4px;animation:blink 1.1s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+  .hero p.sub{max-width:620px;margin:18px auto 0;color:#D7E4F5;font-size:1rem}
+  .hero .howto{
+    max-width:640px;margin:26px auto 0;background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.18);border-radius:var(--radius);
+    padding:14px 18px;font-size:.88rem;color:#E8F0FB;text-align:left;
+  }
+  .hero .howto strong{color:var(--py-gold)}
+
+  /* ===== Navegação por partes ===== */
+  nav.parts{
+    display:flex;gap:8px;flex-wrap:wrap;justify-content:center;
+    padding:18px 16px;max-width:980px;margin:0 auto;
+  }
+  nav.parts a{
+    font-family:var(--mono);font-size:.78rem;text-decoration:none;
+    color:var(--py-blue-dark);background:var(--card);
+    border:1.5px solid #D5E2F2;border-radius:99px;padding:7px 14px;
+    transition:all .15s ease;
+  }
+  nav.parts a:hover,nav.parts a:focus-visible{border-color:var(--py-blue);background:#EAF2FB}
+  nav.parts a:focus-visible{outline:2px solid var(--py-blue);outline-offset:2px}
+
+  main{max-width:880px;margin:0 auto;padding:8px 18px 80px}
+
+  /* ===== Seções (partes) ===== */
+  section.parte{margin-top:46px}
+  .parte-head{display:flex;align-items:baseline;gap:14px;border-bottom:3px solid var(--py-gold);padding-bottom:10px;margin-bottom:6px}
+  .parte-head .num{
+    font-family:var(--mono);font-size:2.4rem;font-weight:700;color:var(--py-blue);line-height:1;
+  }
+  .parte-head h2{font-family:var(--mono);font-size:clamp(1.05rem,2.8vw,1.45rem);color:var(--ink)}
+  .parte-intro{
+    background:var(--card);border:1px solid #E1E9F4;border-radius:var(--radius);
+    padding:18px 22px;margin-top:16px;font-size:.95rem;
+  }
+  .parte-intro h3{font-size:.8rem;font-family:var(--mono);color:var(--py-blue);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px}
+  .parte-intro p{margin-bottom:10px}
+  .parte-intro p:last-child{margin-bottom:0}
+  .parte-intro ol,.parte-intro ul{margin:8px 0 10px 22px}
+  table{border-collapse:collapse;width:100%;margin:10px 0;font-size:.88rem}
+  th,td{border:1px solid #DCE6F2;padding:7px 10px;text-align:left}
+  th{background:#EDF3FA;font-family:var(--mono);font-size:.78rem}
+  td code,p code,li code{
+    font-family:var(--mono);font-size:.85em;background:#EDF2F9;
+    border:1px solid #DCE6F2;border-radius:5px;padding:1px 5px;color:var(--py-blue-dark);
+  }
+
+  /* ===== Cartão de exercício ===== */
+  article.ex{
+    background:var(--card);border:1px solid #E1E9F4;border-radius:var(--radius);
+    margin-top:22px;overflow:hidden;
+    box-shadow:0 1px 4px rgba(22,36,58,.05);
+    transition:box-shadow .2s ease;
+  }
+  article.ex:hover{box-shadow:0 4px 16px rgba(22,36,58,.10)}
+  article.ex.done{border-color:var(--green)}
+  article.ex.done .ex-head{background:#EAF7F0}
+  .ex-head{
+    display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+    padding:14px 18px;background:#F2F6FC;border-bottom:1px solid #E1E9F4;
+  }
+  .ex-num{
+    font-family:var(--mono);font-weight:700;font-size:.85rem;color:#fff;
+    background:var(--py-blue);border-radius:8px;padding:5px 10px;white-space:nowrap;
+  }
+  article.ex.done .ex-num{background:var(--green)}
+  .ex-head h3{font-size:1.02rem;flex:1;min-width:180px}
+  .stars{font-size:.78rem;color:var(--py-gold-dark);background:#FFF6D6;border:1px solid #F2DE96;border-radius:99px;padding:3px 10px;white-space:nowrap}
+  .done-toggle{
+    display:flex;align-items:center;gap:7px;cursor:pointer;user-select:none;
+    font-size:.8rem;font-family:var(--mono);color:var(--ink-soft);
+  }
+  .done-toggle input{width:17px;height:17px;accent-color:var(--green);cursor:pointer}
+  .ex-body{padding:18px 20px 22px}
+  .ex-body p{margin-bottom:10px}
+  .ex-body ol,.ex-body ul{margin:6px 0 12px 22px}
+  .ex-body li{margin-bottom:4px}
+
+  .tag{
+    display:inline-block;font-family:var(--mono);font-size:.72rem;
+    text-transform:uppercase;letter-spacing:.08em;border-radius:6px;
+    padding:3px 9px;margin:4px 0 6px;
+  }
+  .tag.obj{background:#E7F0FB;color:var(--py-blue-dark)}
+  .tag.passos{background:#FFF3CC;color:#8a6d00}
+  .tag.saida{background:#E4F5EC;color:#1c7a4d}
+
+  /* ===== Blocos de código estilo terminal ===== */
+  .term-window{border-radius:12px;overflow:hidden;margin:12px 0;border:1px solid var(--term-line)}
+  .term-bar{
+    display:flex;align-items:center;gap:8px;background:#121A29;padding:8px 14px;
+  }
+  .term-bar .dot{width:11px;height:11px;border-radius:50%}
+  .dot.r{background:#FF5F57}.dot.y{background:#FEBC2E}.dot.g{background:#28C840}
+  .term-bar .fname{font-family:var(--mono);font-size:.75rem;color:#8FA6C8;margin-left:6px}
+  pre.code,pre.output{
+    background:var(--term);color:#E7EDF7;font-family:var(--mono);
+    font-size:.86rem;line-height:1.6;padding:14px 18px;overflow-x:auto;margin:0;
+  }
+  pre.output{color:#9FE8C0}
+  pre.output .prompt-in{color:#E7EDF7}
+  /* syntax highlight */
+  .tk-kw{color:#7EC1FF;font-weight:600}
+  .tk-str{color:#FFD98A}
+  .tk-com{color:#7C8DA8;font-style:italic}
+  .tk-num{color:#9FE8C0}
+  .tk-fn{color:#C7A6FF}
+
+  /* ===== Dicas / desafios / soluções ===== */
+  details{border-radius:10px;margin:12px 0;overflow:hidden;border:1.5px solid transparent}
+  details summary{
+    cursor:pointer;list-style:none;padding:11px 16px;font-weight:600;font-size:.9rem;
+    display:flex;align-items:center;gap:8px;user-select:none;
+  }
+  details summary::-webkit-details-marker{display:none}
+  details summary::after{content:"▾";margin-left:auto;transition:transform .2s ease;font-size:.85em}
+  details[open] summary::after{transform:rotate(180deg)}
+  details .inner{padding:4px 16px 14px}
+  details.dica{background:#FFF9E8;border-color:#F2DE96}
+  details.dica summary{color:#8a6d00}
+  details.desafio{background:#F3EDFB;border-color:#D9C8F2}
+  details.desafio summary{color:#6B3FA0}
+  details.solucao{background:#EAF7F0;border-color:#BFE5D0}
+  details.solucao summary{color:#1c7a4d}
+  details.solucao .aviso{font-size:.8rem;color:#1c7a4d;margin-bottom:8px;font-style:italic}
+
+  /* ===== Checklist final ===== */
+  .checklist{background:var(--card);border:1px solid #E1E9F4;border-radius:var(--radius);padding:22px;margin-top:30px}
+  .checklist h2{font-family:var(--mono);font-size:1.2rem;margin-bottom:6px}
+  .checklist p{font-size:.9rem;color:var(--ink-soft);margin-bottom:14px}
+  .check-item{display:flex;align-items:flex-start;gap:10px;padding:7px 4px;border-radius:8px;cursor:pointer}
+  .check-item:hover{background:#F2F6FC}
+  .check-item input{width:18px;height:18px;margin-top:3px;accent-color:var(--py-blue);cursor:pointer}
+  .check-item span{font-size:.93rem}
+  .check-item input:checked + span{color:var(--green);text-decoration:line-through;text-decoration-color:rgba(46,165,108,.5)}
+
+  /* banner 100% */
+  .win-banner{
+    display:none;margin-top:26px;text-align:center;color:#fff;
+    background:linear-gradient(120deg,var(--green),var(--py-blue));
+    border-radius:var(--radius);padding:26px 20px;
+  }
+  .win-banner.show{display:block;animation:pop .45s ease}
+  @keyframes pop{0%{transform:scale(.94);opacity:0}100%{transform:scale(1);opacity:1}}
+  .win-banner h2{font-family:var(--mono);font-size:1.4rem;margin-bottom:6px}
+
+  .preview-s2{
+    margin-top:36px;border:2px dashed var(--py-blue);border-radius:var(--radius);
+    padding:20px 22px;background:#EFF5FC;
+  }
+  .preview-s2 h2{font-family:var(--mono);font-size:1.05rem;color:var(--py-blue-dark);margin-bottom:8px}
+  footer{
+    text-align:center;font-family:var(--mono);font-size:.75rem;color:var(--ink-soft);
+    padding:26px 16px 40px;
+  }
+  @media(max-width:560px){
+    .progress-msg{display:none}
+    .ex-head h3{font-size:.95rem}
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-wrap" role="region" aria-label="Progresso da semana">
+  <span class="label">XP DA SEMANA</span>
+  <div class="progress-bar"><div class="progress-fill" id="pfill"></div></div>
+  <span class="progress-count" id="pcount">0 / 17</span>
+  <span class="progress-msg" id="pmsg">Marque os exercícios concluídos ✔</span>
+  <button class="reset-btn" id="resetBtn" title="Apagar todo o progresso salvo">↺ Resetar</button>
+</div>
+
+<header class="hero">
+  <div class="kicker">Python para Iniciantes · Exercícios Guiados</div>
+  <h1>SEMANA 6 — Funções:<br>montando programas como LEGO<span class="cursor" aria-hidden="true"></span></h1>
+  <p class="sub">Pare de repetir código: def, parâmetros, return, valores padrão, escopo de variáveis e a arte de refatorar seus projetos antigos em peças reutilizáveis.</p>
+  <div class="howto">
+    <strong>Como usar:</strong> digite o código você mesmo (não copie e cole!), compare com a saída esperada e marque <strong>✔ Concluído</strong> em cada exercício para encher sua barra de XP. As <strong>dicas</strong> e <strong>soluções</strong> ficam escondidas — só abra depois de tentar! Seu progresso fica salvo no navegador.
+  </div>
+</header>
+
+<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · def</a><a href="#p2">2 · return</a><a href="#p3">3 · Parâmetros</a><a href="#p4">4 · Escopo</a><a href="#p5">5 · Refatorando</a><a href="#p6">6 · Projetos</a><a href="#checklist">✅ Checklist</a></nav>
+
+<main>
+
+<section class="parte" id="p1">
+  <div class="parte-head"><span class="num">01</span><h2>def: criando suas próprias funções</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Você já USA funções desde a Semana 1: <code>print()</code>, <code>input()</code>, <code>len()</code>... Agora vai CRIAR as suas. A receita:</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">estrutura.py</span></div><pre class="code">def nome_da_funcao():      # 1. DEFINE (ensina a receita)
+    print("Fazendo algo...")
+
+nome_da_funcao()           # 2. CHAMA (executa a receita)</pre></div><p><strong>Atenção:</strong> definir NÃO executa! A função só roda quando é chamada — e pode ser chamada quantas vezes você quiser. Essa é a mágica: escreve uma vez, usa mil vezes.</p></div>
+  <article class="ex" id="ex1">
+    <div class="ex-head">
+      <span class="ex-num">EX 01</span>
+      <h3>Primeira função</h3>
+      <span class="stars">⭐ básico</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex1"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Definir e chamar uma função — e comprovar que definir não executa.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Digite, PREVEJA quantas vezes a mensagem aparece, e execute:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex01_funcao.py</span></div><pre class="code">def saudacao():
+    print("Olá! Bem-vindo ao curso de Python!")
+
+saudacao()
+saudacao()</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Olá! Bem-vindo ao curso de Python!
+Olá! Bem-vindo ao curso de Python!</pre></div><details class="dica"><summary>💡 Experimento</summary><div class="inner">Apague as duas chamadas e rode de novo. Nada acontece! O def sozinho só ENSINA a receita — ninguém cozinhou ainda.</div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex2">
+    <div class="ex-head">
+      <span class="ex-num">EX 02</span>
+      <h3>Função com parâmetro</h3>
+      <span class="stars">⭐ básico</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex2"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Passar informação para dentro da função.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>O parâmetro é uma variável que nasce no parêntese da definição:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex02_parametro.py</span></div><pre class="code">def saudacao(nome):
+    print(f"Olá, {nome}!")
+
+saudacao("Ana")
+saudacao("Robson")
+saudacao(input("Seu nome: "))</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Olá, Ana!
+Olá, Robson!
+Seu nome: Carla
+Olá, Carla!</pre></div><details class="dica"><summary>💡 Vocabulário</summary><div class="inner">Na DEFINIÇÃO, <code>nome</code> é o <strong>parâmetro</strong>. Na CHAMADA, <code>"Ana"</code> é o <strong>argumento</strong> — o valor real que preenche o parâmetro naquela execução.</div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex3">
+    <div class="ex-head">
+      <span class="ex-num">EX 03</span>
+      <h3>Dois parâmetros (a ordem importa!)</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex3"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Trabalhar com múltiplos parâmetros.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie <code>def matricula(nome, curso):</code> que imprime "[nome] foi matriculado em [curso]"</li><li>Chame com <code>matricula("Ana", "Python")</code></li><li>Agora INVERTA os argumentos e veja o estrago 😄</li></ol><span class="tag saida">✅ Saída (com a inversão)</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Ana foi matriculado em Python
+Python foi matriculado em Ana</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex03.py</span></div><pre class="code">def matricula(nome, curso):
+    print(f"{nome} foi matriculado em {curso}")
+
+matricula("Ana", "Python")
+matricula("Python", "Ana")   # a ordem dos argumentos importa!</pre></div><p>O Python preenche os parâmetros NA ORDEM. Existe um jeito de nomear os argumentos (<code>matricula(curso="Python", nome="Ana")</code>) — teste!</p></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p2">
+  <div class="parte-head"><span class="num">02</span><h2>return: a função que devolve</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>A diferença mais importante da semana: <code>print</code> <strong>MOSTRA</strong> um valor na tela e pronto. <code>return</code> <strong>ENTREGA</strong> o valor para quem chamou — e aí você pode guardar numa variável, usar numa conta, passar para outra função...</p></div>
+  <article class="ex" id="ex4">
+    <div class="ex-head">
+      <span class="ex-num">EX 04</span>
+      <h3>print vs return: o duelo</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex4"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Entender de uma vez por todas a diferença.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>PREVEJA cada linha da saída (uma delas vai te surpreender!):</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex04_duelo.py</span></div><pre class="code">def soma_print(a, b):
+    print(a + b)
+
+def soma_return(a, b):
+    return a + b
+
+resultado = soma_print(2, 3)
+print(resultado)
+
+resultado = soma_return(2, 3)
+print(resultado)
+print(resultado * 10)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">5
+None
+5
+50</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><p>A surpresa é o <code>None</code>: <code>soma_print</code> mostra o 5 na tela, mas não DEVOLVE nada — e função sem return devolve <code>None</code>. Já <code>soma_return</code> entrega o valor, que pode ser guardado e reutilizado (<code>resultado * 10</code>). Regra prática: <strong>funções que calculam devem retornar</strong>; quem decide mostrar é quem chamou.</p></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex5">
+    <div class="ex-head">
+      <span class="ex-num">EX 05</span>
+      <h3>Compondo funções</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex5"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Usar o retorno de uma função como entrada de outra.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie <code>dobro(n)</code> que retorna <code>n * 2</code> e <code>quadrado(n)</code> que retorna <code>n ** 2</code></li><li>PREVEJA: quanto dá <code>dobro(quadrado(3))</code>? E <code>quadrado(dobro(3))</code>?</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">18
+36</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex05.py</span></div><pre class="code">def dobro(n):
+    return n * 2
+
+def quadrado(n):
+    return n ** 2
+
+print(dobro(quadrado(3)))    # quadrado(3)=9 → dobro(9)=18
+print(quadrado(dobro(3)))    # dobro(3)=6 → quadrado(6)=36</pre></div><p>O Python resolve de DENTRO para FORA. Compor funções assim só é possível porque elas RETORNAM — com print, nada disso funcionaria.</p></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex6">
+    <div class="ex-head">
+      <span class="ex-num">EX 06</span>
+      <h3>Funções que respondem sim ou não</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex6"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Retornar True/False para usar direto em condições.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie <code>eh_par(n)</code> que retorna <code>True</code> se n for par</li><li>Use-a num if: <code>if eh_par(numero):</code></li><li>Dica de elegância: a comparação JÁ é True/False — retorne ela direto!</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Digite um número: 8
+8 é par!</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex06.py</span></div><pre class="code">def eh_par(n):
+    return n % 2 == 0     # a comparação já devolve True/False!
+
+numero = int(input("Digite um número: "))
+
+if eh_par(numero):
+    print(f"{numero} é par!")
+else:
+    print(f"{numero} é ímpar!")</pre></div><p>Nada de <code>if n % 2 == 0: return True else: return False</code> — funciona, mas é dar uma volta enorme no quarteirão. 😄</p></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex7">
+    <div class="ex-head">
+      <span class="ex-num">EX 07</span>
+      <h3>Retornando dois valores</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex7"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Devolver uma tupla e desempacotar (olá, Semana 5!).</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie <code>menor_maior(lista)</code> que retorna <code>min(lista), max(lista)</code></li><li>Receba com duas variáveis: <code>menor, maior = menor_maior(numeros)</code></li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Menor: 1 | Maior: 9</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex07.py</span></div><pre class="code">def menor_maior(lista):
+    return min(lista), max(lista)   # retorna uma tupla!
+
+numeros = [4, 9, 1, 7, 3]
+menor, maior = menor_maior(numeros)
+
+print(f"Menor: {menor} | Maior: {maior}")</pre></div></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p3">
+  <div class="parte-head"><span class="num">03</span><h2>Parâmetros com valor padrão</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Um parâmetro pode ter um valor de reserva, usado quando a chamada não informa o argumento: <code>def saudacao(nome="visitante"):</code>. Assim a função funciona com E sem argumento.</p></div>
+  <article class="ex" id="ex8">
+    <div class="ex-head">
+      <span class="ex-num">EX 08</span>
+      <h3>O valor padrão</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex8"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Criar uma função flexível.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Digite, preveja e execute:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex08_padrao.py</span></div><pre class="code">def saudacao(nome="visitante"):
+    print(f"Olá, {nome}!")
+
+saudacao("Ana")
+saudacao()</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Olá, Ana!
+Olá, visitante!</pre></div><details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">Crie <code>orcamento(quantidade, preco=25.0)</code> que retorna o total. Chame com e sem o preço.</div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex9">
+    <div class="ex-head">
+      <span class="ex-num">EX 09</span>
+      <h3>Uma função, várias turmas</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex9"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Sentir o poder do reuso.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie <code>calcular_media(notas)</code> que recebe uma LISTA e retorna a média</li><li>Use a MESMA função para duas turmas diferentes</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Turma A: 7.8
+Turma B: 6.5</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex09.py</span></div><pre class="code">def calcular_media(notas):
+    return sum(notas) / len(notas)
+
+turma_a = [8.5, 7.0, 9.0, 6.5]
+turma_b = [5.0, 7.5, 6.0, 7.5]
+
+print(f"Turma A: {calcular_media(turma_a):.1f}")
+print(f"Turma B: {calcular_media(turma_b):.1f}")</pre></div><p>Sem função, você copiaria a conta duas vezes. Com função, a lógica mora num lugar só — se precisar mudar, muda UMA vez.</p></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p4">
+  <div class="parte-head"><span class="num">04</span><h2>Escopo: onde as variáveis moram</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Variável criada DENTRO de uma função é <strong>local</strong>: nasce quando a função roda e morre quando ela termina. Do lado de fora, ela simplesmente não existe!</p></div>
+  <article class="ex" id="ex10">
+    <div class="ex-head">
+      <span class="ex-num">EX 10</span>
+      <h3>A variável que sumiu</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex10"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Provocar (e entender) o NameError de escopo.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Execute este código <strong>com erro proposital</strong>:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex10_escopo.py</span></div><pre class="code">def calcular():
+    resultado = 10 * 2
+
+calcular()
+print(resultado)   # 💥</pre></div><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output" style="color:#FF9B94">NameError: name 'resultado' is not defined</pre></div><span class="tag passos">🧭 Continue</span><ol><li>A função RODOU, mas a variável ficou presa lá dentro</li><li>Corrija usando return (a forma certa de "exportar" um valor)</li></ol><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex10.py</span></div><pre class="code">def calcular():
+    return 10 * 2
+
+resultado = calcular()
+print(resultado)</pre></div><p>O return é a porta de saída oficial: a função devolve o valor, e quem chamou guarda na SUA própria variável.</p></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex11">
+    <div class="ex-head">
+      <span class="ex-num">EX 11</span>
+      <h3>Local vence global?</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex11"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Ver o que acontece quando dentro e fora têm o mesmo nome.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>PREVEJA com cuidado, depois execute:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex11_global.py</span></div><pre class="code">mensagem = "Eu sou a global"
+
+def testar():
+    mensagem = "Eu sou a local"
+    print(mensagem)
+
+testar()
+print(mensagem)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Eu sou a local
+Eu sou a global</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><p>São DUAS variáveis diferentes que por coincidência têm o mesmo nome! Dentro da função, a local "ganha". Fora, a global continua intacta — a função nem encostou nela. Por isso funções são seguras: o que acontece na função, fica na função. 😄</p></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p5">
+  <div class="parte-head"><span class="num">05</span><h2>Refatorando: dando upgrade no código antigo</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p><strong>Refatorar</strong> = reorganizar um código que já funciona para ele ficar mais limpo, sem mudar o que ele faz. A ferramenta número 1 da refatoração? Funções! Vamos revisitar seus projetos das semanas passadas.</p></div>
+  <article class="ex" id="ex12">
+    <div class="ex-head">
+      <span class="ex-num">EX 12</span>
+      <h3>Tabuada vira função</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex12"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Transformar o exercício da Semana 3 numa peça reutilizável.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie <code>def tabuada(n):</code> com o for de 1 a 10 dentro</li><li>Chame 3 vezes: <code>tabuada(3)</code>, <code>tabuada(7)</code>, <code>tabuada(int(input(...)))</code></li></ol><span class="tag saida">✅ Saída esperada (início)</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">3 x 1 = 3
+(...)
+7 x 1 = 7
+(...)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex12.py</span></div><pre class="code">def tabuada(n):
+    for i in range(1, 11):
+        print(f"{n} x {i} = {n * i}")
+
+tabuada(3)
+tabuada(7)
+tabuada(int(input("Qual tabuada? ")))</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex13">
+    <div class="ex-head">
+      <span class="ex-num">EX 13</span>
+      <h3>A validação vira função</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex13"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Empacotar a validação de entrada da Semana 3 para usar em qualquer programa.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie <code>pedir_nota()</code> que pergunta, repete enquanto for inválida e RETORNA a nota válida</li><li>Use-a duas vezes para calcular a média de 2 provas</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Nota (0 a 10): 15
+Inválida!
+Nota (0 a 10): 8
+Nota (0 a 10): 6
+Média: 7.0</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex13.py</span></div><pre class="code">def pedir_nota():
+    nota = float(input("Nota (0 a 10): "))
+    while nota &lt; 0 or nota &gt; 10:
+        print("Inválida!")
+        nota = float(input("Nota (0 a 10): "))
+    return nota
+
+nota1 = pedir_nota()
+nota2 = pedir_nota()
+print(f"Média: {(nota1 + nota2) / 2:.1f}")</pre></div><p>Repare na elegância: quem usa <code>pedir_nota()</code> tem a GARANTIA de receber uma nota válida — toda a chatice da validação ficou escondida dentro da função.</p></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex14">
+    <div class="ex-head">
+      <span class="ex-num">EX 14</span>
+      <h3>A calculadora refatorada</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex14"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Reescrever o projeto da Semana 2 com uma função que calcula e retorna.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie <code>calcular(n1, operacao, n2)</code> que RETORNA o resultado (ou <code>None</code> para operação inválida)</li><li>O programa principal só pede os dados, chama a função e mostra</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Primeiro número: 8
+Operação: *
+Segundo número: 7
+Resultado: 56.0</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex14.py</span></div><pre class="code">def calcular(n1, operacao, n2):
+    if operacao == "+":
+        return n1 + n2
+    elif operacao == "-":
+        return n1 - n2
+    elif operacao == "*":
+        return n1 * n2
+    elif operacao == "/":
+        if n2 == 0:
+            return None
+        return n1 / n2
+    return None
+
+n1 = float(input("Primeiro número: "))
+op = input("Operação: ")
+n2 = float(input("Segundo número: "))
+
+resultado = calcular(n1, op, n2)
+if resultado is None:
+    print("Operação inválida!")
+else:
+    print(f"Resultado: {resultado}")</pre></div></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p6">
+  <div class="parte-head"><span class="num">06</span><h2>Projetos da semana: juntando tudo!</h2></div>
+
+  <article class="ex" id="ex15">
+    <div class="ex-head">
+      <span class="ex-num">EX 15</span>
+      <h3>Projeto: Tua Caneca v4 — agora com funções ☕</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex15"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Refatorar o orçamento das Semanas 2 e 4 em três funções com responsabilidades claras.</p><span class="tag passos">🧭 Requisitos</span><ol><li>Crie <code>calcular_subtotal(quantidade)</code> → retorna quantidade × R$ 25,00</li><li>Crie <code>definir_desconto(quantidade)</code> → retorna 0.15, 0.10 ou 0</li><li>Crie <code>exibir_resumo(quantidade)</code> → usa as duas anteriores e imprime o orçamento</li><li>O programa principal vira DUAS linhas!</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Quantidade de canecas: 12
+Subtotal: R$ 300.00
+Desconto: 10%
+TOTAL: R$ 270.00</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex15.py</span></div><pre class="code">PRECO = 25.00
+
+def calcular_subtotal(quantidade):
+    return quantidade * PRECO
+
+def definir_desconto(quantidade):
+    if quantidade &gt;= 20:
+        return 0.15
+    elif quantidade &gt;= 10:
+        return 0.10
+    return 0
+
+def exibir_resumo(quantidade):
+    subtotal = calcular_subtotal(quantidade)
+    desconto = definir_desconto(quantidade)
+    total = subtotal * (1 - desconto)
+    print(f"Subtotal: R$ {subtotal:.2f}")
+    print(f"Desconto: {desconto * 100:.0f}%")
+    print(f"TOTAL: R$ {total:.2f}")
+
+qtd = int(input("Quantidade de canecas: "))
+exibir_resumo(qtd)</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex16">
+    <div class="ex-head">
+      <span class="ex-num">EX 16</span>
+      <h3>Projeto: Jogo de adivinhação refatorado 🎲</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex16"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Reorganizar o jogo da Semana 3 em funções.</p><span class="tag passos">🧭 Requisitos</span><ol><li>Função <code>sortear()</code> → retorna <code>random.randint(1, 50)</code></li><li>Função <code>dar_dica(palpite, segredo)</code> → imprime "alto"/"baixo"</li><li>Função <code>jogar()</code> → contém o loop e retorna o número de tentativas</li><li>Programa principal: chama jogar() e parabeniza</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Adivinhe o número entre 1 e 50!
+Seu palpite: 25
+Muito baixo! ⬆
+Seu palpite: 38
+🎉 Acertou em 2 tentativas!</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex16.py</span></div><pre class="code">import random
+
+def sortear():
+    return random.randint(1, 50)
+
+def dar_dica(palpite, segredo):
+    if palpite &gt; segredo:
+        print("Muito alto! ⬇")
+    elif palpite &lt; segredo:
+        print("Muito baixo! ⬆")
+
+def jogar():
+    segredo = sortear()
+    tentativas = 0
+    palpite = 0
+    print("Adivinhe o número entre 1 e 50!")
+    while palpite != segredo:
+        palpite = int(input("Seu palpite: "))
+        tentativas += 1
+        dar_dica(palpite, segredo)
+    return tentativas
+
+total = jogar()
+print(f"🎉 Acertou em {total} tentativas!")</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex17">
+    <div class="ex-head">
+      <span class="ex-num">EX 17</span>
+      <h3>Projeto bônus: Caixa de ferramentas 🧰</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex17"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Montar sua biblioteca pessoal de funções (sem código pronto!).</p><span class="tag passos">🧭 Roteiro</span><ol><li>Crie um arquivo <code>ferramentas.py</code> com pelo menos 4 funções suas: <code>eh_par(n)</code>, <code>calcular_media(lista)</code>, <code>pedir_nota()</code>, <code>tabuada(n)</code>...</li><li>Monte um menu em loop que permite testar cada ferramenta</li><li>Capriche nos nomes: uma boa função se explica pelo nome!</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">=== CAIXA DE FERRAMENTAS ===
+1-Par ou ímpar  2-Média  3-Tabuada  4-Sair
+Opção: 1
+Número: 14
+14 é par!</pre></div><details class="dica"><summary>💡 Você percebeu?</summary><div class="inner">Com funções, adicionar uma opção nova ao menu é só escrever a função e mais um elif. Programas organizados assim crescem sem virar espaguete! 🍝</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex17.py</span></div><pre class="code">def eh_par(n):
+    return n % 2 == 0
+
+def calcular_media(notas):
+    return sum(notas) / len(notas)
+
+def tabuada(n):
+    for i in range(1, 11):
+        print(f"{n} x {i} = {n * i}")
+
+while True:
+    print()
+    print("=== CAIXA DE FERRAMENTAS ===")
+    print("1-Par ou ímpar  2-Média  3-Tabuada  4-Sair")
+    opcao = int(input("Opção: "))
+
+    if opcao == 1:
+        n = int(input("Número: "))
+        if eh_par(n):
+            print(f"{n} é par!")
+        else:
+            print(f"{n} é ímpar!")
+    elif opcao == 2:
+        notas = []
+        for i in range(1, 4):
+            notas.append(float(input(f"Nota {i}: ")))
+        print(f"Média: {calcular_media(notas):.1f}")
+    elif opcao == 3:
+        tabuada(int(input("Qual tabuada? ")))
+    elif opcao == 4:
+        break
+    else:
+        print("Opção inválida!")</pre></div></div></details>
+    </div>
+  </article>
+</section>
+
+<div class="checklist" id="checklist">
+  <h2>✅ Checklist de fim de semana</h2>
+  <p>Antes de seguir para a próxima semana, confirme que você consegue:</p>
+<label class="check-item"><input type="checkbox"><span>Definir uma função com def e chamá-la (e saber a diferença!)</span></label>
+<label class="check-item"><input type="checkbox"><span>Criar funções com um ou mais parâmetros</span></label>
+<label class="check-item"><input type="checkbox"><span>Explicar a diferença entre print e return</span></label>
+<label class="check-item"><input type="checkbox"><span>Guardar o retorno de uma função numa variável e reutilizá-lo</span></label>
+<label class="check-item"><input type="checkbox"><span>Escrever funções que retornam True/False para usar em ifs</span></label>
+<label class="check-item"><input type="checkbox"><span>Retornar mais de um valor (tupla) e desempacotar</span></label>
+<label class="check-item"><input type="checkbox"><span>Usar parâmetros com valor padrão</span></label>
+<label class="check-item"><input type="checkbox"><span>Explicar por que uma variável local "não existe" fora da função</span></label>
+<label class="check-item"><input type="checkbox"><span>Refatorar um código repetitivo em funções</span></label>
+<label class="check-item"><input type="checkbox"><span>Dividir um programa em funções pequenas com nomes claros</span></label>
+</div>
+
+<div class="win-banner" id="winBanner">
+  <h2>🏆 SEMANA 6 COMPLETA!</h2>
+  <p>Você concluiu todos os exercícios. Seu código agora se monta em pecinhas reutilizáveis!</p>
+</div>
+
+<div class="preview-s2">
+<h2>📅 Prévia da Semana 7</h2><p>Na próxima semana: <strong>tratamento de erros</strong> (<code>try/except</code> — programas que não quebram com entradas erradas) e <strong>arquivos</strong> (<code>open()</code>, ler e gravar .txt) — seus dados finalmente vão <strong>sobreviver ao fechamento do programa</strong>!</p></div>
+
+</main>
+
+<footer>python_para_iniciantes // semana_06 // exercícios guiados</footer>
+
+<script>
+// ===== Syntax highlight leve para Python =====
+(function(){
+  const KW = /\b(print|input|int|float|type|str|bool)\b/g;
+  document.querySelectorAll('pre.code').forEach(pre=>{
+    let src = pre.textContent;
+    // escapa HTML
+    src = src.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    // uma passada só, com alternação (comentário | string | builtin | bool | número)
+    src = src.replace(
+      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|insert|int|float|str|len|range|type|abs|round|max|min|sum|sorted|sort|reverse|append|remove|split|strip|upper|lower|replace|title|randint|random|get|keys|values|items|open|readlines|read|write|close|count|index|pop|update|list|dict|tuple|enumerate)\b|\b(True|False|None|if|elif|else|while|for|in|and|or|not|break|continue|import|from|def|return|try|except|finally|with|as|del|global|pass)\b|(\b\d+(?:\.\d+)?\b)/g,
+      function(m, com, str, fn, bool, num){
+        if(com)  return '<span class="tk-com">'+com+'</span>';
+        if(str)  return '<span class="tk-str">'+str+'</span>';
+        if(fn)   return '<span class="tk-fn">'+fn+'</span>';
+        if(bool) return '<span class="tk-kw">'+bool+'</span>';
+        if(num)  return '<span class="tk-num">'+num+'</span>';
+        return m;
+      }
+    );
+    pre.innerHTML = src;
+  });
+})();
+
+// ===== Armazenamento seguro (localStorage com fallback em memória) =====
+// Quando o aluno abre o arquivo .html no computador, o progresso fica salvo
+// no navegador. Se o localStorage estiver indisponível (modo restrito,
+// pré-visualização, etc.), o progresso funciona só em memória, sem quebrar.
+const storage = (function(){
+  const KEY = 'python_semana06_progresso';
+  let memoria = {};
+  let disponivel = false;
+  try{
+    localStorage.setItem('__teste__','1');
+    localStorage.removeItem('__teste__');
+    disponivel = true;
+  }catch(e){ disponivel = false; }
+
+  return {
+    carregar: function(){
+      if(disponivel){
+        try{ return JSON.parse(localStorage.getItem(KEY)) || {}; }
+        catch(e){ return {}; }
+      }
+      return memoria;
+    },
+    salvar: function(dados){
+      memoria = dados;
+      if(disponivel){
+        try{ localStorage.setItem(KEY, JSON.stringify(dados)); }catch(e){}
+      }
+    },
+    limpar: function(){
+      memoria = {};
+      if(disponivel){
+        try{ localStorage.removeItem(KEY); }catch(e){}
+      }
+    },
+    persistente: disponivel
+  };
+})();
+
+// ===== Progresso dos exercícios + checklist =====
+(function(){
+  const checks = document.querySelectorAll('.done-check');
+  const listChecks = document.querySelectorAll('.check-item input');
+  const total = checks.length;
+  const fill = document.getElementById('pfill');
+  const count = document.getElementById('pcount');
+  const msg = document.getElementById('pmsg');
+  const banner = document.getElementById('winBanner');
+  const resetBtn = document.getElementById('resetBtn');
+
+  const MSGS = [
+    [0,  'Marque os exercícios concluídos ✔'],
+    [1,  'Boa! Continue assim 💪'],
+    [5,  'Pegando o ritmo! 🔥'],
+    [8, 'Metade do caminho! 🚀'],
+    [13, 'Quase lá... força! ⚡'],
+    [17, 'SEMANA COMPLETA! 🏆']
+  ];
+
+  function estadoAtual(){
+    const dados = { ex: {}, lista: {} };
+    checks.forEach(c => { dados.ex[c.dataset.ex] = c.checked; });
+    listChecks.forEach((c,i) => { dados.lista['item'+i] = c.checked; });
+    return dados;
+  }
+
+  function atualizarBarra(){
+    const done = document.querySelectorAll('.done-check:checked').length;
+    const pct = Math.round(done/total*100);
+    fill.style.width = pct + '%';
+    count.textContent = done + ' / ' + total;
+    let m = MSGS[0][1];
+    for(const [min,text] of MSGS){ if(done >= min) m = text; }
+    msg.textContent = m;
+    banner.classList.toggle('show', done === total);
+  }
+
+  function aplicarEstado(dados){
+    checks.forEach(c => {
+      const marcado = !!(dados.ex && dados.ex[c.dataset.ex]);
+      c.checked = marcado;
+      c.closest('article.ex').classList.toggle('done', marcado);
+    });
+    listChecks.forEach((c,i) => {
+      c.checked = !!(dados.lista && dados.lista['item'+i]);
+    });
+    atualizarBarra();
+  }
+
+  // Restaura o progresso salvo ao abrir a página
+  aplicarEstado(storage.carregar());
+
+  // Salva a cada mudança
+  checks.forEach(c => {
+    c.addEventListener('change', function(){
+      this.closest('article.ex').classList.toggle('done', this.checked);
+      atualizarBarra();
+      storage.salvar(estadoAtual());
+    });
+  });
+  listChecks.forEach(c => {
+    c.addEventListener('change', function(){
+      storage.salvar(estadoAtual());
+    });
+  });
+
+  // Botão de reset com confirmação
+  resetBtn.addEventListener('click', function(){
+    if(confirm('Apagar todo o progresso desta semana?')){
+      storage.limpar();
+      aplicarEstado({});
+    }
+  });
+
+  // Aviso discreto se o progresso não puder ser salvo neste ambiente
+  if(!storage.persistente){
+    msg.textContent += ' (progresso não será salvo neste ambiente)';
+  }
+})();
+</script>
+</body>
+</html>

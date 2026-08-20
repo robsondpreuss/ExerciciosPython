@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Semana 34 — Produção e Deploy</title>
+<style>
+  :root{
+    --ink:#16243A;
+    --ink-soft:#4A5A74;
+    --paper:#F5F8FC;
+    --card:#FFFFFF;
+    --py-blue:#3776AB;
+    --py-blue-dark:#27598C;
+    --py-gold:#FFD43B;
+    --py-gold-dark:#C99700;
+    --term:#1B2435;
+    --term-line:#2B3850;
+    --green:#2EA56C;
+    --coral:#E2574C;
+    --radius:14px;
+    --mono:"Cascadia Code","JetBrains Mono",Consolas,"Roboto Mono",monospace;
+    --sans:"Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto}
+    *{transition:none !important;animation:none !important}
+  }
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.65}
+
+  /* ===== Barra de progresso fixa ===== */
+  .progress-wrap{
+    position:sticky;top:0;z-index:50;
+    background:var(--term);color:#fff;
+    padding:10px 18px;
+    display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+    box-shadow:0 2px 12px rgba(22,36,58,.25);
+  }
+  .progress-wrap .label{font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;white-space:nowrap}
+  .progress-bar{flex:1;min-width:140px;height:14px;background:var(--term-line);border-radius:99px;overflow:hidden}
+  .progress-fill{height:100%;width:0%;border-radius:99px;background:linear-gradient(90deg,var(--py-blue),var(--py-gold));transition:width .4s ease}
+  .progress-count{font-family:var(--mono);font-size:.85rem;color:var(--py-gold);white-space:nowrap}
+  .progress-msg{font-size:.78rem;color:#AFC3E0;white-space:nowrap}
+  .reset-btn{
+    font-family:var(--mono);font-size:.72rem;color:#AFC3E0;
+    background:transparent;border:1px solid var(--term-line);border-radius:8px;
+    padding:5px 11px;cursor:pointer;transition:all .15s ease;white-space:nowrap;
+  }
+  .reset-btn:hover,.reset-btn:focus-visible{color:#fff;border-color:#5A6E92;background:rgba(255,255,255,.06)}
+  .reset-btn:focus-visible{outline:2px solid var(--py-gold);outline-offset:2px}
+
+  /* ===== Hero ===== */
+  header.hero{
+    background:linear-gradient(150deg,var(--term) 0%,#22406B 70%,var(--py-blue) 100%);
+    color:#fff;padding:56px 20px 48px;text-align:center;position:relative;overflow:hidden;
+  }
+  header.hero::before{
+    content:"requirements.txt  venv  .env  debug=False  Docker";
+    position:absolute;inset:auto 0 8px 0;font-family:var(--mono);font-size:.78rem;
+    color:rgba(255,255,255,.14);letter-spacing:.4em;white-space:nowrap;overflow:hidden;
+  }
+  .hero .kicker{
+    font-family:var(--mono);font-size:.85rem;color:var(--py-gold);
+    letter-spacing:.18em;text-transform:uppercase;margin-bottom:14px;
+  }
+  .hero h1{font-family:var(--mono);font-size:clamp(1.5rem,4.5vw,2.6rem);font-weight:700;line-height:1.25}
+  .hero h1 .cursor{display:inline-block;width:.55em;height:1.05em;background:var(--py-gold);vertical-align:text-bottom;margin-left:4px;animation:blink 1.1s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+  .hero p.sub{max-width:620px;margin:18px auto 0;color:#D7E4F5;font-size:1rem}
+  .hero .howto{
+    max-width:640px;margin:26px auto 0;background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.18);border-radius:var(--radius);
+    padding:14px 18px;font-size:.88rem;color:#E8F0FB;text-align:left;
+  }
+  .hero .howto strong{color:var(--py-gold)}
+
+  /* ===== Navegação por partes ===== */
+  nav.parts{
+    display:flex;gap:8px;flex-wrap:wrap;justify-content:center;
+    padding:18px 16px;max-width:980px;margin:0 auto;
+  }
+  nav.parts a{
+    font-family:var(--mono);font-size:.78rem;text-decoration:none;
+    color:var(--py-blue-dark);background:var(--card);
+    border:1.5px solid #D5E2F2;border-radius:99px;padding:7px 14px;
+    transition:all .15s ease;
+  }
+  nav.parts a:hover,nav.parts a:focus-visible{border-color:var(--py-blue);background:#EAF2FB}
+  nav.parts a:focus-visible{outline:2px solid var(--py-blue);outline-offset:2px}
+
+  main{max-width:880px;margin:0 auto;padding:8px 18px 80px}
+
+  /* ===== Seções (partes) ===== */
+  section.parte{margin-top:46px}
+  .parte-head{display:flex;align-items:baseline;gap:14px;border-bottom:3px solid var(--py-gold);padding-bottom:10px;margin-bottom:6px}
+  .parte-head .num{
+    font-family:var(--mono);font-size:2.4rem;font-weight:700;color:var(--py-blue);line-height:1;
+  }
+  .parte-head h2{font-family:var(--mono);font-size:clamp(1.05rem,2.8vw,1.45rem);color:var(--ink)}
+  .parte-intro{
+    background:var(--card);border:1px solid #E1E9F4;border-radius:var(--radius);
+    padding:18px 22px;margin-top:16px;font-size:.95rem;
+  }
+  .parte-intro h3{font-size:.8rem;font-family:var(--mono);color:var(--py-blue);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px}
+  .parte-intro p{margin-bottom:10px}
+  .parte-intro p:last-child{margin-bottom:0}
+  .parte-intro ol,.parte-intro ul{margin:8px 0 10px 22px}
+  table{border-collapse:collapse;width:100%;margin:10px 0;font-size:.88rem}
+  th,td{border:1px solid #DCE6F2;padding:7px 10px;text-align:left}
+  th{background:#EDF3FA;font-family:var(--mono);font-size:.78rem}
+  td code,p code,li code{
+    font-family:var(--mono);font-size:.85em;background:#EDF2F9;
+    border:1px solid #DCE6F2;border-radius:5px;padding:1px 5px;color:var(--py-blue-dark);
+  }
+
+  /* ===== Cartão de exercício ===== */
+  article.ex{
+    background:var(--card);border:1px solid #E1E9F4;border-radius:var(--radius);
+    margin-top:22px;overflow:hidden;
+    box-shadow:0 1px 4px rgba(22,36,58,.05);
+    transition:box-shadow .2s ease;
+  }
+  article.ex:hover{box-shadow:0 4px 16px rgba(22,36,58,.10)}
+  article.ex.done{border-color:var(--green)}
+  article.ex.done .ex-head{background:#EAF7F0}
+  .ex-head{
+    display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+    padding:14px 18px;background:#F2F6FC;border-bottom:1px solid #E1E9F4;
+  }
+  .ex-num{
+    font-family:var(--mono);font-weight:700;font-size:.85rem;color:#fff;
+    background:var(--py-blue);border-radius:8px;padding:5px 10px;white-space:nowrap;
+  }
+  article.ex.done .ex-num{background:var(--green)}
+  .ex-head h3{font-size:1.02rem;flex:1;min-width:180px}
+  .stars{font-size:.78rem;color:var(--py-gold-dark);background:#FFF6D6;border:1px solid #F2DE96;border-radius:99px;padding:3px 10px;white-space:nowrap}
+  .done-toggle{
+    display:flex;align-items:center;gap:7px;cursor:pointer;user-select:none;
+    font-size:.8rem;font-family:var(--mono);color:var(--ink-soft);
+  }
+  .done-toggle input{width:17px;height:17px;accent-color:var(--green);cursor:pointer}
+  .ex-body{padding:18px 20px 22px}
+  .ex-body p{margin-bottom:10px}
+  .ex-body ol,.ex-body ul{margin:6px 0 12px 22px}
+  .ex-body li{margin-bottom:4px}
+
+  .tag{
+    display:inline-block;font-family:var(--mono);font-size:.72rem;
+    text-transform:uppercase;letter-spacing:.08em;border-radius:6px;
+    padding:3px 9px;margin:4px 0 6px;
+  }
+  .tag.obj{background:#E7F0FB;color:var(--py-blue-dark)}
+  .tag.passos{background:#FFF3CC;color:#8a6d00}
+  .tag.saida{background:#E4F5EC;color:#1c7a4d}
+
+  /* ===== Blocos de código estilo terminal ===== */
+  .term-window{border-radius:12px;overflow:hidden;margin:12px 0;border:1px solid var(--term-line)}
+  .term-bar{
+    display:flex;align-items:center;gap:8px;background:#121A29;padding:8px 14px;
+  }
+  .term-bar .dot{width:11px;height:11px;border-radius:50%}
+  .dot.r{background:#FF5F57}.dot.y{background:#FEBC2E}.dot.g{background:#28C840}
+  .term-bar .fname{font-family:var(--mono);font-size:.75rem;color:#8FA6C8;margin-left:6px}
+  pre.code,pre.output{
+    background:var(--term);color:#E7EDF7;font-family:var(--mono);
+    font-size:.86rem;line-height:1.6;padding:14px 18px;overflow-x:auto;margin:0;
+  }
+  pre.output{color:#9FE8C0}
+  pre.output .prompt-in{color:#E7EDF7}
+  /* syntax highlight */
+  .tk-kw{color:#7EC1FF;font-weight:600}
+  .tk-str{color:#FFD98A}
+  .tk-com{color:#7C8DA8;font-style:italic}
+  .tk-num{color:#9FE8C0}
+  .tk-fn{color:#C7A6FF}
+
+  /* ===== Dicas / desafios / soluções ===== */
+  details{border-radius:10px;margin:12px 0;overflow:hidden;border:1.5px solid transparent}
+  details summary{
+    cursor:pointer;list-style:none;padding:11px 16px;font-weight:600;font-size:.9rem;
+    display:flex;align-items:center;gap:8px;user-select:none;
+  }
+  details summary::-webkit-details-marker{display:none}
+  details summary::after{content:"▾";margin-left:auto;transition:transform .2s ease;font-size:.85em}
+  details[open] summary::after{transform:rotate(180deg)}
+  details .inner{padding:4px 16px 14px}
+  details.dica{background:#FFF9E8;border-color:#F2DE96}
+  details.dica summary{color:#8a6d00}
+  details.desafio{background:#F3EDFB;border-color:#D9C8F2}
+  details.desafio summary{color:#6B3FA0}
+  details.solucao{background:#EAF7F0;border-color:#BFE5D0}
+  details.solucao summary{color:#1c7a4d}
+  details.solucao .aviso{font-size:.8rem;color:#1c7a4d;margin-bottom:8px;font-style:italic}
+
+  /* ===== Checklist final ===== */
+  .checklist{background:var(--card);border:1px solid #E1E9F4;border-radius:var(--radius);padding:22px;margin-top:30px}
+  .checklist h2{font-family:var(--mono);font-size:1.2rem;margin-bottom:6px}
+  .checklist p{font-size:.9rem;color:var(--ink-soft);margin-bottom:14px}
+  .check-item{display:flex;align-items:flex-start;gap:10px;padding:7px 4px;border-radius:8px;cursor:pointer}
+  .check-item:hover{background:#F2F6FC}
+  .check-item input{width:18px;height:18px;margin-top:3px;accent-color:var(--py-blue);cursor:pointer}
+  .check-item span{font-size:.93rem}
+  .check-item input:checked + span{color:var(--green);text-decoration:line-through;text-decoration-color:rgba(46,165,108,.5)}
+
+  /* banner 100% */
+  .win-banner{
+    display:none;margin-top:26px;text-align:center;color:#fff;
+    background:linear-gradient(120deg,var(--green),var(--py-blue));
+    border-radius:var(--radius);padding:26px 20px;
+  }
+  .win-banner.show{display:block;animation:pop .45s ease}
+  @keyframes pop{0%{transform:scale(.94);opacity:0}100%{transform:scale(1);opacity:1}}
+  .win-banner h2{font-family:var(--mono);font-size:1.4rem;margin-bottom:6px}
+
+  .preview-s2{
+    margin-top:36px;border:2px dashed var(--py-blue);border-radius:var(--radius);
+    padding:20px 22px;background:#EFF5FC;
+  }
+  .preview-s2 h2{font-family:var(--mono);font-size:1.05rem;color:var(--py-blue-dark);margin-bottom:8px}
+  footer{
+    text-align:center;font-family:var(--mono);font-size:.75rem;color:var(--ink-soft);
+    padding:26px 16px 40px;
+  }
+  @media(max-width:560px){
+    .progress-msg{display:none}
+    .ex-head h3{font-size:.95rem}
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-wrap" role="region" aria-label="Progresso da semana">
+  <span class="label">XP DA SEMANA</span>
+  <div class="progress-bar"><div class="progress-fill" id="pfill"></div></div>
+  <span class="progress-count" id="pcount">0 / 11</span>
+  <span class="progress-msg" id="pmsg">Marque os exercícios concluídos ✔</span>
+  <button class="reset-btn" id="resetBtn" title="Apagar todo o progresso salvo">↺ Resetar</button>
+</div>
+
+<header class="hero">
+  <div class="kicker">Python para Iniciantes · Exercícios Guiados</div>
+  <h1>SEMANA 34 — Produção:<br>preparando o sistema para o mundo<span class="cursor" aria-hidden="true"></span></h1>
+  <p class="sub">A última milha: requirements.txt e venv para o projeto rodar em qualquer máquina, .env para as configurações, debug desligado (você vai ver o perigo!), o papel do WSGI e do Docker — e o caminho para colocar tudo no ar.</p>
+  <div class="howto">
+    <strong>Como usar:</strong> digite o código você mesmo (não copie e cole!), compare com a saída esperada e marque <strong>✔ Concluído</strong> em cada exercício para encher sua barra de XP. As <strong>dicas</strong> e <strong>soluções</strong> ficam escondidas — só abra depois de tentar! Seu progresso fica salvo no navegador.
+  </div>
+</header>
+
+<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · Dependências</a><a href="#p2">2 · venv</a><a href="#p3">3 · .env</a><a href="#p4">4 · Debug & WSGI</a><a href="#p5">5 · Docker & deploy</a><a href="#p6">6 · Projetos</a><a href="#checklist">✅ Checklist</a></nav>
+
+<main>
+
+<section class="parte" id="p1">
+  <div class="parte-head"><span class="num">01</span><h2>requirements.txt: a lista de ingredientes</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Seu projeto usa Flask, PyMySQL, PyJWT, flask-cors, pytest... Se alguém clonar seu repositório (Semana 33), como saberá o que instalar? O <code>requirements.txt</code> é a lista de ingredientes: o <code>pip</code> a gera e a consome automaticamente.</p></div>
+  <article class="ex" id="ex1">
+    <div class="ex-head">
+      <span class="ex-num">EX 01</span>
+      <h3>Congelando as dependências 🧊</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex1"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Gerar o requirements.txt do seu projeto.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Na pasta do projeto: <code>pip freeze &gt; requirements.txt</code></li><li>Abra o arquivo: cada linha é <code>pacote==versão</code></li><li>Commite-o (Semana 33) — ele faz parte do projeto!</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">requirements.txt</span></div><pre class="output">Flask==3.0.3
+flask-cors==4.0.1
+PyJWT==2.9.0
+PyMySQL==1.1.1
+pytest==8.3.3</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(o arquivo gerado, com as versões exatas do seu ambiente)</pre></div><details class="dica"><summary>💡 Por que a versão exata?</summary><div class="inner">O <code>==</code> congela a versão TESTADA. Sem isso, quem instalar amanhã pode receber uma versão nova com mudanças que quebram seu código ("funciona na minha máquina" nasce aí). Versões pinadas = comportamento reproduzível em qualquer lugar.</div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex2">
+    <div class="ex-head">
+      <span class="ex-num">EX 02</span>
+      <h3>Instalando do zero com -r</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex2"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Viver a experiência de quem clona o seu projeto.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>O comando do outro lado: <code>pip install -r requirements.txt</code></li><li>O pip lê a lista e instala tudo, nas versões exatas</li><li>Junte as peças: <code>git clone</code> + <code>pip install -r</code> = projeto rodando em qualquer máquina em 2 comandos</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">$ pip install -r requirements.txt
+Collecting Flask==3.0.3 ...
+Successfully installed Flask-3.0.3 PyJWT-2.9.0 PyMySQL-1.1.1 ...</pre></div><details class="dica"><summary>💡 O README agradece</summary><div class="inner">Lembra do "como rodar" do README (Semana 33)? Agora ele fica limpo: clone, instale com -r, configure o .env (Parte 3), rode. Quatro linhas que funcionam para QUALQUER pessoa — inclusive o recrutador testando seu projeto.</div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p2">
+  <div class="parte-head"><span class="num">02</span><h2>venv: uma caixa de ferramentas por projeto</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Problema clássico: o projeto A precisa do Flask 2, o projeto B do Flask 3 — e o pip instala tudo no mesmo lugar! O <strong>ambiente virtual</strong> (<code>venv</code>) resolve: cada projeto ganha sua própria "caixa" de pacotes, isolada das outras.</p></div>
+  <article class="ex" id="ex3">
+    <div class="ex-head">
+      <span class="ex-num">EX 03</span>
+      <h3>Criando e ativando o venv 📦</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex3"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Isolar as dependências do projeto num ambiente próprio.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Na pasta do projeto: <code>python -m venv venv</code> (cria a pasta venv/)</li><li>Ative: Windows <code>venv\Scripts\activate</code> · Linux/Mac <code>source venv/bin/activate</code></li><li>O prompt ganha o prefixo <code>(venv)</code> — os pip install agora vão para a caixa do projeto</li><li>E lembre: <code>venv/</code> já está no seu .gitignore (Semana 33)!</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">$ python -m venv venv
+$ source venv/bin/activate      # (ou venv\Scripts\activate no Windows)
+(venv) $ pip install -r requirements.txt
+(venv) $ python api.py</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(o projeto rodando com SUA caixa de pacotes, isolada do resto)</pre></div><details class="dica"><summary>💡 O ritual profissional</summary><div class="inner">A sequência clone → venv → activate → install -r → rodar é o "bom dia" de todo dev ao pegar um projeto novo. O venv não sobe para o Git (é pesado e recriável); o requirements.txt é a receita para reconstruí-lo em segundos. Caixa descartável, receita eterna.</div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p3">
+  <div class="parte-head"><span class="num">03</span><h2>.env: a configuração fora do código</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Suas credenciais já vivem em variáveis de ambiente (Semanas 24, 26, 28) — mas configurá-las na mão toda vez cansa. O arquivo <code>.env</code> + a biblioteca <code>python-dotenv</code> automatizam: as variáveis ficam num arquivo local (FORA do Git!) e são carregadas no início do programa.</p></div>
+  <article class="ex" id="ex4">
+    <div class="ex-head">
+      <span class="ex-num">EX 04</span>
+      <h3>python-dotenv: carregando o .env 🔑</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex4"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Centralizar a configuração do projeto num arquivo.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Instale: <code>pip install python-dotenv</code> (e atualize o requirements.txt!)</li><li>Crie o <code>.env</code> com as variáveis do sistema</li><li>No topo do código: <code>load_dotenv()</code> — e o <code>os.environ.get</code> passa a enxergá-las</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">.env</span></div><pre class="code">DB_HOST=localhost
+DB_USER=root
+DB_PASS=minha-senha-secreta
+JWT_SECRET=um-segredo-bem-grande-e-aleatorio</pre></div><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">db.py</span></div><pre class="code">import os
+import pymysql
+from dotenv import load_dotenv
+
+load_dotenv()   # le o arquivo .env desta pasta
+
+def conectar():
+    return pymysql.connect(
+        host=os.environ.get("DB_HOST", "localhost"),
+        user=os.environ.get("DB_USER", "root"),
+        password=os.environ.get("DB_PASS", ""),
+        database="tua_caneca")</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(o mesmo código de sempre — mas a configuração agora vive num arquivo só)</pre></div><details class="dica"><summary>💡 Um .env por ambiente</summary><div class="inner">A mágica: o MESMO código roda em qualquer lugar, mudando só o .env — na sua máquina aponta para o MariaDB local; no servidor de produção, para o banco na nuvem. Código é único, configuração é por ambiente. E o .env NUNCA vai para o Git (Semana 33) — no repositório, publica-se um <code>.env.example</code> com as chaves e valores falsos, como documentação.</div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex5">
+    <div class="ex-head">
+      <span class="ex-num">EX 05</span>
+      <h3>O .env.example: documentando sem vazar</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex5"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Criar o modelo público do seu .env.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie <code>.env.example</code> com as MESMAS chaves e valores de mentira</li><li>Este sim vai para o Git — quem clona copia para .env e preenche</li><li>Adicione a instrução no README (Semana 33)</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">.env.example</span></div><pre class="code">DB_HOST=localhost
+DB_USER=seu-usuario
+DB_PASS=sua-senha
+JWT_SECRET=gere-um-segredo-aleatorio-grande</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(documentação de configuração sem expor nenhum segredo)</pre></div><details class="dica"><summary>💡 O padrão de todo repositório sério</summary><div class="inner">Abra qualquer projeto open-source de backend: lá está o .env.example (ou similar). Ele responde "o que preciso configurar?" sem responder "quais são os valores?". Segurança e usabilidade juntas — o par que você vem cultivando desde a Semana 21.</div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p4">
+  <div class="parte-head"><span class="num">04</span><h2>debug=False e o servidor WSGI</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Duas mudanças obrigatórias para ir ao ar: <strong>desligar o debug</strong> e trocar o servidor de desenvolvimento do Flask por um <strong>servidor WSGI</strong> de verdade.</p></div>
+  <article class="ex" id="ex6">
+    <div class="ex-head">
+      <span class="ex-num">EX 06</span>
+      <h3>O perigo do debug em produção 🚨</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex6"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Ver com os próprios olhos o que o debug=True expõe.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Com <code>debug=True</code>, provoque um erro na API (ex.: divida por zero numa rota)</li><li>Abra a rota no navegador: o Flask mostra o TRACEBACK completo — seu código-fonte, caminhos de arquivos, variáveis!</li><li>Agora imagine essa tela aberta para a internet inteira...</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output" style="color:#FF9B94">ZeroDivisionError: division by zero
+File "/home/robson/tua_caneca/api.py", line 42, in relatorio
+    media = total / qtd
+(... o codigo-fonte da sua aplicacao, exposto na tela ...)</pre></div><span class="tag passos">🧭 Continue</span><ol><li>Em produção, SEMPRE <code>debug=False</code> (ou melhor: controle pelo .env!)</li><li>Erros em produção devem virar um JSON genérico de erro 500 — nunca um raio-X do sistema</li></ol><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">api.py (trecho)</span></div><pre class="code">import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+# no fim do arquivo:
+if __name__ == "__main__":
+    modo_debug = os.environ.get("FLASK_DEBUG", "0") == "1"
+    app.run(debug=modo_debug)
+
+# no .env de desenvolvimento:  FLASK_DEBUG=1
+# no .env de producao:         FLASK_DEBUG=0  (ou simplesmente ausente)</pre></div><p>O debug é uma ferramenta MARAVILHOSA em desenvolvimento (recarrega sozinho, mostra erros ricos) e uma porta escancarada em produção. Controlá-lo pelo .env fecha a questão: o mesmo código, seguro em cada ambiente.</p></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex7">
+    <div class="ex-head">
+      <span class="ex-num">EX 07</span>
+      <h3>WSGI: o motor de produção 🏭</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex7"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Entender por que app.run() não vai para produção — e o que vai no lugar.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>O servidor do <code>app.run()</code> avisa na inicialização: "This is a development server" — ele atende UMA requisição por vez!</li><li>Produção usa um servidor <strong>WSGI</strong>: <code>gunicorn</code> (Linux) ou <code>waitress</code> (qualquer sistema)</li><li>Experimente: <code>pip install waitress</code> e rode a API com ele</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">$ pip install waitress
+$ waitress-serve --port=5000 api:app
+INFO:waitress:Serving on http://0.0.0.0:5000</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(a mesma API, servida por um servidor de produção multi-requisições)</pre></div><details class="dica"><summary>💡 api:app — o endereço do app</summary><div class="inner">O <code>api:app</code> significa "no arquivo api.py, o objeto app". O WSGI é o padrão que conecta servidores de produção a apps Python — o gunicorn com vários "workers" atende dezenas de requisições simultâneas. É a diferença entre uma bicicleta e um caminhão: o mesmo destino, capacidades muito diferentes.</div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p5">
+  <div class="parte-head"><span class="num">05</span><h2>Docker e o mapa do deploy</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Última peça conceitual: o <strong>Docker</strong> empacota app + dependências + configuração num "contêiner" que roda IGUAL em qualquer máquina — o fim definitivo do "funciona na minha máquina". Você não precisa dominá-lo hoje, mas precisa LER um Dockerfile e entender o que ele resolve.</p></div>
+  <article class="ex" id="ex8">
+    <div class="ex-head">
+      <span class="ex-num">EX 08</span>
+      <h3>Lendo um Dockerfile 🐳</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex8"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Decifrar a receita de um contêiner, linha por linha.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Leia o Dockerfile abaixo e traduza cada linha ANTES de ver a solução:</li><li>Repare como ele reúne TUDO o que você aprendeu esta semana</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">Dockerfile</span></div><pre class="code">FROM python:3.12-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+COPY . .
+
+CMD ["waitress-serve", "--port=5000", "api:app"]</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><p>Tradução: <strong>FROM</strong> — parte de uma imagem com o Python 3.12 já instalado; <strong>WORKDIR</strong> — trabalha na pasta /app; <strong>COPY requirements + RUN pip install</strong> — instala as dependências (a sua lista de ingredientes!); <strong>COPY . .</strong> — copia o código do projeto; <strong>CMD</strong> — o comando que roda quando o contêiner liga (o waitress do exercício anterior!). <strong>Um Dockerfile é o seu ritual de instalação, escrito como receita executável.</strong> Quem tem o contêiner não precisa instalar nada — nem Python. Ele roda igual no seu PC, no servidor, na nuvem. Por isso o Docker dominou o mundo do deploy.</p></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex9">
+    <div class="ex-head">
+      <span class="ex-num">EX 09</span>
+      <h3>O mapa do deploy 🗺️</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex9"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Saber onde cada camada do sistema vai morar no ar.</p><p>O sistema desacoplado (Semana 30) tem três camadas — e cada uma tem seu tipo de hospedagem:</p><table><tr><th>Camada</th><th>O que é</th><th>Onde hospedar</th></tr><tr><td>Frontend</td><td>arquivos estáticos (HTML/JS)</td><td>GitHub Pages, Netlify, Vercel (grátis!)</td></tr><tr><td>API</td><td>app Python rodando</td><td>serviços de deploy de apps (há planos gratuitos)</td></tr><tr><td>MariaDB</td><td>banco persistente</td><td>banco gerenciado na nuvem (vários provedores)</td></tr></table><span class="tag passos">🧭 Passo a passo</span><ol><li>Pesquise (termos: "deploy Flask gratuito", "MariaDB nuvem gratuito", "GitHub Pages tutorial")</li><li>Anote: quais variáveis do seu .env mudariam no ambiente de produção?</li><li>Perceba: a arquitetura desacoplada permite publicar cada camada no lugar ideal</li></ol><details class="dica"><summary>💡 O CORS de novo!</summary><div class="inner">Ao publicar, o frontend muda de endereço — e o CORS (Semana 27) precisa autorizar o novo domínio. E a URL da API no fetch (Semana 29) também muda. São os dois ajustes clássicos do primeiro deploy desacoplado; sabendo deles de antemão, você economiza horas de "por que não funciona no ar?!". 😉</div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p6">
+  <div class="parte-head"><span class="num">06</span><h2>Projetos da semana: juntando tudo!</h2></div>
+
+  <article class="ex" id="ex10">
+    <div class="ex-head">
+      <span class="ex-num">EX 10</span>
+      <h3>Projeto: o pacote de produção da Tua Caneca 📦</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex10"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Aplicar TODA a semana ao seu sistema — deixá-lo pronto para o mundo.</p><span class="tag passos">🧭 Requisitos</span><ol><li>No repositório da API: venv + <code>requirements.txt</code> atualizado + <code>.env</code>/<code>.env.example</code> + debug controlado pelo ambiente + rodando via waitress</li><li>Atualize o README com o novo ritual de instalação (clone → venv → install -r → .env → rodar)</li><li>Rode a suíte de testes (Semana 32) DEPOIS das mudanças — continua verde?</li><li>Commite tudo com mensagens claras (Semana 33)</li></ol><span class="tag saida">✅ O ritual completo</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">$ git clone ... &amp;&amp; cd tua-caneca-api
+$ python -m venv venv &amp;&amp; source venv/bin/activate
+$ pip install -r requirements.txt
+$ cp .env.example .env   # (e preencher)
+$ pytest                 # 9 passed ✅
+$ waitress-serve --port=5000 api:app</pre></div><details class="dica"><summary>💡 A prova dos nove</summary><div class="inner">O teste definitivo: peça a um colega (ou use outra máquina/pasta limpa) para clonar e rodar SÓ seguindo o README. Funcionou de primeira? Seu projeto está profissional. Travou? Cada tropeço é um buraco no README ou no pacote — conserte e agradeça o feedback. É assim que se lapida um projeto de verdade.</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><p>Checklist final do pacote: <strong>(1)</strong> <code>requirements.txt</code> com TODAS as dependências (inclusive python-dotenv e waitress); <strong>(2)</strong> <code>venv/</code> e <code>.env</code> no .gitignore, <code>.env.example</code> no repositório; <strong>(3)</strong> nenhum segredo em NENHUM commit do histórico; <strong>(4)</strong> debug desligável por variável; <strong>(5)</strong> pytest verde; <strong>(6)</strong> README com o ritual completo. Seis itens verdes = pronto para o deploy da Semana 35.</p></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex11">
+    <div class="ex-head">
+      <span class="ex-num">EX 11</span>
+      <h3>Projeto bônus: rumo ao ar de verdade 🌍</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex11"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Dar os primeiros passos do deploy real (sem código pronto!).</p><span class="tag passos">🧭 Roteiro</span><ol><li>Comece pelo mais fácil: publique o FRONTEND no GitHub Pages (repositório → Settings → Pages → branch main)</li><li>Em minutos, seu frontend estará num endereço público de verdade</li><li>Ele vai reclamar da API (que ainda está no localhost) — é esperado! Anote o que precisaria mudar (URL da API, CORS)</li><li>Se quiser ir até o fim: pesquise um serviço gratuito de deploy Flask e publique a API também</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(seu frontend acessível por qualquer pessoa, em https://seu-usuario.github.io/...)</pre></div><details class="dica"><summary>💡 O primeiro link é inesquecível</summary><div class="inner">Mandar o link do SEU sistema para alguém abrir no celular — não há aula que substitua essa sensação. Mesmo que só o frontend esteja no ar por enquanto, você cruzou a fronteira: deixou de fazer projetos que só você vê. A Semana 35 fecha o ciclo completo. 🚀</div></details>
+    </div>
+  </article>
+</section>
+
+<div class="checklist" id="checklist">
+  <h2>✅ Checklist de fim de semana</h2>
+  <p>Antes de seguir para a próxima semana, confirme que você consegue:</p>
+<label class="check-item"><input type="checkbox"><span>Congelar as dependências num requirements.txt</span></label>
+<label class="check-item"><input type="checkbox"><span>Instalar um projeto do zero com pip install -r</span></label>
+<label class="check-item"><input type="checkbox"><span>Criar e ativar um ambiente virtual (venv)</span></label>
+<label class="check-item"><input type="checkbox"><span>Explicar por que cada projeto merece seu próprio venv</span></label>
+<label class="check-item"><input type="checkbox"><span>Carregar configurações de um arquivo .env (python-dotenv)</span></label>
+<label class="check-item"><input type="checkbox"><span>Separar configuração de código (dev vs produção)</span></label>
+<label class="check-item"><input type="checkbox"><span>Desligar o debug e explicar por que ele é perigoso em produção</span></label>
+<label class="check-item"><input type="checkbox"><span>Explicar o papel de um servidor WSGI (gunicorn/waitress)</span></label>
+<label class="check-item"><input type="checkbox"><span>Ler um Dockerfile e explicar o que o Docker resolve</span></label>
+<label class="check-item"><input type="checkbox"><span>Montar o checklist de produção de um projeto</span></label>
+</div>
+
+<div class="win-banner" id="winBanner">
+  <h2>🏆 SEMANA 34 COMPLETA!</h2>
+  <p>Você concluiu todos os exercícios. Seu sistema está pronto para sair do localhost: dependências congeladas, configuração separada, debug domado e o caminho do deploy mapeado!</p>
+</div>
+
+<div class="preview-s2">
+<h2>📅 Prévia da Semana 35 — a GRANDE final do módulo 🏆</h2><p>Tudo o que o módulo de engenharia ensinou converge no <strong>Projeto Final 7</strong>: o sistema Tua Caneca com banco relacionado por chaves estrangeiras, relatórios com JOIN, <strong>suíte de testes</strong> vigiando, <strong>Git/GitHub</strong> com histórico limpo e o pacote de produção completo. O projeto que fecha a sua formação de engenheiro(a) de software. 🎓</p></div>
+
+</main>
+
+<footer>python_para_iniciantes // semana_34 // exercícios guiados</footer>
+
+<script>
+// ===== Syntax highlight leve para Python =====
+(function(){
+  const KW = /\b(print|input|int|float|type|str|bool)\b/g;
+  document.querySelectorAll('pre.code').forEach(pre=>{
+    let src = pre.textContent;
+    // escapa HTML
+    src = src.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    // uma passada só, com alternação (comentário | string | builtin | bool | número)
+    src = src.replace(
+      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|insert|int|float|str|len|range|type|abs|round|max|min|sum|sorted|sort|reverse|append|remove|split|strip|upper|lower|replace|title|randint|random|get|keys|values|items|open|readlines|read|write|close|count|index|pop|update|list|dict|tuple|enumerate|sqrt|floor|ceil|choice|shuffle|sample|sleep|now|today|strftime|dumps|dump|loads|load|isinstance|datetime|date|DictReader|DictWriter|writerows|writerow|writeheader|writer|reader|csv|Workbook|load_workbook|save|iter_rows|Font|listdir|makedirs|getcwd|rename|exists|getsize|splitext|join|endswith|startswith|copytree|copy|move|requests|status_code|json|DataFrame|read_csv|read_excel|to_excel|to_csv|head|describe|groupby|sort_values|value_counts|mean|idxmax|bar|barh|pie|plot|savefig|show|title|xlabel|ylabel|figure|legend|axhline|tight_layout|close|Flask|route|run|render_template|jsonify|redirect|request|connect|cursor|execute|executemany|fetchall|fetchone|commit|environ|getenv|post|encode|decode|abort|make_response|raises|approx|load_dotenv)\b|\b(True|False|None|if|elif|else|while|for|in|and|or|not|break|continue|import|from|def|return|try|except|finally|with|as|del|global|pass|class|self|super|lambda)\b|(\b\d+(?:\.\d+)?\b)/g,
+      function(m, com, str, fn, bool, num){
+        if(com)  return '<span class="tk-com">'+com+'</span>';
+        if(str)  return '<span class="tk-str">'+str+'</span>';
+        if(fn)   return '<span class="tk-fn">'+fn+'</span>';
+        if(bool) return '<span class="tk-kw">'+bool+'</span>';
+        if(num)  return '<span class="tk-num">'+num+'</span>';
+        return m;
+      }
+    );
+    pre.innerHTML = src;
+  });
+})();
+
+// ===== Armazenamento seguro (localStorage com fallback em memória) =====
+// Quando o aluno abre o arquivo .html no computador, o progresso fica salvo
+// no navegador. Se o localStorage estiver indisponível (modo restrito,
+// pré-visualização, etc.), o progresso funciona só em memória, sem quebrar.
+const storage = (function(){
+  const KEY = 'python_semana34_progresso';
+  let memoria = {};
+  let disponivel = false;
+  try{
+    localStorage.setItem('__teste__','1');
+    localStorage.removeItem('__teste__');
+    disponivel = true;
+  }catch(e){ disponivel = false; }
+
+  return {
+    carregar: function(){
+      if(disponivel){
+        try{ return JSON.parse(localStorage.getItem(KEY)) || {}; }
+        catch(e){ return {}; }
+      }
+      return memoria;
+    },
+    salvar: function(dados){
+      memoria = dados;
+      if(disponivel){
+        try{ localStorage.setItem(KEY, JSON.stringify(dados)); }catch(e){}
+      }
+    },
+    limpar: function(){
+      memoria = {};
+      if(disponivel){
+        try{ localStorage.removeItem(KEY); }catch(e){}
+      }
+    },
+    persistente: disponivel
+  };
+})();
+
+// ===== Progresso dos exercícios + checklist =====
+(function(){
+  const checks = document.querySelectorAll('.done-check');
+  const listChecks = document.querySelectorAll('.check-item input');
+  const total = checks.length;
+  const fill = document.getElementById('pfill');
+  const count = document.getElementById('pcount');
+  const msg = document.getElementById('pmsg');
+  const banner = document.getElementById('winBanner');
+  const resetBtn = document.getElementById('resetBtn');
+
+  const MSGS = [
+    [0,  'Marque os exercícios concluídos ✔'],
+    [1,  'Boa! Continue assim 💪'],
+    [3,  'Pegando o ritmo! 🔥'],
+    [6, 'Metade do caminho! 🚀'],
+    [8, 'Quase lá... força! ⚡'],
+    [11, 'SEMANA COMPLETA! 🏆']
+  ];
+
+  function estadoAtual(){
+    const dados = { ex: {}, lista: {} };
+    checks.forEach(c => { dados.ex[c.dataset.ex] = c.checked; });
+    listChecks.forEach((c,i) => { dados.lista['item'+i] = c.checked; });
+    return dados;
+  }
+
+  function atualizarBarra(){
+    const done = document.querySelectorAll('.done-check:checked').length;
+    const pct = Math.round(done/total*100);
+    fill.style.width = pct + '%';
+    count.textContent = done + ' / ' + total;
+    let m = MSGS[0][1];
+    for(const [min,text] of MSGS){ if(done >= min) m = text; }
+    msg.textContent = m;
+    banner.classList.toggle('show', done === total);
+  }
+
+  function aplicarEstado(dados){
+    checks.forEach(c => {
+      const marcado = !!(dados.ex && dados.ex[c.dataset.ex]);
+      c.checked = marcado;
+      c.closest('article.ex').classList.toggle('done', marcado);
+    });
+    listChecks.forEach((c,i) => {
+      c.checked = !!(dados.lista && dados.lista['item'+i]);
+    });
+    atualizarBarra();
+  }
+
+  // Restaura o progresso salvo ao abrir a página
+  aplicarEstado(storage.carregar());
+
+  // Salva a cada mudança
+  checks.forEach(c => {
+    c.addEventListener('change', function(){
+      this.closest('article.ex').classList.toggle('done', this.checked);
+      atualizarBarra();
+      storage.salvar(estadoAtual());
+    });
+  });
+  listChecks.forEach(c => {
+    c.addEventListener('change', function(){
+      storage.salvar(estadoAtual());
+    });
+  });
+
+  // Botão de reset com confirmação
+  resetBtn.addEventListener('click', function(){
+    if(confirm('Apagar todo o progresso desta semana?')){
+      storage.limpar();
+      aplicarEstado({});
+    }
+  });
+
+  // Aviso discreto se o progresso não puder ser salvo neste ambiente
+  if(!storage.persistente){
+    msg.textContent += ' (progresso não será salvo neste ambiente)';
+  }
+})();
+</script>
+</body>
+</html>

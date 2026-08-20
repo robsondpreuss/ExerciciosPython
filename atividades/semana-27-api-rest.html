@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Semana 14 — Automações</title>
+<style>
+  :root{
+    --ink:#16243A;
+    --ink-soft:#4A5A74;
+    --paper:#F5F8FC;
+    --card:#FFFFFF;
+    --py-blue:#3776AB;
+    --py-blue-dark:#27598C;
+    --py-gold:#FFD43B;
+    --py-gold-dark:#C99700;
+    --term:#1B2435;
+    --term-line:#2B3850;
+    --green:#2EA56C;
+    --coral:#E2574C;
+    --radius:14px;
+    --mono:"Cascadia Code","JetBrains Mono",Consolas,"Roboto Mono",monospace;
+    --sans:"Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto}
+    *{transition:none !important;animation:none !important}
+  }
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.65}
+
+  /* ===== Barra de progresso fixa ===== */
+  .progress-wrap{
+    position:sticky;top:0;z-index:50;
+    background:var(--term);color:#fff;
+    padding:10px 18px;
+    display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+    box-shadow:0 2px 12px rgba(22,36,58,.25);
+  }
+  .progress-wrap .label{font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;white-space:nowrap}
+  .progress-bar{flex:1;min-width:140px;height:14px;background:var(--term-line);border-radius:99px;overflow:hidden}
+  .progress-fill{height:100%;width:0%;border-radius:99px;background:linear-gradient(90deg,var(--py-blue),var(--py-gold));transition:width .4s ease}
+  .progress-count{font-family:var(--mono);font-size:.85rem;color:var(--py-gold);white-space:nowrap}
+  .progress-msg{font-size:.78rem;color:#AFC3E0;white-space:nowrap}
+  .reset-btn{
+    font-family:var(--mono);font-size:.72rem;color:#AFC3E0;
+    background:transparent;border:1px solid var(--term-line);border-radius:8px;
+    padding:5px 11px;cursor:pointer;transition:all .15s ease;white-space:nowrap;
+  }
+  .reset-btn:hover,.reset-btn:focus-visible{color:#fff;border-color:#5A6E92;background:rgba(255,255,255,.06)}
+  .reset-btn:focus-visible{outline:2px solid var(--py-gold);outline-offset:2px}
+
+  /* ===== Hero ===== */
+  header.hero{
+    background:linear-gradient(150deg,var(--term) 0%,#22406B 70%,var(--py-blue) 100%);
+    color:#fff;padding:56px 20px 48px;text-align:center;position:relative;overflow:hidden;
+  }
+  header.hero::before{
+    content:"import os  os.listdir(  shutil.move(  makedirs  backup";
+    position:absolute;inset:auto 0 8px 0;font-family:var(--mono);font-size:.78rem;
+    color:rgba(255,255,255,.14);letter-spacing:.4em;white-space:nowrap;overflow:hidden;
+  }
+  .hero .kicker{
+    font-family:var(--mono);font-size:.85rem;color:var(--py-gold);
+    letter-spacing:.18em;text-transform:uppercase;margin-bottom:14px;
+  }
+  .hero h1{font-family:var(--mono);font-size:clamp(1.5rem,4.5vw,2.6rem);font-weight:700;line-height:1.25}
+  .hero h1 .cursor{display:inline-block;width:.55em;height:1.05em;background:var(--py-gold);vertical-align:text-bottom;margin-left:4px;animation:blink 1.1s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+  .hero p.sub{max-width:620px;margin:18px auto 0;color:#D7E4F5;font-size:1rem}
+  .hero .howto{
+    max-width:640px;margin:26px auto 0;background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.18);border-radius:var(--radius);
+    padding:14px 18px;font-size:.88rem;color:#E8F0FB;text-align:left;
+  }
+  .hero .howto strong{color:var(--py-gold)}
+
+  /* ===== Navegação por partes ===== */
+  nav.parts{
+    display:flex;gap:8px;flex-wrap:wrap;justify-content:center;
+    padding:18px 16px;max-width:980px;margin:0 auto;
+  }
+  nav.parts a{
+    font-family:var(--mono);font-size:.78rem;text-decoration:none;
+    color:var(--py-blue-dark);background:var(--card);
+    border:1.5px solid #D5E2F2;border-radius:99px;padding:7px 14px;
+    transition:all .15s ease;
+  }
+  nav.parts a:hover,nav.parts a:focus-visible{border-color:var(--py-blue);background:#EAF2FB}
+  nav.parts a:focus-visible{outline:2px solid var(--py-blue);outline-offset:2px}
+
+  main{max-width:880px;margin:0 auto;padding:8px 18px 80px}
+
+  /* ===== Seções (partes) ===== */
+  section.parte{margin-top:46px}
+  .parte-head{display:flex;align-items:baseline;gap:14px;border-bottom:3px solid var(--py-gold);padding-bottom:10px;margin-bottom:6px}
+  .parte-head .num{
+    font-family:var(--mono);font-size:2.4rem;font-weight:700;color:var(--py-blue);line-height:1;
+  }
+  .parte-head h2{font-family:var(--mono);font-size:clamp(1.05rem,2.8vw,1.45rem);color:var(--ink)}
+  .parte-intro{
+    background:var(--card);border:1px solid #E1E9F4;border-radius:var(--radius);
+    padding:18px 22px;margin-top:16px;font-size:.95rem;
+  }
+  .parte-intro h3{font-size:.8rem;font-family:var(--mono);color:var(--py-blue);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px}
+  .parte-intro p{margin-bottom:10px}
+  .parte-intro p:last-child{margin-bottom:0}
+  .parte-intro ol,.parte-intro ul{margin:8px 0 10px 22px}
+  table{border-collapse:collapse;width:100%;margin:10px 0;font-size:.88rem}
+  th,td{border:1px solid #DCE6F2;padding:7px 10px;text-align:left}
+  th{background:#EDF3FA;font-family:var(--mono);font-size:.78rem}
+  td code,p code,li code{
+    font-family:var(--mono);font-size:.85em;background:#EDF2F9;
+    border:1px solid #DCE6F2;border-radius:5px;padding:1px 5px;color:var(--py-blue-dark);
+  }
+
+  /* ===== Cartão de exercício ===== */
+  article.ex{
+    background:var(--card);border:1px solid #E1E9F4;border-radius:var(--radius);
+    margin-top:22px;overflow:hidden;
+    box-shadow:0 1px 4px rgba(22,36,58,.05);
+    transition:box-shadow .2s ease;
+  }
+  article.ex:hover{box-shadow:0 4px 16px rgba(22,36,58,.10)}
+  article.ex.done{border-color:var(--green)}
+  article.ex.done .ex-head{background:#EAF7F0}
+  .ex-head{
+    display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+    padding:14px 18px;background:#F2F6FC;border-bottom:1px solid #E1E9F4;
+  }
+  .ex-num{
+    font-family:var(--mono);font-weight:700;font-size:.85rem;color:#fff;
+    background:var(--py-blue);border-radius:8px;padding:5px 10px;white-space:nowrap;
+  }
+  article.ex.done .ex-num{background:var(--green)}
+  .ex-head h3{font-size:1.02rem;flex:1;min-width:180px}
+  .stars{font-size:.78rem;color:var(--py-gold-dark);background:#FFF6D6;border:1px solid #F2DE96;border-radius:99px;padding:3px 10px;white-space:nowrap}
+  .done-toggle{
+    display:flex;align-items:center;gap:7px;cursor:pointer;user-select:none;
+    font-size:.8rem;font-family:var(--mono);color:var(--ink-soft);
+  }
+  .done-toggle input{width:17px;height:17px;accent-color:var(--green);cursor:pointer}
+  .ex-body{padding:18px 20px 22px}
+  .ex-body p{margin-bottom:10px}
+  .ex-body ol,.ex-body ul{margin:6px 0 12px 22px}
+  .ex-body li{margin-bottom:4px}
+
+  .tag{
+    display:inline-block;font-family:var(--mono);font-size:.72rem;
+    text-transform:uppercase;letter-spacing:.08em;border-radius:6px;
+    padding:3px 9px;margin:4px 0 6px;
+  }
+  .tag.obj{background:#E7F0FB;color:var(--py-blue-dark)}
+  .tag.passos{background:#FFF3CC;color:#8a6d00}
+  .tag.saida{background:#E4F5EC;color:#1c7a4d}
+
+  /* ===== Blocos de código estilo terminal ===== */
+  .term-window{border-radius:12px;overflow:hidden;margin:12px 0;border:1px solid var(--term-line)}
+  .term-bar{
+    display:flex;align-items:center;gap:8px;background:#121A29;padding:8px 14px;
+  }
+  .term-bar .dot{width:11px;height:11px;border-radius:50%}
+  .dot.r{background:#FF5F57}.dot.y{background:#FEBC2E}.dot.g{background:#28C840}
+  .term-bar .fname{font-family:var(--mono);font-size:.75rem;color:#8FA6C8;margin-left:6px}
+  pre.code,pre.output{
+    background:var(--term);color:#E7EDF7;font-family:var(--mono);
+    font-size:.86rem;line-height:1.6;padding:14px 18px;overflow-x:auto;margin:0;
+  }
+  pre.output{color:#9FE8C0}
+  pre.output .prompt-in{color:#E7EDF7}
+  /* syntax highlight */
+  .tk-kw{color:#7EC1FF;font-weight:600}
+  .tk-str{color:#FFD98A}
+  .tk-com{color:#7C8DA8;font-style:italic}
+  .tk-num{color:#9FE8C0}
+  .tk-fn{color:#C7A6FF}
+
+  /* ===== Dicas / desafios / soluções ===== */
+  details{border-radius:10px;margin:12px 0;overflow:hidden;border:1.5px solid transparent}
+  details summary{
+    cursor:pointer;list-style:none;padding:11px 16px;font-weight:600;font-size:.9rem;
+    display:flex;align-items:center;gap:8px;user-select:none;
+  }
+  details summary::-webkit-details-marker{display:none}
+  details summary::after{content:"▾";margin-left:auto;transition:transform .2s ease;font-size:.85em}
+  details[open] summary::after{transform:rotate(180deg)}
+  details .inner{padding:4px 16px 14px}
+  details.dica{background:#FFF9E8;border-color:#F2DE96}
+  details.dica summary{color:#8a6d00}
+  details.desafio{background:#F3EDFB;border-color:#D9C8F2}
+  details.desafio summary{color:#6B3FA0}
+  details.solucao{background:#EAF7F0;border-color:#BFE5D0}
+  details.solucao summary{color:#1c7a4d}
+  details.solucao .aviso{font-size:.8rem;color:#1c7a4d;margin-bottom:8px;font-style:italic}
+
+  /* ===== Checklist final ===== */
+  .checklist{background:var(--card);border:1px solid #E1E9F4;border-radius:var(--radius);padding:22px;margin-top:30px}
+  .checklist h2{font-family:var(--mono);font-size:1.2rem;margin-bottom:6px}
+  .checklist p{font-size:.9rem;color:var(--ink-soft);margin-bottom:14px}
+  .check-item{display:flex;align-items:flex-start;gap:10px;padding:7px 4px;border-radius:8px;cursor:pointer}
+  .check-item:hover{background:#F2F6FC}
+  .check-item input{width:18px;height:18px;margin-top:3px;accent-color:var(--py-blue);cursor:pointer}
+  .check-item span{font-size:.93rem}
+  .check-item input:checked + span{color:var(--green);text-decoration:line-through;text-decoration-color:rgba(46,165,108,.5)}
+
+  /* banner 100% */
+  .win-banner{
+    display:none;margin-top:26px;text-align:center;color:#fff;
+    background:linear-gradient(120deg,var(--green),var(--py-blue));
+    border-radius:var(--radius);padding:26px 20px;
+  }
+  .win-banner.show{display:block;animation:pop .45s ease}
+  @keyframes pop{0%{transform:scale(.94);opacity:0}100%{transform:scale(1);opacity:1}}
+  .win-banner h2{font-family:var(--mono);font-size:1.4rem;margin-bottom:6px}
+
+  .preview-s2{
+    margin-top:36px;border:2px dashed var(--py-blue);border-radius:var(--radius);
+    padding:20px 22px;background:#EFF5FC;
+  }
+  .preview-s2 h2{font-family:var(--mono);font-size:1.05rem;color:var(--py-blue-dark);margin-bottom:8px}
+  footer{
+    text-align:center;font-family:var(--mono);font-size:.75rem;color:var(--ink-soft);
+    padding:26px 16px 40px;
+  }
+  @media(max-width:560px){
+    .progress-msg{display:none}
+    .ex-head h3{font-size:.95rem}
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-wrap" role="region" aria-label="Progresso da semana">
+  <span class="label">XP DA SEMANA</span>
+  <div class="progress-bar"><div class="progress-fill" id="pfill"></div></div>
+  <span class="progress-count" id="pcount">0 / 12</span>
+  <span class="progress-msg" id="pmsg">Marque os exercícios concluídos ✔</span>
+  <button class="reset-btn" id="resetBtn" title="Apagar todo o progresso salvo">↺ Resetar</button>
+</div>
+
+<header class="hero">
+  <div class="kicker">Python para Iniciantes · Exercícios Guiados</div>
+  <h1>SEMANA 14 — Automações:<br>Python arruma sua bagunça<span class="cursor" aria-hidden="true"></span></h1>
+  <p class="sub">Os módulos os e shutil: listar, criar, renomear, mover e copiar arquivos em lote — com segurança! O organizador de Downloads e backups automáticos com data.</p>
+  <div class="howto">
+    <strong>Como usar:</strong> digite o código você mesmo (não copie e cole!), compare com a saída esperada e marque <strong>✔ Concluído</strong> em cada exercício para encher sua barra de XP. As <strong>dicas</strong> e <strong>soluções</strong> ficam escondidas — só abra depois de tentar! Seu progresso fica salvo no navegador.
+  </div>
+</header>
+
+<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · Explorando</a><a href="#p2">2 · Criando & renomeando</a><a href="#p3">3 · shutil</a><a href="#p4">4 · Caminhos & tamanhos</a><a href="#p5">5 · Segurança</a><a href="#p6">6 · Projetos</a><a href="#checklist">✅ Checklist</a></nav>
+
+<main>
+
+<section class="parte" id="p1">
+  <div class="parte-head"><span class="num">01</span><h2>Explorando pastas com o módulo os</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>O módulo <code>os</code> é a ponte entre o Python e o sistema operacional. <strong>⚠️ REGRA DE OURO DA SEMANA:</strong> automação de arquivos se aprende numa <strong>pasta de laboratório</strong> — nunca treine direto nos seus arquivos reais! O primeiro exercício monta o laboratório.</p></div>
+  <article class="ex" id="ex1">
+    <div class="ex-head">
+      <span class="ex-num">EX 01</span>
+      <h3>Montando o laboratório 🧪</h3>
+      <span class="stars">⭐ básico</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex1"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Criar uma pasta de testes com arquivos falsos — seu campo de treino seguro.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Execute este script: ele cria a pasta <code>laboratorio</code> com 7 arquivos de mentira</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex01_setup.py</span></div><pre class="code">import os
+
+os.makedirs("laboratorio", exist_ok=True)
+
+nomes = ["foto1.jpg", "foto2.png", "relatorio.pdf", "notas.txt",
+         "planilha.xlsx", "musica.mp3", "rascunho.txt"]
+
+for nome in nomes:
+    caminho = os.path.join("laboratorio", nome)
+    with open(caminho, "w") as arquivo:
+        arquivo.write("arquivo de teste\n")
+
+print("Laboratório montado com", len(nomes), "arquivos ✔")</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Laboratório montado com 7 arquivos ✔</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner">Tudo nesta semana acontece DENTRO da pasta laboratorio. Se algo der errado, é só apagá-la e rodar este script de novo. Errar de graça é o luxo do laboratório!</div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex2">
+    <div class="ex-head">
+      <span class="ex-num">EX 02</span>
+      <h3>Onde estou? O que tem aqui?</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex2"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Os dois comandos de orientação: getcwd e listdir.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>PREVEJA e execute:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex02_explorar.py</span></div><pre class="code">import os
+
+print("Pasta atual:", os.getcwd())
+print("Conteúdo do laboratório:")
+
+for nome in os.listdir("laboratorio"):
+    print("-", nome)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Pasta atual: C:\Users\voce\projetos
+Conteúdo do laboratório:
+- foto1.jpg
+- foto2.png
+- relatorio.pdf
+- notas.txt
+- planilha.xlsx
+- musica.mp3
+- rascunho.txt</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner"><code>os.listdir(pasta)</code> devolve uma LISTA de nomes — e tudo que você sabe de listas funciona: len(), in, sort(), filtros com for + if...</div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex3">
+    <div class="ex-head">
+      <span class="ex-num">EX 03</span>
+      <h3>Censo por extensão 📊</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex3"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Filtrar e contar arquivos por tipo — o dict contador ataca novamente!</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Liste só os .txt usando <code>if nome.endswith(".txt")</code></li><li>Depois conte TODOS os tipos: a extensão é <code>nome.split(".")[-1]</code> — use o padrão <code>contagem.get(ext, 0) + 1</code></li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Arquivos .txt: ['notas.txt', 'rascunho.txt']
+Censo: {'jpg': 1, 'png': 1, 'pdf': 1, 'txt': 2, 'xlsx': 1, 'mp3': 1}</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex03.py</span></div><pre class="code">import os
+
+arquivos = os.listdir("laboratorio")
+
+txts = []
+for nome in arquivos:
+    if nome.endswith(".txt"):
+        txts.append(nome)
+print(f"Arquivos .txt: {txts}")
+
+contagem = {}
+for nome in arquivos:
+    ext = nome.split(".")[-1]
+    contagem[ext] = contagem.get(ext, 0) + 1
+print(f"Censo: {contagem}")</pre></div></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p2">
+  <div class="parte-head"><span class="num">02</span><h2>Criando pastas e renomeando em lote</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Criar: <code>os.makedirs(caminho, exist_ok=True)</code> (o exist_ok evita erro se já existir). Conferir: <code>os.path.exists(caminho)</code>. Renomear: <code>os.rename(antigo, novo)</code> — que em lote, dentro de um for, vira uma máquina de produtividade.</p></div>
+  <article class="ex" id="ex4">
+    <div class="ex-head">
+      <span class="ex-num">EX 04</span>
+      <h3>Criando a estrutura</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex4"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Criar várias subpastas de uma vez.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Dentro do laboratório, crie as pastas Imagens, Documentos e Outros</li><li>Use um for sobre a lista de nomes + <code>os.path.join</code></li><li>Confira com <code>os.path.exists</code> e liste o laboratório de novo</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Pasta Imagens criada ✔
+Pasta Documentos criada ✔
+Pasta Outros criada ✔</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex04.py</span></div><pre class="code">import os
+
+pastas = ["Imagens", "Documentos", "Outros"]
+
+for pasta in pastas:
+    caminho = os.path.join("laboratorio", pasta)
+    os.makedirs(caminho, exist_ok=True)
+    if os.path.exists(caminho):
+        print(f"Pasta {pasta} criada ✔")</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex5">
+    <div class="ex-head">
+      <span class="ex-num">EX 05</span>
+      <h3>Renomeando em lote 🏷️</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex5"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Adicionar um prefixo a todos os .txt — o clássico pedido de escritório.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Percorra o laboratório filtrando os .txt</li><li>Para cada um, monte o nome novo: <code>"2026_" + nome</code></li><li>Renomeie com <code>os.rename(caminho_antigo, caminho_novo)</code> — SEMPRE com os caminhos completos via join!</li><li>Liste a pasta para conferir</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">notas.txt → 2026_notas.txt
+rascunho.txt → 2026_rascunho.txt</pre></div><details class="dica"><summary>💡 Cuidado clássico</summary><div class="inner">O rename precisa do CAMINHO completo dos dois lados. Só o nome do arquivo funciona apenas se o script estiver rodando dentro da própria pasta — e aí qualquer descuido renomeia a coisa errada!</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex05.py</span></div><pre class="code">import os
+
+for nome in os.listdir("laboratorio"):
+    if nome.endswith(".txt"):
+        antigo = os.path.join("laboratorio", nome)
+        novo = os.path.join("laboratorio", "2026_" + nome)
+        os.rename(antigo, novo)
+        print(f"{nome} → 2026_{nome}")</pre></div></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p3">
+  <div class="parte-head"><span class="num">03</span><h2>shutil: copiar e mover</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>O <code>os</code> organiza; o <code>shutil</code> transporta: <code>shutil.copy(origem, destino)</code> copia (o original fica) e <code>shutil.move(origem, destino)</code> move (o original vai embora). O destino pode ser uma PASTA — o arquivo entra nela com o mesmo nome.</p></div>
+  <article class="ex" id="ex6">
+    <div class="ex-head">
+      <span class="ex-num">EX 06</span>
+      <h3>Primeira cópia</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex6"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Copiar um arquivo para outra pasta.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Copie o relatorio.pdf para a pasta Documentos:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex06_copy.py</span></div><pre class="code">import os
+import shutil
+
+origem = os.path.join("laboratorio", "relatorio.pdf")
+destino = os.path.join("laboratorio", "Documentos")
+
+shutil.copy(origem, destino)
+print("Copiado ✔")
+print(os.listdir(destino))</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Copiado ✔
+['relatorio.pdf']</pre></div><details class="dica"><summary>💡 copy vs move</summary><div class="inner">Depois de copiar, o relatorio.pdf existe NOS DOIS lugares. Teste a diferença: troque por <code>shutil.move</code> e veja o original sumir da raiz do laboratório.</div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex7">
+    <div class="ex-head">
+      <span class="ex-num">EX 07</span>
+      <h3>Movendo por extensão</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex7"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>O coração do organizador: cada tipo para sua pasta.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Percorra os arquivos da RAIZ do laboratório (pule as pastas! use <code>os.path.isfile</code> ou confira se tem ponto no nome)</li><li>jpg/png → Imagens · pdf/txt/xlsx → Documentos · resto → Outros</li><li>Mova com shutil.move e relate cada movimento</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">foto1.jpg → Imagens
+foto2.png → Imagens
+2026_notas.txt → Documentos
+(...)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex07.py</span></div><pre class="code">import os
+import shutil
+
+LAB = "laboratorio"
+
+for nome in os.listdir(LAB):
+    caminho = os.path.join(LAB, nome)
+    if not os.path.isfile(caminho):
+        continue   # pula as pastas!
+
+    if nome.endswith(".jpg") or nome.endswith(".png"):
+        destino = "Imagens"
+    elif nome.endswith(".pdf") or nome.endswith(".txt") or nome.endswith(".xlsx"):
+        destino = "Documentos"
+    else:
+        destino = "Outros"
+
+    shutil.move(caminho, os.path.join(LAB, destino))
+    print(f"{nome} → {destino}")</pre></div><p>O <code>continue</code> da Semana 3 salvando o dia: pastas não devem ser movidas para dentro de pastas! E repare que o <code>os.path.isfile</code> distingue arquivo de pasta.</p></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p4">
+  <div class="parte-head"><span class="num">04</span><h2>Caminhos portáteis e tamanhos</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Dois detalhes de profissional: <code>os.path.join</code> monta caminhos que funcionam em Windows, Linux e Mac (nada de colar "\\" na mão!), e <code>os.path.getsize</code> devolve o tamanho em <strong>bytes</strong> (÷ 1024 = KB).</p></div>
+  <article class="ex" id="ex8">
+    <div class="ex-head">
+      <span class="ex-num">EX 08</span>
+      <h3>Relatório de tamanhos</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex8"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Medir cada arquivo da pasta Documentos.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Percorra a pasta com listdir</li><li>Para cada arquivo: <code>os.path.getsize(caminho)</code> e converta para KB</li><li>Exiba alinhado e some o total</li></ol><span class="tag saida">✅ Exemplo (tamanhos variam)</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">relatorio.pdf — 0.02 KB
+2026_notas.txt — 0.02 KB
+(...)
+TOTAL: 0.08 KB</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex08.py</span></div><pre class="code">import os
+
+pasta = os.path.join("laboratorio", "Documentos")
+total = 0
+
+for nome in os.listdir(pasta):
+    caminho = os.path.join(pasta, nome)
+    tamanho_kb = os.path.getsize(caminho) / 1024
+    total = total + tamanho_kb
+    print(f"{nome} — {tamanho_kb:.2f} KB")
+
+print(f"TOTAL: {total:.2f} KB")</pre></div></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p5">
+  <div class="parte-head"><span class="num">05</span><h2>Segurança: o dry run</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>A prática que separa o automatizador confiável do destruidor de pastas: o <strong>dry run</strong> (ensaio). O script primeiro SÓ MOSTRA o que faria; a ação real só roda depois de uma confirmação explícita. Mover arquivo errado dá trabalho; em lote, dá MUITO trabalho.</p></div>
+  <article class="ex" id="ex9">
+    <div class="ex-head">
+      <span class="ex-num">EX 09</span>
+      <h3>Ensaiando antes de mover 🛡️</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex9"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Adicionar modo simulação ao organizador.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Refaça o Exercício 7 em DUAS passadas:</li><li>Passada 1: só imprime "MOVERIA: x → y" (nenhum move!)</li><li>Pergunte: "Confirmar? (sim/não)" — só execute os moves de verdade no "sim"</li><li>Dica de estrutura: guarde os pares (origem, destino) numa lista na passada 1</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">MOVERIA: foto1.jpg → Imagens
+MOVERIA: musica.mp3 → Outros
+Confirmar? (sim/não): sim
+2 arquivos movidos ✔</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex09.py</span></div><pre class="code">import os
+import shutil
+
+LAB = "laboratorio"
+planos = []
+
+for nome in os.listdir(LAB):
+    caminho = os.path.join(LAB, nome)
+    if not os.path.isfile(caminho):
+        continue
+    if nome.endswith(".jpg") or nome.endswith(".png"):
+        destino = "Imagens"
+    else:
+        destino = "Outros"
+    planos.append((caminho, os.path.join(LAB, destino)))
+    print(f"MOVERIA: {nome} → {destino}")
+
+if len(planos) == 0:
+    print("Nada a mover.")
+else:
+    resposta = input("Confirmar? (sim/não): ")
+    if resposta == "sim":
+        for origem, destino in planos:
+            shutil.move(origem, destino)
+        print(f"{len(planos)} arquivos movidos ✔")
+    else:
+        print("Operação cancelada — nada foi alterado.")</pre></div><p>Repare na lista de TUPLAS (Semana 5!) guardando os planos e no desempacotamento no for final. Esse padrão "planejar → confirmar → executar" vale para QUALQUER automação perigosa.</p></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p6">
+  <div class="parte-head"><span class="num">06</span><h2>Projetos da semana: juntando tudo!</h2></div>
+
+  <article class="ex" id="ex10">
+    <div class="ex-head">
+      <span class="ex-num">EX 10</span>
+      <h3>Projeto: Organizador de Downloads 🗂️</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex10"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>O organizador definitivo, com dicionário de regras e dry run.</p><span class="tag passos">🧭 Requisitos</span><ol><li>Regras num dicionário: <code>{"Imagens": [".jpg", ".png", ".gif"], "Documentos": [".pdf", ".docx", ".txt", ".xlsx"], "Musicas": [".mp3"]}</code> — extensão fora das regras vai para "Outros"</li><li>Crie as pastas necessárias (makedirs exist_ok)</li><li>Dry run completo + confirmação + execução</li><li>TREINE NO LABORATÓRIO! Só aponte para a pasta Downloads real quando estiver 100% confiante</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">MOVERIA: foto_ferias.jpg → Imagens
+MOVERIA: boleto.pdf → Documentos
+Confirmar? (sim/não): sim
+2 arquivos organizados ✔</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex10.py</span></div><pre class="code">import os
+import shutil
+
+PASTA = "laboratorio"   # troque para sua pasta real SÓ quando dominar!
+
+REGRAS = {
+    "Imagens": [".jpg", ".png", ".gif"],
+    "Documentos": [".pdf", ".docx", ".txt", ".xlsx"],
+    "Musicas": [".mp3"]
+}
+
+def descobrir_destino(nome):
+    for pasta, extensoes in REGRAS.items():
+        for ext in extensoes:
+            if nome.endswith(ext):
+                return pasta
+    return "Outros"
+
+planos = []
+for nome in os.listdir(PASTA):
+    caminho = os.path.join(PASTA, nome)
+    if not os.path.isfile(caminho):
+        continue
+    destino = descobrir_destino(nome)
+    planos.append((caminho, destino))
+    print(f"MOVERIA: {nome} → {destino}")
+
+if planos and input("Confirmar? (sim/não): ") == "sim":
+    for origem, destino in planos:
+        os.makedirs(os.path.join(PASTA, destino), exist_ok=True)
+        shutil.move(origem, os.path.join(PASTA, destino))
+    print(f"{len(planos)} arquivos organizados ✔")</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex11">
+    <div class="ex-head">
+      <span class="ex-num">EX 11</span>
+      <h3>Projeto: Backup com data 💾</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex11"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Cópia de segurança automática da pasta inteira, carimbada com datetime.</p><span class="tag passos">🧭 Passo a passo</span><ol><li><code>shutil.copytree(origem, destino)</code> copia uma PASTA inteira (com subpastas!)</li><li>O nome do destino leva a data: <code>datetime.now().strftime("backup_%Y-%m-%d_%H-%M")</code></li><li>Faça o backup do laboratório e rode duas vezes — dois backups, cada um com seu horário!</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Backup criado: backup_2026-06-12_15-30 ✔</pre></div><details class="dica"><summary>💡 Por que ano-mês-dia?</summary><div class="inner">No formato %Y-%m-%d, a ordem ALFABÉTICA das pastas é também a ordem CRONOLÓGICA — seus backups se organizam sozinhos na listagem!</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex11.py</span></div><pre class="code">import shutil
+from datetime import datetime
+
+nome = datetime.now().strftime("backup_%Y-%m-%d_%H-%M")
+shutil.copytree("laboratorio", nome)
+print(f"Backup criado: {nome} ✔")</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex12">
+    <div class="ex-head">
+      <span class="ex-num">EX 12</span>
+      <h3>Projeto bônus: Raio-X da pasta 🔬</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex12"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Um relatório completo da pasta, gravado em CSV (olá, Semana 13!) — sem código pronto.</p><span class="tag passos">🧭 Roteiro</span><ol><li>Percorra o laboratório (e subpastas, se quiser ousar com <code>os.walk</code> — pesquise!)</li><li>Para cada arquivo: nome, extensão, tamanho em KB</li><li>Grave tudo em <code>raio_x.csv</code> com DictWriter</li><li>No final, exiba: total de arquivos, tamanho total e o MAIOR arquivo (padrão maior/menor da Semana 3!)</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">raio_x.csv gerado: 7 arquivos, 0.14 KB no total
+Maior arquivo: planilha.xlsx (0.02 KB)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex12.py</span></div><pre class="code">import os
+import csv
+
+PASTA = "laboratorio"
+
+linhas = []
+for nome in os.listdir(PASTA):
+    caminho = os.path.join(PASTA, nome)
+    if os.path.isfile(caminho):
+        linhas.append({
+            "nome": nome,
+            "extensao": nome.split(".")[-1],
+            "kb": round(os.path.getsize(caminho) / 1024, 2)
+        })
+
+with open("raio_x.csv", "w", newline="", encoding="utf-8") as arquivo:
+    escritor = csv.DictWriter(arquivo, fieldnames=["nome", "extensao", "kb"])
+    escritor.writeheader()
+    for linha in linhas:
+        escritor.writerow(linha)
+
+total_kb = 0
+maior_nome = ""
+maior_kb = 0
+for linha in linhas:
+    total_kb = total_kb + linha["kb"]
+    if linha["kb"] &gt; maior_kb:
+        maior_kb = linha["kb"]
+        maior_nome = linha["nome"]
+
+print(f"raio_x.csv gerado: {len(linhas)} arquivos, {total_kb:.2f} KB no total")
+print(f"Maior arquivo: {maior_nome} ({maior_kb} KB)")</pre></div></div></details>
+    </div>
+  </article>
+</section>
+
+<div class="checklist" id="checklist">
+  <h2>✅ Checklist de fim de semana</h2>
+  <p>Antes de seguir para a próxima semana, confirme que você consegue:</p>
+<label class="check-item"><input type="checkbox"><span>Descobrir a pasta atual com os.getcwd() e listar com os.listdir()</span></label>
+<label class="check-item"><input type="checkbox"><span>Filtrar arquivos por extensão com endswith()</span></label>
+<label class="check-item"><input type="checkbox"><span>Criar pastas com os.makedirs(exist_ok=True)</span></label>
+<label class="check-item"><input type="checkbox"><span>Verificar existência com os.path.exists()</span></label>
+<label class="check-item"><input type="checkbox"><span>Renomear arquivos em lote com os.rename()</span></label>
+<label class="check-item"><input type="checkbox"><span>Copiar com shutil.copy() e mover com shutil.move()</span></label>
+<label class="check-item"><input type="checkbox"><span>Montar caminhos portáteis com os.path.join()</span></label>
+<label class="check-item"><input type="checkbox"><span>Medir tamanhos com os.path.getsize()</span></label>
+<label class="check-item"><input type="checkbox"><span>Fazer um "dry run" (simulação) antes de executar de verdade</span></label>
+<label class="check-item"><input type="checkbox"><span>Criar um backup com data no nome usando copytree</span></label>
+</div>
+
+<div class="win-banner" id="winBanner">
+  <h2>🏆 SEMANA 14 COMPLETA!</h2>
+  <p>Você concluiu todos os exercícios. As tarefas repetitivas do computador agora são problema do Python!</p>
+</div>
+
+<div class="preview-s2">
+<h2>📅 Prévia da Semana 15</h2><p>Na próxima semana: <strong>Python e a internet</strong>! A biblioteca <code>requests</code> para consumir <strong>APIs</strong> de verdade: consultar CEP no ViaCEP, cotação do dólar ao vivo e construir sistemas que conversam com o mundo. 🌐</p></div>
+
+</main>
+
+<footer>python_para_iniciantes // semana_14 // exercícios guiados</footer>
+
+<script>
+// ===== Syntax highlight leve para Python =====
+(function(){
+  const KW = /\b(print|input|int|float|type|str|bool)\b/g;
+  document.querySelectorAll('pre.code').forEach(pre=>{
+    let src = pre.textContent;
+    // escapa HTML
+    src = src.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    // uma passada só, com alternação (comentário | string | builtin | bool | número)
+    src = src.replace(
+      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|insert|int|float|str|len|range|type|abs|round|max|min|sum|sorted|sort|reverse|append|remove|split|strip|upper|lower|replace|title|randint|random|get|keys|values|items|open|readlines|read|write|close|count|index|pop|update|list|dict|tuple|enumerate|sqrt|floor|ceil|choice|shuffle|sample|sleep|now|today|strftime|dumps|dump|loads|load|isinstance|datetime|date|DictReader|DictWriter|writerows|writerow|writeheader|writer|reader|csv|Workbook|load_workbook|save|iter_rows|Font|listdir|makedirs|getcwd|rename|exists|getsize|splitext|join|endswith|startswith|copytree|copy|move|requests|status_code|json)\b|\b(True|False|None|if|elif|else|while|for|in|and|or|not|break|continue|import|from|def|return|try|except|finally|with|as|del|global|pass|class|self|super|lambda)\b|(\b\d+(?:\.\d+)?\b)/g,
+      function(m, com, str, fn, bool, num){
+        if(com)  return '<span class="tk-com">'+com+'</span>';
+        if(str)  return '<span class="tk-str">'+str+'</span>';
+        if(fn)   return '<span class="tk-fn">'+fn+'</span>';
+        if(bool) return '<span class="tk-kw">'+bool+'</span>';
+        if(num)  return '<span class="tk-num">'+num+'</span>';
+        return m;
+      }
+    );
+    pre.innerHTML = src;
+  });
+})();
+
+// ===== Armazenamento seguro (localStorage com fallback em memória) =====
+// Quando o aluno abre o arquivo .html no computador, o progresso fica salvo
+// no navegador. Se o localStorage estiver indisponível (modo restrito,
+// pré-visualização, etc.), o progresso funciona só em memória, sem quebrar.
+const storage = (function(){
+  const KEY = 'python_semana14_progresso';
+  let memoria = {};
+  let disponivel = false;
+  try{
+    localStorage.setItem('__teste__','1');
+    localStorage.removeItem('__teste__');
+    disponivel = true;
+  }catch(e){ disponivel = false; }
+
+  return {
+    carregar: function(){
+      if(disponivel){
+        try{ return JSON.parse(localStorage.getItem(KEY)) || {}; }
+        catch(e){ return {}; }
+      }
+      return memoria;
+    },
+    salvar: function(dados){
+      memoria = dados;
+      if(disponivel){
+        try{ localStorage.setItem(KEY, JSON.stringify(dados)); }catch(e){}
+      }
+    },
+    limpar: function(){
+      memoria = {};
+      if(disponivel){
+        try{ localStorage.removeItem(KEY); }catch(e){}
+      }
+    },
+    persistente: disponivel
+  };
+})();
+
+// ===== Progresso dos exercícios + checklist =====
+(function(){
+  const checks = document.querySelectorAll('.done-check');
+  const listChecks = document.querySelectorAll('.check-item input');
+  const total = checks.length;
+  const fill = document.getElementById('pfill');
+  const count = document.getElementById('pcount');
+  const msg = document.getElementById('pmsg');
+  const banner = document.getElementById('winBanner');
+  const resetBtn = document.getElementById('resetBtn');
+
+  const MSGS = [
+    [0,  'Marque os exercícios concluídos ✔'],
+    [1,  'Boa! Continue assim 💪'],
+    [4,  'Pegando o ritmo! 🔥'],
+    [6, 'Metade do caminho! 🚀'],
+    [9, 'Quase lá... força! ⚡'],
+    [12, 'SEMANA COMPLETA! 🏆']
+  ];
+
+  function estadoAtual(){
+    const dados = { ex: {}, lista: {} };
+    checks.forEach(c => { dados.ex[c.dataset.ex] = c.checked; });
+    listChecks.forEach((c,i) => { dados.lista['item'+i] = c.checked; });
+    return dados;
+  }
+
+  function atualizarBarra(){
+    const done = document.querySelectorAll('.done-check:checked').length;
+    const pct = Math.round(done/total*100);
+    fill.style.width = pct + '%';
+    count.textContent = done + ' / ' + total;
+    let m = MSGS[0][1];
+    for(const [min,text] of MSGS){ if(done >= min) m = text; }
+    msg.textContent = m;
+    banner.classList.toggle('show', done === total);
+  }
+
+  function aplicarEstado(dados){
+    checks.forEach(c => {
+      const marcado = !!(dados.ex && dados.ex[c.dataset.ex]);
+      c.checked = marcado;
+      c.closest('article.ex').classList.toggle('done', marcado);
+    });
+    listChecks.forEach((c,i) => {
+      c.checked = !!(dados.lista && dados.lista['item'+i]);
+    });
+    atualizarBarra();
+  }
+
+  // Restaura o progresso salvo ao abrir a página
+  aplicarEstado(storage.carregar());
+
+  // Salva a cada mudança
+  checks.forEach(c => {
+    c.addEventListener('change', function(){
+      this.closest('article.ex').classList.toggle('done', this.checked);
+      atualizarBarra();
+      storage.salvar(estadoAtual());
+    });
+  });
+  listChecks.forEach(c => {
+    c.addEventListener('change', function(){
+      storage.salvar(estadoAtual());
+    });
+  });
+
+  // Botão de reset com confirmação
+  resetBtn.addEventListener('click', function(){
+    if(confirm('Apagar todo o progresso desta semana?')){
+      storage.limpar();
+      aplicarEstado({});
+    }
+  });
+
+  // Aviso discreto se o progresso não puder ser salvo neste ambiente
+  if(!storage.persistente){
+    msg.textContent += ' (progresso não será salvo neste ambiente)';
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Semana 35 — Projeto Final 7</title>
+<style>
+  :root{
+    --ink:#16243A;
+    --ink-soft:#4A5A74;
+    --paper:#F5F8FC;
+    --card:#FFFFFF;
+    --py-blue:#3776AB;
+    --py-blue-dark:#27598C;
+    --py-gold:#FFD43B;
+    --py-gold-dark:#C99700;
+    --term:#1B2435;
+    --term-line:#2B3850;
+    --green:#2EA56C;
+    --coral:#E2574C;
+    --radius:14px;
+    --mono:"Cascadia Code","JetBrains Mono",Consolas,"Roboto Mono",monospace;
+    --sans:"Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto}
+    *{transition:none !important;animation:none !important}
+  }
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.65}
+
+  /* ===== Barra de progresso fixa ===== */
+  .progress-wrap{
+    position:sticky;top:0;z-index:50;
+    background:var(--term);color:#fff;
+    padding:10px 18px;
+    display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+    box-shadow:0 2px 12px rgba(22,36,58,.25);
+  }
+  .progress-wrap .label{font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;white-space:nowrap}
+  .progress-bar{flex:1;min-width:140px;height:14px;background:var(--term-line);border-radius:99px;overflow:hidden}
+  .progress-fill{height:100%;width:0%;border-radius:99px;background:linear-gradient(90deg,var(--py-blue),var(--py-gold));transition:width .4s ease}
+  .progress-count{font-family:var(--mono);font-size:.85rem;color:var(--py-gold);white-space:nowrap}
+  .progress-msg{font-size:.78rem;color:#AFC3E0;white-space:nowrap}
+  .reset-btn{
+    font-family:var(--mono);font-size:.72rem;color:#AFC3E0;
+    background:transparent;border:1px solid var(--term-line);border-radius:8px;
+    padding:5px 11px;cursor:pointer;transition:all .15s ease;white-space:nowrap;
+  }
+  .reset-btn:hover,.reset-btn:focus-visible{color:#fff;border-color:#5A6E92;background:rgba(255,255,255,.06)}
+  .reset-btn:focus-visible{outline:2px solid var(--py-gold);outline-offset:2px}
+
+  /* ===== Hero ===== */
+  header.hero{
+    background:linear-gradient(150deg,var(--term) 0%,#22406B 70%,var(--py-blue) 100%);
+    color:#fff;padding:56px 20px 48px;text-align:center;position:relative;overflow:hidden;
+  }
+  header.hero::before{
+    content:"JOIN  pytest  git  .env  deploy  🏆";
+    position:absolute;inset:auto 0 8px 0;font-family:var(--mono);font-size:.78rem;
+    color:rgba(255,255,255,.14);letter-spacing:.4em;white-space:nowrap;overflow:hidden;
+  }
+  .hero .kicker{
+    font-family:var(--mono);font-size:.85rem;color:var(--py-gold);
+    letter-spacing:.18em;text-transform:uppercase;margin-bottom:14px;
+  }
+  .hero h1{font-family:var(--mono);font-size:clamp(1.5rem,4.5vw,2.6rem);font-weight:700;line-height:1.25}
+  .hero h1 .cursor{display:inline-block;width:.55em;height:1.05em;background:var(--py-gold);vertical-align:text-bottom;margin-left:4px;animation:blink 1.1s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+  .hero p.sub{max-width:620px;margin:18px auto 0;color:#D7E4F5;font-size:1rem}
+  .hero .howto{
+    max-width:640px;margin:26px auto 0;background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.18);border-radius:var(--radius);
+    padding:14px 18px;font-size:.88rem;color:#E8F0FB;text-align:left;
+  }
+  .hero .howto strong{color:var(--py-gold)}
+
+  /* ===== Navegação por partes ===== */
+  nav.parts{
+    display:flex;gap:8px;flex-wrap:wrap;justify-content:center;
+    padding:18px 16px;max-width:980px;margin:0 auto;
+  }
+  nav.parts a{
+    font-family:var(--mono);font-size:.78rem;text-decoration:none;
+    color:var(--py-blue-dark);background:var(--card);
+    border:1.5px solid #D5E2F2;border-radius:99px;padding:7px 14px;
+    transition:all .15s ease;
+  }
+  nav.parts a:hover,nav.parts a:focus-visible{border-color:var(--py-blue);background:#EAF2FB}
+  nav.parts a:focus-visible{outline:2px solid var(--py-blue);outline-offset:2px}
+
+  main{max-width:880px;margin:0 auto;padding:8px 18px 80px}
+
+  /* ===== Seções (partes) ===== */
+  section.parte{margin-top:46px}
+  .parte-head{display:flex;align-items:baseline;gap:14px;border-bottom:3px solid var(--py-gold);padding-bottom:10px;margin-bottom:6px}
+  .parte-head .num{
+    font-family:var(--mono);font-size:2.4rem;font-weight:700;color:var(--py-blue);line-height:1;
+  }
+  .parte-head h2{font-family:var(--mono);font-size:clamp(1.05rem,2.8vw,1.45rem);color:var(--ink)}
+  .parte-intro{
+    background:var(--card);border:1px solid #E1E9F4;border-radius:var(--radius);
+    padding:18px 22px;margin-top:16px;font-size:.95rem;
+  }
+  .parte-intro h3{font-size:.8rem;font-family:var(--mono);color:var(--py-blue);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px}
+  .parte-intro p{margin-bottom:10px}
+  .parte-intro p:last-child{margin-bottom:0}
+  .parte-intro ol,.parte-intro ul{margin:8px 0 10px 22px}
+  table{border-collapse:collapse;width:100%;margin:10px 0;font-size:.88rem}
+  th,td{border:1px solid #DCE6F2;padding:7px 10px;text-align:left}
+  th{background:#EDF3FA;font-family:var(--mono);font-size:.78rem}
+  td code,p code,li code{
+    font-family:var(--mono);font-size:.85em;background:#EDF2F9;
+    border:1px solid #DCE6F2;border-radius:5px;padding:1px 5px;color:var(--py-blue-dark);
+  }
+
+  /* ===== Cartão de exercício ===== */
+  article.ex{
+    background:var(--card);border:1px solid #E1E9F4;border-radius:var(--radius);
+    margin-top:22px;overflow:hidden;
+    box-shadow:0 1px 4px rgba(22,36,58,.05);
+    transition:box-shadow .2s ease;
+  }
+  article.ex:hover{box-shadow:0 4px 16px rgba(22,36,58,.10)}
+  article.ex.done{border-color:var(--green)}
+  article.ex.done .ex-head{background:#EAF7F0}
+  .ex-head{
+    display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+    padding:14px 18px;background:#F2F6FC;border-bottom:1px solid #E1E9F4;
+  }
+  .ex-num{
+    font-family:var(--mono);font-weight:700;font-size:.85rem;color:#fff;
+    background:var(--py-blue);border-radius:8px;padding:5px 10px;white-space:nowrap;
+  }
+  article.ex.done .ex-num{background:var(--green)}
+  .ex-head h3{font-size:1.02rem;flex:1;min-width:180px}
+  .stars{font-size:.78rem;color:var(--py-gold-dark);background:#FFF6D6;border:1px solid #F2DE96;border-radius:99px;padding:3px 10px;white-space:nowrap}
+  .done-toggle{
+    display:flex;align-items:center;gap:7px;cursor:pointer;user-select:none;
+    font-size:.8rem;font-family:var(--mono);color:var(--ink-soft);
+  }
+  .done-toggle input{width:17px;height:17px;accent-color:var(--green);cursor:pointer}
+  .ex-body{padding:18px 20px 22px}
+  .ex-body p{margin-bottom:10px}
+  .ex-body ol,.ex-body ul{margin:6px 0 12px 22px}
+  .ex-body li{margin-bottom:4px}
+
+  .tag{
+    display:inline-block;font-family:var(--mono);font-size:.72rem;
+    text-transform:uppercase;letter-spacing:.08em;border-radius:6px;
+    padding:3px 9px;margin:4px 0 6px;
+  }
+  .tag.obj{background:#E7F0FB;color:var(--py-blue-dark)}
+  .tag.passos{background:#FFF3CC;color:#8a6d00}
+  .tag.saida{background:#E4F5EC;color:#1c7a4d}
+
+  /* ===== Blocos de código estilo terminal ===== */
+  .term-window{border-radius:12px;overflow:hidden;margin:12px 0;border:1px solid var(--term-line)}
+  .term-bar{
+    display:flex;align-items:center;gap:8px;background:#121A29;padding:8px 14px;
+  }
+  .term-bar .dot{width:11px;height:11px;border-radius:50%}
+  .dot.r{background:#FF5F57}.dot.y{background:#FEBC2E}.dot.g{background:#28C840}
+  .term-bar .fname{font-family:var(--mono);font-size:.75rem;color:#8FA6C8;margin-left:6px}
+  pre.code,pre.output{
+    background:var(--term);color:#E7EDF7;font-family:var(--mono);
+    font-size:.86rem;line-height:1.6;padding:14px 18px;overflow-x:auto;margin:0;
+  }
+  pre.output{color:#9FE8C0}
+  pre.output .prompt-in{color:#E7EDF7}
+  /* syntax highlight */
+  .tk-kw{color:#7EC1FF;font-weight:600}
+  .tk-str{color:#FFD98A}
+  .tk-com{color:#7C8DA8;font-style:italic}
+  .tk-num{color:#9FE8C0}
+  .tk-fn{color:#C7A6FF}
+
+  /* ===== Dicas / desafios / soluções ===== */
+  details{border-radius:10px;margin:12px 0;overflow:hidden;border:1.5px solid transparent}
+  details summary{
+    cursor:pointer;list-style:none;padding:11px 16px;font-weight:600;font-size:.9rem;
+    display:flex;align-items:center;gap:8px;user-select:none;
+  }
+  details summary::-webkit-details-marker{display:none}
+  details summary::after{content:"▾";margin-left:auto;transition:transform .2s ease;font-size:.85em}
+  details[open] summary::after{transform:rotate(180deg)}
+  details .inner{padding:4px 16px 14px}
+  details.dica{background:#FFF9E8;border-color:#F2DE96}
+  details.dica summary{color:#8a6d00}
+  details.desafio{background:#F3EDFB;border-color:#D9C8F2}
+  details.desafio summary{color:#6B3FA0}
+  details.solucao{background:#EAF7F0;border-color:#BFE5D0}
+  details.solucao summary{color:#1c7a4d}
+  details.solucao .aviso{font-size:.8rem;color:#1c7a4d;margin-bottom:8px;font-style:italic}
+
+  /* ===== Checklist final ===== */
+  .checklist{background:var(--card);border:1px solid #E1E9F4;border-radius:var(--radius);padding:22px;margin-top:30px}
+  .checklist h2{font-family:var(--mono);font-size:1.2rem;margin-bottom:6px}
+  .checklist p{font-size:.9rem;color:var(--ink-soft);margin-bottom:14px}
+  .check-item{display:flex;align-items:flex-start;gap:10px;padding:7px 4px;border-radius:8px;cursor:pointer}
+  .check-item:hover{background:#F2F6FC}
+  .check-item input{width:18px;height:18px;margin-top:3px;accent-color:var(--py-blue);cursor:pointer}
+  .check-item span{font-size:.93rem}
+  .check-item input:checked + span{color:var(--green);text-decoration:line-through;text-decoration-color:rgba(46,165,108,.5)}
+
+  /* banner 100% */
+  .win-banner{
+    display:none;margin-top:26px;text-align:center;color:#fff;
+    background:linear-gradient(120deg,var(--green),var(--py-blue));
+    border-radius:var(--radius);padding:26px 20px;
+  }
+  .win-banner.show{display:block;animation:pop .45s ease}
+  @keyframes pop{0%{transform:scale(.94);opacity:0}100%{transform:scale(1);opacity:1}}
+  .win-banner h2{font-family:var(--mono);font-size:1.4rem;margin-bottom:6px}
+
+  .preview-s2{
+    margin-top:36px;border:2px dashed var(--py-blue);border-radius:var(--radius);
+    padding:20px 22px;background:#EFF5FC;
+  }
+  .preview-s2 h2{font-family:var(--mono);font-size:1.05rem;color:var(--py-blue-dark);margin-bottom:8px}
+  footer{
+    text-align:center;font-family:var(--mono);font-size:.75rem;color:var(--ink-soft);
+    padding:26px 16px 40px;
+  }
+  @media(max-width:560px){
+    .progress-msg{display:none}
+    .ex-head h3{font-size:.95rem}
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-wrap" role="region" aria-label="Progresso da semana">
+  <span class="label">XP DA SEMANA</span>
+  <div class="progress-bar"><div class="progress-fill" id="pfill"></div></div>
+  <span class="progress-count" id="pcount">0 / 10</span>
+  <span class="progress-msg" id="pmsg">Marque os exercícios concluídos ✔</span>
+  <button class="reset-btn" id="resetBtn" title="Apagar todo o progresso salvo">↺ Resetar</button>
+</div>
+
+<header class="hero">
+  <div class="kicker">Python para Iniciantes · Exercícios Guiados</div>
+  <h1>SEMANA 35 — Projeto Final 7:<br>engenharia de ponta a ponta 🏆<span class="cursor" aria-hidden="true"></span></h1>
+  <p class="sub">A síntese do módulo de engenharia: banco relacionado com chaves estrangeiras e JOINs, API coberta por testes, histórico Git limpo no GitHub e o pacote de produção completo. O projeto que fecha sua formação.</p>
+  <div class="howto">
+    <strong>Como usar:</strong> digite o código você mesmo (não copie e cole!), compare com a saída esperada e marque <strong>✔ Concluído</strong> em cada exercício para encher sua barra de XP. As <strong>dicas</strong> e <strong>soluções</strong> ficam escondidas — só abra depois de tentar! Seu progresso fica salvo no navegador.
+  </div>
+</header>
+
+<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · Revisão</a><a href="#p2">2 · Etapas 1-2</a><a href="#p3">3 · Etapas 3-4</a><a href="#p4">4 · Etapas 5-6</a><a href="#p5">5 · Formatura</a><a href="#checklist">✅ Checklist</a></nav>
+
+<main>
+
+<section class="parte" id="p1">
+  <div class="parte-head"><span class="num">01</span><h2>Revisão do módulo de engenharia</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>O último aquecimento antes da obra final. Capriche nas previsões! 🚀</p></div>
+  <article class="ex" id="ex1">
+    <div class="ex-head">
+      <span class="ex-num">EX 01</span>
+      <h3>Quiz: preveja as saídas 🧠</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex1"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Testar JOINs, pytest e Git numa tacada.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Anote as previsões antes de conferir o gabarito!</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">quiz.py</span></div><pre class="code"># 1) Qual JOIN traz TODAS as linhas da esquerda, com ou sem par?
+print("INNER ou LEFT?")
+
+# 2) O que filtra grupos DEPOIS do GROUP BY?
+print("WHERE ou HAVING?")
+
+# 3) pytest acha os testes por qual convencao de nome?
+print("test_" + "*.py")
+
+# 4) O que afirma que um erro DEVE acontecer?
+print("pytest." + "raises")
+
+# 5) Qual arquivo impede o .env de subir para o Git?
+print(".git" + "ignore")
+
+# 6) git add e git commit: qual escolhe e qual fotografa?
+partes = ["add escolhe", "commit fotografa"]
+print(" / ".join(partes))
+
+# 7) Em producao, debug=?
+print(False)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">INNER ou LEFT?
+WHERE ou HAVING?
+test_*.py
+pytest.raises
+.gitignore
+add escolhe / commit fotografa
+False</pre></div><details class="dica"><summary>💡 Gabarito comentado</summary><div class="inner">1) LEFT JOIN (S31) · 2) HAVING (S31) · 3) arquivos test_*.py, funções test_* (S32) · 4) pytest.raises (S32) · 5) .gitignore (S33) · 6) add escolhe, commit fotografa (S33) · 7) debug=False, controlado por .env (S34). Tudo fresco? A obra final te espera!</div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex2">
+    <div class="ex-head">
+      <span class="ex-num">EX 02</span>
+      <h3>Caça aos bugs de engenharia 🐛🔍</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex2"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Os tropeços clássicos do módulo, todos num só lugar.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>O teste abaixo deveria validar o relatório da API — ache os 4 bugs:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">test_bugado.py</span></div><pre class="code">from api import app
+
+def testar_relatorio():
+    client = app.test_client()
+    resp = client.get("/api/relatorio/ranking")
+    assert resp.status_code == 200
+
+# consulta usada na rota:
+# SELECT p.nome, SUM(v.qtd) FROM vendas v
+# JOIN produtos p WHERE p.id = v.produto_id
+# GROUP BY p.nome</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><p><strong>Os 4 bugs:</strong> (1) a função chama-se <code>testar_relatorio</code> — o pytest só coleta funções que COMEÇAM com <code>test_</code>; esse teste nunca roda (o mais silencioso dos bugs: a suíte fica verde... vazia!). (2) A rota é protegida (Semana 31: relatórios com <code>@token_required</code>) — sem o header Authorization, o status esperado seria 401, não 200; o teste precisa logar e enviar o token. (3) No SQL, a condição de junção usa <code>WHERE</code> no lugar de <code>ON</code> — a sintaxe do JOIN exige <code>JOIN produtos p ON p.id = v.produto_id</code>. (4) A coluna agregada não tem alias (<code>AS unidades</code>) — funciona, mas dificulta o ORDER BY e a leitura; num relatório profissional, sempre batize as agregações.</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">test_corrigido.py</span></div><pre class="code">from api import app
+
+def test_relatorio_exige_token():
+    client = app.test_client()
+    resp = client.get("/api/relatorio/ranking")
+    assert resp.status_code == 401   # protegido!
+
+def test_relatorio_com_token():
+    client = app.test_client()
+    login = client.post("/api/login",
+        json={"usuario": "robson", "senha": "tuacaneca123"})
+    token = login.get_json()["token"]
+    resp = client.get("/api/relatorio/ranking",
+        headers={"Authorization": f"Bearer {token}"})
+    assert resp.status_code == 200
+    assert isinstance(resp.get_json(), list)</pre></div></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p2">
+  <div class="parte-head"><span class="num">02</span><h2>A obra final — Etapas 1 e 2</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p><strong>O Projeto Final 7</strong> pega o sistema desacoplado da Semana 30 e o eleva ao padrão de engenharia, em 6 etapas:</p><table><tr><th>Etapa</th><th>Entrega</th><th>Semanas</th></tr><tr><td>1</td><td>Banco relacionado (FKs) + clientes</td><td>31</td></tr><tr><td>2</td><td>Relatórios com JOIN na API</td><td>31</td></tr><tr><td>3</td><td>Suíte de testes completa</td><td>32</td></tr><tr><td>4</td><td>Git + GitHub + README</td><td>33</td></tr><tr><td>5</td><td>Pacote de produção</td><td>34</td></tr><tr><td>6</td><td>Deploy (ou plano detalhado) + apresentação</td><td>34</td></tr></table></div>
+  <article class="ex" id="ex3">
+    <div class="ex-head">
+      <span class="ex-num">EX 03</span>
+      <h3>Etapa 1: o banco de engenharia 🗄️</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex3"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Modelar o banco com relacionamentos de verdade.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Tabelas: produtos, clientes, usuarios e vendas — com <code>FOREIGN KEY</code> de vendas para produtos E clientes</li><li>Popule com dados de exemplo (produtos, 2-3 clientes, vendas apontando para ambos)</li><li>Abra o diagrama no DBeaver (View Diagram) e tire um print — ele vai para o README!</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(4 tabelas relacionadas, com o diagrama comprovando os vínculos)</pre></div><details class="dica"><summary>💡 O diagrama fala por você</summary><div class="inner">Um print do diagrama de relacionamentos no README mostra em UM segundo que você domina modelagem — antes mesmo de alguém ler uma linha de código. Documentação visual é persuasão instantânea.</div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex4">
+    <div class="ex-head">
+      <span class="ex-num">EX 04</span>
+      <h3>Etapa 2: relatórios com JOIN na API 📊</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex4"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Servir a inteligência do negócio pela API protegida.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Endpoints protegidos (Semana 28): ranking por produto (JOIN + GROUP BY), encalhados (LEFT JOIN + IS NULL) e compras por cliente (JOIN triplo)</li><li>Reaproveite as consultas da Semana 31 — agora integradas ao sistema oficial</li><li>Teste cada um com requests ou pelo frontend</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(três relatórios profissionais respondendo em JSON, sob autenticação)</pre></div><details class="dica"><summary>💡 Reúso é engenharia</summary><div class="inner">Repare quanto desta etapa você JÁ construiu na Semana 31. Projetos finais não são sobre escrever tudo de novo — são sobre INTEGRAR o que existe num todo coeso. Saber promover código de exercício a sistema é uma habilidade em si.</div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p3">
+  <div class="parte-head"><span class="num">03</span><h2>A obra final — Etapas 3 e 4</h2></div>
+
+  <article class="ex" id="ex5">
+    <div class="ex-head">
+      <span class="ex-num">EX 05</span>
+      <h3>Etapa 3: a suíte que vigia tudo 🧪</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex5"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Cobrir o sistema com testes automatizados.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Mínimo de 10 testes: CRUD de produtos (com e sem token), validações (400), inexistentes (404), login (token vem?), relatórios (protegidos? formato certo?)</li><li>Use parametrize onde couber (Semana 32)</li><li>Meta absoluta: <code>pytest</code> 100% verde antes de cada commit</li></ol><span class="tag saida">✅ A meta</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">$ pytest
+collected 12 items
+test_api.py ............                                        [100%]
+========================= 12 passed in 1.1s ==========================</pre></div><details class="dica"><summary>💡 O selo de qualidade</summary><div class="inner">Uma suíte robusta é o que permite as etapas seguintes serem TRANQUILAS: cada mudança de configuração (Etapa 5) roda contra os testes. Sem eles, preparar produção é andar no escuro. Com eles, é caminhar de lanterna. 🔦</div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex6">
+    <div class="ex-head">
+      <span class="ex-num">EX 06</span>
+      <h3>Etapa 4: versionado e publicado 🐙</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex6"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Levar o projeto ao GitHub com padrão profissional.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Repositórios da API e do frontend com <code>.gitignore</code> desde o primeiro commit (o .env JAMAIS sobe!)</li><li>Histórico com mensagens claras — se preciso, refaça commits localmente antes de publicar</li><li>READMEs completos (Semana 33): o que é, diagrama do banco, tecnologias, como rodar, endpoints, como testar</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(dois repositórios públicos, limpos e documentados — seu portfólio oficial)</pre></div><details class="dica"><summary>💡 O teste do estranho</summary><div class="inner">Releia seu README fingindo nunca ter visto o projeto: dá para rodar só com o que está escrito? Falta um passo? Um pré-requisito? Cada lacuna que você fecha agora é uma pergunta que o recrutador não precisa fazer. 🎯</div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p4">
+  <div class="parte-head"><span class="num">04</span><h2>A obra final — Etapas 5 e 6</h2></div>
+
+  <article class="ex" id="ex7">
+    <div class="ex-head">
+      <span class="ex-num">EX 07</span>
+      <h3>Etapa 5: o pacote de produção 📦</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex7"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Fechar o projeto no padrão de produção da Semana 34.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>venv + requirements.txt completo + .env/.env.example + debug via variável + waitress</li><li>Rode a suíte APÓS cada ajuste (é para isso que ela existe!)</li><li>Bônus de respeito: escreva o Dockerfile do projeto (Semana 34) — mesmo sem usar Docker ainda, ele documenta o ambiente</li></ol><span class="tag saida">✅ Checklist da etapa</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">✔ requirements.txt (com dotenv e waitress)
+✔ .env.example no repo, .env fora
+✔ debug controlado por variável
+✔ pytest: 12 passed
+✔ waitress servindo em produção local</pre></div><details class="dica"><summary>💡 Profissional é previsível</summary><div class="inner">Repare o que você montou: qualquer dev clona, instala e roda seu sistema em minutos, sem te perguntar nada. Essa PREVISIBILIDADE — mais que qualquer código genial — é o que times valorizam. Você constrói sistemas que não dependem de você estar do lado. Isso é senioridade em formação.</div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex8">
+    <div class="ex-head">
+      <span class="ex-num">EX 08</span>
+      <h3>Etapa 6: no ar + apresentação 🏁</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex8"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Publicar (ou planejar em detalhe) e apresentar a obra completa.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Publique o frontend (GitHub Pages — Semana 34) e, se topar o desafio, a API num serviço gratuito (ajustando URL do fetch e CORS!)</li><li>Se o deploy completo não rolar agora, entregue o PLANO: onde cada camada vai, o que muda no .env, custos, passos</li><li>Prepare a apresentação de 5 minutos: o problema → a arquitetura (diagrama!) → demo ao vivo → os testes rodando → o que aprendeu</li><li>Apresente para alguém — turma, colega, câmera. A obra só se completa quando comunicada 🎤</li></ol><span class="tag saida">✅ A formatura</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">✔ Banco relacionado (MariaDB + FKs)
+✔ API REST + JWT + relatórios JOIN
+✔ Suíte pytest verde
+✔ GitHub com README profissional
+✔ Pacote de produção completo
+✔ No ar (ou plano de deploy detalhado)
+PROJETO FINAL 7 COMPLETO! 🏆</pre></div><details class="dica"><summary>💡 Demo com testes é diferencial</summary><div class="inner">Na apresentação, RODE o pytest ao vivo: doze verdinhos passando em 1 segundo dizem "este sistema é confiável" melhor que qualquer slide. Pouquíssimos candidatos mostram testes numa demo — seja a exceção que o avaliador lembra. 🌟</div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p5">
+  <div class="parte-head"><span class="num">05</span><h2>Formatura — a última chamada</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Os dois desafios finais do módulo. Sem soluções: a engenharia agora é sua. 🏆</p></div>
+  <article class="ex" id="ex9">
+    <div class="ex-head">
+      <span class="ex-num">EX 09</span>
+      <h3>Desafio: o sistema sob estresse 🔧</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex9"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Evoluções de engenharia para quem quer ir além.</p><span class="tag passos">🧭 Roteiro</span><ol><li>Escolha pelo menos um:</li><li>a) Pesquise "GitHub Actions pytest" e faça os testes rodarem SOZINHOS a cada push (CI — integração contínua!)</li><li>b) Adicione um índice (<code>CREATE INDEX</code>) numa coluna consultada com frequência e pesquise por que ele acelera</li><li>c) Escreva um teste que usa um banco de dados exclusivo de testes (pesquise "pytest fixtures")</li><li>d) Rode o sistema inteiro via Docker (construa a imagem do seu Dockerfile)</li></ol><details class="dica"><summary>💡 As portas que se abrem</summary><div class="inner">Cada item desses é a porta de uma especialidade: (a) DevOps/CI-CD, (b) performance de bancos, (c) engenharia de testes, (d) infraestrutura. Experimente as portas — a que te der mais brilho nos olhos é um ótimo indício da sua próxima trilha. ✨</div></details><details class="desafio"><summary>🚀 Desafio extra</summary><div class="inner">O combo definitivo: CI no GitHub rodando seus testes + badge de "tests passing" no README. É o aperto de mão secreto dos repositórios profissionais — e fica LINDO no portfólio. 🟢</div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex10">
+    <div class="ex-head">
+      <span class="ex-num">EX 10</span>
+      <h3>O projeto que fecha a jornada 🎓🏆</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex10"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>A obra-assinatura: um sistema de engenharia completa para um problema seu.</p><span class="tag passos">🧭 Roteiro</span><ol><li>Escolha um domínio SEU (de verdade): o controle da Tua Caneca real, um sistema para um cliente, uma dor da sua comunidade</li><li>Entregue o pacote completo deste módulo: banco relacionado, API testada, Git limpo, README com diagrama, pronto para produção</li><li>Publique, apresente, colete feedback — e itere</li><li>E o passo final da formação: ENSINE. Escreva um post, grave um vídeo, ajude alguém que está na Semana 1. Quem ensina, domina duas vezes. 🎓</li></ol><details class="dica"><summary>💡 A última palavra</summary><div class="inner">35 semanas. ~400 exercícios. 7 projetos completos. Você começou prevendo a saída de um print() e termina entregando sistemas testados, versionados e prontos para produção — o ciclo inteiro da engenharia de software. O código que você escreve agora tem qualidade, memória e futuro. Obrigado por cada semana desta jornada. Parabéns, engenheiro(a) de software. E bons códigos — para a vida toda. 🏆🐍✨</div></details>
+    </div>
+  </article>
+</section>
+
+<div class="checklist" id="checklist">
+  <h2>✅ Checklist de fim de semana</h2>
+  <p>Antes de seguir para a próxima semana, confirme que você consegue:</p>
+<label class="check-item"><input type="checkbox"><span>Prever saídas misturando JOIN, pytest e Git</span></label>
+<label class="check-item"><input type="checkbox"><span>Caçar bugs de testes, JOINs e configuração</span></label>
+<label class="check-item"><input type="checkbox"><span>Modelar o banco com chaves estrangeiras e conferir no DBeaver</span></label>
+<label class="check-item"><input type="checkbox"><span>Servir relatórios com JOIN e GROUP BY pela API</span></label>
+<label class="check-item"><input type="checkbox"><span>Cobrir a API com uma suíte pytest (incluindo autenticação)</span></label>
+<label class="check-item"><input type="checkbox"><span>Versionar com Git: commits claros e .gitignore protegendo segredos</span></label>
+<label class="check-item"><input type="checkbox"><span>Publicar os repositórios no GitHub com README profissional</span></label>
+<label class="check-item"><input type="checkbox"><span>Fechar o pacote de produção (venv, requirements, .env, debug off)</span></label>
+<label class="check-item"><input type="checkbox"><span>Executar (ou planejar em detalhe) o deploy das camadas</span></label>
+<label class="check-item"><input type="checkbox"><span>Apresentar o projeto de engenharia completo — a obra final</span></label>
+</div>
+
+<div class="win-banner" id="winBanner">
+  <h2>🏆 SEMANA 35 COMPLETA!</h2>
+  <p>MÓDULO DE ENGENHARIA COMPLETO! 35 semanas, ~400 exercícios, 7 projetos finais — do print() a sistemas full-stack testados, versionados e prontos para produção. Você não estuda mais programação: você a pratica como profissional. Parabéns — e bons códigos para a vida toda! 🏆🎓🐍✨</p>
+</div>
+
+<div class="preview-s2">
+<h2>🏆 Formatura do módulo de engenharia: e agora?</h2><p>35 semanas. Você domina o ciclo COMPLETO: lógica, dados, POO, web, SQL, arquitetura desacoplada com MariaDB + REST + JWT, e agora a engenharia — JOINs, testes, Git e produção. O que vem à frente é escolha, não obrigação: <strong>frameworks maiores</strong> (Django, FastAPI), <strong>front-end moderno</strong> (React), <strong>dados &amp; IA</strong> (pandas avançado, ML, agentes), <strong>DevOps</strong> (Docker a fundo, CI/CD, nuvem). Qualquer trilha que escolher, você tem a base que sustenta todas. Continue com a receita que te trouxe até aqui: <strong>projetos reais, portfólio público e ensinar o que aprende</strong>. Foi uma honra ser seu guia. Agora vá — o software que só você pode construir está esperando. 🚀🐍🎓</p></div>
+
+</main>
+
+<footer>python_para_iniciantes // semana_35 // exercícios guiados</footer>
+
+<script>
+// ===== Syntax highlight leve para Python =====
+(function(){
+  const KW = /\b(print|input|int|float|type|str|bool)\b/g;
+  document.querySelectorAll('pre.code').forEach(pre=>{
+    let src = pre.textContent;
+    // escapa HTML
+    src = src.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    // uma passada só, com alternação (comentário | string | builtin | bool | número)
+    src = src.replace(
+      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|insert|int|float|str|len|range|type|abs|round|max|min|sum|sorted|sort|reverse|append|remove|split|strip|upper|lower|replace|title|randint|random|get|keys|values|items|open|readlines|read|write|close|count|index|pop|update|list|dict|tuple|enumerate|sqrt|floor|ceil|choice|shuffle|sample|sleep|now|today|strftime|dumps|dump|loads|load|isinstance|datetime|date|DictReader|DictWriter|writerows|writerow|writeheader|writer|reader|csv|Workbook|load_workbook|save|iter_rows|Font|listdir|makedirs|getcwd|rename|exists|getsize|splitext|join|endswith|startswith|copytree|copy|move|requests|status_code|json|DataFrame|read_csv|read_excel|to_excel|to_csv|head|describe|groupby|sort_values|value_counts|mean|idxmax|bar|barh|pie|plot|savefig|show|title|xlabel|ylabel|figure|legend|axhline|tight_layout|close|Flask|route|run|render_template|jsonify|redirect|request|connect|cursor|execute|executemany|fetchall|fetchone|commit|environ|getenv|post|encode|decode|abort|make_response|raises|approx|load_dotenv)\b|\b(True|False|None|if|elif|else|while|for|in|and|or|not|break|continue|import|from|def|return|try|except|finally|with|as|del|global|pass|class|self|super|lambda)\b|(\b\d+(?:\.\d+)?\b)/g,
+      function(m, com, str, fn, bool, num){
+        if(com)  return '<span class="tk-com">'+com+'</span>';
+        if(str)  return '<span class="tk-str">'+str+'</span>';
+        if(fn)   return '<span class="tk-fn">'+fn+'</span>';
+        if(bool) return '<span class="tk-kw">'+bool+'</span>';
+        if(num)  return '<span class="tk-num">'+num+'</span>';
+        return m;
+      }
+    );
+    pre.innerHTML = src;
+  });
+})();
+
+// ===== Armazenamento seguro (localStorage com fallback em memória) =====
+// Quando o aluno abre o arquivo .html no computador, o progresso fica salvo
+// no navegador. Se o localStorage estiver indisponível (modo restrito,
+// pré-visualização, etc.), o progresso funciona só em memória, sem quebrar.
+const storage = (function(){
+  const KEY = 'python_semana35_progresso';
+  let memoria = {};
+  let disponivel = false;
+  try{
+    localStorage.setItem('__teste__','1');
+    localStorage.removeItem('__teste__');
+    disponivel = true;
+  }catch(e){ disponivel = false; }
+
+  return {
+    carregar: function(){
+      if(disponivel){
+        try{ return JSON.parse(localStorage.getItem(KEY)) || {}; }
+        catch(e){ return {}; }
+      }
+      return memoria;
+    },
+    salvar: function(dados){
+      memoria = dados;
+      if(disponivel){
+        try{ localStorage.setItem(KEY, JSON.stringify(dados)); }catch(e){}
+      }
+    },
+    limpar: function(){
+      memoria = {};
+      if(disponivel){
+        try{ localStorage.removeItem(KEY); }catch(e){}
+      }
+    },
+    persistente: disponivel
+  };
+})();
+
+// ===== Progresso dos exercícios + checklist =====
+(function(){
+  const checks = document.querySelectorAll('.done-check');
+  const listChecks = document.querySelectorAll('.check-item input');
+  const total = checks.length;
+  const fill = document.getElementById('pfill');
+  const count = document.getElementById('pcount');
+  const msg = document.getElementById('pmsg');
+  const banner = document.getElementById('winBanner');
+  const resetBtn = document.getElementById('resetBtn');
+
+  const MSGS = [
+    [0,  'Marque os exercícios concluídos ✔'],
+    [1,  'Boa! Continue assim 💪'],
+    [3,  'Pegando o ritmo! 🔥'],
+    [5, 'Metade do caminho! 🚀'],
+    [8, 'Quase lá... força! ⚡'],
+    [10, 'SEMANA COMPLETA! 🏆']
+  ];
+
+  function estadoAtual(){
+    const dados = { ex: {}, lista: {} };
+    checks.forEach(c => { dados.ex[c.dataset.ex] = c.checked; });
+    listChecks.forEach((c,i) => { dados.lista['item'+i] = c.checked; });
+    return dados;
+  }
+
+  function atualizarBarra(){
+    const done = document.querySelectorAll('.done-check:checked').length;
+    const pct = Math.round(done/total*100);
+    fill.style.width = pct + '%';
+    count.textContent = done + ' / ' + total;
+    let m = MSGS[0][1];
+    for(const [min,text] of MSGS){ if(done >= min) m = text; }
+    msg.textContent = m;
+    banner.classList.toggle('show', done === total);
+  }
+
+  function aplicarEstado(dados){
+    checks.forEach(c => {
+      const marcado = !!(dados.ex && dados.ex[c.dataset.ex]);
+      c.checked = marcado;
+      c.closest('article.ex').classList.toggle('done', marcado);
+    });
+    listChecks.forEach((c,i) => {
+      c.checked = !!(dados.lista && dados.lista['item'+i]);
+    });
+    atualizarBarra();
+  }
+
+  // Restaura o progresso salvo ao abrir a página
+  aplicarEstado(storage.carregar());
+
+  // Salva a cada mudança
+  checks.forEach(c => {
+    c.addEventListener('change', function(){
+      this.closest('article.ex').classList.toggle('done', this.checked);
+      atualizarBarra();
+      storage.salvar(estadoAtual());
+    });
+  });
+  listChecks.forEach(c => {
+    c.addEventListener('change', function(){
+      storage.salvar(estadoAtual());
+    });
+  });
+
+  // Botão de reset com confirmação
+  resetBtn.addEventListener('click', function(){
+    if(confirm('Apagar todo o progresso desta semana?')){
+      storage.limpar();
+      aplicarEstado({});
+    }
+  });
+
+  // Aviso discreto se o progresso não puder ser salvo neste ambiente
+  if(!storage.persistente){
+    msg.textContent += ' (progresso não será salvo neste ambiente)';
+  }
+})();
+</script>
+</body>
+</html>

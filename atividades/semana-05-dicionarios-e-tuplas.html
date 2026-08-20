@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Semana 31 — SQL Avançado: JOINs</title>
+<style>
+  :root{
+    --ink:#16243A;
+    --ink-soft:#4A5A74;
+    --paper:#F5F8FC;
+    --card:#FFFFFF;
+    --py-blue:#3776AB;
+    --py-blue-dark:#27598C;
+    --py-gold:#FFD43B;
+    --py-gold-dark:#C99700;
+    --term:#1B2435;
+    --term-line:#2B3850;
+    --green:#2EA56C;
+    --coral:#E2574C;
+    --radius:14px;
+    --mono:"Cascadia Code","JetBrains Mono",Consolas,"Roboto Mono",monospace;
+    --sans:"Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto}
+    *{transition:none !important;animation:none !important}
+  }
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.65}
+
+  /* ===== Barra de progresso fixa ===== */
+  .progress-wrap{
+    position:sticky;top:0;z-index:50;
+    background:var(--term);color:#fff;
+    padding:10px 18px;
+    display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+    box-shadow:0 2px 12px rgba(22,36,58,.25);
+  }
+  .progress-wrap .label{font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;white-space:nowrap}
+  .progress-bar{flex:1;min-width:140px;height:14px;background:var(--term-line);border-radius:99px;overflow:hidden}
+  .progress-fill{height:100%;width:0%;border-radius:99px;background:linear-gradient(90deg,var(--py-blue),var(--py-gold));transition:width .4s ease}
+  .progress-count{font-family:var(--mono);font-size:.85rem;color:var(--py-gold);white-space:nowrap}
+  .progress-msg{font-size:.78rem;color:#AFC3E0;white-space:nowrap}
+  .reset-btn{
+    font-family:var(--mono);font-size:.72rem;color:#AFC3E0;
+    background:transparent;border:1px solid var(--term-line);border-radius:8px;
+    padding:5px 11px;cursor:pointer;transition:all .15s ease;white-space:nowrap;
+  }
+  .reset-btn:hover,.reset-btn:focus-visible{color:#fff;border-color:#5A6E92;background:rgba(255,255,255,.06)}
+  .reset-btn:focus-visible{outline:2px solid var(--py-gold);outline-offset:2px}
+
+  /* ===== Hero ===== */
+  header.hero{
+    background:linear-gradient(150deg,var(--term) 0%,#22406B 70%,var(--py-blue) 100%);
+    color:#fff;padding:56px 20px 48px;text-align:center;position:relative;overflow:hidden;
+  }
+  header.hero::before{
+    content:"FOREIGN KEY  INNER JOIN  ON  LEFT JOIN  IS NULL";
+    position:absolute;inset:auto 0 8px 0;font-family:var(--mono);font-size:.78rem;
+    color:rgba(255,255,255,.14);letter-spacing:.4em;white-space:nowrap;overflow:hidden;
+  }
+  .hero .kicker{
+    font-family:var(--mono);font-size:.85rem;color:var(--py-gold);
+    letter-spacing:.18em;text-transform:uppercase;margin-bottom:14px;
+  }
+  .hero h1{font-family:var(--mono);font-size:clamp(1.5rem,4.5vw,2.6rem);font-weight:700;line-height:1.25}
+  .hero h1 .cursor{display:inline-block;width:.55em;height:1.05em;background:var(--py-gold);vertical-align:text-bottom;margin-left:4px;animation:blink 1.1s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+  .hero p.sub{max-width:620px;margin:18px auto 0;color:#D7E4F5;font-size:1rem}
+  .hero .howto{
+    max-width:640px;margin:26px auto 0;background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.18);border-radius:var(--radius);
+    padding:14px 18px;font-size:.88rem;color:#E8F0FB;text-align:left;
+  }
+  .hero .howto strong{color:var(--py-gold)}
+
+  /* ===== Navegação por partes ===== */
+  nav.parts{
+    display:flex;gap:8px;flex-wrap:wrap;justify-content:center;
+    padding:18px 16px;max-width:980px;margin:0 auto;
+  }
+  nav.parts a{
+    font-family:var(--mono);font-size:.78rem;text-decoration:none;
+    color:var(--py-blue-dark);background:var(--card);
+    border:1.5px solid #D5E2F2;border-radius:99px;padding:7px 14px;
+    transition:all .15s ease;
+  }
+  nav.parts a:hover,nav.parts a:focus-visible{border-color:var(--py-blue);background:#EAF2FB}
+  nav.parts a:focus-visible{outline:2px solid var(--py-blue);outline-offset:2px}
+
+  main{max-width:880px;margin:0 auto;padding:8px 18px 80px}
+
+  /* ===== Seções (partes) ===== */
+  section.parte{margin-top:46px}
+  .parte-head{display:flex;align-items:baseline;gap:14px;border-bottom:3px solid var(--py-gold);padding-bottom:10px;margin-bottom:6px}
+  .parte-head .num{
+    font-family:var(--mono);font-size:2.4rem;font-weight:700;color:var(--py-blue);line-height:1;
+  }
+  .parte-head h2{font-family:var(--mono);font-size:clamp(1.05rem,2.8vw,1.45rem);color:var(--ink)}
+  .parte-intro{
+    background:var(--card);border:1px solid #E1E9F4;border-radius:var(--radius);
+    padding:18px 22px;margin-top:16px;font-size:.95rem;
+  }
+  .parte-intro h3{font-size:.8rem;font-family:var(--mono);color:var(--py-blue);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px}
+  .parte-intro p{margin-bottom:10px}
+  .parte-intro p:last-child{margin-bottom:0}
+  .parte-intro ol,.parte-intro ul{margin:8px 0 10px 22px}
+  table{border-collapse:collapse;width:100%;margin:10px 0;font-size:.88rem}
+  th,td{border:1px solid #DCE6F2;padding:7px 10px;text-align:left}
+  th{background:#EDF3FA;font-family:var(--mono);font-size:.78rem}
+  td code,p code,li code{
+    font-family:var(--mono);font-size:.85em;background:#EDF2F9;
+    border:1px solid #DCE6F2;border-radius:5px;padding:1px 5px;color:var(--py-blue-dark);
+  }
+
+  /* ===== Cartão de exercício ===== */
+  article.ex{
+    background:var(--card);border:1px solid #E1E9F4;border-radius:var(--radius);
+    margin-top:22px;overflow:hidden;
+    box-shadow:0 1px 4px rgba(22,36,58,.05);
+    transition:box-shadow .2s ease;
+  }
+  article.ex:hover{box-shadow:0 4px 16px rgba(22,36,58,.10)}
+  article.ex.done{border-color:var(--green)}
+  article.ex.done .ex-head{background:#EAF7F0}
+  .ex-head{
+    display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+    padding:14px 18px;background:#F2F6FC;border-bottom:1px solid #E1E9F4;
+  }
+  .ex-num{
+    font-family:var(--mono);font-weight:700;font-size:.85rem;color:#fff;
+    background:var(--py-blue);border-radius:8px;padding:5px 10px;white-space:nowrap;
+  }
+  article.ex.done .ex-num{background:var(--green)}
+  .ex-head h3{font-size:1.02rem;flex:1;min-width:180px}
+  .stars{font-size:.78rem;color:var(--py-gold-dark);background:#FFF6D6;border:1px solid #F2DE96;border-radius:99px;padding:3px 10px;white-space:nowrap}
+  .done-toggle{
+    display:flex;align-items:center;gap:7px;cursor:pointer;user-select:none;
+    font-size:.8rem;font-family:var(--mono);color:var(--ink-soft);
+  }
+  .done-toggle input{width:17px;height:17px;accent-color:var(--green);cursor:pointer}
+  .ex-body{padding:18px 20px 22px}
+  .ex-body p{margin-bottom:10px}
+  .ex-body ol,.ex-body ul{margin:6px 0 12px 22px}
+  .ex-body li{margin-bottom:4px}
+
+  .tag{
+    display:inline-block;font-family:var(--mono);font-size:.72rem;
+    text-transform:uppercase;letter-spacing:.08em;border-radius:6px;
+    padding:3px 9px;margin:4px 0 6px;
+  }
+  .tag.obj{background:#E7F0FB;color:var(--py-blue-dark)}
+  .tag.passos{background:#FFF3CC;color:#8a6d00}
+  .tag.saida{background:#E4F5EC;color:#1c7a4d}
+
+  /* ===== Blocos de código estilo terminal ===== */
+  .term-window{border-radius:12px;overflow:hidden;margin:12px 0;border:1px solid var(--term-line)}
+  .term-bar{
+    display:flex;align-items:center;gap:8px;background:#121A29;padding:8px 14px;
+  }
+  .term-bar .dot{width:11px;height:11px;border-radius:50%}
+  .dot.r{background:#FF5F57}.dot.y{background:#FEBC2E}.dot.g{background:#28C840}
+  .term-bar .fname{font-family:var(--mono);font-size:.75rem;color:#8FA6C8;margin-left:6px}
+  pre.code,pre.output{
+    background:var(--term);color:#E7EDF7;font-family:var(--mono);
+    font-size:.86rem;line-height:1.6;padding:14px 18px;overflow-x:auto;margin:0;
+  }
+  pre.output{color:#9FE8C0}
+  pre.output .prompt-in{color:#E7EDF7}
+  /* syntax highlight */
+  .tk-kw{color:#7EC1FF;font-weight:600}
+  .tk-str{color:#FFD98A}
+  .tk-com{color:#7C8DA8;font-style:italic}
+  .tk-num{color:#9FE8C0}
+  .tk-fn{color:#C7A6FF}
+
+  /* ===== Dicas / desafios / soluções ===== */
+  details{border-radius:10px;margin:12px 0;overflow:hidden;border:1.5px solid transparent}
+  details summary{
+    cursor:pointer;list-style:none;padding:11px 16px;font-weight:600;font-size:.9rem;
+    display:flex;align-items:center;gap:8px;user-select:none;
+  }
+  details summary::-webkit-details-marker{display:none}
+  details summary::after{content:"▾";margin-left:auto;transition:transform .2s ease;font-size:.85em}
+  details[open] summary::after{transform:rotate(180deg)}
+  details .inner{padding:4px 16px 14px}
+  details.dica{background:#FFF9E8;border-color:#F2DE96}
+  details.dica summary{color:#8a6d00}
+  details.desafio{background:#F3EDFB;border-color:#D9C8F2}
+  details.desafio summary{color:#6B3FA0}
+  details.solucao{background:#EAF7F0;border-color:#BFE5D0}
+  details.solucao summary{color:#1c7a4d}
+  details.solucao .aviso{font-size:.8rem;color:#1c7a4d;margin-bottom:8px;font-style:italic}
+
+  /* ===== Checklist final ===== */
+  .checklist{background:var(--card);border:1px solid #E1E9F4;border-radius:var(--radius);padding:22px;margin-top:30px}
+  .checklist h2{font-family:var(--mono);font-size:1.2rem;margin-bottom:6px}
+  .checklist p{font-size:.9rem;color:var(--ink-soft);margin-bottom:14px}
+  .check-item{display:flex;align-items:flex-start;gap:10px;padding:7px 4px;border-radius:8px;cursor:pointer}
+  .check-item:hover{background:#F2F6FC}
+  .check-item input{width:18px;height:18px;margin-top:3px;accent-color:var(--py-blue);cursor:pointer}
+  .check-item span{font-size:.93rem}
+  .check-item input:checked + span{color:var(--green);text-decoration:line-through;text-decoration-color:rgba(46,165,108,.5)}
+
+  /* banner 100% */
+  .win-banner{
+    display:none;margin-top:26px;text-align:center;color:#fff;
+    background:linear-gradient(120deg,var(--green),var(--py-blue));
+    border-radius:var(--radius);padding:26px 20px;
+  }
+  .win-banner.show{display:block;animation:pop .45s ease}
+  @keyframes pop{0%{transform:scale(.94);opacity:0}100%{transform:scale(1);opacity:1}}
+  .win-banner h2{font-family:var(--mono);font-size:1.4rem;margin-bottom:6px}
+
+  .preview-s2{
+    margin-top:36px;border:2px dashed var(--py-blue);border-radius:var(--radius);
+    padding:20px 22px;background:#EFF5FC;
+  }
+  .preview-s2 h2{font-family:var(--mono);font-size:1.05rem;color:var(--py-blue-dark);margin-bottom:8px}
+  footer{
+    text-align:center;font-family:var(--mono);font-size:.75rem;color:var(--ink-soft);
+    padding:26px 16px 40px;
+  }
+  @media(max-width:560px){
+    .progress-msg{display:none}
+    .ex-head h3{font-size:.95rem}
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-wrap" role="region" aria-label="Progresso da semana">
+  <span class="label">XP DA SEMANA</span>
+  <div class="progress-bar"><div class="progress-fill" id="pfill"></div></div>
+  <span class="progress-count" id="pcount">0 / 13</span>
+  <span class="progress-msg" id="pmsg">Marque os exercícios concluídos ✔</span>
+  <button class="reset-btn" id="resetBtn" title="Apagar todo o progresso salvo">↺ Resetar</button>
+</div>
+
+<header class="hero">
+  <div class="kicker">Python para Iniciantes · Exercícios Guiados</div>
+  <h1>SEMANA 31 — JOINs:<br>ligando as tabelas<span class="cursor" aria-hidden="true"></span></h1>
+  <p class="sub">O superpoder que faltava no seu SQL: relacionamentos com chave estrangeira, INNER JOIN para cruzar tabelas, LEFT JOIN para achar o que NÃO aconteceu e relatórios de três tabelas — o dia a dia de quem trabalha com dados.</p>
+  <div class="howto">
+    <strong>Como usar:</strong> digite o código você mesmo (não copie e cole!), compare com a saída esperada e marque <strong>✔ Concluído</strong> em cada exercício para encher sua barra de XP. As <strong>dicas</strong> e <strong>soluções</strong> ficam escondidas — só abra depois de tentar! Seu progresso fica salvo no navegador.
+  </div>
+</header>
+
+<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · Relacionamentos</a><a href="#p2">2 · INNER JOIN</a><a href="#p3">3 · LEFT JOIN</a><a href="#p4">4 · JOIN + GROUP BY</a><a href="#p5">5 · Três tabelas</a><a href="#p6">6 · Projetos</a><a href="#checklist">✅ Checklist</a></nav>
+
+<main>
+
+<section class="parte" id="p1">
+  <div class="parte-head"><span class="num">01</span><h2>Relacionamentos: a alma do banco relacional</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Na Semana 30 sua tabela <code>vendas</code> guardava <code>produto_id</code> — um NÚMERO apontando para a tabela produtos. Isso é um <strong>relacionamento</strong>, e é ele que dá nome aos "bancos relacionais". A coluna que aponta para outra tabela chama-se <strong>chave estrangeira</strong> (foreign key).</p><p>Por que guardar o id e não o nome? Três motivos: se o nome do produto mudar, muda num lugar só; números ocupam menos espaço e comparam mais rápido; e o banco consegue GARANTIR que a venda aponta para um produto que existe.</p></div>
+  <article class="ex" id="ex1">
+    <div class="ex-head">
+      <span class="ex-num">EX 01</span>
+      <h3>Por que produto_id e não o nome? 🤔</h3>
+      <span class="stars">⭐ básico</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex1"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Sentir na pele o problema de duplicar dados.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Imagine a tabela vendas guardando o NOME do produto em cada linha:</li><li>a) A "caneca branca" vira "caneca branca P" — quantas linhas você teria que atualizar?</li><li>b) Alguém digita "Caneca Branca" (maiúsculas) numa venda — o GROUP BY ainda agrupa certo?</li><li>c) Com produto_id, os dois problemas existem?</li></ol><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><p><strong>a)</strong> Com o nome duplicado, TODAS as vendas antigas precisariam de UPDATE (e se esquecer uma, o relatório quebra). Com o id, muda-se o nome UMA vez na tabela produtos. <strong>b)</strong> "caneca branca" ≠ "Caneca Branca" para o GROUP BY — o relatório dividiria o mesmo produto em dois! Com o id, impossível errar. <strong>c)</strong> Não: o id é único, imutável e verificável. <strong>Regra de ouro da modelagem: cada informação vive num lugar só; as outras tabelas apenas APONTAM para ela.</strong> É o DRY (Semana 6) aplicado a dados!</p></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex2">
+    <div class="ex-head">
+      <span class="ex-num">EX 02</span>
+      <h3>FOREIGN KEY: o contrato entre tabelas 📜</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex2"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Recriar a tabela vendas com uma chave estrangeira de verdade.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>No DBeaver, rode o CREATE abaixo — a novidade é a linha <code>FOREIGN KEY</code></li><li>Ela declara: "produto_id aponta para produtos(id)"</li><li>Agora o banco RECUSA uma venda com produto_id que não existe!</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">fk.sql</span></div><pre class="code">USE tua_caneca;
+
+CREATE TABLE IF NOT EXISTS vendas_v2 (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    produto_id INT,
+    qtd INT,
+    total DECIMAL(10,2),
+    FOREIGN KEY (produto_id) REFERENCES produtos(id)
+);</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(tabela criada — e no DBeaver, a aba "Foreign Keys" mostra o vínculo)</pre></div><details class="dica"><summary>💡 O banco como guardião</summary><div class="inner">Tente inserir uma venda com <code>produto_id = 9999</code> (que não existe): o MariaDB recusa com erro de "foreign key constraint fails". Antes, a validação era só no seu Python; agora o PRÓPRIO BANCO garante a integridade. Defesa em camadas — como a validação no servidor da Semana 23!</div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex3">
+    <div class="ex-head">
+      <span class="ex-num">EX 03</span>
+      <h3>Testando o guardião 🚨</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex3"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Provocar (de propósito) o erro de chave estrangeira.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Pelo Python (pymysql, Semana 26), tente inserir uma venda com um produto_id inexistente</li><li>Leia o erro:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output" style="color:#FF9B94">pymysql.err.IntegrityError: (1452, 'Cannot add or update a child row: a foreign key constraint fails...')</pre></div><span class="tag passos">🧭 Continue</span><ol><li>Erro 1452 = "essa chave estrangeira não existe na tabela-mãe"</li><li>Trate com try/except (Semana 7) para responder um 400 amigável na API</li></ol><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex03.py</span></div><pre class="code">import pymysql
+from db import conectar   # Semana 26
+
+con = conectar()
+cur = con.cursor()
+
+try:
+    cur.execute(
+        "INSERT INTO vendas_v2 (produto_id, qtd, total) VALUES (%s, %s, %s)",
+        (9999, 1, 10.0))
+    con.commit()
+except pymysql.err.IntegrityError:
+    print("Produto inexistente — venda recusada pelo banco! 🛡️")
+
+con.close()</pre></div><p>O <code>IntegrityError</code> é o banco defendendo a consistência dos SEUS dados. Na API, capture-o e devolva <code>400</code> ou <code>404</code> — nunca deixe o erro cru vazar para o cliente.</p></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p2">
+  <div class="parte-head"><span class="num">02</span><h2>INNER JOIN: cruzando as tabelas</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>A tabela vendas guarda <code>produto_id = 1</code>... mas o relatório precisa mostrar "caneca branca"! O <strong>JOIN</strong> junta as duas tabelas na consulta, seguindo o relacionamento:</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">a_magica.sql</span></div><pre class="code">SELECT v.qtd, p.nome
+FROM vendas v
+JOIN produtos p ON p.id = v.produto_id</pre></div><p>Leia: "pegue as vendas e, PARA CADA UMA, encontre o produto cujo id bate com o produto_id". O <code>ON</code> é a regra do encaixe. Os apelidos <code>v</code> e <code>p</code> (aliases) encurtam a escrita.</p></div>
+  <article class="ex" id="ex4">
+    <div class="ex-head">
+      <span class="ex-num">EX 04</span>
+      <h3>Seu primeiro JOIN 🤝</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex4"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Listar as vendas com o NOME do produto (não o id).</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Monte o SELECT com <code>JOIN produtos p ON p.id = v.produto_id</code></li><li>Peça as colunas com o apelido: <code>p.nome</code>, <code>v.qtd</code>, <code>v.total</code></li><li>Rode no DBeaver primeiro (para VER a tabela cruzada), depois no Python</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex04_join.py</span></div><pre class="code">from db import conectar
+
+con = conectar()
+cur = con.cursor()
+
+cur.execute("""
+    SELECT p.nome, v.qtd, v.total
+    FROM vendas v
+    JOIN produtos p ON p.id = v.produto_id
+""")
+
+for nome, qtd, total in cur.fetchall():
+    print(f"{nome}: {qtd} un. — R$ {total:.2f}")
+
+con.close()</pre></div><span class="tag saida">✅ Exemplo (dados variam)</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">caneca branca: 3 un. — R$ 75.00
+caneca preta: 2 un. — R$ 55.00
+caneca branca: 1 un. — R$ 25.00</pre></div><details class="dica"><summary>💡 O dicionário virou JOIN</summary><div class="inner">Lembra da Semana 8, quando você usava um dict para "traduzir" código→nome dentro de um loop? O JOIN é ISSO, feito pelo banco, em velocidade industrial. Você já tinha a intuição — agora tem a ferramenta definitiva.</div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex5">
+    <div class="ex-head">
+      <span class="ex-num">EX 05</span>
+      <h3>JOIN com filtro e ordenação</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex5"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Combinar JOIN com WHERE e ORDER BY — tudo junto.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Liste só as vendas de valor acima de R$ 50 (<code>WHERE v.total &gt; 50</code></li><li>Ordene do maior para o menor total</li><li>Repare: o WHERE e o ORDER BY (Semana 22) funcionam normalmente sobre o resultado cruzado</li></ol><span class="tag saida">✅ Exemplo</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">caneca branca: 3 un. — R$ 75.00
+caneca preta: 2 un. — R$ 55.00</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex05.py</span></div><pre class="code">cur.execute("""
+    SELECT p.nome, v.qtd, v.total
+    FROM vendas v
+    JOIN produtos p ON p.id = v.produto_id
+    WHERE v.total &gt; 50
+    ORDER BY v.total DESC
+""")
+for nome, qtd, total in cur.fetchall():
+    print(f"{nome}: {qtd} un. — R$ {total:.2f}")</pre></div><p>A ordem das cláusulas no SQL: <code>SELECT → FROM/JOIN → WHERE → GROUP BY → ORDER BY</code>. Decore essa sequência — ela vale para toda consulta que você escrever na vida.</p></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p3">
+  <div class="parte-head"><span class="num">03</span><h2>LEFT JOIN: o que NÃO aconteceu</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>O <code>INNER JOIN</code> (ou só JOIN) traz apenas as linhas que TÊM par nas duas tabelas. E os produtos que nunca venderam? Eles somem do resultado! O <strong>LEFT JOIN</strong> resolve: traz TODAS as linhas da tabela da esquerda e preenche com <code>NULL</code> onde não houver par. Perguntas de negócio valiosas ("o que está encalhado?") vivem aí.</p></div>
+  <article class="ex" id="ex6">
+    <div class="ex-head">
+      <span class="ex-num">EX 06</span>
+      <h3>LEFT JOIN: todos os produtos, vendidos ou não</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex6"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Ver a diferença entre INNER e LEFT na prática.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Rode a mesma consulta duas vezes: uma com <code>JOIN</code>, outra com <code>LEFT JOIN</code></li><li>No LEFT, produtos sem venda aparecem com qtd <code>None</code> (o NULL do banco chega como None no Python — Semana 6!)</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex06_left.py</span></div><pre class="code">cur.execute("""
+    SELECT p.nome, v.qtd
+    FROM produtos p
+    LEFT JOIN vendas v ON v.produto_id = p.id
+""")
+for nome, qtd in cur.fetchall():
+    situacao = f"{qtd} un." if qtd is not None else "— nunca vendido!"
+    print(f"{nome}: {situacao}")</pre></div><span class="tag saida">✅ Exemplo</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">caneca branca: 3 un.
+caneca preta: 2 un.
+azulejo: — nunca vendido!</pre></div><details class="dica"><summary>💡 Esquerda de quem?</summary><div class="inner">"LEFT" = a tabela escrita ANTES do JOIN (aqui, produtos). O LEFT JOIN promete: "TODAS as linhas da esquerda entram no resultado, com ou sem par". Por isso o azulejo aparece — com NULL na parte da venda. O INNER o teria escondido.</div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex7">
+    <div class="ex-head">
+      <span class="ex-num">EX 07</span>
+      <h3>Os encalhados: LEFT JOIN + IS NULL 🕵️</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex7"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Encontrar produtos que NUNCA venderam — a consulta de detetive.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Parta do LEFT JOIN anterior</li><li>Filtre com <code>WHERE v.id IS NULL</code> — sobram só as linhas SEM par</li><li>Atenção: no SQL é <code>IS NULL</code>, nunca <code>= NULL</code></li></ol><span class="tag saida">✅ Exemplo</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Produtos encalhados:
+azulejo</pre></div><details class="dica"><summary>💡 A pergunta invertida</summary><div class="inner">O INNER JOIN responde "o que aconteceu?"; o LEFT JOIN + IS NULL responde "o que NÃO aconteceu?" — clientes que nunca compraram, produtos parados, alunos sem entrega. Perguntas negativas são ouro para o negócio, e essa é A técnica para respondê-las.</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex07.py</span></div><pre class="code">cur.execute("""
+    SELECT p.nome
+    FROM produtos p
+    LEFT JOIN vendas v ON v.produto_id = p.id
+    WHERE v.id IS NULL
+""")
+print("Produtos encalhados:")
+for (nome,) in cur.fetchall():
+    print(nome)</pre></div><p>Repare no <code>(nome,)</code>: fetchall devolve tuplas mesmo com uma coluna só — a vírgula desempacota (Semana 5!).</p></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p4">
+  <div class="parte-head"><span class="num">04</span><h2>JOIN + GROUP BY: relatórios profissionais</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>A dupla mais usada do SQL corporativo: o JOIN cruza, o GROUP BY (Semana 22) resume. Toda pergunta do tipo "total de X por Y" com dados em tabelas diferentes passa por aqui.</p></div>
+  <article class="ex" id="ex8">
+    <div class="ex-head">
+      <span class="ex-num">EX 08</span>
+      <h3>Ranking com nome de verdade 🏆</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex8"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>O relatório da Semana 30, agora entendido linha por linha.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>JOIN para trazer o nome + GROUP BY p.nome para agrupar</li><li>Some as quantidades e o faturamento por produto</li><li>Ordene pelo total vendido</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex08_ranking.py</span></div><pre class="code">cur.execute("""
+    SELECT p.nome, SUM(v.qtd) AS unidades, SUM(v.total) AS faturamento
+    FROM vendas v
+    JOIN produtos p ON p.id = v.produto_id
+    GROUP BY p.nome
+    ORDER BY unidades DESC
+""")
+print("--- RANKING TUA CANECA ---")
+for nome, unidades, faturamento in cur.fetchall():
+    print(f"{nome}: {unidades} un. — R$ {faturamento:.2f}")</pre></div><span class="tag saida">✅ Exemplo</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">--- RANKING TUA CANECA ---
+caneca branca: 4 un. — R$ 100.00
+caneca preta: 2 un. — R$ 55.00</pre></div><details class="dica"><summary>💡 O AS batiza a coluna</summary><div class="inner">O <code>AS unidades</code> dá um nome ao resultado da agregação — deixa a consulta legível e permite usar <code>ORDER BY unidades</code>. Na Semana 30 você usou essa consulta pronta no relatório da API; agora você a DOMINA peça por peça. 🎓</div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex9">
+    <div class="ex-head">
+      <span class="ex-num">EX 09</span>
+      <h3>Produtos com estoque baixo E vendas altas ⚠️</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex9"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Uma consulta de decisão: o que repor com urgência (sem código pronto!).</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Combine tudo: JOIN + GROUP BY + HAVING</li><li>Traga produtos com estoque < 5 cujas vendas somam 2+ unidades</li><li>Pesquise o <code>HAVING</code>: é o WHERE dos grupos (filtra DEPOIS do GROUP BY)</li></ol><span class="tag saida">✅ Exemplo</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Repor com urgência:
+caneca branca (estoque 3, vendeu 4)</pre></div><details class="dica"><summary>💡 WHERE vs HAVING</summary><div class="inner">O <code>WHERE</code> filtra LINHAS antes de agrupar; o <code>HAVING</code> filtra GRUPOS depois de agregar. "Estoque < 5" é sobre a linha (WHERE); "vendeu 2+" é sobre a soma do grupo (HAVING). Saber onde cada filtro entra é marca de quem entende SQL de verdade.</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex09.py</span></div><pre class="code">cur.execute("""
+    SELECT p.nome, p.estoque, SUM(v.qtd) AS vendidas
+    FROM produtos p
+    JOIN vendas v ON v.produto_id = p.id
+    WHERE p.estoque &lt; 5
+    GROUP BY p.nome, p.estoque
+    HAVING vendidas &gt;= 2
+""")
+print("Repor com urgência:")
+for nome, estoque, vendidas in cur.fetchall():
+    print(f"{nome} (estoque {estoque}, vendeu {vendidas})")</pre></div></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p5">
+  <div class="parte-head"><span class="num">05</span><h2>Três tabelas: clientes entram em cena</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Sistemas reais têm MUITAS tabelas relacionadas. Vamos adicionar <code>clientes</code> e ligar: cliente → venda → produto. Um JOIN duplo responde "quem comprou o quê".</p></div>
+  <article class="ex" id="ex10">
+    <div class="ex-head">
+      <span class="ex-num">EX 10</span>
+      <h3>A tabela de clientes</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex10"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Criar clientes e ligá-los às vendas.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Crie a tabela <code>clientes</code> (id, nome) e adicione <code>cliente_id</code> às vendas (com FOREIGN KEY)</li><li>Insira 2-3 clientes e registre vendas apontando para eles</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">clientes.sql</span></div><pre class="code">CREATE TABLE IF NOT EXISTS clientes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100)
+);
+
+ALTER TABLE vendas_v2 ADD COLUMN cliente_id INT;
+ALTER TABLE vendas_v2 ADD FOREIGN KEY (cliente_id) REFERENCES clientes(id);</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(clientes criados e vendas apontando para eles — confira o diagrama no DBeaver!)</pre></div><details class="dica"><summary>💡 O diagrama do DBeaver</summary><div class="inner">Clique com o botão direito no banco → View Diagram: o DBeaver DESENHA suas tabelas e as setas dos relacionamentos! Ver o "mapa" do banco ajuda demais a raciocinar — e impressiona em qualquer apresentação. 🗺️</div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex11">
+    <div class="ex-head">
+      <span class="ex-num">EX 11</span>
+      <h3>JOIN triplo: quem comprou o quê 🔗</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex11"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Cruzar clientes, vendas e produtos numa consulta só.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Dois JOINs em sequência: vendas→produtos e vendas→clientes</li><li>Cada JOIN tem seu próprio ON</li><li>Traga: nome do cliente, nome do produto, quantidade</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex11_triplo.py</span></div><pre class="code">cur.execute("""
+    SELECT c.nome AS cliente, p.nome AS produto, v.qtd
+    FROM vendas_v2 v
+    JOIN produtos p ON p.id = v.produto_id
+    JOIN clientes c ON c.id = v.cliente_id
+""")
+for cliente, produto, qtd in cur.fetchall():
+    print(f"{cliente} comprou {qtd}x {produto}")</pre></div><span class="tag saida">✅ Exemplo</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Ana comprou 3x caneca branca
+Bruno comprou 2x caneca preta
+Ana comprou 1x caneca personalizada</pre></div><details class="dica"><summary>💡 JOINs empilham</summary><div class="inner">Cada JOIN adiciona uma tabela ao cruzamento — dois, três, cinco JOINs são rotina em sistemas reais. A tabela vendas aqui é o "centro" que conecta tudo (quem + o quê + quanto). Modelagens assim, com uma tabela de eventos ligando entidades, aparecem em TODO sistema comercial.</div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p6">
+  <div class="parte-head"><span class="num">06</span><h2>Projetos da semana: juntando tudo!</h2></div>
+
+  <article class="ex" id="ex12">
+    <div class="ex-head">
+      <span class="ex-num">EX 12</span>
+      <h3>Projeto: relatórios profissionais na API 📊</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex12"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Servir os novos relatórios com JOIN pela API REST (Semanas 27-28).</p><span class="tag passos">🧭 Requisitos</span><ol><li>Endpoint <code>GET /api/relatorio/ranking</code>: o ranking por produto (JOIN + GROUP BY) em JSON</li><li>Endpoint <code>GET /api/relatorio/encalhados</code>: produtos sem venda (LEFT JOIN + IS NULL)</li><li>Endpoint <code>GET /api/relatorio/clientes</code>: total comprado por cliente (JOIN triplo + GROUP BY)</li><li>Proteja-os com <code>@token_required</code> (Semana 28) — relatório é coisa interna!</li></ol><span class="tag saida">✅ Exemplo</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">GET /api/relatorio/encalhados (com token)
+-&gt; [{"produto": "azulejo"}]</pre></div><details class="dica"><summary>💡 Você virou analista</summary><div class="inner">Uma API que serve relatórios com JOINs protegidos por autenticação — isso é ferramenta de gestão de verdade. O frontend (Semana 29) pode consumir esses endpoints e montar um painel gerencial. Cada peça que você aprendeu multiplica as anteriores. 📈</div></details><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">api_relatorios.py</span></div><pre class="code">@app.route("/api/relatorio/ranking")
+@token_required
+def relatorio_ranking(usuario_logado):
+    con = conectar(); cur = con.cursor()
+    cur.execute("""
+        SELECT p.nome, SUM(v.qtd) AS unidades, SUM(v.total) AS faturamento
+        FROM vendas v JOIN produtos p ON p.id = v.produto_id
+        GROUP BY p.nome ORDER BY unidades DESC""")
+    dados = [{"produto": n, "unidades": int(u), "faturamento": float(f)}
+             for n, u, f in cur.fetchall()]
+    con.close()
+    return jsonify(dados)
+
+@app.route("/api/relatorio/encalhados")
+@token_required
+def relatorio_encalhados(usuario_logado):
+    con = conectar(); cur = con.cursor()
+    cur.execute("""
+        SELECT p.nome FROM produtos p
+        LEFT JOIN vendas v ON v.produto_id = p.id
+        WHERE v.id IS NULL""")
+    dados = [{"produto": n} for (n,) in cur.fetchall()]
+    con.close()
+    return jsonify(dados)</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex13">
+    <div class="ex-head">
+      <span class="ex-num">EX 13</span>
+      <h3>Projeto bônus: o histórico do cliente 🧾</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex13"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Um endpoint de extrato por cliente (sem código pronto!).</p><span class="tag passos">🧭 Roteiro</span><ol><li><code>GET /api/clientes/&lt;id&gt;/compras</code>: todas as compras de UM cliente, com nome do produto, qtd e total</li><li>JOIN duplo + WHERE pelo id do cliente (placeholder %s!)</li><li>Se o cliente não existir, 404; inclua no JSON um campo com a soma total gasta</li><li>Teste com requests para 2 clientes diferentes</li></ol><span class="tag saida">✅ Exemplo</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">GET /api/clientes/1/compras -&gt;
+{"cliente": "Ana", "total_gasto": 100.0,
+ "compras": [{"produto": "caneca branca", "qtd": 3, "total": 75.0}, ...]}</pre></div><details class="dica"><summary>💡 Empurrãozinho</summary><div class="inner">É o JOIN triplo do EX 11 com um WHERE <code>c.id = %s</code>. Para a soma, você pode usar SUM numa segunda consulta ou somar no Python (Semana 3!). Um endpoint desses alimenta a tela "minhas compras" de qualquer loja online — você sabe construir o motor por trás dela. 😉</div></details>
+    </div>
+  </article>
+</section>
+
+<div class="checklist" id="checklist">
+  <h2>✅ Checklist de fim de semana</h2>
+  <p>Antes de seguir para a próxima semana, confirme que você consegue:</p>
+<label class="check-item"><input type="checkbox"><span>Explicar o que é um relacionamento e uma chave estrangeira</span></label>
+<label class="check-item"><input type="checkbox"><span>Justificar por que guardar produto_id em vez do nome do produto</span></label>
+<label class="check-item"><input type="checkbox"><span>Criar tabelas com FOREIGN KEY no MariaDB</span></label>
+<label class="check-item"><input type="checkbox"><span>Ligar duas tabelas com INNER JOIN ... ON</span></label>
+<label class="check-item"><input type="checkbox"><span>Usar apelidos (aliases) para deixar consultas legíveis</span></label>
+<label class="check-item"><input type="checkbox"><span>Diferenciar INNER JOIN de LEFT JOIN</span></label>
+<label class="check-item"><input type="checkbox"><span>Encontrar registros sem correspondência com LEFT JOIN + IS NULL</span></label>
+<label class="check-item"><input type="checkbox"><span>Combinar JOIN com GROUP BY em relatórios</span></label>
+<label class="check-item"><input type="checkbox"><span>Cruzar três tabelas numa consulta (clientes, vendas, produtos)</span></label>
+<label class="check-item"><input type="checkbox"><span>Servir relatórios com JOIN pela API REST</span></label>
+</div>
+
+<div class="win-banner" id="winBanner">
+  <h2>🏆 SEMANA 31 COMPLETA!</h2>
+  <p>Você concluiu todos os exercícios. Você domina JOINs e modelagem relacional — a habilidade que separa quem "usa banco" de quem realmente entende dados!</p>
+</div>
+
+<div class="preview-s2">
+<h2>📅 Prévia da Semana 32</h2><p>Seu sistema cresce — e como garantir que uma mudança nova não QUEBRA o que já funcionava? Com <strong>testes automatizados</strong>! Na próxima semana, o <strong>pytest</strong>: escrever testes que verificam seu código sozinhos, testar casos extremos, exceções e até a sua API Flask completa (com token e tudo) — sem nem subir o servidor. A rede de segurança dos profissionais. 🧪</p></div>
+
+</main>
+
+<footer>python_para_iniciantes // semana_31 // exercícios guiados</footer>
+
+<script>
+// ===== Syntax highlight leve para Python =====
+(function(){
+  const KW = /\b(print|input|int|float|type|str|bool)\b/g;
+  document.querySelectorAll('pre.code').forEach(pre=>{
+    let src = pre.textContent;
+    // escapa HTML
+    src = src.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    // uma passada só, com alternação (comentário | string | builtin | bool | número)
+    src = src.replace(
+      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|insert|int|float|str|len|range|type|abs|round|max|min|sum|sorted|sort|reverse|append|remove|split|strip|upper|lower|replace|title|randint|random|get|keys|values|items|open|readlines|read|write|close|count|index|pop|update|list|dict|tuple|enumerate|sqrt|floor|ceil|choice|shuffle|sample|sleep|now|today|strftime|dumps|dump|loads|load|isinstance|datetime|date|DictReader|DictWriter|writerows|writerow|writeheader|writer|reader|csv|Workbook|load_workbook|save|iter_rows|Font|listdir|makedirs|getcwd|rename|exists|getsize|splitext|join|endswith|startswith|copytree|copy|move|requests|status_code|json|DataFrame|read_csv|read_excel|to_excel|to_csv|head|describe|groupby|sort_values|value_counts|mean|idxmax|bar|barh|pie|plot|savefig|show|title|xlabel|ylabel|figure|legend|axhline|tight_layout|close|Flask|route|run|render_template|jsonify|redirect|request|connect|cursor|execute|executemany|fetchall|fetchone|commit|environ|getenv|post|encode|decode|abort|make_response|raises|approx|load_dotenv)\b|\b(True|False|None|if|elif|else|while|for|in|and|or|not|break|continue|import|from|def|return|try|except|finally|with|as|del|global|pass|class|self|super|lambda)\b|(\b\d+(?:\.\d+)?\b)/g,
+      function(m, com, str, fn, bool, num){
+        if(com)  return '<span class="tk-com">'+com+'</span>';
+        if(str)  return '<span class="tk-str">'+str+'</span>';
+        if(fn)   return '<span class="tk-fn">'+fn+'</span>';
+        if(bool) return '<span class="tk-kw">'+bool+'</span>';
+        if(num)  return '<span class="tk-num">'+num+'</span>';
+        return m;
+      }
+    );
+    pre.innerHTML = src;
+  });
+})();
+
+// ===== Armazenamento seguro (localStorage com fallback em memória) =====
+// Quando o aluno abre o arquivo .html no computador, o progresso fica salvo
+// no navegador. Se o localStorage estiver indisponível (modo restrito,
+// pré-visualização, etc.), o progresso funciona só em memória, sem quebrar.
+const storage = (function(){
+  const KEY = 'python_semana31_progresso';
+  let memoria = {};
+  let disponivel = false;
+  try{
+    localStorage.setItem('__teste__','1');
+    localStorage.removeItem('__teste__');
+    disponivel = true;
+  }catch(e){ disponivel = false; }
+
+  return {
+    carregar: function(){
+      if(disponivel){
+        try{ return JSON.parse(localStorage.getItem(KEY)) || {}; }
+        catch(e){ return {}; }
+      }
+      return memoria;
+    },
+    salvar: function(dados){
+      memoria = dados;
+      if(disponivel){
+        try{ localStorage.setItem(KEY, JSON.stringify(dados)); }catch(e){}
+      }
+    },
+    limpar: function(){
+      memoria = {};
+      if(disponivel){
+        try{ localStorage.removeItem(KEY); }catch(e){}
+      }
+    },
+    persistente: disponivel
+  };
+})();
+
+// ===== Progresso dos exercícios + checklist =====
+(function(){
+  const checks = document.querySelectorAll('.done-check');
+  const listChecks = document.querySelectorAll('.check-item input');
+  const total = checks.length;
+  const fill = document.getElementById('pfill');
+  const count = document.getElementById('pcount');
+  const msg = document.getElementById('pmsg');
+  const banner = document.getElementById('winBanner');
+  const resetBtn = document.getElementById('resetBtn');
+
+  const MSGS = [
+    [0,  'Marque os exercícios concluídos ✔'],
+    [1,  'Boa! Continue assim 💪'],
+    [4,  'Pegando o ritmo! 🔥'],
+    [6, 'Metade do caminho! 🚀'],
+    [10, 'Quase lá... força! ⚡'],
+    [13, 'SEMANA COMPLETA! 🏆']
+  ];
+
+  function estadoAtual(){
+    const dados = { ex: {}, lista: {} };
+    checks.forEach(c => { dados.ex[c.dataset.ex] = c.checked; });
+    listChecks.forEach((c,i) => { dados.lista['item'+i] = c.checked; });
+    return dados;
+  }
+
+  function atualizarBarra(){
+    const done = document.querySelectorAll('.done-check:checked').length;
+    const pct = Math.round(done/total*100);
+    fill.style.width = pct + '%';
+    count.textContent = done + ' / ' + total;
+    let m = MSGS[0][1];
+    for(const [min,text] of MSGS){ if(done >= min) m = text; }
+    msg.textContent = m;
+    banner.classList.toggle('show', done === total);
+  }
+
+  function aplicarEstado(dados){
+    checks.forEach(c => {
+      const marcado = !!(dados.ex && dados.ex[c.dataset.ex]);
+      c.checked = marcado;
+      c.closest('article.ex').classList.toggle('done', marcado);
+    });
+    listChecks.forEach((c,i) => {
+      c.checked = !!(dados.lista && dados.lista['item'+i]);
+    });
+    atualizarBarra();
+  }
+
+  // Restaura o progresso salvo ao abrir a página
+  aplicarEstado(storage.carregar());
+
+  // Salva a cada mudança
+  checks.forEach(c => {
+    c.addEventListener('change', function(){
+      this.closest('article.ex').classList.toggle('done', this.checked);
+      atualizarBarra();
+      storage.salvar(estadoAtual());
+    });
+  });
+  listChecks.forEach(c => {
+    c.addEventListener('change', function(){
+      storage.salvar(estadoAtual());
+    });
+  });
+
+  // Botão de reset com confirmação
+  resetBtn.addEventListener('click', function(){
+    if(confirm('Apagar todo o progresso desta semana?')){
+      storage.limpar();
+      aplicarEstado({});
+    }
+  });
+
+  // Aviso discreto se o progresso não puder ser salvo neste ambiente
+  if(!storage.persistente){
+    msg.textContent += ' (progresso não será salvo neste ambiente)';
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Semana 17 — Análise de Dados com pandas</title>
+<style>
+  :root{
+    --ink:#16243A;
+    --ink-soft:#4A5A74;
+    --paper:#F5F8FC;
+    --card:#FFFFFF;
+    --py-blue:#3776AB;
+    --py-blue-dark:#27598C;
+    --py-gold:#FFD43B;
+    --py-gold-dark:#C99700;
+    --term:#1B2435;
+    --term-line:#2B3850;
+    --green:#2EA56C;
+    --coral:#E2574C;
+    --radius:14px;
+    --mono:"Cascadia Code","JetBrains Mono",Consolas,"Roboto Mono",monospace;
+    --sans:"Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto}
+    *{transition:none !important;animation:none !important}
+  }
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.65}
+
+  /* ===== Barra de progresso fixa ===== */
+  .progress-wrap{
+    position:sticky;top:0;z-index:50;
+    background:var(--term);color:#fff;
+    padding:10px 18px;
+    display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+    box-shadow:0 2px 12px rgba(22,36,58,.25);
+  }
+  .progress-wrap .label{font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;white-space:nowrap}
+  .progress-bar{flex:1;min-width:140px;height:14px;background:var(--term-line);border-radius:99px;overflow:hidden}
+  .progress-fill{height:100%;width:0%;border-radius:99px;background:linear-gradient(90deg,var(--py-blue),var(--py-gold));transition:width .4s ease}
+  .progress-count{font-family:var(--mono);font-size:.85rem;color:var(--py-gold);white-space:nowrap}
+  .progress-msg{font-size:.78rem;color:#AFC3E0;white-space:nowrap}
+  .reset-btn{
+    font-family:var(--mono);font-size:.72rem;color:#AFC3E0;
+    background:transparent;border:1px solid var(--term-line);border-radius:8px;
+    padding:5px 11px;cursor:pointer;transition:all .15s ease;white-space:nowrap;
+  }
+  .reset-btn:hover,.reset-btn:focus-visible{color:#fff;border-color:#5A6E92;background:rgba(255,255,255,.06)}
+  .reset-btn:focus-visible{outline:2px solid var(--py-gold);outline-offset:2px}
+
+  /* ===== Hero ===== */
+  header.hero{
+    background:linear-gradient(150deg,var(--term) 0%,#22406B 70%,var(--py-blue) 100%);
+    color:#fff;padding:56px 20px 48px;text-align:center;position:relative;overflow:hidden;
+  }
+  header.hero::before{
+    content:"import pandas as pd  DataFrame  read_csv(  groupby(";
+    position:absolute;inset:auto 0 8px 0;font-family:var(--mono);font-size:.78rem;
+    color:rgba(255,255,255,.14);letter-spacing:.4em;white-space:nowrap;overflow:hidden;
+  }
+  .hero .kicker{
+    font-family:var(--mono);font-size:.85rem;color:var(--py-gold);
+    letter-spacing:.18em;text-transform:uppercase;margin-bottom:14px;
+  }
+  .hero h1{font-family:var(--mono);font-size:clamp(1.5rem,4.5vw,2.6rem);font-weight:700;line-height:1.25}
+  .hero h1 .cursor{display:inline-block;width:.55em;height:1.05em;background:var(--py-gold);vertical-align:text-bottom;margin-left:4px;animation:blink 1.1s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+  .hero p.sub{max-width:620px;margin:18px auto 0;color:#D7E4F5;font-size:1rem}
+  .hero .howto{
+    max-width:640px;margin:26px auto 0;background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.18);border-radius:var(--radius);
+    padding:14px 18px;font-size:.88rem;color:#E8F0FB;text-align:left;
+  }
+  .hero .howto strong{color:var(--py-gold)}
+
+  /* ===== Navegação por partes ===== */
+  nav.parts{
+    display:flex;gap:8px;flex-wrap:wrap;justify-content:center;
+    padding:18px 16px;max-width:980px;margin:0 auto;
+  }
+  nav.parts a{
+    font-family:var(--mono);font-size:.78rem;text-decoration:none;
+    color:var(--py-blue-dark);background:var(--card);
+    border:1.5px solid #D5E2F2;border-radius:99px;padding:7px 14px;
+    transition:all .15s ease;
+  }
+  nav.parts a:hover,nav.parts a:focus-visible{border-color:var(--py-blue);background:#EAF2FB}
+  nav.parts a:focus-visible{outline:2px solid var(--py-blue);outline-offset:2px}
+
+  main{max-width:880px;margin:0 auto;padding:8px 18px 80px}
+
+  /* ===== Seções (partes) ===== */
+  section.parte{margin-top:46px}
+  .parte-head{display:flex;align-items:baseline;gap:14px;border-bottom:3px solid var(--py-gold);padding-bottom:10px;margin-bottom:6px}
+  .parte-head .num{
+    font-family:var(--mono);font-size:2.4rem;font-weight:700;color:var(--py-blue);line-height:1;
+  }
+  .parte-head h2{font-family:var(--mono);font-size:clamp(1.05rem,2.8vw,1.45rem);color:var(--ink)}
+  .parte-intro{
+    background:var(--card);border:1px solid #E1E9F4;border-radius:var(--radius);
+    padding:18px 22px;margin-top:16px;font-size:.95rem;
+  }
+  .parte-intro h3{font-size:.8rem;font-family:var(--mono);color:var(--py-blue);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px}
+  .parte-intro p{margin-bottom:10px}
+  .parte-intro p:last-child{margin-bottom:0}
+  .parte-intro ol,.parte-intro ul{margin:8px 0 10px 22px}
+  table{border-collapse:collapse;width:100%;margin:10px 0;font-size:.88rem}
+  th,td{border:1px solid #DCE6F2;padding:7px 10px;text-align:left}
+  th{background:#EDF3FA;font-family:var(--mono);font-size:.78rem}
+  td code,p code,li code{
+    font-family:var(--mono);font-size:.85em;background:#EDF2F9;
+    border:1px solid #DCE6F2;border-radius:5px;padding:1px 5px;color:var(--py-blue-dark);
+  }
+
+  /* ===== Cartão de exercício ===== */
+  article.ex{
+    background:var(--card);border:1px solid #E1E9F4;border-radius:var(--radius);
+    margin-top:22px;overflow:hidden;
+    box-shadow:0 1px 4px rgba(22,36,58,.05);
+    transition:box-shadow .2s ease;
+  }
+  article.ex:hover{box-shadow:0 4px 16px rgba(22,36,58,.10)}
+  article.ex.done{border-color:var(--green)}
+  article.ex.done .ex-head{background:#EAF7F0}
+  .ex-head{
+    display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+    padding:14px 18px;background:#F2F6FC;border-bottom:1px solid #E1E9F4;
+  }
+  .ex-num{
+    font-family:var(--mono);font-weight:700;font-size:.85rem;color:#fff;
+    background:var(--py-blue);border-radius:8px;padding:5px 10px;white-space:nowrap;
+  }
+  article.ex.done .ex-num{background:var(--green)}
+  .ex-head h3{font-size:1.02rem;flex:1;min-width:180px}
+  .stars{font-size:.78rem;color:var(--py-gold-dark);background:#FFF6D6;border:1px solid #F2DE96;border-radius:99px;padding:3px 10px;white-space:nowrap}
+  .done-toggle{
+    display:flex;align-items:center;gap:7px;cursor:pointer;user-select:none;
+    font-size:.8rem;font-family:var(--mono);color:var(--ink-soft);
+  }
+  .done-toggle input{width:17px;height:17px;accent-color:var(--green);cursor:pointer}
+  .ex-body{padding:18px 20px 22px}
+  .ex-body p{margin-bottom:10px}
+  .ex-body ol,.ex-body ul{margin:6px 0 12px 22px}
+  .ex-body li{margin-bottom:4px}
+
+  .tag{
+    display:inline-block;font-family:var(--mono);font-size:.72rem;
+    text-transform:uppercase;letter-spacing:.08em;border-radius:6px;
+    padding:3px 9px;margin:4px 0 6px;
+  }
+  .tag.obj{background:#E7F0FB;color:var(--py-blue-dark)}
+  .tag.passos{background:#FFF3CC;color:#8a6d00}
+  .tag.saida{background:#E4F5EC;color:#1c7a4d}
+
+  /* ===== Blocos de código estilo terminal ===== */
+  .term-window{border-radius:12px;overflow:hidden;margin:12px 0;border:1px solid var(--term-line)}
+  .term-bar{
+    display:flex;align-items:center;gap:8px;background:#121A29;padding:8px 14px;
+  }
+  .term-bar .dot{width:11px;height:11px;border-radius:50%}
+  .dot.r{background:#FF5F57}.dot.y{background:#FEBC2E}.dot.g{background:#28C840}
+  .term-bar .fname{font-family:var(--mono);font-size:.75rem;color:#8FA6C8;margin-left:6px}
+  pre.code,pre.output{
+    background:var(--term);color:#E7EDF7;font-family:var(--mono);
+    font-size:.86rem;line-height:1.6;padding:14px 18px;overflow-x:auto;margin:0;
+  }
+  pre.output{color:#9FE8C0}
+  pre.output .prompt-in{color:#E7EDF7}
+  /* syntax highlight */
+  .tk-kw{color:#7EC1FF;font-weight:600}
+  .tk-str{color:#FFD98A}
+  .tk-com{color:#7C8DA8;font-style:italic}
+  .tk-num{color:#9FE8C0}
+  .tk-fn{color:#C7A6FF}
+
+  /* ===== Dicas / desafios / soluções ===== */
+  details{border-radius:10px;margin:12px 0;overflow:hidden;border:1.5px solid transparent}
+  details summary{
+    cursor:pointer;list-style:none;padding:11px 16px;font-weight:600;font-size:.9rem;
+    display:flex;align-items:center;gap:8px;user-select:none;
+  }
+  details summary::-webkit-details-marker{display:none}
+  details summary::after{content:"▾";margin-left:auto;transition:transform .2s ease;font-size:.85em}
+  details[open] summary::after{transform:rotate(180deg)}
+  details .inner{padding:4px 16px 14px}
+  details.dica{background:#FFF9E8;border-color:#F2DE96}
+  details.dica summary{color:#8a6d00}
+  details.desafio{background:#F3EDFB;border-color:#D9C8F2}
+  details.desafio summary{color:#6B3FA0}
+  details.solucao{background:#EAF7F0;border-color:#BFE5D0}
+  details.solucao summary{color:#1c7a4d}
+  details.solucao .aviso{font-size:.8rem;color:#1c7a4d;margin-bottom:8px;font-style:italic}
+
+  /* ===== Checklist final ===== */
+  .checklist{background:var(--card);border:1px solid #E1E9F4;border-radius:var(--radius);padding:22px;margin-top:30px}
+  .checklist h2{font-family:var(--mono);font-size:1.2rem;margin-bottom:6px}
+  .checklist p{font-size:.9rem;color:var(--ink-soft);margin-bottom:14px}
+  .check-item{display:flex;align-items:flex-start;gap:10px;padding:7px 4px;border-radius:8px;cursor:pointer}
+  .check-item:hover{background:#F2F6FC}
+  .check-item input{width:18px;height:18px;margin-top:3px;accent-color:var(--py-blue);cursor:pointer}
+  .check-item span{font-size:.93rem}
+  .check-item input:checked + span{color:var(--green);text-decoration:line-through;text-decoration-color:rgba(46,165,108,.5)}
+
+  /* banner 100% */
+  .win-banner{
+    display:none;margin-top:26px;text-align:center;color:#fff;
+    background:linear-gradient(120deg,var(--green),var(--py-blue));
+    border-radius:var(--radius);padding:26px 20px;
+  }
+  .win-banner.show{display:block;animation:pop .45s ease}
+  @keyframes pop{0%{transform:scale(.94);opacity:0}100%{transform:scale(1);opacity:1}}
+  .win-banner h2{font-family:var(--mono);font-size:1.4rem;margin-bottom:6px}
+
+  .preview-s2{
+    margin-top:36px;border:2px dashed var(--py-blue);border-radius:var(--radius);
+    padding:20px 22px;background:#EFF5FC;
+  }
+  .preview-s2 h2{font-family:var(--mono);font-size:1.05rem;color:var(--py-blue-dark);margin-bottom:8px}
+  footer{
+    text-align:center;font-family:var(--mono);font-size:.75rem;color:var(--ink-soft);
+    padding:26px 16px 40px;
+  }
+  @media(max-width:560px){
+    .progress-msg{display:none}
+    .ex-head h3{font-size:.95rem}
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-wrap" role="region" aria-label="Progresso da semana">
+  <span class="label">XP DA SEMANA</span>
+  <div class="progress-bar"><div class="progress-fill" id="pfill"></div></div>
+  <span class="progress-count" id="pcount">0 / 14</span>
+  <span class="progress-msg" id="pmsg">Marque os exercícios concluídos ✔</span>
+  <button class="reset-btn" id="resetBtn" title="Apagar todo o progresso salvo">↺ Resetar</button>
+</div>
+
+<header class="hero">
+  <div class="kicker">Python para Iniciantes · Exercícios Guiados</div>
+  <h1>SEMANA 17 — pandas:<br>análise de dados de verdade<span class="cursor" aria-hidden="true"></span></h1>
+  <p class="sub">A biblioteca número 1 de dados do planeta: DataFrames, ler CSV e Excel numa linha, filtros, colunas calculadas e o lendário groupby — seu relatório de 30 linhas vira 1.</p>
+  <div class="howto">
+    <strong>Como usar:</strong> digite o código você mesmo (não copie e cole!), compare com a saída esperada e marque <strong>✔ Concluído</strong> em cada exercício para encher sua barra de XP. As <strong>dicas</strong> e <strong>soluções</strong> ficam escondidas — só abra depois de tentar! Seu progresso fica salvo no navegador.
+  </div>
+</header>
+
+<nav class="parts" aria-label="Partes da semana"><a href="#p1">1 · DataFrame</a><a href="#p2">2 · Lendo arquivos</a><a href="#p3">3 · Explorando</a><a href="#p4">4 · groupby</a><a href="#p5">5 · Exportando</a><a href="#p6">6 · Projetos</a><a href="#checklist">✅ Checklist</a></nav>
+
+<main>
+
+<section class="parte" id="p1">
+  <div class="parte-head"><span class="num">01</span><h2>O DataFrame: sua tabela superpoderosa</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Instale com <code>pip install pandas openpyxl</code>. O <strong>DataFrame</strong> é a tabela do pandas: linhas e colunas com nome — a evolução natural da "lista de dicionários" que você usa desde a Semana 5, agora com centenas de operações prontas. A convenção mundial é importar como <code>import pandas as pd</code>.</p></div>
+  <article class="ex" id="ex1">
+    <div class="ex-head">
+      <span class="ex-num">EX 01</span>
+      <h3>Primeiro DataFrame 🐼</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex1"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Criar uma tabela a partir de um dicionário de listas.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Digite e execute — repare no formato: cada CHAVE vira uma coluna:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex01_dataframe.py</span></div><pre class="code">import pandas as pd
+
+dados = {
+    "produto": ["caneca branca", "caneca preta", "azulejo"],
+    "qtd": [3, 12, 2],
+    "total": [75.0, 270.0, 80.0]
+}
+
+df = pd.DataFrame(dados)
+print(df)</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">         produto  qtd  total
+0  caneca branca    3   75.0
+1   caneca preta   12  270.0
+2        azulejo    2   80.0</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner">A coluna de números à esquerda (0, 1, 2) é o ÍNDICE — o pandas numera as linhas sozinho, como os índices de lista da Semana 4. E "df" é a abreviação universal de DataFrame.</div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex2">
+    <div class="ex-head">
+      <span class="ex-num">EX 02</span>
+      <h3>Conhecendo a tabela</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex2"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>As primeiras perguntas que se faz a qualquer dado.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Continue com o df e PREVEJA:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex02_conhecendo.py</span></div><pre class="code">print(len(df))
+print(list(df.columns))
+print(df.head(2))</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">3
+['produto', 'qtd', 'total']
+         produto  qtd  total
+0  caneca branca    3   75.0
+1   caneca preta   12  270.0</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner"><code>len(df)</code> conta as linhas, <code>df.columns</code> lista as colunas e <code>head(n)</code> espia as primeiras n linhas — essencial quando o arquivo tem 50 mil linhas e você só quer dar uma olhada!</div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p2">
+  <div class="parte-head"><span class="num">02</span><h2>Lendo arquivos numa linha</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Lembra do DictReader, da conversão de tipos, do loop de leitura? O pandas faz TUDO isso numa linha: <code>pd.read_csv("arquivo.csv")</code> — e ainda detecta os tipos sozinho. Primeiro, garanta o arquivo de testes <code>vendas.csv</code>:</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">vendas.csv</span></div><pre class="output">data,produto,qtd,total
+10/06/2026,caneca branca,3,75.0
+10/06/2026,caneca preta,12,270.0
+11/06/2026,azulejo,2,80.0
+11/06/2026,caneca preta,5,137.5
+12/06/2026,caneca branca,4,100.0
+12/06/2026,azulejo,1,40.0</pre></div></div>
+  <article class="ex" id="ex3">
+    <div class="ex-head">
+      <span class="ex-num">EX 03</span>
+      <h3>read_csv: adeus, DictReader</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex3"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Ler um CSV completo com uma linha de código.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Com o vendas.csv na pasta, execute:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex03_readcsv.py</span></div><pre class="code">import pandas as pd
+
+df = pd.read_csv("vendas.csv")
+print(df)
+print(df["qtd"].sum())   # já vem como número!</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">         data        produto  qtd  total
+0  10/06/2026  caneca branca    3   75.0
+(...)
+27</pre></div><details class="dica"><summary>💡 Compare com a Semana 13</summary><div class="inner">Lá: open + DictReader + loop + int() + float(). Aqui: UMA linha, tipos detectados. Os loops que você aprendeu não foram em vão — agora você ENTENDE o que o pandas faz por baixo!</div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex4">
+    <div class="ex-head">
+      <span class="ex-num">EX 04</span>
+      <h3>read_excel: planilhas direto</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex4"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Ler um .xlsx sem abrir o Excel.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Use alguma planilha sua das semanas 13/16 (ou gere uma com to_excel — Exercício 11!)</li><li><code>df = pd.read_excel("relatorio_vendas.xlsx")</code> e explore com head()</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(as primeiras linhas da sua planilha)</pre></div><details class="dica"><summary>💡 Dica</summary><div class="inner">O read_excel usa o openpyxl por baixo dos panos — por isso instalamos os dois juntos. Dá até para escolher a aba: <code>pd.read_excel("arq.xlsx", sheet_name="Resumo")</code>.</div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p3">
+  <div class="parte-head"><span class="num">03</span><h2>Explorando: colunas, contas e filtros</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Selecionar uma coluna: <code>df["total"]</code>. Ela aceita contas em massa: <code>.sum()</code>, <code>.mean()</code>, <code>.max()</code>, <code>.min()</code> — sem nenhum for!</p></div>
+  <article class="ex" id="ex5">
+    <div class="ex-head">
+      <span class="ex-num">EX 05</span>
+      <h3>Contas em massa</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex5"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Estatísticas de uma coluna inteira sem loop.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>PREVEJA com a calculadora (ou confie no pandas 😄):</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex05_contas.py</span></div><pre class="code">import pandas as pd
+
+df = pd.read_csv("vendas.csv")
+
+print(f"Faturamento: R$ {df['total'].sum():.2f}")
+print(f"Ticket médio: R$ {df['total'].mean():.2f}")
+print(f"Maior venda: R$ {df['total'].max():.2f}")</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Faturamento: R$ 702.50
+Ticket médio: R$ 117.08
+Maior venda: R$ 270.00</pre></div>
+    </div>
+  </article>
+
+  <article class="ex" id="ex6">
+    <div class="ex-head">
+      <span class="ex-num">EX 06</span>
+      <h3>Filtros booleanos 🎯</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex6"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>O filtro da Semana 4, em sintaxe pandas.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>A expressão <code>df["total"] &gt; 100</code> gera uma coluna de True/False (olá, Semana 2!)</li><li>Colocada DENTRO de <code>df[...]</code>, ela filtra as linhas:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex06_filtros.py</span></div><pre class="code">grandes = df[df["total"] &gt; 100]
+print(grandes)
+
+pretas = df[df["produto"] == "caneca preta"]
+print(f"Vendas de caneca preta: {len(pretas)}")</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">         data       produto  qtd  total
+1  10/06/2026  caneca preta   12  270.0
+3  11/06/2026  caneca preta    5  137.5
+Vendas de caneca preta: 2</pre></div><details class="dica"><summary>💡 Tradução mental</summary><div class="inner">Leia <code>df[df["total"] &gt; 100]</code> como: "do df, as linhas onde total > 100". É o for + if + append da Semana 4 espremido numa expressão!</div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex7">
+    <div class="ex-head">
+      <span class="ex-num">EX 07</span>
+      <h3>Ordenando</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex7"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>sort_values: o sort() das tabelas.</p><span class="tag passos">🧭 Passo a passo</span><ol><li><code>df.sort_values("total")</code> ordena crescente; <code>ascending=False</code> inverte</li><li>Mostre o TOP 3 de vendas combinando com <code>.head(3)</code></li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(as 3 maiores vendas, da maior para a menor)</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex07.py</span></div><pre class="code">import pandas as pd
+
+df = pd.read_csv("vendas.csv")
+
+top3 = df.sort_values("total", ascending=False).head(3)
+print(top3)</pre></div><p>Repare no encadeamento: ordena E pega as 3 primeiras na mesma linha. Métodos de pandas adoram trabalhar em fila!</p></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex8">
+    <div class="ex-head">
+      <span class="ex-num">EX 08</span>
+      <h3>Coluna calculada</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex8"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Criar uma coluna nova a partir das existentes.</p><span class="tag passos">🧭 Passo a passo</span><ol><li><code>df["unitario"] = df["total"] / df["qtd"]</code> — a conta acontece linha a linha, sem for!</li><li>Confira o resultado com print(df)</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">         data        produto  qtd  total  unitario
+0  10/06/2026  caneca branca    3   75.0      25.0
+1  10/06/2026   caneca preta   12  270.0      22.5
+(...)</pre></div><details class="dica"><summary>💡 Olha o desconto aparecendo!</summary><div class="inner">O unitário de 22.5 nas vendas grandes denuncia o desconto progressivo que VOCÊ programou lá na Semana 2. Os dados contam a história do seu código. 🤯</div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p4">
+  <div class="parte-head"><span class="num">04</span><h2>groupby: o relatório em uma linha</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>O momento mais emocionante da semana. Lembra do dict contador, do loop acumulando por produto, do padrão maior/menor para achar o campeão? Observe:</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">magia.py</span></div><pre class="code">df.groupby("produto")["qtd"].sum()</pre></div><p>Leia: "agrupe por produto, pegue a qtd, some por grupo". UMA linha. Semanas 3, 5 e 8 mandam lembranças. 🤯</p></div>
+  <article class="ex" id="ex9">
+    <div class="ex-head">
+      <span class="ex-num">EX 09</span>
+      <h3>O groupby revelado</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex9"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Substituir o relatório inteiro por groupby.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Execute e compare com seus relatórios das semanas 8/12/16:</li></ol><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">ex09_groupby.py</span></div><pre class="code">import pandas as pd
+
+df = pd.read_csv("vendas.csv")
+
+print(df.groupby("produto")["qtd"].sum())
+print()
+print(df.groupby("produto")["total"].sum())
+print()
+print("Campeão:", df.groupby("produto")["qtd"].sum().idxmax())</pre></div><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">produto
+azulejo           3
+caneca branca     7
+caneca preta     17
+Name: qtd, dtype: int64
+
+produto
+azulejo          120.0
+caneca branca    175.0
+caneca preta     407.5
+Name: total, dtype: float64
+
+Campeão: caneca preta</pre></div><details class="dica"><summary>💡 idxmax</summary><div class="inner">O <code>.idxmax()</code> devolve o RÓTULO do maior valor — exatamente o seu padrão "campeão" das semanas anteriores, pronto de fábrica.</div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex10">
+    <div class="ex-head">
+      <span class="ex-num">EX 10</span>
+      <h3>value_counts: o censo instantâneo</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex10"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Contar quantas vezes cada categoria aparece.</p><span class="tag passos">🧭 Passo a passo</span><ol><li><code>df["produto"].value_counts()</code> — o dict contador da Semana 5 em uma chamada</li><li>Conte também as vendas por data</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">produto
+caneca preta     2
+caneca branca    2
+azulejo          2
+Name: count, dtype: int64</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex10.py</span></div><pre class="code">import pandas as pd
+
+df = pd.read_csv("vendas.csv")
+print(df["produto"].value_counts())
+print(df["data"].value_counts())</pre></div></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p5">
+  <div class="parte-head"><span class="num">05</span><h2>Exportando resultados</h2></div>
+<div class="parte-intro"><h3>Conceito</h3><p>Análise pronta vira entrega: <code>df.to_excel("saida.xlsx", index=False)</code> e <code>df.to_csv("saida.csv", index=False)</code>. O <code>index=False</code> evita exportar aquela coluna 0,1,2... que ninguém pediu.</p></div>
+  <article class="ex" id="ex11">
+    <div class="ex-head">
+      <span class="ex-num">EX 11</span>
+      <h3>Análise → Excel</h3>
+      <span class="stars">⭐⭐ médio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex11"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Exportar um resultado de groupby como planilha.</p><span class="tag passos">🧭 Passo a passo</span><ol><li>Agrupe o faturamento por produto</li><li>Use <code>.reset_index()</code> para o resultado virar tabela de novo</li><li>Exporte com to_excel(index=False) e abra no Excel</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">resumo.xlsx gerado ✔</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex11.py</span></div><pre class="code">import pandas as pd
+
+df = pd.read_csv("vendas.csv")
+
+resumo = df.groupby("produto")["total"].sum().reset_index()
+resumo.to_excel("resumo.xlsx", index=False)
+print("resumo.xlsx gerado ✔")</pre></div></div></details>
+    </div>
+  </article>
+</section>
+
+<section class="parte" id="p6">
+  <div class="parte-head"><span class="num">06</span><h2>Projetos da semana: juntando tudo!</h2></div>
+
+  <article class="ex" id="ex12">
+    <div class="ex-head">
+      <span class="ex-num">EX 12</span>
+      <h3>Projeto: Análise completa Tua Caneca 📊</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex12"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Refazer a análise da Central (Semana 16) inteirinha em pandas — e sentir a diferença.</p><span class="tag passos">🧭 Requisitos</span><ol><li>Leia o vendas.csv</li><li>Calcule: faturamento, unidades, ticket médio, campeão (groupby + idxmax)</li><li>Crie a coluna "unitario" e identifique a venda com MENOR preço unitário (o maior desconto!)</li><li>Exporte o resumo por produto para resumo_pandas.xlsx</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">Faturamento: R$ 702.50
+Unidades: 27
+Ticket médio: R$ 117.08
+Campeão: caneca preta
+Maior desconto: caneca preta a R$ 22.50/un.
+resumo_pandas.xlsx gerado ✔</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex12.py</span></div><pre class="code">import pandas as pd
+
+df = pd.read_csv("vendas.csv")
+
+print(f"Faturamento: R$ {df['total'].sum():.2f}")
+print(f"Unidades: {df['qtd'].sum()}")
+print(f"Ticket médio: R$ {df['total'].mean():.2f}")
+print(f"Campeão: {df.groupby('produto')['qtd'].sum().idxmax()}")
+
+df["unitario"] = df["total"] / df["qtd"]
+barata = df.sort_values("unitario").head(1)
+produto = barata["produto"].values[0]
+unitario = barata["unitario"].values[0]
+print(f"Maior desconto: {produto} a R$ {unitario:.2f}/un.")
+
+resumo = df.groupby("produto")["total"].sum().reset_index()
+resumo.to_excel("resumo_pandas.xlsx", index=False)
+print("resumo_pandas.xlsx gerado ✔")</pre></div><p>Compare com a função analisar() da Semana 16: o conhecimento dos loops fez você ENTENDER; o pandas faz você VOAR.</p></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex13">
+    <div class="ex-head">
+      <span class="ex-num">EX 13</span>
+      <h3>Projeto: Boletim turbinado 🎓</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex13"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>A análise da turma com médias por aluno via groupby.</p><span class="tag passos">🧭 Requisitos</span><ol><li>Monte (ou leia de CSV) notas com colunas aluno e nota — vários registros por aluno</li><li>Média por aluno: <code>groupby("aluno")["nota"].mean()</code></li><li>Filtre os aprovados (média ≥ 7) e exporte boletim_pandas.xlsx</li></ol><span class="tag saida">✅ Exemplo de execução</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">aluno
+Ana      8.25
+Bruno    5.50
+Carla    9.50
+Aprovados: 2</pre></div><details class="solucao"><summary>🔑 Ver solução</summary><div class="inner"><p class="aviso">Só abra depois de tentar!</p><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">solucao_ex13.py</span></div><pre class="code">import pandas as pd
+
+notas = pd.DataFrame({
+    "aluno": ["Ana", "Ana", "Bruno", "Bruno", "Carla", "Carla"],
+    "nota": [8.0, 8.5, 6.0, 5.0, 9.5, 9.5]
+})
+
+medias = notas.groupby("aluno")["nota"].mean()
+print(medias)
+
+aprovados = medias[medias &gt;= 7]
+print(f"Aprovados: {len(aprovados)}")
+
+medias.reset_index().to_excel("boletim_pandas.xlsx", index=False)</pre></div></div></details>
+    </div>
+  </article>
+
+  <article class="ex" id="ex14">
+    <div class="ex-head">
+      <span class="ex-num">EX 14</span>
+      <h3>Projeto bônus: describe() e descobertas livres 🔍</h3>
+      <span class="stars">⭐⭐⭐ desafio</span>
+      <label class="done-toggle"><input type="checkbox" class="done-check" data-ex="ex14"> Concluído</label>
+    </div>
+    <div class="ex-body">
+<span class="tag obj">🎯 Objetivo</span><p>Explorar dados como um analista (sem código pronto!).</p><span class="tag passos">🧭 Roteiro</span><ol><li>Rode <code>df.describe()</code> no vendas.csv e INTERPRETE cada linha (count, mean, min, max...)</li><li>Formule 3 perguntas suas sobre os dados e responda com filtros/groupby — ex.: "qual dia faturou mais?", "qual % do faturamento vem das canecas pretas?"</li><li>Anote as respostas em comentários no código — análise sem interpretação é só conta!</li></ol><span class="tag saida">✅ Saída esperada</span><div class="term-window"><div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span></div><pre class="output">(as estatísticas do describe + suas 3 descobertas)</pre></div><details class="dica"><summary>💡 Você virou analista</summary><div class="inner">Fazer perguntas aos dados e respondê-las com código É o trabalho de análise de dados. As empresas chamam isso de "insights" — você chama de terça-feira. 😄</div></details>
+    </div>
+  </article>
+</section>
+
+<div class="checklist" id="checklist">
+  <h2>✅ Checklist de fim de semana</h2>
+  <p>Antes de seguir para a próxima semana, confirme que você consegue:</p>
+<label class="check-item"><input type="checkbox"><span>Criar um DataFrame a partir de um dicionário de listas</span></label>
+<label class="check-item"><input type="checkbox"><span>Ler um CSV com pd.read_csv (e um Excel com read_excel)</span></label>
+<label class="check-item"><input type="checkbox"><span>Selecionar uma coluna e usar .sum(), .mean(), .max()</span></label>
+<label class="check-item"><input type="checkbox"><span>Filtrar linhas com condições booleanas df[df["col"] &gt; x]</span></label>
+<label class="check-item"><input type="checkbox"><span>Ordenar com sort_values</span></label>
+<label class="check-item"><input type="checkbox"><span>Criar uma coluna calculada a partir de outras</span></label>
+<label class="check-item"><input type="checkbox"><span>Agrupar e somar com groupby — em UMA linha</span></label>
+<label class="check-item"><input type="checkbox"><span>Contar categorias com value_counts</span></label>
+<label class="check-item"><input type="checkbox"><span>Exportar com to_excel/to_csv usando index=False</span></label>
+<label class="check-item"><input type="checkbox"><span>Explicar quando pandas vale mais que loops manuais</span></label>
+</div>
+
+<div class="win-banner" id="winBanner">
+  <h2>🏆 SEMANA 17 COMPLETA!</h2>
+  <p>Você concluiu todos os exercícios. Bem-vindo ao clube de quem analisa dados com a ferramenta dos profissionais!</p>
+</div>
+
+<div class="preview-s2">
+<h2>📅 Prévia da Semana 18</h2><p>Dados analisados pedem para ser VISTOS: na próxima semana, <strong>matplotlib</strong> — gráficos de barras, pizza e linha, salvos em PNG e até gerados direto do pandas com <code>.plot()</code>. Seus relatórios vão ganhar olhos! 📊</p></div>
+
+</main>
+
+<footer>python_para_iniciantes // semana_17 // exercícios guiados</footer>
+
+<script>
+// ===== Syntax highlight leve para Python =====
+(function(){
+  const KW = /\b(print|input|int|float|type|str|bool)\b/g;
+  document.querySelectorAll('pre.code').forEach(pre=>{
+    let src = pre.textContent;
+    // escapa HTML
+    src = src.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    // uma passada só, com alternação (comentário | string | builtin | bool | número)
+    src = src.replace(
+      /(#[^\n]*)|(f?"[^"\n]*"|f?'[^'\n]*')|\b(print|input|insert|int|float|str|len|range|type|abs|round|max|min|sum|sorted|sort|reverse|append|remove|split|strip|upper|lower|replace|title|randint|random|get|keys|values|items|open|readlines|read|write|close|count|index|pop|update|list|dict|tuple|enumerate|sqrt|floor|ceil|choice|shuffle|sample|sleep|now|today|strftime|dumps|dump|loads|load|isinstance|datetime|date|DictReader|DictWriter|writerows|writerow|writeheader|writer|reader|csv|Workbook|load_workbook|save|iter_rows|Font|listdir|makedirs|getcwd|rename|exists|getsize|splitext|join|endswith|startswith|copytree|copy|move|requests|status_code|json|DataFrame|read_csv|read_excel|to_excel|to_csv|head|describe|groupby|sort_values|value_counts|mean|idxmax|bar|barh|pie|plot|savefig|show|title|xlabel|ylabel|figure|legend|axhline|tight_layout|close|Flask|route|run|render_template|jsonify|redirect|request)\b|\b(True|False|None|if|elif|else|while|for|in|and|or|not|break|continue|import|from|def|return|try|except|finally|with|as|del|global|pass|class|self|super|lambda)\b|(\b\d+(?:\.\d+)?\b)/g,
+      function(m, com, str, fn, bool, num){
+        if(com)  return '<span class="tk-com">'+com+'</span>';
+        if(str)  return '<span class="tk-str">'+str+'</span>';
+        if(fn)   return '<span class="tk-fn">'+fn+'</span>';
+        if(bool) return '<span class="tk-kw">'+bool+'</span>';
+        if(num)  return '<span class="tk-num">'+num+'</span>';
+        return m;
+      }
+    );
+    pre.innerHTML = src;
+  });
+})();
+
+// ===== Armazenamento seguro (localStorage com fallback em memória) =====
+// Quando o aluno abre o arquivo .html no computador, o progresso fica salvo
+// no navegador. Se o localStorage estiver indisponível (modo restrito,
+// pré-visualização, etc.), o progresso funciona só em memória, sem quebrar.
+const storage = (function(){
+  const KEY = 'python_semana17_progresso';
+  let memoria = {};
+  let disponivel = false;
+  try{
+    localStorage.setItem('__teste__','1');
+    localStorage.removeItem('__teste__');
+    disponivel = true;
+  }catch(e){ disponivel = false; }
+
+  return {
+    carregar: function(){
+      if(disponivel){
+        try{ return JSON.parse(localStorage.getItem(KEY)) || {}; }
+        catch(e){ return {}; }
+      }
+      return memoria;
+    },
+    salvar: function(dados){
+      memoria = dados;
+      if(disponivel){
+        try{ localStorage.setItem(KEY, JSON.stringify(dados)); }catch(e){}
+      }
+    },
+    limpar: function(){
+      memoria = {};
+      if(disponivel){
+        try{ localStorage.removeItem(KEY); }catch(e){}
+      }
+    },
+    persistente: disponivel
+  };
+})();
+
+// ===== Progresso dos exercícios + checklist =====
+(function(){
+  const checks = document.querySelectorAll('.done-check');
+  const listChecks = document.querySelectorAll('.check-item input');
+  const total = checks.length;
+  const fill = document.getElementById('pfill');
+  const count = document.getElementById('pcount');
+  const msg = document.getElementById('pmsg');
+  const banner = document.getElementById('winBanner');
+  const resetBtn = document.getElementById('resetBtn');
+
+  const MSGS = [
+    [0,  'Marque os exercícios concluídos ✔'],
+    [1,  'Boa! Continue assim 💪'],
+    [4,  'Pegando o ritmo! 🔥'],
+    [7, 'Metade do caminho! 🚀'],
+    [10, 'Quase lá... força! ⚡'],
+    [14, 'SEMANA COMPLETA! 🏆']
+  ];
+
+  function estadoAtual(){
+    const dados = { ex: {}, lista: {} };
+    checks.forEach(c => { dados.ex[c.dataset.ex] = c.checked; });
+    listChecks.forEach((c,i) => { dados.lista['item'+i] = c.checked; });
+    return dados;
+  }
+
+  function atualizarBarra(){
+    const done = document.querySelectorAll('.done-check:checked').length;
+    const pct = Math.round(done/total*100);
+    fill.style.width = pct + '%';
+    count.textContent = done + ' / ' + total;
+    let m = MSGS[0][1];
+    for(const [min,text] of MSGS){ if(done >= min) m = text; }
+    msg.textContent = m;
+    banner.classList.toggle('show', done === total);
+  }
+
+  function aplicarEstado(dados){
+    checks.forEach(c => {
+      const marcado = !!(dados.ex && dados.ex[c.dataset.ex]);
+      c.checked = marcado;
+      c.closest('article.ex').classList.toggle('done', marcado);
+    });
+    listChecks.forEach((c,i) => {
+      c.checked = !!(dados.lista && dados.lista['item'+i]);
+    });
+    atualizarBarra();
+  }
+
+  // Restaura o progresso salvo ao abrir a página
+  aplicarEstado(storage.carregar());
+
+  // Salva a cada mudança
+  checks.forEach(c => {
+    c.addEventListener('change', function(){
+      this.closest('article.ex').classList.toggle('done', this.checked);
+      atualizarBarra();
+      storage.salvar(estadoAtual());
+    });
+  });
+  listChecks.forEach(c => {
+    c.addEventListener('change', function(){
+      storage.salvar(estadoAtual());
+    });
+  });
+
+  // Botão de reset com confirmação
+  resetBtn.addEventListener('click', function(){
+    if(confirm('Apagar todo o progresso desta semana?')){
+      storage.limpar();
+      aplicarEstado({});
+    }
+  });
+
+  // Aviso discreto se o progresso não puder ser salvo neste ambiente
+  if(!storage.persistente){
+    msg.textContent += ' (progresso não será salvo neste ambiente)';
+  }
+})();
+</script>
+</body>
+</html>
